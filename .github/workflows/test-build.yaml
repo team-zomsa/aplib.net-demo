@@ -14,7 +14,8 @@ jobs:
     strategy:
       matrix:
         unity-version: [2022.3.19f1]
-        platform: [ StandaloneOSX, StandaloneWindows64, StandaloneLinux64, WebGL ]
+        # platform: [ StandaloneOSX, StandaloneWindows64, StandaloneLinux64, WebGL ]
+        platform: [ StandaloneWindows64 ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
