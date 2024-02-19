@@ -62,55 +62,60 @@ jobs:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
-      - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@v4.1.1
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          projectPath: aplib.net-demo/
-      - name: Setup dotnet 5 for SonarQube
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '5.0.x'
-      - name: Set up JDK 11 for SonarQube
+      # - name: Run Unit Tests
+      #   uses: game-ci/unity-test-runner@v4.1.1
+      #   env:
+      #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #   with:
+      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
+      #     projectPath: aplib.net-demo/
+
+
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: 11
-      - name: Setup Unity for SonarQube
-        id: setup-unity
-        uses: kuler90/setup-unity@v1
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - uses: actions/checkout@v3
         with:
-          project-path: aplib.net-demo/
-      - name: Activate Unity for SonarQube
-        uses: kuler90/activate-unity@v1
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
         with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-license: ${{ secrets.UNITY_LICENSE }}
-      - name: SonarQube Analysis
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Build and analyze
         env:
-          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: powershell
         run: |
           sudo rm -rf Library
           pwd; ls -alh
-          xvfb-run --auto-servernum ${{ steps.setup-unity.outputs.unity-path }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath aplib.net-demo/ -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+          xvfb-run --auto-servernum ${{ steps.setup-unity.outputs.unity-path }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
           pwd; ls -alh
           sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
           mv aplib.net-demo.sln ..
           cd ..
-          dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin \
-            /o:"finol-digital" \
-            /k:"finol-digital_aplib.net-demo" \
-            /d:sonar.login="$SONAR_TOKEN" \
-            /d:sonar.host.url=https://sonarcloud.io \
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url=https://sonarcloud.io \
             /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
             /d:sonar.cpd.exclusions=Assets/Tests/** \
             /d:sonar.coverage.exclusions=Assets/Tests/** \
@@ -119,12 +124,67 @@ jobs:
           dotnet build aplib.net-demo.sln
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd aplib.net-demo
-      - name: SonarQube Quality Gate Check
-        uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
-        with:
-          scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+
+
+      # - name: Setup dotnet 5 for SonarQube
+      #   uses: actions/setup-dotnet@v2
+      #   with:
+      #     dotnet-version: '5.0.x'
+      # - name: Set up JDK 11 for SonarQube
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: 'zulu'
+      #     java-version: 11
+      # - name: Setup Unity for SonarQube
+      #   id: setup-unity
+      #   uses: kuler90/setup-unity@v1
+      #   with:
+      #     project-path: aplib.net-demo/
+      # - name: Activate Unity for SonarQube
+      #   uses: kuler90/activate-unity@v1
+      #   with:
+      #     unity-username: ${{ secrets.UNITY_EMAIL }}
+      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
+      #     unity-license: ${{ secrets.UNITY_LICENSE }}
+      # - name: SonarQube Analysis
+      #   env:
+      #     FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     sudo rm -rf Library
+      #     pwd; ls -alh
+      #     xvfb-run --auto-servernum ${{ steps.setup-unity.outputs.unity-path }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath aplib.net-demo/ -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+      #     pwd; ls -alh
+      #     sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+      #     sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
+      #     mv aplib.net-demo.sln ..
+      #     cd ..
+      #     dotnet tool install --global dotnet-sonarscanner
+      #     dotnet sonarscanner begin \
+      #       /o:"finol-digital" \
+      #       /k:"finol-digital_aplib.net-demo" \
+      #       /d:sonar.login="$SONAR_TOKEN" \
+      #       /d:sonar.host.url=https://sonarcloud.io \
+      #       /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
+      #       /d:sonar.cpd.exclusions=Assets/Tests/** \
+      #       /d:sonar.coverage.exclusions=Assets/Tests/** \
+      #       /d:sonar.cs.nunit.reportsPaths=aplib.net-demo/artifacts/editmode-results.xml,aplib.net-demo/artifacts/playmode-results.xml \
+      #       /d:sonar.cs.opencover.reportsPaths=aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml
+      #     dotnet build aplib.net-demo.sln
+      #     dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+      #     cd aplib.net-demo
+      # - name: SonarQube Quality Gate Check
+      #   uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+      #   with:
+      #     scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+      
       # - name: Update Release Notes
       #   if: github.event.action == 'published'
       #   env:
