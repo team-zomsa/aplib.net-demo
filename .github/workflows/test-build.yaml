@@ -13,13 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        unity-version:
-          - 2022.3.19f1
-        targetPlatform: 
-          - StandaloneOSX
-          - StandaloneWindows64
-          - StandaloneLinux64
-          - WebGL
+        unity-version: [ 2022.3.19f1 ]
+        targetPlatform: [ StandaloneOSX, StandaloneWindows64, StandaloneLinux64, WebGL ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
