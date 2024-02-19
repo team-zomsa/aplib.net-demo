@@ -33,17 +33,17 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Setup Unity for SonarQube
+      - name: Setup Unity for SonarCloud
         id: setup-unity
         uses: kuler90/setup-unity@v1
         with:
           project-path: aplib.net-demo/
-      - name: Activate Unity for SonarQube
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-license: ${{ secrets.UNITY_LICENSE }}
+      # - name: Activate Unity for SonarCloud
+      #   uses: kuler90/activate-unity@v1
+      #   with:
+      #     unity-username: ${{ secrets.UNITY_EMAIL }}
+      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
+      #     unity-license: ${{ secrets.UNITY_LICENSE }}
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
