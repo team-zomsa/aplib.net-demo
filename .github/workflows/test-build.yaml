@@ -6,6 +6,7 @@ on:
       - main
       - dev
   paths:
+    - '.github/workflows/**'
     - 'Assets/**'
     - 'Packages/**'
     - 'ProjectSettings/**'
@@ -16,6 +17,7 @@ on:
       - main
       - dev
     paths:
+      - '.github/workflows/**'
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
