@@ -36,6 +36,7 @@ jobs:
           targetPlatform: ${{ matrix.platform }}
           unityVersion: ${{ matrix.unity-version }}
           customImage: 'unityci/editor:ubuntu-2022.3.19f1-linux-il2cpp-3.0.1'
+          projectPath: aplib.net-demo
       - uses: actions/upload-artifact@v3
         with:
           name: Build
