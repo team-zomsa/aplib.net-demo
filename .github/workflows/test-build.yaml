@@ -5,37 +5,173 @@ on:
     branches:
       - main
       - dev
+  paths:
+    - 'Assets/**'
+    - 'Packages/**'
+    - 'ProjectSettings/**'
   pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+    branches:
+      - main
+      - dev
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      workflow_mode:
+        description: '[release] [Android, iOS, StandaloneLinux64, WebGL, StandaloneWindows, StandaloneWindows64, WSAPlayer, StandaloneOSX, Steam]'
+        required: false
+        default: ''
+
 jobs:
-  build:
-    name: Build Project
+  tests:
+    name: Test Code Quality
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unity-version: [2022.3.19f1]
-        platform: [ StandaloneOSX, StandaloneWindows64, StandaloneLinux64, WebGL ]
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
-      - uses: actions/cache@v3
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create LFS File List
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+      - name: Restore LFS Cache
+        uses: actions/cache@v3
+        id: lfs-cache
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+      - name: Git LFS Pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+      - name: Cache Library
+        uses: actions/cache@v3
         with:
           path: Library
-          key: Library-aplib.net-demo
-          restore-keys: |
-            Library-
-            Library-aplib.net-demo-
-      - name: Build Project
-        uses: game-ci/unity-builder@v4.1.4
+          key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-test-
+      - name: Run Unit Tests
+        uses: game-ci/unity-test-runner@v2
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with: 
-          targetPlatform: ${{ matrix.platform }}
-          unityVersion: ${{ matrix.unity-version }}
-          # buildMethod: Cgs.Editor.BuildCgs.BuildOptions
-      - uses: actions/upload-artifact@v3
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          name: Build
-          path: Build
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup dotnet 5 for SonarQube
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'
+      - name: Set up JDK 11 for SonarQube
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Setup Unity for SonarQube
+        id: setup-unity
+        uses: kuler90/setup-unity@v1
+      - name: Activate Unity for SonarQube
+        uses: kuler90/activate-unity@v1
+        with:
+          unity-username: ${{ secrets.UNITY_EMAIL }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
+      - name: SonarQube Analysis
+        env:
+          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sudo rm -rf Library
+          pwd; ls -alh
+          xvfb-run --auto-servernum ${{ steps.setup-unity.outputs.unity-path }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+          pwd; ls -alh
+          sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+          sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
+          mv aplib.net-demo.sln ..
+          cd ..
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin \
+            /o:"finol-digital" \
+            /k:"finol-digital_aplib.net-demo" \
+            /d:sonar.login="$SONAR_TOKEN" \
+            /d:sonar.host.url=https://sonarcloud.io \
+            /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
+            /d:sonar.cpd.exclusions=Assets/Tests/** \
+            /d:sonar.coverage.exclusions=Assets/Tests/** \
+            /d:sonar.cs.nunit.reportsPaths=aplib.net-demo/artifacts/editmode-results.xml,aplib.net-demo/artifacts/playmode-results.xml \
+            /d:sonar.cs.opencover.reportsPaths=aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml
+          dotnet build aplib.net-demo.sln
+          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          cd aplib.net-demo
+      - name: SonarQube Quality Gate Check
+        uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+        with:
+          scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: Update Release Notes
+      #   if: github.event.action == 'published'
+      #   env:
+      #     RELEASE_NOTES: ${{ github.event.release.body }}
+      #   run: |
+      #     echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+      #     echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      # - name: Auto-Commit Release Notes
+      #   if: github.event.action == 'published'
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     branch: main
+      #     file_pattern: fastlane/metadata
+      #     commit_message: Update Release Notes
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # build:
+  #   name: Build Project
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       unity-version: [2022.3.19f1]
+  #       platform: [ StandaloneOSX, StandaloneWindows64, StandaloneLinux64, WebGL ]
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: Library
+  #         key: Library-aplib.net-demo
+  #         restore-keys: |
+  #           Library-
+  #           Library-aplib.net-demo-
+  #     - name: Build Project
+  #       uses: game-ci/unity-builder@v4.1.4
+  #       env:
+  #         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  #         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  #         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  #       with: 
+  #         targetPlatform: ${{ matrix.platform }}
+  #         unityVersion: ${{ matrix.unity-version }}
+  #         # buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: Build
+  #         path: Build
