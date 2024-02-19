@@ -11,6 +11,7 @@ jobs:
   build:
     name: Build Project
     runs-on: ubuntu-latest
+    container: unityci/editor:ubuntu-2022.3.19f1-linux-il2cpp-3.0.1
     strategy:
       matrix:
         unity-version: [2022.3.19f1]
