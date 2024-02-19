@@ -21,9 +21,10 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-aplib.net-demo
           restore-keys: |
             Library-
+            Library-aplib.net-demo-
       - name: Build Project
         uses: game-ci/unity-builder@v4.1.4
         env:
