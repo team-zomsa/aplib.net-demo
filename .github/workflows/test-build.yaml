@@ -42,7 +42,7 @@ jobs:
       - name: Cache Unity Installation
         uses: actions/cache@v2
         with:
-          path: ${{ steps.setup-unity.outputs.unity-install-path }}
+          path: ${{ env.UNITY_PATH }}
           key: ${{ runner.os }}-unity-${{ steps.setup-unity.outputs.unity-version }}
           restore-keys: ${{ runner.os }}-unity
       # - name: Activate Unity for SonarCloud
