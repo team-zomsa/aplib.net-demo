@@ -34,7 +34,7 @@ jobs:
         with: 
           targetPlatform: ${{ matrix.platform }}
           unityVersion: ${{ matrix.unity-version }}
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          # buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - uses: actions/upload-artifact@v3
         with:
           name: Build
