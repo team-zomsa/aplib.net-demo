@@ -69,7 +69,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          projectPath: aplib.net-demo/
+          projectPath: aplib.net-demo/.
       - name: Setup dotnet 5 for SonarQube
         uses: actions/setup-dotnet@v2
         with:
