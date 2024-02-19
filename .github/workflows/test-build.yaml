@@ -13,8 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        unity-version: [ 2022.3.19f1 ]
-        targetPlatform: [ StandaloneOSX, StandaloneWindows64, StandaloneLinux64, WebGL ]
+        unity-version:
+          - 2022.3.19f1
+        targetPlatform: 
+          - StandaloneOSX
+          - StandaloneWindows64
+          - StandaloneLinux64
+          - WebGL
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,7 +28,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
       - name: Build Project
