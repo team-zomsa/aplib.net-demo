@@ -1,4 +1,4 @@
-name: Build Pipeline on the Unity Project
+name: Build pipeline
 
 on:
   push:
