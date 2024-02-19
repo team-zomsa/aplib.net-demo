@@ -74,10 +74,8 @@ jobs:
 
 
 
-      - name: Setup dotnet 5 for SonarCloud
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '5.0.x'
+      - name: Install dotnet for SonarCloud
+        uses: actions/setup-dotnet@v4
 
 
       - name: Set up JDK 17
