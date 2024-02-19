@@ -34,6 +34,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with: 
           targetPlatform: ${{ matrix.platform }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
           unityVersion: ${{ matrix.unity-version }}
       - uses: actions/upload-artifact@v3
         with:
