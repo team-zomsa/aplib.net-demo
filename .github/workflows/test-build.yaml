@@ -11,6 +11,9 @@ jobs:
   sonar:
     name: Test and Analyze with SonarCloud
     runs-on: windows-latest
+    strategy:
+      matrix:
+        unity-version: [2022.3.19f1]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -33,6 +36,12 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Restore Unity Installation Cache
+        id: cache-unity
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.UNITY_PATH }}
+          key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
       - name: Setup Unity for SonarCloud
         id: setup-unity
         uses: kuler90/setup-unity@v1
