@@ -2,22 +2,22 @@ name: Build Pipeline on the Unity Project
 
 on:
   push:
+    paths:
+      - '.github/workflows/**'
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
     branches:
       - main
       - dev
-  paths:
-    - '.github/workflows/**'
-    - 'Assets/**'
-    - 'Packages/**'
-    - 'ProjectSettings/**'
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
-    # branches:
-    #   - main
-    #   - dev
+    branches:
+      - main
+      - dev
     # paths:
     #   - '.github/workflows/**'
     #   - 'Assets/**'
