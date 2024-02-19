@@ -35,6 +35,7 @@ on:
 
 jobs:
   tests:
+    permissions: write-all
     name: Test Code Quality
     runs-on: ubuntu-latest
     steps:
