@@ -15,9 +15,9 @@ on:
       - opened
       - synchronize
       - reopened
-    branches:
-      - main
-      - dev
+    # branches:
+    #   - main
+    #   - dev
     # paths:
     #   - '.github/workflows/**'
     #   - 'Assets/**'
