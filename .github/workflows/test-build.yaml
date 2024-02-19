@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unityversion }}
+    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,7 +32,7 @@ jobs:
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
-      - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unityversion }}
+      - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
