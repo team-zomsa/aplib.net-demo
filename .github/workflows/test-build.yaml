@@ -18,11 +18,11 @@ on:
     branches:
       - main
       - dev
-    paths:
-      - '.github/workflows/**'
-      - 'Assets/**'
-      - 'Packages/**'
-      - 'ProjectSettings/**'
+    # paths:
+    #   - '.github/workflows/**'
+    #   - 'Assets/**'
+    #   - 'Packages/**'
+    #   - 'ProjectSettings/**'
   release:
     types:
       - published
