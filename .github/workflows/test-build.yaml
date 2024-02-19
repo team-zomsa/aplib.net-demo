@@ -38,6 +38,13 @@ jobs:
         uses: kuler90/setup-unity@v1
         with:
           project-path: aplib.net-demo/
+        if: steps.cache-unity.outputs.cache-hit != 'true'
+      - name: Cache Unity Installation
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.setup-unity.outputs.unity-install-path }}
+          key: ${{ runner.os }}-unity-${{ steps.setup-unity.outputs.unity-version }}
+          restore-keys: ${{ runner.os }}-unity
       # - name: Activate Unity for SonarCloud
       #   uses: kuler90/activate-unity@v1
       #   with:
