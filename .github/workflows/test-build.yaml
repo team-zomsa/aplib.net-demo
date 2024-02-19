@@ -63,14 +63,13 @@ jobs:
           restore-keys: Library-test-
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@v2
-        with:
-          projectPath: aplib.net-demo/
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          projectPath: aplib.net-demo/
       - name: Setup dotnet 5 for SonarQube
         uses: actions/setup-dotnet@v2
         with:
