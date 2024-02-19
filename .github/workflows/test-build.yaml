@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build
+    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unityversion }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -42,7 +42,8 @@ jobs:
           targetPlatform: ${{ matrix.platform }}
           unityVersion: ${{ matrix.unity-version }}
           projectPath: aplib.net-demo
-      - uses: actions/upload-artifact@v3
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: Build
           path: Build
