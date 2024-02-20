@@ -50,7 +50,7 @@ jobs:
         with:
           project-path: aplib.net-demo/
         if: steps.cache-unity.outputs.cache-hit != 'true'
-      name: Activate Unity for SonarCloud
+      - name: Activate Unity for SonarCloud
         uses: kuler90/activate-unity@v1
         with:
           unity-username: ${{ secrets.UNITY_EMAIL }}
@@ -72,7 +72,7 @@ jobs:
         shell: powershell
         run: |
           ls -R
-          xvfb-run --auto-servernum ${{ steps.setup-unity.outputs.unity-path }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+          xvfb-run --auto-servernum ${{ env.UNITY_PATH }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
           sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
           ls -R
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
