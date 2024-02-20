@@ -50,13 +50,13 @@ jobs:
         with:
           project-path: aplib.net-demo/
         if: steps.cache-unity.outputs.cache-hit != 'true'
-      - name: Activate Unity for SonarCloud
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
-          unity-path: ${{ env.UNITY_PATH }}
+      # - name: Activate Unity for SonarCloud
+      #   uses: kuler90/activate-unity@v1
+      #   with:
+      #     unity-username: ${{ secrets.UNITY_EMAIL }}
+      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
+      #     unity-serial: ${{ secrets.UNITY_SERIAL }}
+      #     unity-path: ${{ env.UNITY_PATH }}
       - name: Cache Unity Installation
         uses: actions/cache@v2
         with:
