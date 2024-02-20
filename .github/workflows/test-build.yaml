@@ -61,14 +61,14 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool update dotnet-sonarscanner --tool-path .aplib.net-demo\.sonar\scanner
       - name: Prepare SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: >
-          .\.sonar\scanner\dotnet-sonarscanner begin
+          .aplib.net-demo\.sonar\scanner\dotnet-sonarscanner begin
           /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           /d:sonar.host.url="https://sonarcloud.io"
@@ -88,7 +88,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .aplib.net-demo\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   # build:
   #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
