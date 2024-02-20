@@ -56,7 +56,7 @@ jobs:
           unity-username: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
-          project-path: aplib.net-demo/
+          unity-path: ${{ env.UNITY_PATH }}
       - name: Cache Unity Installation
         uses: actions/cache@v2
         with:
