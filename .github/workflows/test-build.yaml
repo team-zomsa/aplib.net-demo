@@ -55,7 +55,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
           sudo apt-get update
-          ls -R "/home/runner/Unity Hub/"
+          cd "/home/runner/Unity Hub"
+          ls -R
           xvfb-run --auto-servernum "/home/runner/Unity Hub/UnityHub.AppImage" --headless help
 
       # - name: Install Dependencies
