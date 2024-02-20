@@ -14,6 +14,8 @@ jobs:
     strategy:
       matrix:
         unity-version: [2022.3.19f1]
+    environment:
+      UNITY_PATH: C:\Program Files\Unity\Hub\Editor\${{ matrix.unity-version }}\Editor\Unity.exe
     steps:
       - uses: actions/checkout@v3
         with:
@@ -52,7 +54,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.UNITY_PATH }}
-          key: ${{ runner.os }}-unity-${{ steps.setup-unity.outputs.unity-version }}
+          key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
           restore-keys: ${{ runner.os }}-unity
       # - name: Activate Unity for SonarCloud
       #   uses: kuler90/activate-unity@v1
