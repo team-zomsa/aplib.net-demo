@@ -10,7 +10,7 @@ on:
 jobs:
   sonar:
     name: Test and Analyze with SonarCloud
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         unity-version: [2022.3.19f1]
