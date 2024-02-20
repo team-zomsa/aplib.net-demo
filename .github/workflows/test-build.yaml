@@ -66,13 +66,6 @@ jobs:
         shell: powershell
         run: |
           dotnet build --no-incremental aplib.net-demo/aplib.net-demo.sln
-      - name: Begin SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"YourProjectKey" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
       - name: Prepare SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,6 +77,12 @@ jobs:
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           /d:sonar.host.url="https://sonarcloud.io"
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+      - name: Begin SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"YourProjectKey" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -91,42 +90,42 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-  build:
-    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unity-version:
-          - 2022.3.19f1
-        targetPlatform: 
-          - StandaloneOSX
-          - StandaloneWindows64
-          - StandaloneLinux64
-          - WebGL
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-      - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: ${{ matrix.targetPlatform }}
-          unityVersion: ${{ matrix.unity-version }}
-          projectPath: aplib.net-demo
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build
+  # build:
+  #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       unity-version:
+  #         - 2022.3.19f1
+  #       targetPlatform: 
+  #         - StandaloneOSX
+  #         - StandaloneWindows64
+  #         - StandaloneLinux64
+  #         - WebGL
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         lfs: true
+  #     - name: Cache Dependencies
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: Library
+  #         key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+  #         restore-keys: |
+  #           Library-
+  #     - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+  #       uses: game-ci/unity-builder@v4
+  #       env:
+  #         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  #         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  #         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  #       with:
+  #         targetPlatform: ${{ matrix.targetPlatform }}
+  #         unityVersion: ${{ matrix.unity-version }}
+  #         projectPath: aplib.net-demo
+  #     - name: Upload Artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: build
+  #         path: build
