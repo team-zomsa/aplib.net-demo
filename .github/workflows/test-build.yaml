@@ -48,6 +48,9 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
+      - name: Install necessary packages
+        run: |
+          sudo apt-get -y install libfuse2
       - name: Setup Unity for SonarQube
         id: setup-unity
         uses: kuler90/setup-unity@v1
