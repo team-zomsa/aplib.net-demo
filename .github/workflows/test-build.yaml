@@ -35,7 +35,7 @@ jobs:
         id: cache-sonar-scanner
         uses: actions/cache@v3
         with:
-          path: .aplib.net-demo\.sonar\scanner
+          path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Restore Unity Installation Cache
@@ -60,15 +60,15 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path .aplib.net-demo\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .aplib.net-demo\.sonar\scanner
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Prepare SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: >
-          .aplib.net-demo\.sonar\scanner\dotnet-sonarscanner begin
+          .\.sonar\scanner\dotnet-sonarscanner begin
           /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           /d:sonar.host.url="https://sonarcloud.io"
@@ -88,7 +88,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .aplib.net-demo\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   # build:
   #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
