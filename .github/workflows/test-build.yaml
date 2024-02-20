@@ -47,7 +47,7 @@ jobs:
 
       - name: FINE I'LL DO IT MYSELF
         run: |
-          mkdir -p /home/runner/Unity Hub/
+          mkdir -p "/home/runner/Unity Hub/"
           ls "/home/runner/Unity Hub/" -R
           wget "https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage" -o "/home/runner/Unity Hub/UnityHub.AppImage"
           chmod +x /home/runner/Unity Hub/UnityHub.AppImage
