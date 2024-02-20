@@ -72,8 +72,7 @@ jobs:
       - name: Generate .sln and .csproj files
         shell: powershell
         run: |
-          ls -R
-          xvfb-run --auto-servernum ${{ env.UNITY_PATH }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+          ${{ env.UNITY_PATH }} -batchmode -quit -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
           sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
           ls -R
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
