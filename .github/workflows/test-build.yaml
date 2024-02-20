@@ -47,12 +47,12 @@ jobs:
 
       - name: FINE I'LL DO IT MYSELF
         run: |
-          mkdir -p "/home/runner/Unity Hub/" "$/home/runner/.config/Unity Hub"
+          mkdir -p "/home/runner/Unity Hub/" "/home/runner/.config/Unity Hub"
           wget "https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage" -o "/home/runner/Unity Hub/UnityHub.AppImage"
           chmod +x "/home/runner/Unity Hub/UnityHub.AppImage"
           sudo apt-get update
           sudo apt-get install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
-          "/home/runner/Unity Hub/UnityHub.AppImage" --headless help
+          xvfb-run -e /dev/stdout "/home/runner/Unity Hub/UnityHub.AppImage" --no-sandbox --headless help
 
       # - name: Install Dependencies
       #   run: |
