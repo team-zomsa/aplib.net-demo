@@ -76,7 +76,7 @@ jobs:
       - name: Build the project
         shell: powershell
         run: |
-          dotnet build --no-incremental aplib.net-demo.sln
+          dotnet build --no-incremental aplib.net-demo\aplib.net-demo.sln
       - name: List files after building
         run: |
           ls -R -la
