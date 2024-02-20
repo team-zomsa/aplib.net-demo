@@ -46,7 +46,7 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Install FUSE
         run: | 
-          sudo apt install libfuse2
+          sudo apt-get -y install libfuse2
       - name: Setup Unity for SonarQube
         id: setup-unity
         uses: kuler90/setup-unity@v1
