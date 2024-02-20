@@ -60,7 +60,7 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
+          New-Item -Path .aplib.net-demo\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .aplib.net-demo\.sonar\scanner
       - name: Prepare SonarCloud analysis
         env:
