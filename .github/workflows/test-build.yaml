@@ -39,6 +39,12 @@ jobs:
         with:
           path: ${{ env.UNITY_PATH }}
           key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
+      - name: Cache Unity Installation
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.UNITY_PATH }}
+          key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
+          restore-keys: ${{ runner.os }}-unity
       - name: Setup dotnet 5 for SonarQube # Added
         uses: actions/setup-dotnet@v2
         with:
@@ -83,12 +89,6 @@ jobs:
           dotnet build aplib.net-demo.sln
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd aplib.net-demo
-      # - name: Cache Unity Installation
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ${{ env.UNITY_PATH }}
-      #     key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
-      #     restore-keys: ${{ runner.os }}-unity
       # - name: Install SonarCloud scanner
       #   if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
       #   shell: powershell
