@@ -48,9 +48,6 @@ jobs:
         run: |
           sudo apt-get -y install libfuse2
           sudo apt-get install at-spi2-core
-      - name: List files
-        run: |
-          ls -R "/home/runner/Unity Hub"
       - name: Setup Unity for SonarQube
         id: setup-unity
         uses: kuler90/setup-unity@v1
