@@ -113,10 +113,13 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with: 
-          targetPlatform: ${{ matrix.platform }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
           unityVersion: ${{ matrix.unity-version }}
           projectPath: aplib.net-demo
+      - name: List files
+        run: |
+          ls -la
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
