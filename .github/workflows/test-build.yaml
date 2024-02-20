@@ -44,24 +44,37 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
-      - name: Install Dependencies
+
+      - name: FINE I'LL DO IT MYSELF
         run: |
-          sudo apt-get -y install libfuse2
-          sudo apt-get install at-spi2-core
-      - name: Setup Unity for SonarQube
-        id: setup-unity
-        uses: kuler90/setup-unity@v1
-        with:
-          project-path: aplib.net-demo/
-          install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
-        if: steps.cache-unity.outputs.cache-hit != 'true'
-      - name: Activate Unity for SonarQube
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
-          project-path: aplib.net-demo/
+          mkdir -p /home/runner/Unity Hub /home/runner
+          wget "https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage" "/home/runner/Unity Hub/UnityHub.AppImage"
+          chmod +x /home/runner/Unity Hub/UnityHub.AppImage
+          sudo apt-get update
+          sudo apt-get install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
+          xvfb-run --auto-servernum /home/runner/Unity Hub/UnityHub.AppImage --headless editors --installed
+
+      # - name: Install Dependencies
+      #   run: |
+      #     sudo apt-get -y install libfuse2
+      #     sudo apt-get install at-spi2-core
+      # - name: Setup Unity for SonarQube
+      #   id: setup-unity
+      #   uses: kuler90/setup-unity@v1
+      #   with:
+      #     project-path: aplib.net-demo/
+      #     install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
+      #   if: steps.cache-unity.outputs.cache-hit != 'true'
+      # - name: Activate Unity for SonarQube
+      #   uses: kuler90/activate-unity@v1
+      #   with:
+      #     unity-username: ${{ secrets.UNITY_EMAIL }}
+      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
+      #     unity-serial: ${{ secrets.UNITY_SERIAL }}
+      #     project-path: aplib.net-demo/
+
+
+
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
