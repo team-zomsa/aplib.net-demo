@@ -10,7 +10,7 @@ on:
 jobs:
   sonar:
     name: Test and Analyze with SonarCloud
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Changed from windows-latest
     strategy:
       matrix:
         unity-version: [2022.3.19f1]
@@ -20,11 +20,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -44,68 +39,99 @@ jobs:
         with:
           path: ${{ env.UNITY_PATH }}
           key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
-      - name: Setup Unity for SonarCloud
+      - name: Setup dotnet 5 for SonarQube # Added
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'
+      - name: Set up JDK 17 # Moved (was second)
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - name: Setup Unity for SonarQube
         id: setup-unity
         uses: kuler90/setup-unity@v1
         with:
           project-path: aplib.net-demo/
         if: steps.cache-unity.outputs.cache-hit != 'true'
-      # - name: Activate Unity for SonarCloud
-      #   uses: kuler90/activate-unity@v1
-      #   with:
-      #     unity-username: ${{ secrets.UNITY_EMAIL }}
-      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
-      #     unity-serial: ${{ secrets.UNITY_SERIAL }}
-      #     unity-path: ${{ env.UNITY_PATH }}
-      - name: Cache Unity Installation
-        uses: actions/cache@v2
+      - name: Activate Unity for SonarQube
+        uses: kuler90/activate-unity@v1
         with:
-          path: ${{ env.UNITY_PATH }}
-          key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
-          restore-keys: ${{ runner.os }}-unity
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Generate .sln and .csproj files
-        shell: powershell
-        run: |
-          Unity -batchmode -quit -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
-          sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
-          ls -R
-          sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
-          ls -R
-          mv aplib.net-demo.sln ..
-          ls -R
-      - name: Prepare SonarCloud analysis
+          unity-username: ${{ secrets.UNITY_EMAIL }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
+      - name: SonarQube Analysis
         env:
+          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: >
-          .\.sonar\scanner\dotnet-sonarscanner begin
-          /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
-          /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          /d:sonar.host.url="https://sonarcloud.io"
-          /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-      - name: List files before building
         run: |
-          ls -R
-      - name: Build the project
-        shell: powershell
-        run: |
-          dotnet build --no-incremental aplib.net-demo\aplib.net-demo.sln
-      - name: List files after building
-        run: |
-          ls -R
-      - name: Run SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          pwd; ls -alh
+          xvfb-run --auto-servernum ${{ env.UNITY_PATH }} -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+          pwd; ls -alh
+          sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+          sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
+          mv aplib.net-demo.sln ..
+          cd ..
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin \
+            .\.sonar\scanner\dotnet-sonarscanner begin \
+            /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
+          dotnet build aplib.net-demo.sln
+          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          cd aplib.net-demo
+      # - name: Cache Unity Installation
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ env.UNITY_PATH }}
+      #     key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
+      #     restore-keys: ${{ runner.os }}-unity
+      # - name: Install SonarCloud scanner
+      #   if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      #   shell: powershell
+      #   run: |
+      #     New-Item -Path .\.sonar\scanner -ItemType Directory
+      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      # - name: Generate .sln and .csproj files
+      #   shell: powershell
+      #   run: |
+      #     Unity -batchmode -quit -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+      #     sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+      #     ls -R
+      #     sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
+      #     ls -R
+      #     mv aplib.net-demo.sln ..
+      #     ls -R
+      # - name: Prepare SonarCloud analysis
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: >
+      #     .\.sonar\scanner\dotnet-sonarscanner begin
+      #     /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
+      #     /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      #     /d:sonar.host.url="https://sonarcloud.io"
+      #     /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+      # - name: List files before building
+      #   run: |
+      #     ls -R
+      # - name: Build the project
+      #   shell: powershell
+      #   run: |
+      #     dotnet build --no-incremental aplib.net-demo\aplib.net-demo.sln
+      # - name: List files after building
+      #   run: |
+      #     ls -R
+      # - name: Run SonarCloud analysis
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: |
+      #     .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
   # build:
   #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
   #   runs-on: ubuntu-latest
