@@ -38,31 +38,35 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
+      - name: Find Cache Entry
+        run: |
+          ls
+          echo $(pwd)
       - name: Cache Unity Editor
         id: cache-unity-editor
         uses: actions/cache@v3
         with:
-          path: .\Unity\Hub\Editor
+          path: Unity\Hub\Editor
           key: Unity Editor 2022.3.19f1
-      - name: Install Unity Editor
-        run: |
-          wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
-          sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
-          sudo apt update
-          sudo apt install unityhub
-          sudo apt install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
-          sudo apt update
-          mkdir -p ./Unity/Hub/Editor
-          xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
-          xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
-        if: steps.cache-unity-editor.outputs.cache-hit != 'true'
-      - name: Activate Unity Editor
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
-          unity-path: .\Unity\Hub\Editor
+      # - name: Install Unity Editor
+      #   run: |
+      #     wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
+      #     sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
+      #     sudo apt update
+      #     sudo apt install unityhub
+      #     sudo apt install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
+      #     sudo apt update
+      #     mkdir -p ./Unity/Hub/Editor
+      #     xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
+      #     xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
+      #   if: steps.cache-unity-editor.outputs.cache-hit != 'true'
+      # - name: Activate Unity Editor
+      #   uses: kuler90/activate-unity@v1
+      #   with:
+      #     unity-username: ${{ secrets.UNITY_EMAIL }}
+      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
+      #     unity-serial: ${{ secrets.UNITY_SERIAL }}
+      #     unity-path: Unity\Hub\Editor
 
 
       # - name: Install Dependencies
