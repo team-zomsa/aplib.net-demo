@@ -65,8 +65,7 @@ jobs:
       - name: Store License File
         run: |
           touch unitylicensefile.ulf
-          echo "${{ secrets.UNITY_LICENSE }}" | cat >> unitylicensefile.ulf
-          ls
+          echo '${{ secrets.UNITY_LICENSE }}' | cat >> unitylicensefile.ulf
       - name: Activate Unity License
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile unitylicensefile.ulf -logfile
