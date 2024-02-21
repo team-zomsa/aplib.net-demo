@@ -56,8 +56,8 @@ jobs:
           sudo apt install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
           sudo apt update
           xvfb-run --auto-servernum unityhub --headless editors --installed
-          xvfb-run --auto-servernum unityhub --headless install-path -s /Unity/Hub/Editor/
-          xvfb-run --auto-servernum unityhub --headless install --version ${{ matrix.unity-version }}
+          xvfb-run --auto-servernum unityhub --headless install-path -s ./Unity/Hub/Editor
+          xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1
 
       # - name: Install Dependencies
       #   run: |
