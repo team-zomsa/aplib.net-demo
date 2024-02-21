@@ -42,6 +42,8 @@ jobs:
         run: |
           ls
           echo $(pwd)
+        with:
+          path: ~\Unity\Hub\Editor
       - name: Cache Unity Editor
         id: cache-unity-editor
         uses: actions/cache@v3
