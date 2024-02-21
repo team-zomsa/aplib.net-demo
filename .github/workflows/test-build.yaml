@@ -64,7 +64,7 @@ jobs:
         if: steps.restore-unity-editor.outputs.cache-hit != 'true'
       - name: Activate Unity License
         run: |
-          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile "${{ secrets.UNITY_LICENSE }}" -logfile
+          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile <(printf '%s' "${{ secrets.UNITY_LICENSE }}") -logfile
       - name: Generate .sln and .csproj files
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
