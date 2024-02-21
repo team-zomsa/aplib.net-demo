@@ -27,7 +27,7 @@ jobs:
         id: cache-sonar-scanner
         uses: actions/cache@v3
         with:
-          path: .\.sonar\scanner
+          path: ./.sonar/scanner
           key: ${{ runner.os }}-sonar-scanner
       - name: Setup dotnet 5 for SonarQube
         uses: actions/setup-dotnet@v2
@@ -44,9 +44,9 @@ jobs:
           echo $(pwd)
       - name: Cache Unity Editor
         id: cache-unity-editor
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         with:
-          path: ./Unity/Hub/Editor
+          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
       - name: Install Unity Editor
         run: |
@@ -56,40 +56,38 @@ jobs:
           sudo apt install unityhub
           sudo apt install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
           sudo apt update
-          mkdir -p ./Unity/Hub/Editor ./.config/Unity/Hub/Editor
+          mkdir -p ./Unity/Hub/Editor
           xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
           xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
           ls -R
         if: steps.cache-unity-editor.outputs.cache-hit != 'true'
       - name: Cache Unity Editor
-        uses: actions/cache@v3
+        uses: actions/cache/save@v4
         with:
-          path: ./Unity/Hub/Editor
+          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
-      - name: Activate Unity Editor
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
-          unity-path: ~/Unity/Hub/Editor
+      - name: Generate .sln and .csproj files
+        run: |
+          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
 
 
-      - name: Install Dependencies
-        run: |
-          sudo apt-get -y install libfuse2
-          sudo apt-get install at-spi2-core
-      - name: Setup Unity for SonarQube
-        id: setup-unity
-        uses: kuler90/setup-unity@v1
-        with:
-          project-path: aplib.net-demo/
-          install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
-        if: steps.cache-unity.outputs.cache-hit != 'true'
-      - name: Find Cache Entry
-        run: |
-          ls -R
-          echo $(pwd)
+
+
+      # - name: Install Dependencies
+      #   run: |
+      #     sudo apt-get -y install libfuse2
+      #     sudo apt-get install at-spi2-core
+      # - name: Setup Unity for SonarQube
+      #   id: setup-unity
+      #   uses: kuler90/setup-unity@v1
+      #   with:
+      #     project-path: aplib.net-demo/
+      #     install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
+      #   if: steps.cache-unity.outputs.cache-hit != 'true'
+      # - name: Find Cache Entry
+      #   run: |
+      #     ls -R
+      #     echo $(pwd)
 
 
       - name: SonarQube Analysis
