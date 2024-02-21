@@ -59,8 +59,14 @@ jobs:
           mkdir -p ./Unity/Hub/Editor
           xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
           ls -R
-        # xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
+          xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
         if: steps.cache-unity-editor.outputs.cache-hit != 'true'
+      - name: Cache Unity Editor
+        id: cache-unity-editor
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/work/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
+          key: Unity Editor 2022.3.19f1
       - name: Activate Unity Editor
         uses: kuler90/activate-unity@v1
         with:
