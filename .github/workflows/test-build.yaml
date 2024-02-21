@@ -46,7 +46,7 @@ jobs:
         id: cache-unity-editor
         uses: actions/cache/restore@v3
         with:
-          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
+          path: Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
       - name: Install Unity Editor
         run: |
@@ -60,14 +60,14 @@ jobs:
           xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
           xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
         if: steps.cache-unity-editor.outputs.cache-hit != 'true'
-      - name: Activate Unity License
-        run: |
-          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile ${{ secrets.UNITY_LICENSE }} -logfile
       - name: Cache Unity Editor
         uses: actions/cache/save@v4
         with:
-          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
+          path: Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
+      - name: Activate Unity License
+        run: |
+          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile ${{ secrets.UNITY_LICENSE }} -logfile
       - name: Generate .sln and .csproj files
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
