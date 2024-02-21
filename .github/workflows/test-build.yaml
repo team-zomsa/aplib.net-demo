@@ -47,7 +47,6 @@ jobs:
 
       - name: FINE I'LL DO IT MYSELF
         run: |
-          mkdir -p ./unity-hub ./.config/unity-hub
           wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
           sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
           sudo apt update
@@ -55,7 +54,9 @@ jobs:
           sudo apt update
           sudo apt install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
           sudo apt update
-          xvfb-run --auto-servernum unityhub --headless help
+          unityhub --headless editors --installed
+          unityhub --headless ip -s ./Unity/Hub/Editor/
+          
 
       # - name: Install Dependencies
       #   run: |
