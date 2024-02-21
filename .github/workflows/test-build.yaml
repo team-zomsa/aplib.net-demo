@@ -42,8 +42,8 @@ jobs:
         run: |
           ls -R
           echo $(pwd)
-      - name: Cache Unity Editor
-        id: cache-unity-editor
+      - name: Restore Unity Editor
+        id: restore-unity-editor
         uses: actions/cache/restore@v3
         with:
           path: Unity/Hub/Editor
@@ -65,9 +65,13 @@ jobs:
         with:
           path: Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
+      - name: Store License File
+        run: |
+          touch unitylicensefile.ulf
+          ${{ secrets.UNITY_LICENSE }} > unitylicensefile.ulf
       - name: Activate Unity License
         run: |
-          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile ${{ secrets.UNITY_LICENSE }} -logfile
+          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile unitylicensefile.ulf -logfile
       - name: Generate .sln and .csproj files
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
