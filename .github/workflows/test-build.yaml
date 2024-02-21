@@ -64,9 +64,9 @@ jobs:
         if: steps.restore-unity-editor.outputs.cache-hit != 'true'
       - name: Store License File
         run: |
-          echo "${{ secrets.UNITY_LICENSE }}" >> src/.env
-          cat src/.env
-          ls src/.env
+          touch unitylicensefile.ulf
+          echo "${{ secrets.UNITY_LICENSE }}" | cat >> unitylicensefile.ulf
+          ls
       - name: Activate Unity License
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile unitylicensefile.ulf -logfile
