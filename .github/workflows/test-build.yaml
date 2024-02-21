@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/Unity/Hub/Editor
-          key: Unity Editor 2022.3.19f1
+          key: Unity-Editor-2022.3.19f1
       - name: Install Unity Editor
         run: |
           wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
@@ -65,7 +65,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/Unity/Hub/Editor
-          key: Unity Editor 2022.3.19f1
+          key: Unity-Editor-2022.3.19f1
       - name: Activate Unity Editor
         uses: kuler90/activate-unity@v1
         with:
