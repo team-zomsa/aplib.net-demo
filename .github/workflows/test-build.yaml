@@ -58,7 +58,7 @@ jobs:
           xvfb-run --auto-servernum unityhub --headless editors --installed
           xvfb-run --auto-servernum unityhub --headless editors -r
         # xvfb-run --auto-servernum unityhub --headless install-path -s /Unity/Hub/Editor
-        # xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1
+          xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
 
       # - name: Install Dependencies
       #   run: |
