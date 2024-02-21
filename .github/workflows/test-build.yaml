@@ -29,12 +29,6 @@ jobs:
         with:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
-      - name: Restore Unity Installation Cache
-        id: cache-unity
-        uses: actions/cache@v2
-        with:
-          path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
-          key: ${{ runner.os }}-unity-${{ matrix.unity-version }}
       - name: Setup dotnet 5 for SonarQube
         uses: actions/setup-dotnet@v2
         with:
@@ -44,7 +38,13 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
-      - name: FINE I'LL DO IT MYSELF
+      - name: Cache Unity Editor
+        id: cache-unity-editor
+        uses: actions/cache@v3
+        with:
+          path: .\Unity\Hub\Editor
+          key: Unity Editor 2022.3.19f1
+      - name: Install Unity Editor
         run: |
           wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
           sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
@@ -55,11 +55,14 @@ jobs:
           mkdir -p ./Unity/Hub/Editor
           xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
           xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
-      - name: Cache Unity Editor
-        uses: actions/cache@v3
+        if: steps.cache-unity-editor.outputs.cache-hit != 'true'
+      - name: Activate Unity Editor
+        uses: kuler90/activate-unity@v1
         with:
-          path: .\Unity\Hub\Editor
-          key: Unity Editor 2022.3.19f1
+          unity-username: ${{ secrets.UNITY_EMAIL }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
+          unity-path: .\Unity\Hub\Editor
 
 
       # - name: Install Dependencies
@@ -73,13 +76,7 @@ jobs:
       #     project-path: aplib.net-demo/
       #     install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
       #   if: steps.cache-unity.outputs.cache-hit != 'true'
-      # - name: Activate Unity for SonarQube
-      #   uses: kuler90/activate-unity@v1
-      #   with:
-      #     unity-username: ${{ secrets.UNITY_EMAIL }}
-      #     unity-password: ${{ secrets.UNITY_PASSWORD }}
-      #     unity-serial: ${{ secrets.UNITY_SERIAL }}
-      #     project-path: aplib.net-demo/
+
 
 
 
