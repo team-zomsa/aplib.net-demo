@@ -58,7 +58,7 @@ jobs:
       - name: Cache Unity Editor
         uses: actions/cache@v3
         with:
-          path: Unity/Hub/Editor
+          path: .\Unity\Hub\Editor
           key: Unity Editor 2022.3.19f1
 
 
