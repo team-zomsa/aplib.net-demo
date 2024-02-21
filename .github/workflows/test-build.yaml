@@ -39,11 +39,11 @@ jobs:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Find Cache Entry
+        with:
+          path: ~\Unity\Hub\Editor
         run: |
           ls
           echo $(pwd)
-        with:
-          path: ~\Unity\Hub\Editor
       - name: Cache Unity Editor
         id: cache-unity-editor
         uses: actions/cache@v3
