@@ -46,7 +46,7 @@ jobs:
         id: cache-unity-editor
         uses: actions/cache@v3
         with:
-          path: $(pwd)/Unity/Hub/Editor
+          path: /home/runner/work/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
           key: Unity Editor 2022.3.19f1
       - name: Install Unity Editor
         run: |
@@ -67,7 +67,7 @@ jobs:
           unity-username: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
-          unity-path: $(pwd)/Unity/Hub/Editor
+          unity-path: /home/runner/work/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
 
 
       - name: Install Dependencies
