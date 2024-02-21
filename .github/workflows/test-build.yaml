@@ -56,7 +56,7 @@ jobs:
           sudo apt update
           xvfb-run --auto-servernum ls
           echo "-----------------"
-          xvfb-run --auto-servernum ls "/Unity/Hub"
+          xvfb-run --auto-servernum ls "Unity/Hub"
         # xvfb-run --auto-servernum unityhub --headless install-path --set /Unity/Hub/Editor
         # xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
 
