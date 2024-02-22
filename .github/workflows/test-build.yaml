@@ -53,6 +53,9 @@ jobs:
           chmod +x ./workflow-scripts/test-build/install-unity-editor.sh
           ./workflow-scripts/test-build/install-unity-editor.sh
         if: steps.cache-unity-editor.outputs.cache-hit != 'true'
+      - name: List Unity Editor Directory
+        run: |
+          ls -R /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
       - name: Cache Unity Editor
         uses: actions/cache/save@v4
         with:
