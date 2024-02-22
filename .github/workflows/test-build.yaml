@@ -46,7 +46,7 @@ jobs:
         id: cache-unity-editor
         uses: actions/cache/restore@v3
         with:
-          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
+          path: Unity/Hub/Editor
           key: Unity-Editor-${{ matrix.unity-version }}
       - name: Install Unity Editor
         run: |
@@ -59,7 +59,7 @@ jobs:
       - name: Cache Unity Editor
         uses: actions/cache/save@v4
         with:
-          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
+          path: Unity/Hub/Editor
           key: Unity-Editor-${{ matrix.unity-version }}
       - name: Activate Unity License
         run: |
