@@ -61,7 +61,7 @@ jobs:
           ./workflow-scripts/test-build/activate-unity-license.sh
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-            UNITY_PATH: ${{ env.UNITY_PATH }}
+          UNITY_PATH: ${{ env.UNITY_PATH }}
       - name: Generate .sln and .csproj files
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
