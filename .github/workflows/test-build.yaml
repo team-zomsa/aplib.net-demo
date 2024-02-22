@@ -38,40 +38,30 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
-      - name: Restore Unity Editor
-        id: restore-unity-editor
+      - name: Find Cache Entry
+        run: |
+          ls -R
+          echo $(pwd)
+      - name: Restore Unity Editor Cache
+        id: cache-unity-editor
         uses: actions/cache/restore@v3
         with:
-          path: Unity/Hub/Editor
+          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
       - name: Install Unity Editor
         run: |
-          wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
-          sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
-          sudo apt update
-          sudo apt install unityhub
-          sudo apt install -y libgconf-2-4 libglu1 libasound2 libgtk2.0-0 libgtk-3-0 libnss3 zenity xvfb libfuse2 at-spi2-core
-          sudo apt update
-          mkdir -p ./Unity/Hub/Editor
-          xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
-          xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
-        if: steps.restore-unity-editor.outputs.cache-hit != 'true'
+          chmod +x ./test-build/install-unity-editor.sh
+          ./test-build/install-unity-editor.sh
+        if: steps.cache-unity-editor.outputs.cache-hit != 'true'
       - name: Cache Unity Editor
         uses: actions/cache/save@v4
         with:
-          path: Unity/Hub/Editor
+          path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
-        if: steps.restore-unity-editor.outputs.cache-hit != 'true'
-      - name: Store License File
-        run: |
-          touch unitylicensefile.ulf
-          echo '${{ secrets.UNITY_LICENSE }}' | cat >> unitylicensefile.ulf
-      - name: Activate Unity License
-        run: |
-          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -manualLicenseFile unitylicensefile.ulf -logfile
       - name: Generate .sln and .csproj files
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+
 
 
 
