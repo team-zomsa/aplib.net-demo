@@ -8,5 +8,5 @@ echo $UNITY_PATH
 
 # Activate unity license
 # xvfb-run --auto-servernum "$UNITY_PATH" -batchmode -nographics -quit -logFile "-" -serial license.ulf
-"$UNITY_PATH" -batchmode -nographics -quit -logFile "-"
-$UNITY_PATH -batchmode -nographics -quit -logFile "-"
+chmod +x "$UNITY_PATH"
+sudo "$UNITY_PATH" -batchmode -nographics -quit -logFile "-"
