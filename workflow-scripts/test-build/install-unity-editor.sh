@@ -19,18 +19,3 @@ mkdir -p ./Unity/Hub/Editor
 # Install unity editor
 xvfb-run --auto-servernum unityhub --headless install-path --set ./Unity/Hub/Editor
 xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
-
-# Get current path
-current_path=$(pwd)
-
-echo "HELLO I JUST INSTALLED UNITY YOU CAN FIND IT HERE:"
-echo "$current_path/Unity/Hub/Editor/..."
-
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-
-echo "LET ME ALSO PRINT SOME THNGS FOR YOU"
-ls -R
