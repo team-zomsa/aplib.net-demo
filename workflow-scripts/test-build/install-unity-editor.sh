@@ -19,3 +19,6 @@ mkdir -p ./Unity/Hub/Editor
 # Install unity editor
 xvfb-run --auto-servernum unityhub --headless install-path --set ./Unity/Hub/Editor
 xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
+
+# Set unity path in environment
+echo "UNITY_PATH=$(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity" >> $GITHUB_ENV
