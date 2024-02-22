@@ -19,6 +19,3 @@ mkdir -p ./Unity/Hub/Editor
 # Install unity editor
 xvfb-run --auto-servernum unityhub --headless install-path --set $(pwd)/Unity/Hub/Editor
 xvfb-run --auto-servernum unityhub --headless install --version 2022.3.19f1 --changeset 244b723c30a6
-
-# List file structure (Should be removed before merge, reviewer: if this is still here, make it known!)
-ls -R
