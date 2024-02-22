@@ -3,7 +3,7 @@ set -e
 
 # Dump license to a ulf file
 echo "$UNITY_LICENSE_ROOT" > license.ulf
-echo license.ulf
+cat license.ulf
 
 # Activate unity license
 # xvfb-run --auto-servernum "$UNITY_PATH" -batchmode -nographics -quit -logFile "-" -serial license.ulf
