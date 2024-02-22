@@ -40,7 +40,7 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Restore Unity Editor Cache
         id: cache-unity-editor
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: Unity/Hub/Editor
           key: Unity-Editor-${{ matrix.unity-version }}
