@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
-          key: Unity-Editor-2022.3.19f1
+          key: Unity-Editor-${{ matrix.unity-version }}
       - name: Install Unity Editor
         run: |
           chmod +x ./workflow-scripts/test-build/install-unity-editor.sh
@@ -57,7 +57,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: /home/runner/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor
-          key: Unity-Editor-2022.3.19f1
+          key: Unity-Editor-${{ matrix.unity-version }}
       - name: Activate Unity License
         run: |
           chmod +x ./workflow-scripts/test-build/activate-unity-license.sh
