@@ -32,5 +32,5 @@ echo ""
 echo ""
 echo ""
 
-echo "LET ME ALSO PRINT THAT DIRECTORY FOR YOU"
-ls -alh ./Unity/Hub/Editor
+echo "LET ME ALSO PRINT SOME THNGS FOR YOU"
+ls -R ./Unity
