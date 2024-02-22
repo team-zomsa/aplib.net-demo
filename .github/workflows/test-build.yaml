@@ -38,10 +38,6 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
-      - name: Find Cache Entry
-        run: |
-          ls -R
-          echo $(pwd)
       - name: Restore Unity Editor Cache
         id: cache-unity-editor
         uses: actions/cache/restore@v3
@@ -62,7 +58,7 @@ jobs:
       - name: Activate Unity License
         run: |
           chmod +x ./workflow-scripts/test-build/activate-unity-license.sh
-          ./workflow-scripts/test-build/activate-unity-license.sh ${{ secrets.UNITY_LICENSE }} ${{ secrets.UNITY_PATH }}
+          ./workflow-scripts/test-build/activate-unity-license.sh
       - name: Generate .sln and .csproj files
         run: |
           xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
