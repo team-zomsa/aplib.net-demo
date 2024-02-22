@@ -33,4 +33,4 @@ echo ""
 echo ""
 
 echo "LET ME ALSO PRINT SOME THNGS FOR YOU"
-ls -R ./Unity
+ls -R
