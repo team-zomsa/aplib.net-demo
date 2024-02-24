@@ -2,6 +2,7 @@
 set -e
 
 # Dump license to a ulf file
+echo "$UNITY_LICENSE"
 echo "$UNITY_LICENSE" > license.ulf
 
 echo "$(<license.ulf)"
