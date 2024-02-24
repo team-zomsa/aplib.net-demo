@@ -40,10 +40,10 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Restore Unity Editor Cache
         id: cache-unity-editor
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: Unity/Hub/Editor
-          key: Unity-Editor-${{ matrix.unity-version }}
+          key: Unity-Editor-2022.3.19f1
       - name: Install Unity Editor
         run: |
           chmod +x ./workflow-scripts/test-build/install-unity-editor.sh
@@ -53,7 +53,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: Unity/Hub/Editor
-          key: Unity-Editor-${{ matrix.unity-version }}
+          key: Unity-Editor-2022.3.19f1
         if: steps.cache-unity-editor.outputs.cache-hit != 'true'
       - name: Activate Unity License
         run: |
