@@ -11,7 +11,7 @@ echo "$(<license.ulf)"
 # chmod +x "$UNITY_PATH"
 # sudo "$UNITY_PATH" -batchmode -nographics -quit -logFile "-"
 
-ls -R Unity/
+# ls -R Unity/Hub/Editor/2022.3.19f1/Editor/
 
-chmod +x Unity/Hub/Editor/2022.3.19f1/Editor/Unity
-sudo Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -manualLicenseFile license.ulf
+# chmod +x Unity/Hub/Editor/2022.3.19f1/Editor/Unity
+Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -manualLicenseFile "$UNITY_LICENSE"
