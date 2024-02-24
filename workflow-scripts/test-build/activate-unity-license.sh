@@ -2,7 +2,6 @@
 set -e
 
 # Dump license to a ulf file
-echo "$UNITY_LICENSE"
 echo "$UNITY_LICENSE" > license.ulf
 
 echo "$(<license.ulf)"
@@ -12,7 +11,7 @@ echo "$(<license.ulf)"
 # chmod +x "$UNITY_PATH"
 # sudo "$UNITY_PATH" -batchmode -nographics -quit -logFile "-"
 
-ls -alh
+ls -R Unity/
 
 chmod +x Unity/Hub/Editor/2022.3.19f1/Editor/Unity
 sudo Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -manualLicenseFile license.ulf
