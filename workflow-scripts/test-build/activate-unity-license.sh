@@ -40,6 +40,7 @@ exit_code=$?
 
 # chmod +x Unity/Hub/Editor/2022.3.19f1/Editor/Unity
 if [[ ${exit_code} -eq 0 ]]; then
+    echo "Unity license activated successfully"
     Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -manualLicenseFile "${activation_file}"
 fi
 exit $exit_code
