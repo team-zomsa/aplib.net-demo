@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-activation_file=${UNITY_ACTIVATION_FILE:-./unity3d.alf}
+activation_file=${UNITY_ACTIVATION_FILE:-./unity3d.ulf}
 
 if [[ -z "${UNITY_USERNAME}" ]] || [[ -z "${UNITY_PASSWORD}" ]]; then
   echo "UNITY_USERNAME or UNITY_PASSWORD environment variables are not set, please refer to instructions in the readme and add these to your secret environment variables."
@@ -31,7 +31,7 @@ cat ./unity-output.log |
   grep 'LICENSE SYSTEM .* Posting *' |
   sed 's/.*Posting *//' > "${activation_file}"
 
-ls "${UNITY_ACTIVATION_FILE:-./unity3d.alf}"
+ls "${UNITY_ACTIVATION_FILE:-./unity3d.ulf}"
 exit_code=$?
 
 
