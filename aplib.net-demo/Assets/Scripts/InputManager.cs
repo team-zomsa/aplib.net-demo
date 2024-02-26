@@ -15,8 +15,17 @@ public class InputManager : MonoBehaviour
     Vector2 horizontalInput;
     Vector2 mouseInput;
 
+    public static InputManager Instance { get; private set; }
+
     private void Awake()
     {
+        // Setup singleton
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+            Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         input = new PlayerInput();
         playerActions = input.Player;
         uiActions = input.UI;

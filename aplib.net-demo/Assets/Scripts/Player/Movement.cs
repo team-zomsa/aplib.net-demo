@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] float speed = 10;
+    [SerializeField] float speed = 5;
     Vector3 horizontalVelocity;
     Vector2 horizontalInput;
 
