@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 
 activation_file=${UNITY_ACTIVATION_FILE:-./unity3d.ulf}
