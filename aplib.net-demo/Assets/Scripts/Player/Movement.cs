@@ -1,25 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] float speed = 5;
+    [SerializeField] float speed = 10;
     Vector3 horizontalVelocity;
     Vector2 horizontalInput;
 
-    [SerializeField] float gravity = -30;
-    [SerializeField] float fallingGravity = -45;
-    float acutalGravity;
+    [SerializeField] float normalGravityScale = 1.7f;
+    [SerializeField] float fallingGravityScale = 2.5f;
+    float actualGravityScale;
+    float gravity;
 
-    [SerializeField] float jumpHeight = 20;
+    [SerializeField] float jumpHeight = 7;
     Vector3 verticalVelocity;
     bool jumpStarted;
+    bool isGrounded;
 
     [SerializeField] LayerMask groundMask;
     float playerHeight;
-    bool isGrounded;
 
     Rigidbody rb;
     CapsuleCollider controller;
@@ -29,23 +31,20 @@ public class Movement : MonoBehaviour
         controller = GetComponent<CapsuleCollider>();
         playerHeight = controller.height;
         rb.freezeRotation = true;
+        gravity = Physics.gravity.y;
     }
 
     void FixedUpdate() {
-        
         // Ground check by checking a sphere at the bottom of the player
         Vector3 bottomPoint = transform.TransformPoint(controller.center - 0.5f * playerHeight * Vector3.up);
         isGrounded = Physics.CheckSphere(bottomPoint, 0.1f, groundMask);
 
-        if (isGrounded) {
-            Debug.Log("Grounded");
-            horizontalVelocity = Vector3.zero;
-            verticalVelocity.y = 0;
-        }
+        if (isGrounded) 
+            Debug.Log("Grounded");  
         else {
-            // Higher gravity when falling
-            acutalGravity = verticalVelocity.y < 0 ? fallingGravity : gravity;
-            verticalVelocity.y += acutalGravity * Time.deltaTime;  
+            // Custom gravity for player
+            actualGravityScale = rb.velocity.y < 0 ? fallingGravityScale : normalGravityScale;
+            rb.velocity += (actualGravityScale - 1) * gravity * Time.fixedDeltaTime * Vector3.up;   
         }
 
         HorizontalMovement();
@@ -54,28 +53,27 @@ public class Movement : MonoBehaviour
     
     void HorizontalMovement() {
         horizontalVelocity = transform.right * horizontalInput.x + transform.forward * horizontalInput.y;
+        // We can choose to do horizontal movement using AddForce or MovePosition
+        // rb.AddForce(speed * Time.fixedDeltaTime * horizontalVelocity, ForceMode.VelocityChange);
         rb.MovePosition(rb.position + speed * Time.fixedDeltaTime * horizontalVelocity);
     }
 
     void VerticalMovement(){
         if (jumpStarted) {
             if (isGrounded) {
-                Debug.Log("Jumping"); 
-                verticalVelocity.y = Mathf.Sqrt(jumpHeight * 2f);
+                verticalVelocity.y = jumpHeight;
+                rb.AddForce(verticalVelocity, ForceMode.Impulse);
             }
             jumpStarted = false;
         }
-        rb.MovePosition(rb.position + verticalVelocity * Time.fixedDeltaTime);
     }
 
     public void ReceiveInput(Vector2 _input)
     {
         horizontalInput = _input;
-        // Debug.Log(horizontalInput);
     }
 
     public void OnJumpPressed() {
         jumpStarted = true;
-        // Debug.Log("Jump started");
     }
 }
