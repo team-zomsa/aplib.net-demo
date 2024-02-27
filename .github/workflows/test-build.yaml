@@ -9,7 +9,6 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   sonar:
-    needs: request_alf
     name: Test and Analyze with SonarCloud
     runs-on: ubuntu-latest
     strategy:
