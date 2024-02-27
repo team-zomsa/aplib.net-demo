@@ -9,6 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   sonar:
+    needs: request_alf
     name: Test and Analyze with SonarCloud
     runs-on: ubuntu-latest
     strategy:
@@ -76,7 +77,7 @@ jobs:
         run: npm install --global unity-license-activate
 
       - name: Activate the license
-        run: unity-license-activate "${{ secrets.UNITY_EMAIL }}" "${{ secrets.UNITY_PASSWORD }}"
+        run: unity-license-activate "${{ secrets.UNITY_EMAIL }}" "${{ secrets.UNITY_PASSWORD }}" "${{ needs.request_alf.outputs.alf }}"
 
       - name: Read ulf
         id: ulfRead
