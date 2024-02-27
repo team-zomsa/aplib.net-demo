@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
@@ -40,7 +37,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        movement.ReceiveInput(horizontalInput);
+        movement.ReceiveHorizontalInput(horizontalInput);
         mouseLook.ReveiveMouseInput(mouseInput);
     }
 
