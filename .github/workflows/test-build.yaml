@@ -102,12 +102,12 @@ jobs:
           path: ./Unity_v2022.3.19f1.alf
           # path: ${{ steps.activate-license.outputs.license-path }}
 
-      - name: Update secret UNITY_LICENSE
-        uses: hmanzur/actions-set-secret@v2.0.0
-        with:
-          name: 'UNITY_LICENSE'
-          value: '${{ steps.ulfRead.outputs.content }}'
-          token: ${{ secrets.ACCESS_TOKEN }}
+      # - name: Update secret UNITY_LICENSE
+      #   uses: hmanzur/actions-set-secret@v2.0.0
+      #   with:
+      #     name: 'UNITY_LICENSE'
+      #     value: '${{ steps.ulfRead.outputs.content }}'
+      #     token: ${{ secrets.ACCESS_TOKEN }}
 
 
 
