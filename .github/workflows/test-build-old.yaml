@@ -1,0 +1,242 @@
+name: Build pipeline
+
+# Do not run
+# on:
+#   push:
+#     branches:
+#       - main
+#       - dev
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+jobs:
+  sonar:
+    name: Test and Analyze with SonarCloud
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        unity-version: [ 2022.3.19f1 ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: ./.sonar/scanner
+          key: ${{ runner.os }}-sonar-scanner
+      - name: Setup dotnet 5 for SonarQube
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'zulu' # Alternative distribution options are available.
+      - name: Restore Unity Editor Cache
+        id: cache-unity-editor
+        uses: actions/cache/restore@v4
+        with:
+          path: Unity/Hub/Editor
+          key: Unity-Editor-2022.3.19f1
+      - name: Install Unity Editor
+        run: |
+          chmod +x ./workflow-scripts/test-build/install-unity-editor.sh
+          ./workflow-scripts/test-build/install-unity-editor.sh
+        if: steps.cache-unity-editor.outputs.cache-hit != 'true'
+      - name: Cache Unity Editor
+        uses: actions/cache/save@v4
+        with:
+          path: Unity/Hub/Editor
+          key: Unity-Editor-${{ matrix.unity-version }}
+        if: steps.cache-unity-editor.outputs.cache-hit != 'true'
+      # - name: Activate Unity License
+        # run: |
+        #   chmod +x ./workflow-scripts/test-build/activate-unity-license.sh
+        #   ./workflow-scripts/test-build/activate-unity-license.sh
+        # env:
+        #   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        #   UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
+        #   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        # #   UNITY_PATH: ${{ env.UNITY_PATH }}
+
+
+
+
+      # Use dlls in this path to use for sonar:
+      # ./Unity/Hub/Editor/2022.3.19f1/Editor/Data/Managed 
+
+
+
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: '16'
+
+      # - name: Install node package, `unity-license-activate`
+      #   run: npm install --global unity-license-activate
+
+      # - name: Retrieve Activation File
+      #   id: retrieve-activation
+      #   run: |
+      #     chmod +x ./workflow-scripts/test-build/retrieve-activation-file.sh
+      #     ./workflow-scripts/test-build/retrieve-activation-file.sh
+      #   env:
+      #     UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #     UNITY_VERSION: ${{ matrix.unity-version }}
+      #     UNITY_PATH: ${{ env.UNITY_PATH }}
+
+      # - name: Activate the license
+      #   id: activate-license
+      #   continue-on-error: true
+      #   run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} "./Unity_v2022.3.19f1.alf"
+
+      # - name: Upload error screenshot
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: screenshot_error
+      #     path: error.png
+
+
+      # - name: Print Files
+      #   run: |
+      #     ls -R
+
+      # - name: Read ulf
+      #   id: ulfRead
+      #   uses: juliangruber/read-file-action@v1.1.4
+      #   with:
+      #     path: ./Unity_v2022.3.19f1.ulf
+      #     # path: ${{ steps.activate-license.outputs.license-path }}
+
+      # # - name: Update secret UNITY_LICENSE
+      # #   uses: hmanzur/actions-set-secret@v2.0.0
+      # #   with:
+      # #     name: 'UNITY_LICENSE'
+      # #     value: '${{ steps.ulfRead.outputs.content }}'
+      # #     token: ${{ secrets.ACCESS_TOKEN }}
+
+
+
+      
+      # - name: Generate .sln and .csproj files
+      #   run: |
+      #     xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+
+
+
+
+      # # - name: Install Dependencies
+      # #   run: |
+      # #     sudo apt-get -y install libfuse2
+      # #     sudo apt-get install at-spi2-core
+      # # - name: Setup Unity for SonarQube
+      # #   id: setup-unity
+      # #   uses: kuler90/setup-unity@v1
+      # #   with:
+      # #     project-path: aplib.net-demo/
+      # #     install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
+      # #   if: steps.cache-unity.outputs.cache-hit != 'true'
+      # # - name: Find Cache Entry
+      # #   run: |
+      # #     ls -R
+      # #     echo $(pwd)
+
+
+      # - name: SonarQube Analysis
+      #   env:
+      #     FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     chmod +x ./workflow-scripts/test-build/sonarqube-analysis.sh
+      #     ./workflow-scripts/test-build/sonarqube-analysis.sh
+      # - name: Install SonarCloud scanner
+      #   if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      #   shell: powershell
+      #   run: |
+      #     New-Item -Path .\.sonar\scanner -ItemType Directory
+      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      # - name: Generate .sln and .csproj files
+      #   shell: powershell
+      #   run: |
+      #     Unity -batchmode -quit -projectPath aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+      #     sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+      #     ls -R
+      #     sed -i 's/\([A-Za-z0-9.-]\+csproj\)/aplib.net-demo\/&/g' aplib.net-demo.sln
+      #     ls -R
+      #     mv aplib.net-demo.sln ..
+      #     ls -R
+      # - name: Prepare SonarCloud analysis
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: >
+      #     .\.sonar\scanner\dotnet-sonarscanner begin
+      #     /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
+      #     /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      #     /d:sonar.host.url="https://sonarcloud.io"
+      #     /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+      # - name: List files before building
+      #   run: |
+      #     ls -R
+      # - name: Build the project
+      #   shell: powershell
+      #   run: |
+      #     dotnet build --no-incremental aplib.net-demo\aplib.net-demo.sln
+      # - name: List files after building
+      #   run: |
+      #     ls -R
+      # - name: Run SonarCloud analysis
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: |
+      #     .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+  # build:
+  #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       unity-version:
+  #         - 2022.3.19f1
+  #       targetPlatform:
+  #         - StandaloneOSX
+  #         - StandaloneWindows64
+  #         - StandaloneLinux64
+  #         - WebGL
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         lfs: true
+  #     - name: Cache Dependencies
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: Library
+  #         key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+  #         restore-keys: |
+  #           Library-
+  #     - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+  #       uses: game-ci/unity-builder@v4
+  #       env:
+  #         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  #         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  #         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  #       with:
+  #         targetPlatform: ${{ matrix.targetPlatform }}
+  #         unityVersion: ${{ matrix.unity-version }}
+  #         projectPath: aplib.net-demo
+  #     - name: Upload Artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: build
+  #         path: build
