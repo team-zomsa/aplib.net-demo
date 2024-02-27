@@ -20,7 +20,9 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: "https://sonarcloud.io"      
+          SONAR_HOST_URL: "https://sonarcloud.io"    
+          SONAR_ORGANIZATION: "team-zomsa"  
+          SONAR_PROJECT_KEY: "team-zomsa_aplib.net-demo"
       # - name: Cache SonarCloud packages
       #   uses: actions/cache@v3
       #   with:
