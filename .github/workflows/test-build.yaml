@@ -49,7 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-
   unity-test:
     name: Test with Unity Test Runner
     permissions: write-all
@@ -60,6 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: game-ci/unity-test-runner@v4
+        id: unity-test-step
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -67,6 +67,11 @@ jobs:
         with:
           projectPath: ./aplib.net-demo/
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Comment Coverage
+          uses: thollander/actions-comment-pull-request@v2
+          with:
+            filePath: ${{ steps.unity-test-step.outputs.coveragePath }}
+
 
   # build:
   #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
