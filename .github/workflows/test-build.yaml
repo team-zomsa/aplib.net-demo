@@ -41,6 +41,7 @@ jobs:
 
   unity-test:
     name: Test with Unity Test Runner
+    permissions: write-all
     runs-on: ubuntu-latest
     strategy:
       matrix:
