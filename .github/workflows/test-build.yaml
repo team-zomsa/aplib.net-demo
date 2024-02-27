@@ -91,6 +91,10 @@ jobs:
         id: activate-license
         run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} ${{ steps.retrieve-activation.outputs.activation-file }}
 
+      - name: Print Files
+        run: |
+          ls -R
+
       - name: Read ulf
         id: ulfRead
         uses: juliangruber/read-file-action@v1.1.4
