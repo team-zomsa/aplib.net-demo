@@ -47,8 +47,12 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        run: >
+          .\.sonar\scanner\dotnet-sonarscanner end 
+          /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          /d:sonar.host.url="https://sonarcloud.io"
+          /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
   unity-test:
     name: Test with Unity Test Runner
