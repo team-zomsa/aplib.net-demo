@@ -16,33 +16,39 @@ jobs:
         unity-version: [ 2022.3.19f1 ]
     steps:
       - uses: actions/checkout@v3
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+      # - name: SonarQube Scan
+      #   uses: sonarsource/sonarqube-scan-action@master
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: "https://sonarcloud.io"    
+      #     SONAR_ORGANIZATION: "team-zomsa"  
+      #     SONAR_PROJECT_KEY: "team-zomsa_aplib.net-demo"
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: ./.sonar/scanner
+          key: ${{ runner.os }}-sonar-scanner
+      - name: Setup dotnet 5 for SonarQube
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'zulu' # Alternative distribution options are available.
+      - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: "https://sonarcloud.io"    
-          SONAR_ORGANIZATION: "team-zomsa"  
-          SONAR_PROJECT_KEY: "team-zomsa_aplib.net-demo"
-      # - name: Cache SonarCloud packages
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ~\sonar\cache
-      #     key: ${{ runner.os }}-sonar
-      # - name: Cache SonarCloud scanner
-      #   id: cache-sonar-scanner
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ./.sonar/scanner
-      #     key: ${{ runner.os }}-sonar-scanner
-      # - name: Setup dotnet 5 for SonarQube
-      #   uses: actions/setup-dotnet@v2
-      #   with:
-      #     dotnet-version: '5.0.x'
-      # - name: Set up JDK 11
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     java-version: 11
-      #     distribution: 'zulu' # Alternative distribution options are available.
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   unity-test:
     name: Test with Unity Test Runner
