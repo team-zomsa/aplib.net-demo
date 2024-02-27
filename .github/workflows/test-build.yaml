@@ -68,9 +68,9 @@ jobs:
           projectPath: ./aplib.net-demo/
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment Coverage
-          uses: thollander/actions-comment-pull-request@v2
-          with:
-            filePath: ${{ steps.unity-test-step.outputs.coveragePath }}
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: ${{ steps.unity-test-step.outputs.coveragePath }}
 
 
   # build:
