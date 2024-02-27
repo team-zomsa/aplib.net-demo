@@ -98,6 +98,7 @@ public class Movement : MonoBehaviour
                 _rigidbody.velocity = new Vector3(limitedVelocity.x, _rigidbody.velocity.y, limitedVelocity.z);
             }
         }
+        
         // Draw a ray to visualize the player's velocity and direction
         Debug.DrawRay(transform.position, _rigidbody.velocity, Color.red);
     }
@@ -118,6 +119,7 @@ public class Movement : MonoBehaviour
                 return true;
             }
         }
+        
         directionOnSlope = Vector3.zero;
         return false;
     }

@@ -20,10 +20,11 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         // Setup singleton
-        if (Instance != null && Instance != this)
+        if (Instance != null && Instance != this) {
             Destroy(gameObject);
-        else
+        } else {
             Instance = this;
+        }
         DontDestroyOnLoad(gameObject);
 
         _input = new PlayerInput();
@@ -56,5 +57,4 @@ public class InputManager : MonoBehaviour
     {
         _input.Disable();
     }
-
 }
