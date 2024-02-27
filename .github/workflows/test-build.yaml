@@ -75,11 +75,16 @@ jobs:
       - name: Install node package, `unity-license-activate`
         run: npm install --global unity-license-activate
 
-      - name: Request manual activation file
-        id: alfFile
-        uses: game-ci/unity-request-activation-file@main
-        with:
-          unityVersion: ${{ env.UNITY_VERSION }}
+      - name: Retrieve Activation File
+        run: |
+          chmod +x ./workflow-scripts/test-build/retrieve-activation-file.sh
+          ./workflow-scripts/test-build/retrieve-activation-file.sh
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_VERSION: ${{ matrix.unity-version }}
+          UNITY_PATH: ${{ env.UNITY_PATH }}
 
       - name: Activate the license
         run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} ${{ steps.alfFile.outputs.activationFile }}
