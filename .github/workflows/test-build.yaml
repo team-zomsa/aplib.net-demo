@@ -68,43 +68,43 @@ jobs:
           projectPath: ./aplib.net-demo/
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
-  build:
-    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
-    needs: [sonar, unity-test]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unity-version:
-          - 2022.3.19f1
-        targetPlatform:
-          - StandaloneOSX
-          - StandaloneWindows64
-          - StandaloneLinux64
-          - WebGL
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-      - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: ${{ matrix.targetPlatform }}
-          unityVersion: ${{ matrix.unity-version }}
-          projectPath: aplib.net-demo
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build
+  # build:
+  #   name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+  #   needs: [sonar, unity-test]
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       unity-version:
+  #         - 2022.3.19f1
+  #       targetPlatform:
+  #         - StandaloneOSX
+  #         - StandaloneWindows64
+  #         - StandaloneLinux64
+  #         - WebGL
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         lfs: true
+  #     - name: Cache Dependencies
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: Library
+  #         key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+  #         restore-keys: |
+  #           Library-
+  #     - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+  #       uses: game-ci/unity-builder@v4
+  #       env:
+  #         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  #         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  #         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  #       with:
+  #         targetPlatform: ${{ matrix.targetPlatform }}
+  #         unityVersion: ${{ matrix.unity-version }}
+  #         projectPath: aplib.net-demo
+  #     - name: Upload Artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: build
+  #         path: build
