@@ -14,6 +14,9 @@ public class InputManager : MonoBehaviour
 
     public static InputManager Instance { get; private set; }
 
+    /// <summary>
+    /// Make this class a singleton and subscribe to the player's input events.
+    /// </summary>
     private void Awake()
     {
         // Setup singleton
@@ -35,6 +38,9 @@ public class InputManager : MonoBehaviour
         uiActions.Click.performed += _ => mouseLook.OnLeftMousePressed();
     }
 
+    /// <summary>
+    /// Pass the input to the movement and mouse look scripts.
+    /// </summary>
     private void Update()
     {
         movement.ReceiveHorizontalInput(horizontalInput);
