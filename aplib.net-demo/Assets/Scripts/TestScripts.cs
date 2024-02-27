@@ -1,13 +1,16 @@
 using System;
 
-class
- Program
+class Program
 {
-    static void     Main(string[] 
-        args)
-    
-    
+    static void Main(string[] args)
     {
-        Console.WriteLine("Hello World!") }
 
+        string world = "World";
+
+        Console.WriteLine("Hello " + world + "!");
+
+
+        string a = "Hello";
+        console.WriteLine(a + " " + world + " " + c + "!");
+    }
 }
