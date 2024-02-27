@@ -76,6 +76,7 @@ jobs:
         run: npm install --global unity-license-activate
 
       - name: Retrieve Activation File
+        id: retrieve-activation
         run: |
           chmod +x ./workflow-scripts/test-build/retrieve-activation-file.sh
           ./workflow-scripts/test-build/retrieve-activation-file.sh
@@ -87,7 +88,7 @@ jobs:
           UNITY_PATH: ${{ env.UNITY_PATH }}
 
       - name: Activate the license
-        run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} ${{ steps.alfFile.outputs.activationFile }}
+        run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} ${{ retrieve-activation.outputs.activation-file }}
 
       - name: Read ulf
         id: ulfRead
