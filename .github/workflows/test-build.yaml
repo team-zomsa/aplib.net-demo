@@ -88,13 +88,14 @@ jobs:
           UNITY_PATH: ${{ env.UNITY_PATH }}
 
       - name: Activate the license
+        id: activate-license
         run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} ${{ steps.retrieve-activation.outputs.activation-file }}
 
       - name: Read ulf
         id: ulfRead
         uses: juliangruber/read-file-action@v1.1.4
         with:
-          path: ${{ env.ULF_FILE }}
+          path: ${{ steps.activate-license.outputs.license-path }}
 
       - name: Update secret UNITY_LICENSE
         uses: hmanzur/actions-set-secret@v2.0.0
