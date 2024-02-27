@@ -61,12 +61,14 @@ jobs:
         with:
           projectPath: ./aplib.net-demo/
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Print All Files
-        run: ls -R
-      - name: Comment Coverage
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          filePath: ./aplib.net-demo/Assets/Scripts/${{ steps.unity-test-step.outputs.coveragePath }}
+      # Currently not working, somehow does not exist, even though it should according to the documentation
+      #  and also the output of the action:
+      # Docs: https://game.ci/docs/github/test-runner/#getting-coverage-results
+      # Log: https://github.com/team-zomsa/aplib.net-demo/actions/runs/8072459362/job/22054249779?pr=5#step:3:13068
+      # - name: Comment Coverage
+      #   uses: thollander/actions-comment-pull-request@v2
+      #   with:
+      #     filePath: ./aplib.net-demo/Assets/Scripts/${{ steps.unity-test-step.outputs.coveragePath }}
 
   build:
     name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
