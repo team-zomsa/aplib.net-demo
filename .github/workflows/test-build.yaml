@@ -52,6 +52,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ./aplib.net-demo/Library
+          key: Library-aplib.net-demo-test-runner
+          restore-keys: |
+            Library-aplib.net-demo-
+            Library-
       - uses: game-ci/unity-test-runner@v4
         id: unity-test-step
         env:
@@ -106,7 +113,7 @@ jobs:
           unityVersion: ${{ matrix.unity-version }}
           projectPath: aplib.net-demo
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: build
