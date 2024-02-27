@@ -67,90 +67,96 @@ jobs:
 
 
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '16'
 
-      - name: Install node package, `unity-license-activate`
-        run: npm install --global unity-license-activate
-
-      - name: Retrieve Activation File
-        id: retrieve-activation
-        run: |
-          chmod +x ./workflow-scripts/test-build/retrieve-activation-file.sh
-          ./workflow-scripts/test-build/retrieve-activation-file.sh
-        env:
-          UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_VERSION: ${{ matrix.unity-version }}
-          UNITY_PATH: ${{ env.UNITY_PATH }}
-
-      - name: Activate the license
-        id: activate-license
-        continue-on-error: true
-        run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} "./Unity_v2022.3.19f1.alf"
-
-      - name: Upload error screenshot
-        uses: actions/upload-artifact@v1
-        with:
-          name: screenshot_error
-          path: error.png
+      # Use dlls in this path to use for sonar:
+      # ./Unity/Hub/Editor/2022.3.19f1/Editor/Data/Managed 
 
 
-      - name: Print Files
-        run: |
-          ls -R
 
-      - name: Read ulf
-        id: ulfRead
-        uses: juliangruber/read-file-action@v1.1.4
-        with:
-          path: ./Unity_v2022.3.19f1.ulf
-          # path: ${{ steps.activate-license.outputs.license-path }}
-
-      # - name: Update secret UNITY_LICENSE
-      #   uses: hmanzur/actions-set-secret@v2.0.0
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v1
       #   with:
-      #     name: 'UNITY_LICENSE'
-      #     value: '${{ steps.ulfRead.outputs.content }}'
-      #     token: ${{ secrets.ACCESS_TOKEN }}
+      #     node-version: '16'
+
+      # - name: Install node package, `unity-license-activate`
+      #   run: npm install --global unity-license-activate
+
+      # - name: Retrieve Activation File
+      #   id: retrieve-activation
+      #   run: |
+      #     chmod +x ./workflow-scripts/test-build/retrieve-activation-file.sh
+      #     ./workflow-scripts/test-build/retrieve-activation-file.sh
+      #   env:
+      #     UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #     UNITY_VERSION: ${{ matrix.unity-version }}
+      #     UNITY_PATH: ${{ env.UNITY_PATH }}
+
+      # - name: Activate the license
+      #   id: activate-license
+      #   continue-on-error: true
+      #   run: unity-license-activate ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} "./Unity_v2022.3.19f1.alf"
+
+      # - name: Upload error screenshot
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: screenshot_error
+      #     path: error.png
+
+
+      # - name: Print Files
+      #   run: |
+      #     ls -R
+
+      # - name: Read ulf
+      #   id: ulfRead
+      #   uses: juliangruber/read-file-action@v1.1.4
+      #   with:
+      #     path: ./Unity_v2022.3.19f1.ulf
+      #     # path: ${{ steps.activate-license.outputs.license-path }}
+
+      # # - name: Update secret UNITY_LICENSE
+      # #   uses: hmanzur/actions-set-secret@v2.0.0
+      # #   with:
+      # #     name: 'UNITY_LICENSE'
+      # #     value: '${{ steps.ulfRead.outputs.content }}'
+      # #     token: ${{ secrets.ACCESS_TOKEN }}
 
 
 
       
-      - name: Generate .sln and .csproj files
-        run: |
-          xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
-
-
-
-
-      # - name: Install Dependencies
+      # - name: Generate .sln and .csproj files
       #   run: |
-      #     sudo apt-get -y install libfuse2
-      #     sudo apt-get install at-spi2-core
-      # - name: Setup Unity for SonarQube
-      #   id: setup-unity
-      #   uses: kuler90/setup-unity@v1
-      #   with:
-      #     project-path: aplib.net-demo/
-      #     install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
-      #   if: steps.cache-unity.outputs.cache-hit != 'true'
-      # - name: Find Cache Entry
+      #     xvfb-run --auto-servernum $(pwd)/Unity/Hub/Editor/2022.3.19f1/Editor/Unity -batchmode -nographics -quit -logFile "-" -customBuildName aplib.net-demo -projectPath ./aplib.net-demo -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+
+
+
+
+      # # - name: Install Dependencies
+      # #   run: |
+      # #     sudo apt-get -y install libfuse2
+      # #     sudo apt-get install at-spi2-core
+      # # - name: Setup Unity for SonarQube
+      # #   id: setup-unity
+      # #   uses: kuler90/setup-unity@v1
+      # #   with:
+      # #     project-path: aplib.net-demo/
+      # #     install-path: unity-editors/${{ runner.os }}-unity-${{ matrix.unity-version }}
+      # #   if: steps.cache-unity.outputs.cache-hit != 'true'
+      # # - name: Find Cache Entry
+      # #   run: |
+      # #     ls -R
+      # #     echo $(pwd)
+
+
+      # - name: SonarQube Analysis
+      #   env:
+      #     FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   run: |
-      #     ls -R
-      #     echo $(pwd)
-
-
-      - name: SonarQube Analysis
-        env:
-          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          chmod +x ./workflow-scripts/test-build/sonarqube-analysis.sh
-          ./workflow-scripts/test-build/sonarqube-analysis.sh
+      #     chmod +x ./workflow-scripts/test-build/sonarqube-analysis.sh
+      #     ./workflow-scripts/test-build/sonarqube-analysis.sh
       # - name: Install SonarCloud scanner
       #   if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
       #   shell: powershell
