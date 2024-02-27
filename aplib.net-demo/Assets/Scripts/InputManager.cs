@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] Movement movement;
-    [SerializeField] MouseLook mouseLook;
+    [SerializeField] private Movement _movement;
+    [SerializeField] private MouseLook _mouseLook;
 
-    PlayerInput input;
-    PlayerInput.PlayerActions playerActions;
-    PlayerInput.UIActions uiActions;
+    private PlayerInput _input;
+    private PlayerInput.PlayerActions _playerActions;
+    private PlayerInput.UIActions _uiActions;
 
-    Vector2 horizontalInput;
-    Vector2 mouseInput;
+    private Vector2 _horizontalInput;
+    private Vector2 _mouseInput;
 
     public static InputManager Instance { get; private set; }
 
@@ -26,16 +26,16 @@ public class InputManager : MonoBehaviour
             Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        input = new PlayerInput();
-        playerActions = input.Player;
-        uiActions = input.UI;
+        _input = new PlayerInput();
+        _playerActions = _input.Player;
+        _uiActions = _input.UI;
 
-        playerActions.Move.performed += ctx => horizontalInput = ctx.ReadValue<Vector2>();
-        playerActions.Jump.performed += _ => movement.OnJumpPressed();
-        playerActions.LookX.performed += ctx => mouseInput.x = ctx.ReadValue<float>();  
-        playerActions.LookY.performed += ctx => mouseInput.y = ctx.ReadValue<float>();
-        uiActions.ShowMouse.performed += _ => mouseLook.OnShowMousePressed();
-        uiActions.Click.performed += _ => mouseLook.OnLeftMousePressed();
+        _playerActions.Move.performed += ctx => _horizontalInput = ctx.ReadValue<Vector2>();
+        _playerActions.Jump.performed += _ => _movement.OnJumpPressed();
+        _playerActions.LookX.performed += ctx => _mouseInput.x = ctx.ReadValue<float>();  
+        _playerActions.LookY.performed += ctx => _mouseInput.y = ctx.ReadValue<float>();
+        _uiActions.ShowMouse.performed += _ => _mouseLook.OnShowMousePressed();
+        _uiActions.Click.performed += _ => _mouseLook.OnLeftMousePressed();
     }
 
     /// <summary>
@@ -43,18 +43,18 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        movement.ReceiveHorizontalInput(horizontalInput);
-        mouseLook.ReveiveMouseInput(mouseInput);
+        _movement.ReceiveHorizontalInput(_horizontalInput);
+        _mouseLook.ReveiveMouseInput(_mouseInput);
     }
 
     private void OnEnable()
     {
-        input.Enable();
+        _input.Enable();
     }
 
     private void OnDisable()
     {
-        input.Disable();
+        _input.Disable();
     }
 
 }

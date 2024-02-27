@@ -2,48 +2,48 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] float maxSpeed = 7;
-    [SerializeField] float acceleration = 100;
-    Vector3 horizontalVelocity;
-    Vector2 horizontalInput;
+    [SerializeField] private float _maxSpeed = 7;
+    [SerializeField] private float _acceleration = 100;
+    private Vector3 _horizontalVelocity;
+    private Vector2 _horizontalInput;
 
-    [SerializeField] float normalGravityScale = 1.7f;
-    [SerializeField] float fallingGravityScale = 2.5f;
-    float actualGravityScale;
-    float gravity;
+    [SerializeField] private float _normalGravityScale = 1.7f;
+    [SerializeField] private float _fallingGravityScale = 2.5f;
+    private float _actualGravityScale;
+    private float _gravity;
 
-    [SerializeField] float jumpHeight = 7;
-    [SerializeField] float airMovementScale = 0.5f;
-    bool jumpPressed;
+    [SerializeField] private float _jumpHeight = 7;
+    [SerializeField] private float _airMovementScale = 0.5f;
+    private bool _jumpPressed;
 
-    [SerializeField] LayerMask groundMask;
-    [SerializeField] float groundDrag;
-    [SerializeField] float slopeAngle = 40;
-    float playerHeight;
-    bool isGrounded;
+    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private float _groundDrag;
+    [SerializeField] private float _slopeAngle = 40;
+    private float _playerHeight;
+    private bool _isGrounded;
 
-    Rigidbody rb;
-    CapsuleCollider controller;
+    private Rigidbody _rigidbody;
+    private CapsuleCollider _controller;
 
     /// <summary>
     /// Initialize the player's rigidbody and collider, and freeze the player's rotation.
     /// </summary>
-    void Start() { 
-        rb = GetComponent<Rigidbody>();
-        controller = GetComponent<CapsuleCollider>();
-        playerHeight = controller.height;
-        rb.freezeRotation = true;
-        gravity = Physics.gravity.y;
+    private void Start() { 
+        _rigidbody = GetComponent<Rigidbody>();
+        _controller = GetComponent<CapsuleCollider>();
+        _playerHeight = _controller.height;
+        _rigidbody.freezeRotation = true;
+        _gravity = Physics.gravity.y;
     }
 
     /// <summary>
     /// Main update loop where we do a ground check, move the player, and handle jumping.
     /// Updates once per physics update.
     /// </summary>
-    void FixedUpdate() {
+    private void FixedUpdate() {
         // Ground check by checking a sphere at the bottom of the player, more consistent than ray
-        Vector3 bottomPoint = transform.TransformPoint(controller.center - 0.5f * playerHeight * Vector3.up);
-        isGrounded = Physics.CheckSphere(bottomPoint, 0.15f, groundMask);
+        Vector3 bottomPoint = transform.TransformPoint(_controller.center - 0.5f * _playerHeight * Vector3.up);
+        _isGrounded = Physics.CheckSphere(bottomPoint, 0.15f, _groundMask);
 
         MovePlayer();
         HandleJump();
@@ -53,29 +53,29 @@ public class Movement : MonoBehaviour
     /// Move the player based on the input and the ground check using AddForce.
     /// Also applies custom gravity and limits the player's velocity.
     /// </summary>
-    void MovePlayer() {
-        horizontalVelocity = transform.right * horizontalInput.x + transform.forward * horizontalInput.y;
+    private void MovePlayer() {
+        _horizontalVelocity = transform.right * _horizontalInput.x + transform.forward * _horizontalInput.y;
         bool isOnSlope = OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit);
-        rb.useGravity = !isOnSlope;
+        _rigidbody.useGravity = !isOnSlope;
 
-        if (isGrounded) {
-            rb.drag = groundDrag; 
+        if (_isGrounded) {
+            _rigidbody.drag = _groundDrag; 
             Debug.Log("Grounded");
             if (isOnSlope) {
-                rb.AddForce(maxSpeed * acceleration * Time.fixedDeltaTime * 1.5f * directionOnSlope);
+                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 1.5f * directionOnSlope);
                 // Apply gravity but perpendicular to the slope, to prevent sliding
-                rb.velocity += (actualGravityScale - 1) * gravity * Time.fixedDeltaTime * downHit.normal;
+                _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
             }
             else {
-                rb.AddForce(maxSpeed * acceleration * Time.fixedDeltaTime * horizontalVelocity.normalized);
+                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
             }   
         }
         else {
-            rb.drag = 0;  
-            rb.AddForce(maxSpeed * acceleration * Time.fixedDeltaTime * airMovementScale * horizontalVelocity.normalized); 
+            _rigidbody.drag = 0;  
+            _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized); 
             // Custom gravity for player while falling
-            actualGravityScale = rb.velocity.y < 0 ? fallingGravityScale : normalGravityScale;
-            rb.velocity += (actualGravityScale - 1) * gravity * Time.fixedDeltaTime * Vector3.up;
+            _actualGravityScale = _rigidbody.velocity.y < 0 ? _fallingGravityScale : _normalGravityScale;
+            _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * Vector3.up;
         }
 
         LimitVelocity(isOnSlope);
@@ -85,21 +85,21 @@ public class Movement : MonoBehaviour
     ///  Limit the player's velocity to the max speed.
     ///  Also accounts for vertical velocity when on a slope.
     /// </summary>
-    /// <param name="isOnWalkableSlope"></param>
-    void LimitVelocity(bool isOnWalkableSlope){
+    /// <param name="isOnWalkableSlope">Is the player on a walkable slope</param>
+    private void LimitVelocity(bool isOnWalkableSlope){
         if (isOnWalkableSlope) {   
-            if (rb.velocity.magnitude > maxSpeed) {
-                rb.velocity = rb.velocity.normalized * maxSpeed;
+            if (_rigidbody.velocity.magnitude > _maxSpeed) {
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
             }
         } else {
-            Vector3 rbHorizontalVelocity = new(rb.velocity.x, 0, rb.velocity.z);
-            if (rbHorizontalVelocity.magnitude > maxSpeed) {
-                Vector3 limitedVelocity = rbHorizontalVelocity.normalized * maxSpeed;
-                rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
+            Vector3 rigidbodyHorizontalVelocity = new(_rigidbody.velocity.x, 0, _rigidbody.velocity.z);
+            if (rigidbodyHorizontalVelocity.magnitude > _maxSpeed) {
+                Vector3 limitedVelocity = rigidbodyHorizontalVelocity.normalized * _maxSpeed;
+                _rigidbody.velocity = new Vector3(limitedVelocity.x, _rigidbody.velocity.y, limitedVelocity.z);
             }
         }
         // Draw a ray to visualize the player's velocity and direction
-        Debug.DrawRay(transform.position, rb.velocity, Color.red);
+        Debug.DrawRay(transform.position, _rigidbody.velocity, Color.red);
     }
 
     /// <summary>
@@ -108,13 +108,13 @@ public class Movement : MonoBehaviour
     /// </summary>
     /// <param name="directionOnSlope">Movement direction projected on the slope as a plane</param>
     /// <param name="downHit">RaycastHit of the downward slope check</param>
-    /// <returns></returns>
-    bool OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit) {
+    /// <returns>A boolean that signifies whether the player is on a walkable slope or not</returns>
+    private bool OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit) {
         // Shoot a ray down to check if the player is on a slope
-        if (Physics.Raycast(transform.position, Vector3.down, out downHit, playerHeight * 0.5f + 0.3f, groundMask)){
+        if (Physics.Raycast(transform.position, Vector3.down, out downHit, _playerHeight * 0.5f + 0.3f, _groundMask)){
             float angle = Vector3.Angle(Vector3.up, downHit.normal);
-            if (angle < slopeAngle && angle != 0) {
-                directionOnSlope = Vector3.ProjectOnPlane(horizontalVelocity, downHit.normal).normalized;
+            if (angle < _slopeAngle && angle != 0) {
+                directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
                 return true;
             }
         }
@@ -125,23 +125,22 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Handle the player's jump input and apply a force to the player's rigidbody.
     /// </summary>
-    void HandleJump(){
-        if (jumpPressed && isGrounded) {
-            rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+    private void HandleJump(){
+        if (_jumpPressed && _isGrounded) {
+            _rigidbody.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
         }
-        jumpPressed = false;
+        _jumpPressed = false;
     }
 
     /// <summary>
     /// Receive the player's input from the InputManager, result of an InputAction.
     /// </summary>
-    /// <param name="_input"></param>
-    public void ReceiveHorizontalInput(Vector2 _input) => horizontalInput = _input;
+    /// <param name="input">The horizontal input in a Vector2</param>
+    public void ReceiveHorizontalInput(Vector2 input) => _horizontalInput = input;
 
     /// <summary>
     /// Set the jumpPressed flag to true when the player presses the jump button.
     /// Result of an InputAction.
     /// </summary>
-    public void OnJumpPressed() => jumpPressed = true;
-    
+    public void OnJumpPressed() => _jumpPressed = true;
 }

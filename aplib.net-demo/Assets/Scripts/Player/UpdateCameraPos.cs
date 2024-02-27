@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class UpdateCameraPos : MonoBehaviour
 {
-    [SerializeField] Transform cameraTransform;
+    [SerializeField] private Transform cameraTransform;
 
-    void Update()
+    private void Update()
     {
         cameraTransform.position = transform.position;
     }
