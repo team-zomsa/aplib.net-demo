@@ -12,7 +12,7 @@ jobs:
     name: Test and Analyze with SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # - name: SonarQube Scan
       #   uses: sonarsource/sonarqube-scan-action@master
       #   env:
@@ -21,22 +21,22 @@ jobs:
       #     SONAR_ORGANIZATION: "team-zomsa"  
       #     SONAR_PROJECT_KEY: "team-zomsa_aplib.net-demo"
       - name: Cache SonarCloud packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
       - name: Cache SonarCloud scanner
         id: cache-sonar-scanner
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./.sonar/scanner
           key: ${{ runner.os }}-sonar-scanner
       - name: Setup dotnet 5 for SonarQube
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '5.0.x'
       - name: Set up JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
@@ -51,7 +51,7 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: game-ci/unity-test-runner@v4
         id: unity-test-step
         env:
@@ -89,7 +89,7 @@ jobs:
         with:
           lfs: true
       - name: Cache Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
