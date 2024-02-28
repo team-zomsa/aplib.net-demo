@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: -D sonar.cs.opencover.reportsPaths="aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml"
+          args: -D sonar.opencover.reportsPaths="aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,aplib.net-demo/CodeCoverage/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml"
 
   build:
     name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
