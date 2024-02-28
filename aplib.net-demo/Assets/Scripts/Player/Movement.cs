@@ -67,6 +67,7 @@ public class Movement : MonoBehaviour
     private void MovePlayer() {
         _horizontalVelocity = transform.right * _horizontalInput.x + transform.forward * _horizontalInput.y;
         bool isOnSlope = OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit);
+        bool isWalkningAgainstWall = WalkingAgainstWall(out Vector3 directionOnWall);
         _rigidbody.useGravity = !isOnSlope;
 
         if (_isGrounded) {
@@ -77,6 +78,10 @@ public class Movement : MonoBehaviour
                 
                 // Apply gravity but perpendicular to the slope, to prevent sliding
                 _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
+            }
+            else if (isWalkningAgainstWall) {
+                // Change the direction of the force to be along the wall
+                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 0.5f * directionOnWall);
             }
             else {
                 _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
@@ -133,6 +138,21 @@ public class Movement : MonoBehaviour
         }
         
         directionOnSlope = Vector3.zero;
+        return false;
+    }
+
+    /// <summary>
+    /// Check if the player is walking against a wall.
+    /// If so, return the wall's normal.
+    /// </summary>
+    /// <param name="wallNormal">The normal of the wall the player is walking against</param>
+    /// <returns>A boolean that signifies whether the player is walking against a wall or not</returns>
+    private bool WalkingAgainstWall(out Vector3 directionOnWall) {
+        if (Physics.Raycast(transform.position, _horizontalVelocity, out RaycastHit hit, _playerRadius * 4f, _groundMask)) {
+            directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, hit.normal).normalized;
+            return true;
+        }
+        directionOnWall = Vector3.zero;
         return false;
     }
 
