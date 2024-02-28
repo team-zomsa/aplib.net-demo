@@ -31,10 +31,10 @@ public class InputManager : MonoBehaviour
         _playerActions = _input.Player;
         _uiActions = _input.UI;
 
-        _playerActions.Move.performed += ctx => _horizontalInput = ctx.ReadValue<Vector2>();
+        _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _movement.OnJumpPressed();
-        _playerActions.LookX.performed += ctx => _mouseInput.x = ctx.ReadValue<float>();  
-        _playerActions.LookY.performed += ctx => _mouseInput.y = ctx.ReadValue<float>();
+        _playerActions.LookX.performed += inputContext => _mouseInput.x = inputContext.ReadValue<float>();  
+        _playerActions.LookY.performed += inputContext => _mouseInput.y = inputContext.ReadValue<float>();
         _uiActions.ShowMouse.performed += _ => _mouseLook.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLook.OnLeftMousePressed();
     }

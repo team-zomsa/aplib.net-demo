@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class UpdateCameraPos : MonoBehaviour
 {
-    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform _cameraTransform;
 
     private void Update()
     {
-        cameraTransform.position = transform.position;
+        _cameraTransform.position = transform.position;
     }
 }

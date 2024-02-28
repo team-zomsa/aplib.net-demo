@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour
     private bool _jumpPressed;
 
     [SerializeField] private LayerMask _groundMask;
-    [SerializeField] private float _groundDrag;
+    [SerializeField] private float _groundDrag = 0.7f;
     [SerializeField] private float _slopeAngle = 40;
     private float _playerHeight;
     private bool _isGrounded;
@@ -42,8 +42,8 @@ public class Movement : MonoBehaviour
     /// </summary>
     private void FixedUpdate() {
         // Ground check by checking a sphere at the bottom of the player, more consistent than ray
-        Vector3 bottomPoint = transform.TransformPoint(_controller.center - 0.5f * _playerHeight * Vector3.up);
-        _isGrounded = Physics.CheckSphere(bottomPoint, 0.15f, _groundMask);
+        Vector3 bottomPoint = transform.TransformPoint(_controller.center - 0.5f * (_playerHeight * 1.1f) * Vector3.up);
+        _isGrounded = Physics.CheckSphere(bottomPoint, 0.30f, _groundMask);
 
         MovePlayer();
         HandleJump();
@@ -63,6 +63,7 @@ public class Movement : MonoBehaviour
             Debug.Log("Grounded");
             if (isOnSlope) {
                 _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 1.5f * directionOnSlope);
+                
                 // Apply gravity but perpendicular to the slope, to prevent sliding
                 _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
             }
@@ -72,7 +73,8 @@ public class Movement : MonoBehaviour
         }
         else {
             _rigidbody.drag = 0;  
-            _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized); 
+            _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized);
+
             // Custom gravity for player while falling
             _actualGravityScale = _rigidbody.velocity.y < 0 ? _fallingGravityScale : _normalGravityScale;
             _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * Vector3.up;
@@ -87,10 +89,8 @@ public class Movement : MonoBehaviour
     /// </summary>
     /// <param name="isOnWalkableSlope">Is the player on a walkable slope</param>
     private void LimitVelocity(bool isOnWalkableSlope){
-        if (isOnWalkableSlope) {   
-            if (_rigidbody.velocity.magnitude > _maxSpeed) {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
-            }
+        if (isOnWalkableSlope) {
+            if (_rigidbody.velocity.magnitude > _maxSpeed) _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;   
         } else {
             Vector3 rigidbodyHorizontalVelocity = new(_rigidbody.velocity.x, 0, _rigidbody.velocity.z);
             if (rigidbodyHorizontalVelocity.magnitude > _maxSpeed) {
@@ -112,7 +112,7 @@ public class Movement : MonoBehaviour
     /// <returns>A boolean that signifies whether the player is on a walkable slope or not</returns>
     private bool OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit) {
         // Shoot a ray down to check if the player is on a slope
-        if (Physics.Raycast(transform.position, Vector3.down, out downHit, _playerHeight * 0.5f + 0.3f, _groundMask)){
+        if (Physics.Raycast(transform.position, Vector3.down, out downHit, _playerHeight * 0.5f + 0.3f, _groundMask)) {
             float angle = Vector3.Angle(Vector3.up, downHit.normal);
             if (angle < _slopeAngle && angle != 0) {
                 directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
@@ -128,9 +128,8 @@ public class Movement : MonoBehaviour
     /// Handle the player's jump input and apply a force to the player's rigidbody.
     /// </summary>
     private void HandleJump(){
-        if (_jumpPressed && _isGrounded) {
-            _rigidbody.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
-        }
+        if (_jumpPressed && _isGrounded) _rigidbody.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
+        
         _jumpPressed = false;
     }
 
