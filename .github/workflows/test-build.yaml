@@ -1,4 +1,4 @@
-name: Build pipeline
+name: Test and Build Pipeline
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
         with:
           projectPath: ./aplib.net-demo/
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          coverageOptions: "generateAdditionalMetrics;generateHtmlReport;generateHtmlReportHistory;generateBadgeReport;assemblyFilters:+my.assembly.*;pathFilters:-**/Tests/**,-**/BuiltInPackages/**"
+          coverageOptions: "generateAdditionalMetrics;generateHtmlReport;generateHtmlReportHistory;generateBadgeReport"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
