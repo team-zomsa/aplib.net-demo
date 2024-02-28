@@ -20,6 +20,8 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _groundDrag = 0.7f;
     [SerializeField] private float _slopeAngle = 40;
     private float _playerHeight;
+    private float _playerRadius;
+    private Vector3 _bottomPoint;
     private bool _isGrounded;
 
     private Rigidbody _rigidbody;
@@ -32,8 +34,17 @@ public class Movement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<CapsuleCollider>();
         _playerHeight = _controller.height;
+        _playerRadius = _controller.radius;
         _rigidbody.freezeRotation = true;
         _gravity = Physics.gravity.y;
+    }
+
+    /// <summary>
+    /// Draw a red wire sphere at the bottom of the player to visualize the ground check area.
+    /// </summary>
+    void OnDrawGizmosSelected() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_bottomPoint, _playerRadius);
     }
 
     /// <summary>
@@ -42,8 +53,8 @@ public class Movement : MonoBehaviour
     /// </summary>
     private void FixedUpdate() {
         // Ground check by checking a sphere at the bottom of the player, more consistent than ray
-        Vector3 bottomPoint = transform.TransformPoint(_controller.center - 0.5f * (_playerHeight * 1.1f) * Vector3.up);
-        _isGrounded = Physics.CheckSphere(bottomPoint, 0.30f, _groundMask);
+        _bottomPoint = transform.TransformPoint(_controller.center - Vector3.up * (_playerHeight * 0.55f - _playerRadius));
+        _isGrounded = Physics.CheckSphere(_bottomPoint, _playerRadius, _groundMask);
 
         MovePlayer();
         HandleJump();
@@ -100,6 +111,7 @@ public class Movement : MonoBehaviour
         }
         
         // Draw a ray to visualize the player's velocity and direction
+        Debug.Log("Current velocity: " + _rigidbody.velocity.magnitude);
         Debug.DrawRay(transform.position, _rigidbody.velocity, Color.red);
     }
 

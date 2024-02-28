@@ -29,9 +29,9 @@ public class MouseLook : MonoBehaviour
 
         _rotation.x += _mouseInput.x; 
         _rotation.y += _mouseInput.y; 
-		_rotation.y = Mathf.Clamp(_rotation.y, -_yRotationLimit, _yRotationLimit);
-		Quaternion xQuat = Quaternion.AngleAxis(_rotation.x, Vector3.up);
-		Quaternion yQuat = Quaternion.AngleAxis(_rotation.y, Vector3.left);
+	    _rotation.y = Mathf.Clamp(_rotation.y, -_yRotationLimit, _yRotationLimit);
+	    Quaternion xQuat = Quaternion.AngleAxis(_rotation.x, Vector3.up);
+	    Quaternion yQuat = Quaternion.AngleAxis(_rotation.y, Vector3.left);
 
         // Rotate camera
         transform.localRotation = xQuat * yQuat;
