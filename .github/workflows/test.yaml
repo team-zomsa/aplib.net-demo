@@ -1,10 +1,8 @@
 name: Test and Build Pipeline
 
 on:
-  push:
-    branches:
-      - main
-      - dev
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   unity-test:
     name: Test with Unity Test Runner
@@ -68,44 +66,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: -D sonar.cs.opencover.reportsPaths="CodeCoverage/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,CodeCoverage/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml"
-
-  build:
-    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
-    needs: [sonar, unity-test]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unity-version:
-          - 2022.3.19f1
-        targetPlatform:
-          - StandaloneOSX
-          - StandaloneWindows64
-          - StandaloneLinux64
-          - WebGL
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-      - name: Cache Dependencies
-        uses: actions/cache@v4
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-      - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: ${{ matrix.targetPlatform }}
-          unityVersion: ${{ matrix.unity-version }}
-          projectPath: aplib.net-demo
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-${{ matrix.targetPlatform }}-${{ matrix.unity-version }}
-          path: build
