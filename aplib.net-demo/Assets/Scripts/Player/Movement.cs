@@ -67,21 +67,17 @@ public class Movement : MonoBehaviour
     private void MovePlayer() {
         _horizontalVelocity = transform.right * _horizontalInput.x + transform.forward * _horizontalInput.y;
         bool isOnSlope = OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit);
-        bool isWalkningAgainstWall = WalkingAgainstWall(out Vector3 directionOnWall);
+        bool isWallColliding = WalkingAgainstWall(out Vector3 wallNormal);
         _rigidbody.useGravity = !isOnSlope;
 
         if (_isGrounded) {
             _rigidbody.drag = _groundDrag; 
-            Debug.Log("Grounded");
+            // Debug.Log("Grounded");
             if (isOnSlope) {
                 _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 1.5f * directionOnSlope);
                 
                 // Apply gravity but perpendicular to the slope, to prevent sliding
                 _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
-            }
-            else if (isWalkningAgainstWall) {
-                // Change the direction of the force to be along the wall
-                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 0.5f * directionOnWall);
             }
             else {
                 _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
@@ -96,7 +92,19 @@ public class Movement : MonoBehaviour
             _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * Vector3.up;
         }
 
+        if (isWallColliding) HandleWallCollision(wallNormal);
         LimitVelocity(isOnSlope);
+    }
+
+    /// <summary>
+    /// Add force along the wall, to prevent sticking.
+    /// </summary>
+    /// <param name="wallNormal">The normal of the wall the player is walking against</param>
+    private void HandleWallCollision(Vector3 wallNormal) {
+        float angleMultiplier = Mathf.Clamp01(1.2f - Vector3.Angle(_horizontalVelocity, -wallNormal) / 90);
+        Vector3 directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal).normalized;
+        _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
+        Debug.DrawRay(transform.position, directionOnWall * 5, Color.blue);
     }
 
     /// <summary>
@@ -116,7 +124,7 @@ public class Movement : MonoBehaviour
         }
         
         // Draw a ray to visualize the player's velocity and direction
-        Debug.Log("Current velocity: " + _rigidbody.velocity.magnitude);
+        // Debug.Log("Current velocity: " + _rigidbody.velocity.magnitude);
         Debug.DrawRay(transform.position, _rigidbody.velocity, Color.red);
     }
 
@@ -133,6 +141,7 @@ public class Movement : MonoBehaviour
             float angle = Vector3.Angle(Vector3.up, downHit.normal);
             if (angle < _slopeAngle && angle != 0) {
                 directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
+                Debug.DrawRay(transform.position, directionOnSlope * 10, Color.blue);
                 return true;
             }
         }
@@ -147,12 +156,13 @@ public class Movement : MonoBehaviour
     /// </summary>
     /// <param name="wallNormal">The normal of the wall the player is walking against</param>
     /// <returns>A boolean that signifies whether the player is walking against a wall or not</returns>
-    private bool WalkingAgainstWall(out Vector3 directionOnWall) {
-        if (Physics.Raycast(transform.position, _horizontalVelocity, out RaycastHit hit, _playerRadius * 4f, _groundMask)) {
-            directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, hit.normal).normalized;
+    private bool WalkingAgainstWall(out Vector3 wallNormal) {
+        if (Physics.SphereCast(transform.position, _playerRadius, _horizontalVelocity, out RaycastHit hit, 0.5f, _groundMask)) {
+            wallNormal = hit.normal;
+            Debug.DrawRay(transform.position, wallNormal * 5, Color.green);
             return true;
         }
-        directionOnWall = Vector3.zero;
+        wallNormal = Vector3.zero;
         return false;
     }
 
