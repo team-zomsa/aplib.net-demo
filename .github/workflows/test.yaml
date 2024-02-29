@@ -13,9 +13,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ./aplib.net-demo/Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
           restore-keys: |
-            Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+            Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
       - uses: game-ci/unity-test-runner@v4
         id: unity-test-step
         env:
