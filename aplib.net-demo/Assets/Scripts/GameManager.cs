@@ -20,6 +20,12 @@ public class GameManager : MonoBehaviour
 
   private void Awake()
   {
-    _instance = this;
+        // Setup singleton
+        if (_instance != null && _instance != this) {
+            Destroy(gameObject);
+        } else {
+            _instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
   }
 }
