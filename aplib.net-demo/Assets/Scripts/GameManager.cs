@@ -10,8 +10,7 @@ public class GameManager : MonoBehaviour
     {
       if (_instance == null)
       {
-        Debug.LogError("Game Manager is null");
-        _instance = FindObjectOfType<GameManager>();
+        Debug.LogError("Game Manager is null, first awake it!");
       }
       
       return _instance;
