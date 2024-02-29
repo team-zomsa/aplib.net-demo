@@ -15,7 +15,7 @@ jobs:
           path: ./aplib.net-demo/Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
       - uses: game-ci/unity-test-runner@v4
         id: unity-test-step
         env:

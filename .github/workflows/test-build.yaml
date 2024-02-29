@@ -17,7 +17,7 @@ jobs:
           path: ./aplib.net-demo/Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
       - uses: game-ci/unity-test-runner@v4
         id: unity-test-step
         env:
@@ -92,7 +92,7 @@ jobs:
           path: ./aplib.net-demo/Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
       - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
         uses: game-ci/unity-builder@v4
         env:
