@@ -72,7 +72,7 @@ public class Movement : MonoBehaviour
 
         if (_isGrounded) {
             _rigidbody.drag = _groundDrag; 
-            // Debug.Log("Grounded");
+            
             if (isOnSlope) {
                 _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 1.5f * directionOnSlope);
                 
@@ -124,7 +124,6 @@ public class Movement : MonoBehaviour
         }
         
         // Draw a ray to visualize the player's velocity and direction
-        // Debug.Log("Current velocity: " + _rigidbody.velocity.magnitude);
         Debug.DrawRay(transform.position, _rigidbody.velocity, Color.red);
     }
 
