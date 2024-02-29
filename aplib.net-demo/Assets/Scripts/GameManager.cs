@@ -17,11 +17,10 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         // Setup singleton
-        if (_instance != null && _instance != this) {
+        if (_instance != null && _instance != this)
             Destroy(gameObject);
-        } else {
+        else
             _instance = this;
-        }
 
         DontDestroyOnLoad(gameObject);
     }
