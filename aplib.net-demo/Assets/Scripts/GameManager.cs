@@ -8,10 +8,7 @@ public class GameManager : MonoBehaviour
   {
     get
     {
-      if (_instance == null)
-      {
-        Debug.LogError("Game Manager is null, first awake it!");
-      }
+      if (_instance == null) Debug.LogError("Game Manager is null, first awake it!");
       
       return _instance;
     }
@@ -19,12 +16,13 @@ public class GameManager : MonoBehaviour
 
   private void Awake()
   {
-        // Setup singleton
-        if (_instance != null && _instance != this) {
-            Destroy(gameObject);
-        } else {
-            _instance = this;
-        }
-        DontDestroyOnLoad(gameObject);
+    // Setup singleton
+    if (_instance != null && _instance != this) {
+        Destroy(gameObject);
+    } else {
+        _instance = this;
+    }
+    
+    DontDestroyOnLoad(gameObject);
   }
 }
