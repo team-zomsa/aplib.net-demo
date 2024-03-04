@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
     private Vector2 _horizontalInput;
     private Vector2 _mouseInput;
 
-    public static InputManager instance { get; private set; }
+    public static InputManager s_Instance { get; private set; }
 
     /// <summary>
     /// Make this class a singleton and subscribe to the player's input events.
