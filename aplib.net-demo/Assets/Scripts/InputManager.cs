@@ -20,10 +20,10 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (s_Instance != null && s_Instance != this)
             Destroy(gameObject);
         else
-            instance = this;
+            s_Instance = this;
         DontDestroyOnLoad(gameObject);
 
         _input = new PlayerInput();
