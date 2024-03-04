@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Cache Unity Editor
         id: cache-unity-editor
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
           path: Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
