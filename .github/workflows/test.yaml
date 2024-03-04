@@ -39,6 +39,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download Coverage Results
+        uses: actions/download-artifact@v4
+        with:
+          name: Coverage results
+          path: CodeCoverage
       - name: Restore Unity Editor
         id: restore-unity-editor
         uses: actions/cache/restore@v4
