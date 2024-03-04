@@ -52,7 +52,7 @@ jobs:
         if: steps.restore-unity-editor.outputs.cache-hit != 'true'
       - name: Cache Unity Editor
         id: cache-unity-editor
-        uses: actions/cache/save@v2
+        uses: actions/cache/save@v4
         with:
           path: Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
