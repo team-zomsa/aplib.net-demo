@@ -13,18 +13,17 @@ public class InputManager : MonoBehaviour
     private Vector2 _horizontalInput;
     private Vector2 _mouseInput;
 
-    public static InputManager Instance { get; private set; }
+    public static InputManager instance { get; private set; }
 
     /// <summary>
     /// Make this class a singleton and subscribe to the player's input events.
     /// </summary>
     private void Awake()
     {
-        // Setup singleton
-        if (Instance != null && Instance != this)
+        if (instance != null && instance != this)
             Destroy(gameObject);
         else
-            Instance = this;
+            instance = this;
         DontDestroyOnLoad(gameObject);
 
         _input = new PlayerInput();
@@ -45,7 +44,7 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         _movement.ReceiveHorizontalInput(_horizontalInput);
-        _mouseLook.ReveiveMouseInput(_mouseInput);
+        _mouseLook.ReceiveMouseInput(_mouseInput);
     }
 
     private void OnEnable()

@@ -2,9 +2,16 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    [Range(0.05f, 0.30f)][SerializeField] private float _sensitivity = 0.15f;
-	[Tooltip("Limits vertical camera rotation. Prevents the flipping that happens when rotation goes above 90.")]
-	[Range(0f, 90f)][SerializeField] private float _yRotationLimit = 88f;
+    [Range(0.05f, 0.30f)]
+    [SerializeField] 
+    private float _sensitivity = 0.15f;
+
+    [Tooltip("Limits vertical camera rotation. " + 
+    "Prevents the flipping that happens when rotation goes above 90.")]
+    [Range(0f, 90f)]
+    [SerializeField] 
+    private float _yRotationLimit = 88f;
+
     [SerializeField] private Transform _playerBody;
     private Vector2 _rotation = Vector2.zero;
     private Vector2 _mouseInput;
@@ -33,7 +40,6 @@ public class MouseLook : MonoBehaviour
 	    Quaternion xQuat = Quaternion.AngleAxis(_rotation.x, Vector3.up);
 	    Quaternion yQuat = Quaternion.AngleAxis(_rotation.y, Vector3.left);
 
-        // Rotate camera
         transform.localRotation = xQuat * yQuat;
 
         // Rotate player body
@@ -59,5 +65,5 @@ public class MouseLook : MonoBehaviour
             _showMouse = false;
         }
     }
-    public void ReveiveMouseInput(Vector2 input) => _mouseInput = input * _sensitivity;
+    public void ReceiveMouseInput(Vector2 input) => _mouseInput = input * _sensitivity;
 }

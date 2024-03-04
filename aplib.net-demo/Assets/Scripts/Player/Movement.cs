@@ -24,6 +24,9 @@ public class Movement : MonoBehaviour
     private Vector3 _bottomPoint;
     private bool _isGrounded;
 
+    private Color _velocityColor = Color.red;
+    private Color _physicsColor = Color.blue;
+
     private Rigidbody _rigidbody;
     private CapsuleCollider _controller;
 
@@ -104,7 +107,7 @@ public class Movement : MonoBehaviour
         float angleMultiplier = Mathf.Clamp01(1.2f - Vector3.Angle(_horizontalVelocity, -wallNormal) / 90);
         Vector3 directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal).normalized;
         _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
-        Debug.DrawRay(transform.position, directionOnWall * 5, Color.blue);
+        Debug.DrawRay(transform.position, directionOnWall * 5, _physicsColor);
     }
 
     /// <summary>
@@ -124,7 +127,7 @@ public class Movement : MonoBehaviour
         }
         
         // Draw a ray to visualize the player's velocity and direction
-        Debug.DrawRay(transform.position, _rigidbody.velocity, Color.red);
+        Debug.DrawRay(transform.position, _rigidbody.velocity, _velocityColor);
     }
 
     /// <summary>
@@ -140,7 +143,7 @@ public class Movement : MonoBehaviour
             float angle = Vector3.Angle(Vector3.up, downHit.normal);
             if (angle < _slopeAngle && angle != 0) {
                 directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
-                Debug.DrawRay(transform.position, directionOnSlope * 10, Color.blue);
+                Debug.DrawRay(transform.position, directionOnSlope * 10, _physicsColor);
                 return true;
             }
         }
@@ -158,7 +161,7 @@ public class Movement : MonoBehaviour
     private bool WalkingAgainstWall(out Vector3 wallNormal) {
         if (Physics.SphereCast(transform.position, _playerRadius, _horizontalVelocity, out RaycastHit hit, 0.5f, _groundMask)) {
             wallNormal = hit.normal;
-            Debug.DrawRay(transform.position, wallNormal * 5, Color.green);
+            Debug.DrawRay(transform.position, wallNormal * 5, _physicsColor);
             return true;
         }
         wallNormal = Vector3.zero;
