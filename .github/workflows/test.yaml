@@ -57,6 +57,8 @@ jobs:
           path: Unity/Hub/Editor
           key: Unity-Editor-2022.3.19f1
         if: steps.restore-unity-editor.outputs.cache-hit != 'true'
+      - name: List everything
+        run: ls -R
 
       - uses: actions/setup-java@v3
         with:
