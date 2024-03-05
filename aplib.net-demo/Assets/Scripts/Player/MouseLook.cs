@@ -42,7 +42,6 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = xQuat * yQuat;
 
-        // Rotate player body
         _playerBody.rotation = Quaternion.Euler(0, _rotation.x, 0);
     }
 

@@ -19,13 +19,12 @@ public class Movement : MonoBehaviour
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private float _groundDrag = 0.7f;
     [SerializeField] private float _slopeAngle = 40;
+    [SerializeField] private float _slopeCheckRayExtraLength = 0.3f;
+    [SerializeField] private float _wallCheckMaxDistance = 0.5f;
     private float _playerHeight;
     private float _playerRadius;
     private Vector3 _bottomPoint;
     private bool _isGrounded;
-
-    private Color _velocityColor = Color.red;
-    private Color _physicsColor = Color.blue;
 
     private Rigidbody _rigidbody;
     private CapsuleCollider _controller;
@@ -77,7 +76,7 @@ public class Movement : MonoBehaviour
             _rigidbody.drag = _groundDrag; 
             
             if (isOnSlope) {
-                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * 1.5f * directionOnSlope);
+                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * directionOnSlope);
                 
                 // Apply gravity but perpendicular to the slope, to prevent sliding
                 _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
@@ -107,7 +106,7 @@ public class Movement : MonoBehaviour
         float angleMultiplier = Mathf.Clamp01(1.2f - Vector3.Angle(_horizontalVelocity, -wallNormal) / 90);
         Vector3 directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal).normalized;
         _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
-        Debug.DrawRay(transform.position, directionOnWall * 5, _physicsColor);
+        Debug.DrawRay(transform.position, directionOnWall * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
     }
 
     /// <summary>
@@ -127,7 +126,7 @@ public class Movement : MonoBehaviour
         }
         
         // Draw a ray to visualize the player's velocity and direction
-        Debug.DrawRay(transform.position, _rigidbody.velocity, _velocityColor);
+        Debug.DrawRay(transform.position, _rigidbody.velocity, Globals.s_VelocityColor);
     }
 
     /// <summary>
@@ -139,11 +138,11 @@ public class Movement : MonoBehaviour
     /// <returns>A boolean that signifies whether the player is on a walkable slope or not</returns>
     private bool OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit) {
         // Shoot a ray down to check if the player is on a slope
-        if (Physics.Raycast(transform.position, Vector3.down, out downHit, _playerHeight * 0.5f + 0.3f, _groundMask)) {
+        if (Physics.Raycast(transform.position, Vector3.down, out downHit, _playerHeight * 0.5f + _slopeCheckRayExtraLength, _groundMask)) {
             float angle = Vector3.Angle(Vector3.up, downHit.normal);
             if (angle < _slopeAngle && angle != 0) {
                 directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
-                Debug.DrawRay(transform.position, directionOnSlope * 10, _physicsColor);
+                Debug.DrawRay(transform.position, directionOnSlope.normalized * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
                 return true;
             }
         }
@@ -159,9 +158,9 @@ public class Movement : MonoBehaviour
     /// <param name="wallNormal">The normal of the wall the player is walking against</param>
     /// <returns>A boolean that signifies whether the player is walking against a wall or not</returns>
     private bool WalkingAgainstWall(out Vector3 wallNormal) {
-        if (Physics.SphereCast(transform.position, _playerRadius, _horizontalVelocity, out RaycastHit hit, 0.5f, _groundMask)) {
+        if (Physics.SphereCast(transform.position, _playerRadius, _horizontalVelocity, out RaycastHit hit, _wallCheckMaxDistance, _groundMask)) {
             wallNormal = hit.normal;
-            Debug.DrawRay(transform.position, wallNormal * 5, _physicsColor);
+            Debug.DrawRay(transform.position, wallNormal * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
             return true;
         }
         wallNormal = Vector3.zero;
