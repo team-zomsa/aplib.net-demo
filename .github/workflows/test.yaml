@@ -73,6 +73,6 @@ jobs:
           shell: bash
         run: |
           dotnet tool update dotnet-sonarscanner --global
-          dotnet sonarscanner begin /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.projectBaseDir="/home/runner/work/aplib.net-demo/aplib.net-demo/aplib.net-demo/Assets/Scripts" /d:sonar.cs.opencover.reportsPaths="CodeCoverage/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,CodeCoverage/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml"
+          dotnet sonarscanner begin /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.projectBaseDir="/home/runner/work/aplib.net-demo/aplib.net-demo/aplib.net-demo/Assets/Scripts" /d:sonar.cs.opencover.reportsPaths="CodeCoverage/aplib.net-demo-opencov/**/*.xml"
           dotnet build ./scripts/Analysis.csproj
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
