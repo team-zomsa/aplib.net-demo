@@ -26,7 +26,7 @@ jobs:
         with:
           projectPath: ./aplib.net-demo/
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          coverageOptions: "generateAdditionalMetrics;generateHtmlReport;generateHtmlReportHistory"
+          coverageOptions: "generateAdditionalMetrics"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -44,6 +44,9 @@ jobs:
         with:
           name: Coverage results
           path: CodeCoverage
+      - name: Replace paths in Coverage Results
+        run: |
+          find CodeCoverage -name "*.xml" -exec sed -i 's|/github/workspace/|/home/runner/work/aplib.net-demo/aplib.net-demo/|g' {} \;
       - name: Restore Unity Editor
         id: restore-unity-editor
         uses: actions/cache/restore@v4
