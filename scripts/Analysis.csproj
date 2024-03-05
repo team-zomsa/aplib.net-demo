@@ -359,18 +359,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.Graphs">
-      <HintPath>/Unity/Hub/Editor/2022.3.19f1/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Label="Unity Relative Packages">
-    <Reference Include="UnityEditor.UI">
-      <HintPath>../aplib.net-demo/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>../aplib.net-demo/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor/2022.3.19f1/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
