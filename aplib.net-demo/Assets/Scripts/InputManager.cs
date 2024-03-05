@@ -32,10 +32,17 @@ public class InputManager : MonoBehaviour
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _movement.OnJumpPressed();
-        _playerActions.LookX.performed += inputContext => _mouseInput.x = inputContext.ReadValue<float>();  
-        _playerActions.LookY.performed += inputContext => _mouseInput.y = inputContext.ReadValue<float>();
+        _playerActions.Look.performed += inputContext => _mouseInput = inputContext.ReadValue<Vector2>();
         _uiActions.ShowMouse.performed += _ => _mouseLook.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLook.OnLeftMousePressed();
+    }
+
+    /// <summary>
+    /// Get the change in mouse position since the last frame.
+    /// </summary>
+    public Vector2 GetMouseDelta()
+    {
+        return _playerActions.Look.ReadValue<Vector2>();
     }
 
     /// <summary>
@@ -44,7 +51,6 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         _movement.ReceiveHorizontalInput(_horizontalInput);
-        _mouseLook.ReceiveMouseInput(_mouseInput);
     }
 
     private void OnEnable()

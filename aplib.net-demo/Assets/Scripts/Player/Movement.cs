@@ -29,6 +29,9 @@ public class Movement : MonoBehaviour
     private Rigidbody _rigidbody;
     private CapsuleCollider _controller;
 
+    [SerializeField]
+    private Transform _playerVisTransform;
+
     /// <summary>
     /// Initialize the player's rigidbody and collider, and freeze the player's rotation.
     /// </summary>
@@ -71,7 +74,7 @@ public class Movement : MonoBehaviour
     /// </summary>
     private void MovePlayer() 
     {
-        _horizontalVelocity = transform.right * _horizontalInput.x + transform.forward * _horizontalInput.y;
+        _horizontalVelocity = _playerVisTransform.right * _horizontalInput.x + _playerVisTransform.forward * _horizontalInput.y;
         bool isOnSlope = OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit);
         bool isWallColliding = WalkingAgainstWall(out Vector3 wallNormal);
         _rigidbody.useGravity = !isOnSlope;
