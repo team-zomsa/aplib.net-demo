@@ -229,3 +229,6 @@ dotnet_naming_style.begins_with_i.required_prefix = I
 dotnet_naming_style.begins_with_i.required_suffix = 
 dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# Dotnet Diagnostic Overrides
+dotnet_diagnostic.CA1050.severity = none # Use namespaces - we can't because we use unity.
