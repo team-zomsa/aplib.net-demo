@@ -31,6 +31,11 @@ public class CinemachinePOVExtension : CinemachineExtension
         {
             if (stage == CinemachineCore.Stage.Aim)
             {
+                // Make sure to not perform this piece of code when the input manager is null,
+                //  as that means the game is not running
+                if (_inputManager == null)
+                    return;
+
                 Vector2 deltaInput = _inputManager.GetMouseDelta();
                 _startingRotation.x += deltaInput.x * _horizontalSpeed * Time.deltaTime;
                 _startingRotation.y += deltaInput.y * _verticalSpeed * Time.deltaTime;
