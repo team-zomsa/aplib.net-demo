@@ -1,8 +1,7 @@
 {
-    "name": "Scripts",
+    "name": "Input",
     "rootNamespace": "",
     "references": [
-        "GUID:d13d9736026f17248b1cd8b3d7ad92e6",
         "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
