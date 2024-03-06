@@ -41,7 +41,6 @@ public class Movement : MonoBehaviour
         _controller = GetComponent<CapsuleCollider>();
         _playerHeight = _controller.height;
         _playerRadius = _controller.radius;
-        _rigidbody.freezeRotation = true;
         _gravity = Physics.gravity.y;
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private Movement _movement;
-    [SerializeField] private MouseLook _mouseLook;
+    [SerializeField] private MouseLock _mouseLock;
 
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
@@ -33,8 +33,8 @@ public class InputManager : MonoBehaviour
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _movement.OnJumpPressed();
         _playerActions.Look.performed += inputContext => _mouseInput = inputContext.ReadValue<Vector2>();
-        _uiActions.ShowMouse.performed += _ => _mouseLook.OnShowMousePressed();
-        _uiActions.Click.performed += _ => _mouseLook.OnLeftMousePressed();
+        _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
+        _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
     }
 
     /// <summary>

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MouseLook : MonoBehaviour
+public class MouseLock : MonoBehaviour
 {
     private bool _showMouse = false;
 
