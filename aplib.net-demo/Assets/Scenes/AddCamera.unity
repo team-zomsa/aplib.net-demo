@@ -347,7 +347,6 @@ MonoBehaviour:
   _horizontalSpeed: 10
   _verticalSpeed: 12
   _clampAngle: 80
-  _playerVisTransform: {fileID: 513851085}
 --- !u!1 &140984459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1158,6 +1157,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53597eb9099ea944b4b47688ff12f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 505467532}
+  PlayerVisTransform: {fileID: 513851085}
+  VirtualCamera: {fileID: 101199010}
+  Camera: {fileID: 2066774915}
 --- !u!1 &505467528
 GameObject:
   m_ObjectHideFlags: 0
