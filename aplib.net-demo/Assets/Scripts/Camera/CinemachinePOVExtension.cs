@@ -1,7 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 
-public class CinemachinePOVExtension : CinemachineExtension
+public class CinemachinePovExtension : CinemachineExtension
 {
     [SerializeField]
     private float _horizontalSpeed = 10f;
@@ -35,7 +35,7 @@ public class CinemachinePOVExtension : CinemachineExtension
             if (stage == CinemachineCore.Stage.Aim)
             {
                 // Make sure to not perform this piece of code when the input manager is null,
-                //  as that means the game is not running
+                // as that means the game is not running
                 if (_inputManager == null)
                     return;
 

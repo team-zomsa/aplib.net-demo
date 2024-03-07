@@ -41,7 +41,7 @@ public class InputManager : MonoBehaviour
     public Vector2 GetMouseDelta() => _playerActions.Look.ReadValue<Vector2>();
 
     /// <summary>
-    /// Pass the input to the movement and mouse look scripts.
+    /// Pass the input to the movement script.
     /// </summary>
     private void Update() => _movement.ReceiveHorizontalInput(_horizontalInput);
 
