@@ -566,7 +566,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 211880752}
-  - component: {fileID: 211880753}
   m_Layer: 0
   m_Name: RespawnPoint
   m_TagString: Untagged
@@ -589,19 +588,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &211880753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 211880751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08a9ec7e59e7d974e8d82ff3dbc6c324, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rigidbodyToRespawn: {fileID: 505467535}
 --- !u!1 &248052300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,6 +1204,7 @@ GameObject:
   - component: {fileID: 505467536}
   - component: {fileID: 505467535}
   - component: {fileID: 505467533}
+  - component: {fileID: 505467538}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1379,6 +1366,19 @@ CapsuleCollider:
   m_Height: 1.9
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &505467538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505467528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08a9ec7e59e7d974e8d82ff3dbc6c324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _respawnPointTransform: {fileID: 211880752}
 --- !u!1 &513851084
 GameObject:
   m_ObjectHideFlags: 0
@@ -2137,7 +2137,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mouseLock: {fileID: 2066774920}
   _playerTransform: {fileID: 505467532}
-  _playerRespawn: {fileID: 211880753}
 --- !u!1 &1045878733
 GameObject:
   m_ObjectHideFlags: 0

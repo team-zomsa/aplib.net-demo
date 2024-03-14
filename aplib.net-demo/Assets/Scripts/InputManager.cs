@@ -5,7 +5,7 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] private MouseLock _mouseLock;
     [SerializeField] private Transform _playerTransform;
-    [SerializeField] private ResetRigidbody _playerRespawn;
+    private ResetRigidbody _playerRespawn;
     private Movement _playerMovement;
 
     private PlayerInput _input;
@@ -31,6 +31,7 @@ public class InputManager : MonoBehaviour
         _playerActions = _input.Player;
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
+        _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpPressed();

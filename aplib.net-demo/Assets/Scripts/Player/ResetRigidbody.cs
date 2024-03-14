@@ -6,7 +6,8 @@ using UnityEngine;
 /// </summary>
 public class ResetRigidbody : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rigidbodyToRespawn;
+    [SerializeField] private Transform _respawnPointTransform;
+    private Rigidbody _rigidbodyToRespawn;
     private Vector3 _respawnPoint;
 
     /// <summary>
@@ -14,7 +15,8 @@ public class ResetRigidbody : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        _respawnPoint = transform.position;
+        _rigidbodyToRespawn = transform.GetComponent<Rigidbody>();
+        _respawnPoint = _respawnPointTransform.position;
     }
 
     /// <summary>
@@ -22,7 +24,6 @@ public class ResetRigidbody : MonoBehaviour
     /// </summary>
     public void ResetObject()
     {
-        Debug.Log("Resetting object");
         _rigidbodyToRespawn.position = _respawnPoint;
         _rigidbodyToRespawn.velocity = Vector3.zero;
     }
