@@ -40,6 +40,7 @@ public class CinemachinePovExtension : CinemachineExtension
                     return;
 
                 Vector2 deltaInput = _inputManager.GetMouseDelta();
+                // Mouse flicker fix might be removing deltaTime here!!
                 _startingRotation.x += deltaInput.x * _horizontalSpeed * Time.deltaTime;
                 _startingRotation.y += deltaInput.y * _verticalSpeed * Time.deltaTime;
                 _startingRotation.y = Mathf.Clamp(_startingRotation.y, -_clampAngle, _clampAngle);
