@@ -12,11 +12,11 @@ public class MouseLock : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    
+
     /// <summary>
     /// Shows the mouse and unlocks it.
     /// </summary>
-    public void OnShowMousePressed() 
+    public void OnShowMousePressed()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -26,7 +26,7 @@ public class MouseLock : MonoBehaviour
     /// <summary>
     /// On left mouse click, go back into the game and lock the cursor.
     /// </summary>
-    public void OnLeftMousePressed() 
+    public void OnLeftMousePressed()
     {
         if (_showMouse)
         {

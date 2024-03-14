@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
         get
         {
             if (_instance == null) Debug.LogError("Game Manager is null, awake it first!");
-            
+
             return _instance;
         }
     }
