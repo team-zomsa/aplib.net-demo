@@ -6,16 +6,15 @@ using UnityEngine;
 /// </summary>
 public class ResetRigidbody : MonoBehaviour
 {
-    Rigidbody _rigidbodyToRespawn;
+    [SerializeField] private Rigidbody _rigidbodyToRespawn;
     private Vector3 _respawnPoint;
 
     /// <summary>
-    /// Get the Rigidbody component and store the initial position.
+    /// Store the initial position.
     /// </summary>
     private void Awake()
     {
-        _rigidbodyToRespawn = transform.GetComponent<Rigidbody>();
-        _respawnPoint = _rigidbodyToRespawn.position;
+        _respawnPoint = transform.position;
     }
 
     /// <summary>
@@ -23,6 +22,7 @@ public class ResetRigidbody : MonoBehaviour
     /// </summary>
     public void ResetObject()
     {
+        Debug.Log("Resetting object");
         _rigidbodyToRespawn.position = _respawnPoint;
         _rigidbodyToRespawn.velocity = Vector3.zero;
     }
