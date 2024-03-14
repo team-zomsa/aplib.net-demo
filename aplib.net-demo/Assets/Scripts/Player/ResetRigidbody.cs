@@ -8,7 +8,6 @@ public class ResetRigidbody : MonoBehaviour
 {
     [SerializeField] private Transform _respawnPointTransform;
     private Rigidbody _rigidbodyToRespawn;
-    private Vector3 _respawnPoint;
 
     /// <summary>
     /// Store the initial position.
@@ -16,15 +15,14 @@ public class ResetRigidbody : MonoBehaviour
     private void Awake()
     {
         _rigidbodyToRespawn = transform.GetComponent<Rigidbody>();
-        _respawnPoint = _respawnPointTransform.position;
     }
-
+    
     /// <summary>
     /// Reset the position and velocity of the Rigidbody 
     /// </summary>
     public void ResetObject()
     {
-        _rigidbodyToRespawn.position = _respawnPoint;
+        _rigidbodyToRespawn.position = _respawnPointTransform.position;
         _rigidbodyToRespawn.velocity = Vector3.zero;
     }
 }
