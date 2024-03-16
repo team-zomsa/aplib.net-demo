@@ -25,6 +25,25 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup Label="Unity Packages">
+    <Reference Include="Unity.InputSystem">
+      <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/aplib.net-demo/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/aplib.net-demo/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/aplib.net-demo/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/aplib.net-demo/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor/2022.3.19f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
