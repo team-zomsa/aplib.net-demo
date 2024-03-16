@@ -44,6 +44,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup Label="Input System">
+    <Compile Include="../aplib.net-demo/Assets/Input/**/*.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>/home/runner/work/aplib.net-demo/aplib.net-demo/Unity/Hub/Editor/2022.3.19f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
