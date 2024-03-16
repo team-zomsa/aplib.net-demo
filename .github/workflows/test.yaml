@@ -1,8 +1,9 @@
-name: Test and Build Pipeline
+name: Test Pipeline
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   unity-test:
     name: Test with Unity Test Runner
