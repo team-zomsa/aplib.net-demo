@@ -2,13 +2,16 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
-aplib.net-demo/[Ll]ibrary/
+aplib.net-demo/[Ll]ibrary/*
 aplib.net-demo/[Tt]emp/
 aplib.net-demo/[Oo]bj/
 aplib.net-demo/[Bb]uild/
 aplib.net-demo/[Bb]uilds/
 aplib.net-demo/[Ll]ogs/
 aplib.net-demo/[Uu]ser[Ss]ettings/
+
+# Do upload the script assemblies, as we need them for MSBuild (the assemblies are not that big)
+!aplib.net-demo/[Ll]ibrary/ScriptAssemblies/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
