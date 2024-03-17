@@ -23,7 +23,7 @@ public class Inventory : MonoBehaviour
         
     }
     /// <summary>
-    /// Picks up an item and adds it to the inventory queue, if the item is already in the inventory, it adds uses instead
+    /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
     /// </summary>
     /// <param name="item"></param>
     /// <param name="uses"></param>
@@ -35,9 +35,16 @@ public class Inventory : MonoBehaviour
             for (int i = 0; i < queueSize; i++) {
             if (itemList.ToList()[i].itemName == item.itemName)
             {
-                itemList.ToList()[i].uses += uses;
-                alreadyInInventory = true;
-                break;
+                if (item.stackable)
+                {
+                    itemList.ToList()[i].uses += uses;
+                    alreadyInInventory = true;
+                    break;
+                }
+                else
+                {
+                    return;
+                }
             }
                 }
         if (!alreadyInInventory)

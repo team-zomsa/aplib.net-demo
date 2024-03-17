@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
     public float uses;
     public string itemName;
+    public bool stackable;
     // Start is called before the first frame update
     void Start()
     {
