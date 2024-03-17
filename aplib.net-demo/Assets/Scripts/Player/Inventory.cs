@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    //TODO Add visual indicators
-    //TODO Add max inventory size
-    //TODO Add controls for using items
-    //TODO Add controls for switching which item you're using
+    //TODO Add icon logic to Item class
+    //TODO Add test Icon to TestItem class
+    //TODO Add hotbar location to Inventory class
+    //TODO Add max inventory size to Inventory class
+    //TODO Add controls for using items to InputManager(?) class
+    //TODO Add controls for switching which item you're using to InputManager(?) class
     //TODO Add way to get rid of items
+    //TODO Couple this script to the player
     Queue<Item> itemList;
     // Start is called before the first frame update
     void Start()
