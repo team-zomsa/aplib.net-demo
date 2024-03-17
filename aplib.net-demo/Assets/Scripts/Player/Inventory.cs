@@ -8,16 +8,16 @@ public class Inventory : MonoBehaviour
     //TODO Add icon logic to Item class
     //TODO Add test Icon to TestItem class
     //TODO Add hotbar location to Inventory class
-    //TODO Add max inventory size to Inventory class
     //TODO Add controls for using items to InputManager(?) class
     //TODO Add controls for switching which item you're using to InputManager(?) class
-    //TODO Add way to get rid of items
     //TODO Couple this script to the player
     Queue<Item> itemList;
+    public float inventorySize;
     // Start is called before the first frame update
     void Start()
     {
         itemList = new Queue<Item>();
+        inventorySize = 4;
     }
 
     // Update is called once per frame
@@ -50,7 +50,7 @@ public class Inventory : MonoBehaviour
                 }
             }
                 }
-        if (!alreadyInInventory)
+        if (!alreadyInInventory&&itemList.Count<inventorySize)
         {
             itemList.Enqueue(item);
         }
@@ -67,5 +67,12 @@ public class Inventory : MonoBehaviour
         {
             itemList.Dequeue();
         }
+    }
+    /// <summary>
+    /// Puts the first item you have in the last slot;
+    /// </summary>
+    public void SwapItem()
+    {
+        itemList.Enqueue(itemList.Dequeue());
     }
 }
