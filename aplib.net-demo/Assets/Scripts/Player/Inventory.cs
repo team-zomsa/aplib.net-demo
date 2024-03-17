@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
 {
     //TODO Add icon logic to Item class
     //TODO Add test Icon to TestItem class
-    //TODO Add hotbar location to Inventory class
+    //TODO Add hotbar Object which contains 4 subjobjects. They are linked to the inventory class and will display the right icons depending on inventory contents.
     //TODO Add controls for using items to InputManager(?) class
     //TODO Add controls for switching which item you're using to InputManager(?) class
     //TODO Couple this script to the player
