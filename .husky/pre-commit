@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+dotnet format -v diag aplib.net-demo/aplib.net-demo.sln
+
+# Add files changed by husky to git
+git add .
