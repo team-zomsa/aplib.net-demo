@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private Movement _movement;
     [SerializeField] private MouseLock _mouseLock;
+    [SerializeField] private Transform _playerTransform;
+    private ResetRigidbody _playerRespawn;
+    private Movement _playerMovement;
 
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
@@ -28,9 +30,12 @@ public class InputManager : MonoBehaviour
         _input = new PlayerInput();
         _playerActions = _input.Player;
         _uiActions = _input.UI;
+        _playerMovement = _playerTransform.GetComponent<Movement>();
+        _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
-        _playerActions.Jump.performed += _ => _movement.OnJumpPressed();
+        _playerActions.Jump.performed += _ => _playerMovement.OnJumpPressed();
+        _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
     }
@@ -43,7 +48,7 @@ public class InputManager : MonoBehaviour
     /// <summary>
     /// Pass the input to the movement script.
     /// </summary>
-    private void Update() => _movement.ReceiveHorizontalInput(_horizontalInput);
+    private void Update() => _playerMovement.ReceiveHorizontalInput(_horizontalInput);
 
     private void OnEnable() => _input.Enable();
 
