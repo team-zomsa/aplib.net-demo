@@ -1,5 +1,5 @@
-using UnityEngine;
 using Cinemachine;
+using UnityEngine;
 
 public class CinemachinePovExtension : CinemachineExtension
 {
@@ -17,7 +17,7 @@ public class CinemachinePovExtension : CinemachineExtension
     /// <summary>
     /// Initialise the input manager, camera manager, and starting rotation.
     /// </summary>
-    protected override void Awake() 
+    protected override void Awake()
     {
         _inputManager = InputManager.Instance;
         _cameraManager = CameraManager.Instance;
@@ -28,7 +28,7 @@ public class CinemachinePovExtension : CinemachineExtension
     /// <summary>
     /// Override void to use Cinemachine with Unity's new input system.
     /// </summary>
-    protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime) 
+    protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
     {
         if (vcam.Follow)
         {
