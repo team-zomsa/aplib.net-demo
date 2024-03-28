@@ -4,6 +4,10 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a corner tile.
+    /// ___ ___
+    /// | | |_|
+    /// | |____
+    /// |_____|
     /// </summary>
     public class Corner : Tile
     {

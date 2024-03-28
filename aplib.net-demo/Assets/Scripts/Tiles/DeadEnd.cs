@@ -4,6 +4,10 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a dead end tile.
+    /// ___ ___
+    /// | | | |
+    /// | |_| |
+    /// |_____|
     /// </summary>
     public class DeadEnd : Tile
     {

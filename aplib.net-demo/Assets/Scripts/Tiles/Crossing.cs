@@ -4,6 +4,10 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a crossing tile.
+    /// ___ ___
+    /// |_| |_|
+    /// ___ ___
+    /// |_| |_|
     /// </summary>
     public class Crossing : Tile
     {

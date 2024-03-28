@@ -4,6 +4,10 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a straight tile.
+    /// ___ ___
+    /// | | | |
+    /// | | | |
+    /// |_| |_|
     /// </summary>
     public class Straight : Tile
     {

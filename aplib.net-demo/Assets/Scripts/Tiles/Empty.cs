@@ -4,6 +4,10 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents an empty tile.
+    /// _______
+    /// |     |
+    /// |     |
+    /// |_____|
     /// </summary>
     public class Empty : Tile
     {
