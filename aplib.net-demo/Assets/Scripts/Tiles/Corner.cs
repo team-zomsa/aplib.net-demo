@@ -14,11 +14,22 @@ namespace Assets.Scripts.Tiles
         /// <param name="rotate">The amount of times to rotate the tile.</param>
         public Corner(int rotate = 0)
         {
-            _allowedDirections = rotate == 0
-                ? new List<bool> { false, true, true, false }
-                : rotate == 1
-                    ? new List<bool> { false, false, true, true }
-                    : rotate == 2 ? new List<bool> { true, false, false, true } : new List<bool> { true, true, false, false };
+            if (rotate == 0)
+            {
+                _allowedDirections = new List<bool> { false, true, true, false };
+            }
+            else if (rotate == 1)
+            {
+                _allowedDirections = new List<bool> { false, false, true, true };
+            }
+            else if (rotate == 2)
+            {
+                _allowedDirections = new List<bool> { true, false, false, true };
+            }
+            else
+            {
+                _allowedDirections = new List<bool> { true, true, false, false };
+            }
         }
     }
 }
