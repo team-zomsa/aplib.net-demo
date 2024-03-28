@@ -20,6 +20,6 @@ namespace Assets.Scripts.Models
             _func = func;
         }
 
-        public bool Feasable() => _func(_tile, _x, _y, _grid);
+        public bool Feasible() => _func(_tile, _x, _y, _grid);
     }
 }
