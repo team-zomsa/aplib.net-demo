@@ -4,7 +4,6 @@ using System;
 
 namespace Assets.Scripts.Models
 {
-
     public class Model
     {
         private readonly Func<Tile, int, int, Grid, bool> _func;
