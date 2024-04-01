@@ -1,4 +1,5 @@
 using Assets.Scripts.WFC;
+using UnityEngine.CoreModule;
 using System;
 
 namespace Assets.Scripts.Models
@@ -7,7 +8,12 @@ namespace Assets.Scripts.Models
     {
         private readonly Func<int, int, Grid, bool> _func;
 
-        public Model(Func<int, int, Grid, bool> func) => _func = func;
+        private readonly GameObject _model;
+
+        public Model(GameObject model, Func<int, int, Grid, bool> func) { 
+            _func = func;
+            _model = model;
+        }
 
         public bool Feasible(int x, int y, Grid grid) => _func(x, y, grid);
     }
