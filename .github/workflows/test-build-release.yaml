@@ -1,0 +1,196 @@
+name: Test, Build and Release Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  unity-test:
+    name: Test with Unity Test Runner
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ./aplib.net-demo/Library
+          key: Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
+      - uses: game-ci/unity-test-runner@v4
+        id: unity-test-step
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: ./aplib.net-demo/
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          coverageOptions: "generateAdditionalMetrics;generateHtmlReport;generateHtmlReportHistory;generateBadgeReport"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Coverage results
+          path: ${{ steps.unity-test-step.outputs.coveragePath }}
+
+  build:
+    name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+    needs: [unity-test]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        unity-version:
+          - 2022.3.19f1
+        targetPlatform:
+          - StandaloneOSX
+          - StandaloneWindows64
+          - StandaloneLinux64
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ./aplib.net-demo/Library
+          key: Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
+      - name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          unityVersion: ${{ matrix.unity-version }}
+          projectPath: aplib.net-demo
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.targetPlatform }}-${{ matrix.unity-version }}
+          path: build
+
+  create-release:
+    name: Create release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write           # To be able to publish a GitHub Release
+      issues: write             # To be able to comment on related issues
+      pull-requests: write      # To be able to comment on released pull requests
+      # id-token: write           # To enable use of OIDC for npm provenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install Semantic Release
+        run: npm install semantic-release@23
+      - name: Install Semantic Release Dependencies
+        run: npm install @semantic-release/exec@6 @semantic-release/commit-analyzer@11 @semantic-release/release-notes-generator@12
+      - name: Create and Publish Release
+        id: create-release
+        run: |
+          npx semantic-release@23
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  upload-build:
+    name: Upload build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }} to GitHub Release
+    needs: create-release
+    runs-on: ubuntu-latest
+    permissions: write-all
+    strategy:
+      matrix:
+        unity-version:
+          - 2022.3.19f1
+        targetPlatform:
+          - StandaloneOSX
+          - StandaloneWindows64
+          - StandaloneLinux64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Retrieve build from artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.targetPlatform }}-${{ matrix.unity-version }}
+          path: build
+      - name: Get Latest Tag
+        id: previoustag
+        uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
+        with:
+          fallback: v1.0.0
+      - name: Zip build
+        run: zip -r build-${{ matrix.targetPlatform }}-${{ matrix.unity-version }}.zip build
+      - name: Upload build to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build-${{ matrix.targetPlatform }}-${{ matrix.unity-version }}.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.previoustag.outputs.tag }}
+          append_body: true
+
+  build-webgl:
+    name: Build for WebGL, 2022.3.19f1
+    needs: [unity-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ./aplib.net-demo/Library
+          key: Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
+      - name: Build for WebGL, 2022.3.19f1
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          unityVersion: 2022.3.19f1
+          projectPath: aplib.net-demo
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-WebGL-2022.3.19f1
+          path: build
+
+  upload-to-gh-pages:
+    name: Upload to GitHub Pages
+    needs: build-webgl
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Retrieve build from artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-WebGL-2022.3.19f1
+          path: build
+      - name: Push to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: build/WebGL/WebGL
