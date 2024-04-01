@@ -5,15 +5,18 @@ using UnityEngine.UI;
 
 public class TestItem : Item
 {
-    public Image icon;
-    // Start is called before the first frame update
-    void Start()
+/// <summary>
+/// sets item name
+/// </summary>
+void Start()
     {
         itemName = "testItem";
     }
 
-    // Update is called once per frame
-    void Update()
+/// <summary>
+/// Currently does nothing
+/// </summary>
+void Update()
     {
         
     }

@@ -2,26 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
     //TODO Add icon logic to Item class
-    //TODO Add test Icon to TestItem class
     //TODO Add hotbar Object which contains 4 subjobjects. They are linked to the inventory class and will display the right icons depending on inventory contents.
     //TODO Add controls for using items to InputManager(?) class
     //TODO Add controls for switching which item you're using to InputManager(?) class
     //TODO Couple this script to the player
     Queue<Item> itemList;
     public float inventorySize;
-    // Start is called before the first frame update
+    private RawImage icon;
+    private Texture iconTexture;
+    /// <summary>
+    /// Creates the inventory queue and sets default size, als fetches the rawimage component to display the icons
+    /// </summary>
     void Start()
     {
+        icon = GetComponent<RawImage>();
+
         itemList = new Queue<Item>();
         inventorySize = 4;
     }
 
-    // Update is called once per frame
-    void Update()
+/// <summary>
+/// Currently does nothing
+/// </summary>
+void Update()
     {
         
     }
@@ -58,7 +66,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// activates the item in the first inventory slot. if uses are 0, it is also removed;
+    /// activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the icon to the next item in the queue
     /// </summary>
     public void ActivateItem()
     {
@@ -67,6 +75,7 @@ public class Inventory : MonoBehaviour
         {
             itemList.Dequeue();
         }
+        DisplayItem();
     }
     /// <summary>
     /// Puts the first item you have in the last slot;
@@ -74,5 +83,19 @@ public class Inventory : MonoBehaviour
     public void SwapItem()
     {
         itemList.Enqueue(itemList.Dequeue());
+    }
+    /// <summary>
+    /// Fetches the icon of the first item in the queue and makes it the texture of the displayed image
+    /// </summary>
+    public void DisplayItem()
+    {
+        if (itemList.Count == 0)
+        {
+            icon.texture = null;
+        }
+        else
+        {
+            icon.texture = itemList.Peek().iconTexture;
+        }
     }
 }
