@@ -1,6 +1,6 @@
-using Assets.Scripts.WFC;
-using UnityEngine.CoreModule;
 using System;
+using UnityEngine;
+using Grid = Assets.Scripts.WFC.Grid;
 
 namespace Assets.Scripts.Models
 {
@@ -10,7 +10,8 @@ namespace Assets.Scripts.Models
 
         private readonly GameObject _model;
 
-        public Model(GameObject model, Func<int, int, Grid, bool> func) { 
+        public Model(GameObject model, Func<int, int, Grid, bool> func)
+        {
             _func = func;
             _model = model;
         }
