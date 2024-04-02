@@ -1,0 +1,6 @@
+{
+    "name": "AplibTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

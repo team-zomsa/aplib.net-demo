@@ -1,0 +1,2 @@
+-r:Assets/Plugins/Aplib.Core.dll
+-r:Assets/Plugins/Aplib.Integrations.Unity.dll
