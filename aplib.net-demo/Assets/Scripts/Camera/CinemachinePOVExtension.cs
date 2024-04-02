@@ -1,5 +1,4 @@
 using Cinemachine;
-using Codice.Client.Common.Locks;
 using UnityEngine;
 
 public class CinemachinePovExtension : CinemachineExtension
@@ -40,7 +39,7 @@ public class CinemachinePovExtension : CinemachineExtension
                 if (_inputManager == null)
                     return;
 
-                Vector2 deltaInput = (Cursor.lockState == CursorLockMode.Locked) ? _inputManager.GetMouseDelta() : Vector2.zero;
+                Vector2 deltaInput = Cursor.lockState == CursorLockMode.Locked ? _inputManager.GetMouseDelta() : Vector2.zero;
                 _startingRotation.x += deltaInput.x *  _horizontalSpeed * Time.deltaTime;
                 _startingRotation.y += deltaInput.y * _verticalSpeed * Time.deltaTime;
                 _startingRotation.y = Mathf.Clamp(_startingRotation.y, -_clampAngle, _clampAngle);
