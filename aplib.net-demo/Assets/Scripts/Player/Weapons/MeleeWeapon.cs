@@ -4,7 +4,6 @@ public class MeleeWeapon : Weapon
 {
     [SerializeField] private float _damage = 25;
     [SerializeField] private float _range = 3;
-
     private Transform _playerTransform;
 
     private void Start()
@@ -23,13 +22,10 @@ public class MeleeWeapon : Weapon
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.GetComponent<BasicEnemy>().TakeDamage(_damage);
-                Debug.Log("Swinging sword at " + hit.collider.name);
+                DummyEnemy enemy = hit.collider.GetComponent<DummyEnemy>() ?? hit.collider.GetComponentInParent<DummyEnemy>();
+                if (enemy != null) enemy.TakeDamage(_damage);
+                else Debug.Log("This enemy does not have a BasicEnemy component!");
             }
-        }
-        else 
-        {
-            Debug.Log("Swinging sword at nothing");
         }
     }
 }
