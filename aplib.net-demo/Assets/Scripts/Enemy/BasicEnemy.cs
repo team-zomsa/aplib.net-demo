@@ -25,6 +25,7 @@ public class BasicEnemy : MonoBehaviour
         {
             ResetAtRandomLocation();
         }
+        Debug.Log("Enemy took " + damage + " damage. Health: " + Health);
     }
 
     private void ResetAtRandomLocation()
