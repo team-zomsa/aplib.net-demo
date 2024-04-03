@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Basic enemy class to use as dummy target during weapons testing.
 /// </summary>
-public class BasicEnemy : MonoBehaviour
+public class DummyEnemy : MonoBehaviour
 {
     [SerializeField] private float _maxHealth = 100;
     public float Health { get; private set; }
@@ -25,7 +23,6 @@ public class BasicEnemy : MonoBehaviour
         {
             ResetAtRandomLocation();
         }
-        Debug.Log("Enemy took " + damage + " damage. Health: " + Health);
     }
 
     private void ResetAtRandomLocation()
