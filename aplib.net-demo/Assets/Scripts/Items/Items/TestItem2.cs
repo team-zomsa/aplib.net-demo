@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TestItem : Item
+public class TestItem2 : Item
 {
 
     //You want to change the value of the uses and all the attributes of the item in the unity inspector for the item prefab you make
