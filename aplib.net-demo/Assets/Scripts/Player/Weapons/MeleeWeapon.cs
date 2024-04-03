@@ -1,9 +1,13 @@
 using UnityEngine;
 
+/// <summary>
+/// A basic melee weapon that deals damage to enemies within a short range.
+/// </summary>
 public class MeleeWeapon : Weapon
 {
     [SerializeField] private float _damage = 25;
     [SerializeField] private float _range = 3;
+
     private Transform _playerTransform;
 
     private void Start()
@@ -12,8 +16,8 @@ public class MeleeWeapon : Weapon
     }
 
     /// <summary>
-    /// Shoot a ray from the weapon's position in the direction it is facing.
-    /// Look for an entity with an Enemy tag and deal damage to it.
+    /// Shoots a ray from the players's position in the direction it is facing.
+    /// Look for an entity with an Enemy tag within range and deal damage to it.
     /// </summary>
     public override void UseWeapon()
     {
@@ -22,7 +26,8 @@ public class MeleeWeapon : Weapon
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                DummyEnemy enemy = hit.collider.GetComponent<DummyEnemy>() ?? hit.collider.GetComponentInParent<DummyEnemy>();
+                // We need to check if the enemy has an BasicEnemy component before dealing damage
+                BasicEnemy enemy = hit.collider.GetComponent<BasicEnemy>() ?? hit.collider.GetComponentInParent<DummyEnemy>();
                 if (enemy != null) enemy.TakeDamage(_damage);
                 else Debug.Log("This enemy does not have a BasicEnemy component!");
             }
