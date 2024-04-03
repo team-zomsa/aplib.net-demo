@@ -1184,7 +1184,7 @@ GameObject:
   - component: {fileID: 405734145}
   m_Layer: 0
   m_Name: Backpack
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4043,7 +4043,7 @@ GameObject:
   - component: {fileID: 2094657384}
   m_Layer: 0
   m_Name: Visor
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
