@@ -1,31 +1,32 @@
 using UnityEngine;
 
 /// <summary>
-/// Basic enemy class to use as dummy target during weapons testing.
+/// Dummy basic enemy class to use as target during weapons testing.
+/// It respawns after dying.
 /// </summary>
-public class DummyEnemy : MonoBehaviour
+public class DummyEnemy : BasicEnemy
 {
-    [SerializeField] private float _maxHealth = 100;
-    public float Health { get; private set; }
     private Vector3 _spawnPoint;
 
-    private void Awake()
+    /// <summary>
+    /// Initializes the enemy's health to the maximum value.
+    /// Also stores the initial position as the spawn point.
+    /// </summary>
+    protected override void Awake()
     {
-        Health = 100;
+        base.Awake();
         _spawnPoint = transform.position;
-
     }
 
-    public void TakeDamage(float damage)
+    protected override void Die() 
     {
-        Health -= damage;
-        if (Health <= 0)
-        {
-            ResetAtRandomLocation();
-        }
+        Respawn();
     }
 
-    private void ResetAtRandomLocation()
+    /// <summary>
+    /// Respawns the enemy at a random position and resets its health.
+    /// </summary>
+    private void Respawn()
     {
         transform.position = _spawnPoint + new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
         Health = _maxHealth;
