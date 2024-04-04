@@ -5,8 +5,8 @@ using UnityEngine;
 /// </summary>
 public class MeleeWeapon : Weapon
 {
-    [SerializeField] private float _damage = 25;
-    [SerializeField] private float _range = 3;
+    [SerializeField] private int _damage = 25;
+    [SerializeField] private int _range = 3;
 
     private Transform _playerTransform;
 
