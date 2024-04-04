@@ -14,6 +14,6 @@ namespace Assets.Scripts.Tiles
         /// <summary>
         /// Initializes a new instance of the <see cref="Empty"/> class.
         /// </summary>
-        public Empty() => _allowedDirections = new List<bool> { false, false, false, false };
+        public Empty() => AllowedDirections = new List<bool> { false, false, false, false };
     }
 }

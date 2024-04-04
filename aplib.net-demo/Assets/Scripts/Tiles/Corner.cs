@@ -18,13 +18,14 @@ namespace Assets.Scripts.Tiles
         /// <param name="rotate">The amount of times to rotate the tile.</param>
         public Corner(int rotate = 0)
         {
-            _allowedDirections = new List<bool> { false, false, false, false };
+            rotation = rotate;
+            AllowedDirections = new List<bool> { false, false, false, false };
 
             int index = rotate % 4;
             int nextIndex = (index + 1) % 4;
 
-            _allowedDirections[index] = true;
-            _allowedDirections[nextIndex] = true;
+            AllowedDirections[index] = true;
+            AllowedDirections[nextIndex] = true;
         }
     }
 }
