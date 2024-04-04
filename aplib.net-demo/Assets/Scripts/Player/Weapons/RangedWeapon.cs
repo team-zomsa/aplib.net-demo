@@ -10,6 +10,7 @@ public class RangedWeapon : Weapon
     [SerializeField] private int _range = 50;
 
     private Transform _playerTransform;
+    [SerializeField] private GameObject _cameraTransform;
 
 
     // Start is called before the first frame update
@@ -26,7 +27,7 @@ public class RangedWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        RaycastHit[] hits = Physics.RaycastAll(_playerTransform.position, transform.forward, _range);
+        RaycastHit[] hits = Physics.RaycastAll(_cameraTransform.transform.position, _cameraTransform.transform.forward, _range);
 
         IEnumerable<RaycastHit> orderedHits = hits.OrderBy(hit => hit.distance);
 
