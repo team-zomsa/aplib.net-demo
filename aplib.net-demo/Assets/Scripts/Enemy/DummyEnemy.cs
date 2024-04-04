@@ -18,7 +18,7 @@ public class DummyEnemy : BasicEnemy
         _spawnPoint = transform.position;
     }
 
-    protected override void Die() 
+    protected override void Die()
     {
         Respawn();
     }

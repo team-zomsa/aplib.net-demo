@@ -5,8 +5,8 @@ using UnityEngine;
 /// </summary>
 public class BasicEnemy : MonoBehaviour
 {
-    [SerializeField] protected float _maxHealth = 100;
-    public float Health { get; protected set; }
+    [SerializeField] protected int _maxHealth = 100;
+    public int Health { get; protected set; }
 
     /// <summary>
     /// Initializes the enemy's health to the maximum value.
@@ -21,7 +21,7 @@ public class BasicEnemy : MonoBehaviour
     /// If the health reaches zero, the enemy dies.
     /// </summary>
     /// <param name="damage"></param>
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(int damage)
     {
         Health -= damage;
         if (Health <= 0)

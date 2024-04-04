@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -5,32 +6,63 @@ using UnityEngine;
 /// </summary>
 public class MeleeWeapon : Weapon
 {
-    [SerializeField] private float _damage = 25;
-    [SerializeField] private float _range = 3;
+    [SerializeField] private int _damage = 25;
+    [SerializeField] private float _height = 4;
+    [SerializeField] private float _radius = 1.4f;
 
-    private Transform _playerTransform;
+    private Transform _playerVisTransform;
+    private Vector3 _sphere1Center;
+    private Vector3 _sphere2Center;
 
+    /// <summary>
+    /// Set the player's visual transform instance and ensure the height is at least twice the radius.
+    /// </summary>
     private void Start()
     {
-        _playerTransform = transform.parent;
+        _playerVisTransform = CameraManager.Instance.PlayerVisTransform;
+        if (_height < 2 * _radius) _height = 2 * _radius;
+        UpdateHitZone();
     }
 
     /// <summary>
-    /// Shoots a ray from the players's position in the direction it is facing.
-    /// Look for an entity with an Enemy tag within range and deal damage to it.
+    /// Update the player weapon's rotation to match the player's rotation.
+    /// </summary>
+    private void Update()
+    {
+        transform.localRotation = _playerVisTransform.localRotation;
+    }
+
+    /// <summary>
+    /// Update the HitZone Capsule defined by the locations of the two spheres.
+    /// </summary>
+    private void UpdateHitZone()
+    {
+        _sphere1Center = transform.position + _radius * transform.forward;
+        _sphere2Center = transform.position + (_height - _radius) * transform.forward;
+    }
+
+    /// <summary>
+    /// Check in the HitZone for any enemies and deal damage to them.
     /// </summary>
     public override void UseWeapon()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(_playerTransform.position, transform.forward, out hit, _range))
+        UpdateHitZone();
+        foreach (Collider collider in Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
+            .Where(c => c.CompareTag("Enemy")))
         {
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                // We need to check if the enemy has an BasicEnemy component before dealing damage
-                BasicEnemy enemy = hit.collider.GetComponent<BasicEnemy>() ?? hit.collider.GetComponentInParent<DummyEnemy>();
-                if (enemy != null) enemy.TakeDamage(_damage);
-                else Debug.Log("This enemy does not have a BasicEnemy component!");
-            }
+            // Check if the collider with enemy tag has a BasicEnemy component. If so, deal damage to it. 
+            BasicEnemy enemy = collider.GetComponent<BasicEnemy>();
+            enemy?.TakeDamage(_damage);
         }
+    }
+
+    /// <summary>
+    /// Draw the hitzone when the weapon is selected in the editor.
+    /// </summary>
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Globals.s_PhysicsColor;
+        Gizmos.DrawWireSphere(_sphere1Center, _radius);
+        Gizmos.DrawWireSphere(_sphere2Center, _radius);
     }
 }
