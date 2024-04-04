@@ -1,3 +1,7 @@
 {
-    "dotnet.preferCSharpExtension": true
+    "dotnet.preferCSharpExtension": true,
+    "sonarlint.connectedMode.project": {
+        "connectionId": "team-zomsa",
+        "projectKey": "team-zomsa_aplib.net-demo"
+    }
 }
