@@ -10,7 +10,7 @@ namespace Assets.Scripts.Tiles
         /// <summary>
         /// The rotation of the tile. 0 = 0 degrees, 1 = 90 degrees, 2 = 180 degrees, 3 = 270 degrees.
         /// </summary>
-        public int Rotation = 0;
+        public int rotation = 0;
         
         /// <summary>
         /// The allowed directions for this tile. The index of the list corresponds to the direction. 0 = North, 1 = East, 2 = South, 3 = West.
