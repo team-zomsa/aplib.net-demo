@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     [SerializeField] public Transform PlayerVisTransform;
+    public Transform PlayerTransform;
 
     public static CameraManager Instance { get; private set; }
 
@@ -18,5 +20,7 @@ public class CameraManager : MonoBehaviour
         else
             Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        PlayerTransform = PlayerVisTransform.parent;
     }
 }
