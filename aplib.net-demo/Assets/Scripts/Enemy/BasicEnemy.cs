@@ -25,9 +25,7 @@ public class BasicEnemy : MonoBehaviour
     {
         Health -= damage;
         if (Health <= 0)
-        {
             Die();
-        }
     }
 
     /// <summary>

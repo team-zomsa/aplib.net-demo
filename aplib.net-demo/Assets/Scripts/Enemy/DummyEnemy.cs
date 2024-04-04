@@ -6,21 +6,20 @@ using UnityEngine;
 /// </summary>
 public class DummyEnemy : BasicEnemy
 {
-    private Vector3 _spawnPoint;
-
     /// <summary>
-    /// Initializes the enemy's health to the maximum value.
-    /// Also stores the initial position as the spawn point.
+    /// The spawn area for the enemy. 
+    /// The size is defined by the local scale of the transform.
     /// </summary>
-    protected override void Awake()
-    {
-        base.Awake();
-        _spawnPoint = transform.position;
-    }
+    [SerializeField] private Transform _spawnArea;
+    [SerializeField] private bool _respawn;
+    private Vector3 _spawnRange => _spawnArea.localScale / 2.0f;
 
     protected override void Die()
     {
-        Respawn();
+        if (_respawn)
+            Respawn();
+        else
+            base.Die();
     }
 
     /// <summary>
@@ -28,7 +27,10 @@ public class DummyEnemy : BasicEnemy
     /// </summary>
     private void Respawn()
     {
-        transform.position = _spawnPoint + new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
+        Vector3 randomRange = new(Random.Range(-_spawnRange.x, _spawnRange.x),
+                                    Random.Range(-_spawnRange.y, _spawnRange.y),
+                                    Random.Range(-_spawnRange.z, _spawnRange.z));
+        transform.position = _spawnArea.position + randomRange;
         Health = _maxHealth;
     }
 }

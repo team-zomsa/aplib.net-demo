@@ -10,7 +10,6 @@ public class MeleeWeapon : Weapon
     [SerializeField] private float _height = 4;
     [SerializeField] private float _radius = 1.4f;
 
-    private Transform _playerVisTransform;
     private Vector3 _sphere1Center;
     private Vector3 _sphere2Center;
 
@@ -19,17 +18,8 @@ public class MeleeWeapon : Weapon
     /// </summary>
     private void Start()
     {
-        _playerVisTransform = CameraManager.Instance.PlayerVisTransform;
         if (_height < 2 * _radius) _height = 2 * _radius;
         UpdateHitZone();
-    }
-
-    /// <summary>
-    /// Update the player weapon's rotation to match the player's rotation.
-    /// </summary>
-    private void Update()
-    {
-        transform.localRotation = _playerVisTransform.localRotation;
     }
 
     /// <summary>
