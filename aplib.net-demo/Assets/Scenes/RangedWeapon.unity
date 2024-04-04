@@ -3505,6 +3505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 30
   _range: 50
+  _cameraTransform: {fileID: 630626825}
 --- !u!1 &1456176067
 GameObject:
   m_ObjectHideFlags: 0
