@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour
     //TODO Add controls for using items to InputManager(?) class
     //TODO Add controls for switching which item you're using to InputManager(?) class
     //TODO Add logic for items with a duration and effect
-    Queue<Item> itemList;
+    Queue<Item> _itemList;
     public float inventorySize;
     public RawImage icon;
     public Texture iconTexture;
@@ -29,19 +29,19 @@ public class Inventory : MonoBehaviour
         testItem2.Reset();
 
         icon = GetComponent<RawImage>();
-        itemList = new Queue<Item>();
+        _itemList = new Queue<Item>();
         inventorySize = 4;
         TestItemAdd();
     }
     /// <summary>
-    /// adds 2 testitems to the inventory and activates them both
-    /// </summary>
+    /// This is where you should test the items, see if you can add and activate some items using the PickUpItem(item) and ActivateItem() functions
+    /// /// </summary>
     void TestItemAdd()
     {
-        PickUpItem(testItem);
+      /*  PickUpItem(testItem);
         PickUpItem(testItem2);
         ActivateItem();
-        ActivateItem();
+        ActivateItem();*/
     }
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
@@ -50,15 +50,15 @@ public class Inventory : MonoBehaviour
     /// <param name="uses"></param>
     public void PickUpItem(Item item, float uses = 1)
     {
-        float queueSize = itemList.Count();
+        float queueSize = _itemList.Count();
         bool alreadyInInventory=false;
 
             for (int i = 0; i < queueSize; i++) {
-            if (itemList.ToList()[i].itemName == item.itemName)
+            if (_itemList.ToList()[i].itemName == item.itemName)
             {
                 if (item.stackable)
                 {
-                    itemList.ToList()[i].uses += uses;
+                    _itemList.ToList()[i].uses += uses;
                     alreadyInInventory = true;
                     break;
                 }
@@ -69,9 +69,9 @@ public class Inventory : MonoBehaviour
                 }
             }
                 }
-        if (!alreadyInInventory&&itemList.Count<inventorySize)
+        if (!alreadyInInventory&&_itemList.Count<inventorySize)
         {
-            itemList.Enqueue(item);
+            _itemList.Enqueue(item);
             DisplayItem();
         }
 
@@ -82,12 +82,10 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ActivateItem()
     {
-        Debug.Log("using item");
-        itemList.Peek().UseItem();
-        if (itemList.Peek().uses == 0)
+        _itemList.Peek().UseItem();
+        if (_itemList.Peek().uses == 0)
         {
-            Debug.Log("dequeueing item");
-            itemList.Dequeue().Reset();
+            _itemList.Dequeue().Reset();
         }
         DisplayItem();
     }
@@ -96,7 +94,7 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void SwapItem()
     {
-        itemList.Enqueue(itemList.Dequeue());
+        _itemList.Enqueue(_itemList.Dequeue());
         DisplayItem();
     }
     /// <summary>
@@ -104,15 +102,14 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void DisplayItem()
     {
-        if (itemList.Count == 0)
+        if (_itemList.Count == 0)
         {
             icon.texture = iconTexture;
         }
         else
         {
-           Debug.Log( itemList.Peek().uses);
             icon.texture = 
-                itemList.Peek().iconTexture;
+                _itemList.Peek().iconTexture;
         }
     }
 }
