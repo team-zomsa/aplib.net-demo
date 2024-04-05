@@ -14,6 +14,7 @@ public abstract class Item : MonoBehaviour
     public float startUses;
     public string itemName;
     public bool stackable;
+    //The RawImage is the object on which the icon texture is projected
     protected RawImage icon;
     public Texture iconTexture;
 
