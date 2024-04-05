@@ -62,9 +62,7 @@ namespace Assets.Scripts.WFC
         public void Init()
         {
             for (int i = 0; i < Width * Height; i++)
-            {
                 _cells.Add(new Cell());
-            }
         }
 
         /// <summary>
