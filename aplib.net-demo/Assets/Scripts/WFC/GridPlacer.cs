@@ -15,6 +15,21 @@ namespace Assets.Scripts.WFC
         private Grid _grid;
 
         /// <summary>
+        /// The size of the tiles in the x-direction.
+        /// </summary>
+        private const int _tileSizeX = 16;
+
+        /// <summary>
+        /// The size of the tiles in the y-direction.
+        /// </summary>
+        private const int _tileSizeY = 16;
+
+        /// <summary>
+        /// The rotation of the tile.
+        /// </summary>
+        private const int _tileRotation = 90;
+
+        /// <summary>
         /// Represents the room objects.
         /// </summary>
         public RoomObjects RoomObjects;
@@ -70,35 +85,21 @@ namespace Assets.Scripts.WFC
         /// <param name="tile">The tile that needs to be placed.</param>
         public void PlaceTile(int x, int y, Tile tile)
         {
-            GameObject prefab = null;
-            switch (tile)
+            GameObject prefab = tile switch
             {
-                case Corner _:
-                    prefab = RoomObjects.Corner;
-                    break;
-                case Crossing _:
-                    prefab = RoomObjects.Crossing;
-                    break;
-                case DeadEnd _:
-                    prefab = RoomObjects.DeadEnd;
-                    break;
-                case Empty _:
-                    prefab = RoomObjects.Empty;
-                    break;
-                case Room _:
-                    prefab = RoomObjects.Room;
-                    break;
-                case Straight _:
-                    prefab = RoomObjects.Straight;
-                    break;
-                case TSection _:
-                    prefab = RoomObjects.TSection;
-                    break;
-            }
+                Corner _ => RoomObjects.Corner,
+                Crossing _ => RoomObjects.Crossing,
+                DeadEnd _ => RoomObjects.DeadEnd,
+                Empty _ => RoomObjects.Empty,
+                Room _ => RoomObjects.Room,
+                Straight _ => RoomObjects.Straight,
+                TSection _ => RoomObjects.TSection,
+                _ => null
+            };
 
             if (prefab != null)
             {
-                _ = Instantiate(prefab, new Vector3(x * 16, 0, y * 16), Quaternion.Euler(0, tile.Rotation * 90, 0), transform);
+                _ = Instantiate(prefab, new Vector3(x * _tileSizeX, 0, y * _tileSizeY), Quaternion.Euler(0, tile.Rotation * _tileRotation, 0), transform);
             }
         }
     }
