@@ -27,7 +27,7 @@ namespace Assets.Scripts.WFC
             _grid = new Grid(5, 5);
 
             _grid.Init();
-            
+
             TempFillFunction();
 
             for (int y = 0; y < _grid.Height; y++)
@@ -45,7 +45,7 @@ namespace Assets.Scripts.WFC
         public void TempFillFunction()
         {
             _grid.PlaceRoom(2, 1, new Room(new List<bool> { false, true, true, false }));
-            
+
             _grid.PlaceRoom(4, 4, new Room(new List<bool> { false, true, true, false }));
 
             // Road 1
@@ -53,7 +53,7 @@ namespace Assets.Scripts.WFC
             _grid[2, 3].Tile = new Straight();
             _grid[2, 4].Tile = new Corner(2);
             _grid[3, 4].Tile = new Straight(1);
-            
+
             // Road 2
             _grid[3, 1].Tile = new Straight(1);
             _grid[4, 1].Tile = new TSection(3);

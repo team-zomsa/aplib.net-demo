@@ -11,9 +11,6 @@ namespace Assets.Scripts.Tiles
         /// Initializes a new instance of the <see cref="Room"/> class.
         /// </summary>
         /// <param name="allowedDirections">The allowed directions of the tile.</param>
-        public Room(List<bool> allowedDirections)
-        {
-            AllowedDirections = allowedDirections;
-        }
+        public Room(List<bool> allowedDirections) => AllowedDirections = allowedDirections;
     }
 }

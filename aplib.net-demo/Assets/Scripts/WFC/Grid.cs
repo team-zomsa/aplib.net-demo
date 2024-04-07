@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Assets.Scripts.Tiles;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.WFC
 {
@@ -12,12 +12,12 @@ namespace Assets.Scripts.WFC
         /// The width of the grid.
         /// </summary>
         public readonly int Width;
-        
+
         /// <summary>
         /// The height of the grid.
         /// </summary>
         public readonly int Height;
-        
+
         /// <summary>
         /// The cells of the grid.
         /// </summary>
@@ -42,8 +42,8 @@ namespace Assets.Scripts.WFC
         /// <param name="y">The y-coordinate of the cell.</param>
         public Cell this[int x, int y]
         {
-            get => _cells[y * Width + x];
-            set => _cells[y * Width + x] = value;
+            get => _cells[(y * Width) + x];
+            set => _cells[(y * Width) + x] = value;
         }
 
         /// <summary>

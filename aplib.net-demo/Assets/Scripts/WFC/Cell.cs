@@ -17,7 +17,7 @@ namespace Assets.Scripts.WFC
         /// The possible tiles that can be placed in this cell.
         /// </summary>
         public List<Tile> Candidates { get; set; }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
@@ -44,7 +44,7 @@ namespace Assets.Scripts.WFC
                 new TSection(3),
             };
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
