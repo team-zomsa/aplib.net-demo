@@ -52,9 +52,10 @@ public class Inventory : MonoBehaviour
     public void PickUpItem(Item item, float uses = 1)
     {
         float queueSize = _itemList.Count();
-        bool alreadyInInventory=false;
+        bool alreadyInInventory = false;
 
-            for (int i = 0; i < queueSize; i++) {
+        for (int i = 0; i < queueSize; i++)
+        {
             if (_itemList.ToList()[i].itemName == item.itemName)
             {
                 if (item.stackable)
@@ -69,8 +70,8 @@ public class Inventory : MonoBehaviour
                     return;
                 }
             }
-                }
-        if (!alreadyInInventory&&_itemList.Count<inventorySize)
+        }
+        if (!alreadyInInventory && _itemList.Count < inventorySize)
         {
             _itemList.Enqueue(item);
             DisplayItem();
@@ -83,16 +84,15 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ActivateItem()
     {
-        if (_itemList.Count()> 0)
-            {
+        if (_itemList.Count() > 0)
+        {
             _itemList.Peek().UseItem();
             if (_itemList.Peek().uses == 0)
-            {
                 _itemList.Dequeue().Reset();
-            }
             DisplayItem();
         }
     }
+
     /// <summary>
     /// Puts the first item you have in the last slot;
     /// </summary>
@@ -101,6 +101,7 @@ public class Inventory : MonoBehaviour
         _itemList.Enqueue(_itemList.Dequeue());
         DisplayItem();
     }
+
     /// <summary>
     /// Fetches the icon of the first item in the queue and makes it the texture of the displayed image
     /// </summary>
@@ -112,7 +113,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            icon.texture = 
+            icon.texture =
                 _itemList.Peek().iconTexture;
         }
     }
