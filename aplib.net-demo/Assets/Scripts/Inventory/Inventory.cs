@@ -40,9 +40,9 @@ public class Inventory : MonoBehaviour
     void TestItemAdd()
     {
         PickUpItem(testItem);
-        PickUpItem(testItem2);
+        PickUpItem(testItem2);/*
         ActivateItem();
-        ActivateItem();
+        ActivateItem();*/
     }
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
@@ -83,17 +83,20 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ActivateItem()
     {
-        _itemList.Peek().UseItem();
-        if (_itemList.Peek().uses == 0)
-        {
-            _itemList.Dequeue().Reset();
+        if (_itemList.Count()> 0)
+            {
+            _itemList.Peek().UseItem();
+            if (_itemList.Peek().uses == 0)
+            {
+                _itemList.Dequeue().Reset();
+            }
+            DisplayItem();
         }
-        DisplayItem();
     }
     /// <summary>
     /// Puts the first item you have in the last slot;
     /// </summary>
-    public void SwapItem()
+    public void SwitchItem()
     {
         _itemList.Enqueue(_itemList.Dequeue());
         DisplayItem();

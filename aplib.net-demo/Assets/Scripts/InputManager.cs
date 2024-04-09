@@ -4,9 +4,11 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private MouseLock _mouseLock;
-    [SerializeField] private Transform _playerTransform;
+    [SerializeField] private Transform _playerTransform; 
+    [SerializeField] private Inventory _inventory;
     private ResetRigidbody _playerRespawn;
     private Movement _playerMovement;
+
 
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
@@ -17,7 +19,7 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance { get; private set; }
 
     /// <summary>
-    /// Make this class a singleton and subscribe to the player's input events.
+    /// Make this class a singleton and subscribe to the player's input events. To change controls, check Assets/Input/PlayerInput.inputactions.
     /// </summary>
     private void Awake()
     {
@@ -36,8 +38,11 @@ public class InputManager : MonoBehaviour
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpPressed();
         _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
+        _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
+        _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
+
     }
 
     /// <summary>
