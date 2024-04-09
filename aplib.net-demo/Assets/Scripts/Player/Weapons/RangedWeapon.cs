@@ -4,6 +4,11 @@ using UnityEngine;
 using System.Linq;
 using System;
 
+/// <summary>
+/// This class has fuctions for ranged weapons.
+/// A bullet shoots through multiple enemies when they are on the same line in 3D space.
+/// The ranged weapon has a range.
+/// </summary>
 public class RangedWeapon : Weapon
 {
     [SerializeField] private int _damage = 30;
@@ -12,11 +17,10 @@ public class RangedWeapon : Weapon
     private Transform _playerTransform;
 
 
-    // Start is called before the first frame update
+    // Set weapon transformation (pos and angle) at the player transform.
     void Start()
     {
         _playerTransform = transform.parent;
-
     }
 
     /// <summary>
@@ -32,14 +36,12 @@ public class RangedWeapon : Weapon
 
         foreach (RaycastHit hit in orderedHits)
         {
-            Debug.Log(hit.collider.gameObject.name);
             if (!hit.collider.CompareTag("Enemy"))
                 break;
 
             // We need to check if the enemy has an BasicEnemy component before dealing damage
             BasicEnemy enemy = hit.collider.GetComponent<BasicEnemy>() ?? hit.collider.GetComponentInParent<DummyEnemy>();
             if (enemy != null) enemy.TakeDamage(_damage);
-            else Debug.Log("This enemy does not have a BasicEnemy component!");
         }
     }
 }
