@@ -98,8 +98,11 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void SwitchItem()
     {
-        _itemList.Enqueue(_itemList.Dequeue());
-        DisplayItem();
+        if (_itemList.Count > 0)
+        {
+            _itemList.Enqueue(_itemList.Dequeue());
+            DisplayItem();
+        }
     }
 
     /// <summary>
