@@ -194,8 +194,6 @@ public class Movement : MonoBehaviour
     private void HandleJump()
     {
         if (_jumpPressed && _isGrounded) _rigidbody.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
-
-        _jumpPressed = false;
     }
 
     /// <summary>
@@ -208,5 +206,7 @@ public class Movement : MonoBehaviour
     /// Set the jumpPressed flag to true when the player presses the jump button.
     /// Result of an InputAction.
     /// </summary>
-    public void OnJumpPressed() => _jumpPressed = true;
+    public void OnJumpDown() => _jumpPressed = true;
+
+    public void OnJumpUp() => _jumpPressed = false;
 }

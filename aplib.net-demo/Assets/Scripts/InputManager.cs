@@ -34,7 +34,8 @@ public class InputManager : MonoBehaviour
         _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
-        _playerActions.Jump.performed += _ => _playerMovement.OnJumpPressed();
+        _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
+        _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
