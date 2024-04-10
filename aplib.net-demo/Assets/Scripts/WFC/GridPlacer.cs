@@ -98,9 +98,7 @@ namespace Assets.Scripts.WFC
             };
 
             if (prefab != null)
-            {
                 _ = Instantiate(prefab, new Vector3(x * _tileSizeX, 0, y * _tileSizeY), Quaternion.Euler(0, tile.Rotation * _tileRotation, 0), transform);
-            }
         }
     }
 }
