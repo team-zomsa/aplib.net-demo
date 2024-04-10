@@ -30,7 +30,7 @@ public class RangedWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        RaycastHit[] hits = Physics.RaycastAll(CameraManager.Instance.Camera.transform.position, CameraManager.Instance.Camera.transform.forward, _range);
+        RaycastHit[] hits = Physics.RaycastAll(CameraManager.Instance.MainCamera.transform.position, CameraManager.Instance.MainCamera.transform.forward, _range);
 
         IEnumerable<RaycastHit> orderedHits = hits.OrderBy(hit => hit.distance);
 

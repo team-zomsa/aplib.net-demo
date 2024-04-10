@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     [SerializeField] public Transform PlayerVisTransform;
-    [SerializeField] public Camera Camera;
+    [SerializeField] public Camera MainCamera;
 
     public static CameraManager Instance { get; private set; }
 

@@ -3681,7 +3681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerVisTransform: {fileID: 630983630}
-  Camera: {fileID: 630626824}
+  MainCamera: {fileID: 630626824}
 --- !u!4 &1491426797
 Transform:
   m_ObjectHideFlags: 0
