@@ -32,18 +32,19 @@ public class CinemachinePovExtension : CinemachineExtension
     {
         if (vcam.Follow)
         {
+            // Make sure to not perform this piece of code when the input manager is null,
+            // as that means the game is not running
+            if (_inputManager == null)
+                return;
+
             if (stage == CinemachineCore.Stage.Aim)
             {
-                // Make sure to not perform this piece of code when the input manager is null,
-                // as that means the game is not running
-                if (_inputManager == null)
-                    return;
-
                 Vector2 deltaInput = _inputManager.GetMouseDelta();
                 _startingRotation.x += deltaInput.x * _horizontalSpeed * Time.deltaTime;
                 _startingRotation.y += deltaInput.y * _verticalSpeed * Time.deltaTime;
                 _startingRotation.y = Mathf.Clamp(_startingRotation.y, -_clampAngle, _clampAngle);
-                _cameraManager.PlayerVisTransform.localRotation = Quaternion.Euler(0f, _startingRotation.x, 0f);
+                if (_cameraManager.PlayerVisTransform is not null)
+                    _cameraManager.PlayerVisTransform.localRotation = Quaternion.Euler(0f, _startingRotation.x, 0f);
                 state.RawOrientation = Quaternion.Euler(-_startingRotation.y, _startingRotation.x, 0f);
             }
         }

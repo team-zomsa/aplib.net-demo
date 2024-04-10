@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -28,8 +27,9 @@ public class MyFirstBeliefSet : BeliefSet
 public class MyFirstAplibTest
 {
     [SetUp]
-    public void Setup()
+    public void SetUp()
     {
+        Debug.Log("Starting test MyFirstAplibTest");
         SceneManager.LoadScene("FirstTestScene");
     }
 
@@ -37,7 +37,7 @@ public class MyFirstAplibTest
     /// A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use `yield return null;` to skip a frame.
     /// </summary>
     [UnityTest]
-    public IEnumerator MySecondAplibTestWithEnumeratorPasses()
+    public IEnumerator PerformMyFirstAplibTest()
     {
         // Arrange
         // Create a belief set for the agent.
@@ -48,9 +48,10 @@ public class MyFirstAplibTest
             effect: beliefSet =>
             {
                 GameObject player = beliefSet.Player;
+                float playerSpeed = 10f;
                 Vector3 playerPosition = player.transform.position;
                 Vector3 targetPosition = beliefSet.TargetPosition;
-                player.transform.position = Vector3.MoveTowards(playerPosition, targetPosition, Time.deltaTime);
+                player.transform.position = Vector3.MoveTowards(playerPosition, targetPosition, playerSpeed * Time.deltaTime);
             }
         );
         PrimitiveTactic<MyFirstBeliefSet> moveTowardsTargetTactic = new(action: moveTowardsTargetAction);
@@ -67,7 +68,8 @@ public class MyFirstAplibTest
             }
         );
         PrimitiveGoalStructure<MyFirstBeliefSet> reachTargetGoalStructure = new(goal: reachTargetGoal);
-        DesireSet<MyFirstBeliefSet> desireSet = new(mainGoal: reachTargetGoalStructure);
+        RepeatGoalStructure<MyFirstBeliefSet> repeat = new(goalStructure: reachTargetGoalStructure);
+        DesireSet<MyFirstBeliefSet> desireSet = new(mainGoal: repeat);
 
         // Setup the agent with the belief set and desire set and initialize the test runner.
         BdiAgent<MyFirstBeliefSet> agent = new(beliefSet, desireSet);
