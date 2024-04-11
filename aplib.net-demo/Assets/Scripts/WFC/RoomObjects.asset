@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346fe44f8f044234a31d31ccc3fb806e, type: 3}
+  m_Name: RoomObjects
+  m_EditorClassIdentifier: 
+  Corner: {fileID: 1904711290193003994, guid: 48499cd55392d794c8c6e5733b30e075, type: 3}
+  Crossing: {fileID: 4281529980512931028, guid: 62965336953b0ee45a1eac67a44b201c,
+    type: 3}
+  DeadEnd: {fileID: 4121749473207382221, guid: 931379edddb24ef4c81048ce53789c77, type: 3}
+  Empty: {fileID: 367138122065840151, guid: 9d2a73cf96bd3ac4ba5a9c31e0b7d0b4, type: 3}
+  Room: {fileID: 5399417413980365145, guid: 11b5ef5486c19e74aaa779350b87ef57, type: 3}
+  Straight: {fileID: 7066769936668223140, guid: 315e780e29a7ff74cb419f28cb1ad117,
+    type: 3}
+  TSection: {fileID: 2399859539924368441, guid: 4f94cc174bd56aa43ab7ba2a187ada60,
+    type: 3}

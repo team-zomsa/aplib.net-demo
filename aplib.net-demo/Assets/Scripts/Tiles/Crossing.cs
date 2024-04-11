@@ -14,6 +14,6 @@ namespace Assets.Scripts.Tiles
         /// <summary>
         /// Initializes a new instance of the <see cref="Crossing"/> class.
         /// </summary>
-        public Crossing() => _allowedDirections = new List<bool> { true, true, true, true };
+        public Crossing() => AllowedDirections = new List<bool> { true, true, true, true };
     }
 }
