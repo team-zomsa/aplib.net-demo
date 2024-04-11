@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] public Transform PlayerVisTransform;
-    public Transform PlayerTransform;
-
+    [SerializeField] public Transform PlayerRotation;
+    [SerializeField] public Transform PlayerCamFollow;
+    [SerializeField] private Cinemachine.CinemachineVirtualCamera _cinemachineCamera;
     public static CameraManager Instance { get; private set; }
 
     /// <summary>
@@ -21,6 +18,9 @@ public class CameraManager : MonoBehaviour
             Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        PlayerTransform = PlayerVisTransform.parent;
+        if (_cinemachineCamera == null)
+            _cinemachineCamera = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>();
+
+        _cinemachineCamera.Follow = PlayerCamFollow;
     }
 }

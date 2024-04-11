@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Very basic enemy class.
 /// </summary>
-public class BasicEnemy : MonoBehaviour
+public abstract class AbstractEnemy : MonoBehaviour
 {
     [SerializeField] protected int _maxHealth = 100;
     public int Health { get; protected set; }
@@ -14,6 +14,13 @@ public class BasicEnemy : MonoBehaviour
     protected virtual void Awake()
     {
         Health = _maxHealth;
+    }
+
+    /// <summary>
+    /// Protected virtual so that it can be overridden by child classes.
+    /// </summary>
+    protected virtual void Start()
+    {
     }
 
     /// <summary>
