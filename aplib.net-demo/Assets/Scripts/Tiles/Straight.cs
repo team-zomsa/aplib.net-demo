@@ -18,9 +18,10 @@ namespace Assets.Scripts.Tiles
         /// <param name="rotate">The amount of times to rotate the tile.</param>
         public Straight(int rotate = 0)
         {
+            Rotation = rotate;
             bool isVertical = rotate % 2 == 0;
 
-            _allowedDirections = new List<bool> { isVertical, !isVertical, isVertical, !isVertical };
+            AllowedDirections = new List<bool> { isVertical, !isVertical, isVertical, !isVertical };
         }
     }
 }
