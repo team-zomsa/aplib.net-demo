@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] private float _maxSpeed = 7;
+    [SerializeField] private float _maxSpeedGround = 7;
+    [SerializeField] private float _maxSpeedAir = 7;
     [SerializeField] private float _acceleration = 300;
     private Vector3 _horizontalVelocity;
     private Vector2 _horizontalInput;
@@ -85,21 +86,21 @@ public class Movement : MonoBehaviour
 
             if (isOnSlope)
             {
-                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * directionOnSlope);
+                _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * directionOnSlope);
 
                 // Apply gravity but perpendicular to the slope, to prevent sliding
                 _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
             }
             else
             {
-                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
+                _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
             }
 
         }
         else
         {
             _rigidbody.drag = _airDrag;
-            _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized);
+            _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized);
 
             // Custom gravity for player while falling
             _actualGravityScale = _rigidbody.velocity.y < 0 ? _fallingGravityScale : _normalGravityScale;
@@ -118,7 +119,7 @@ public class Movement : MonoBehaviour
     {
         float angleMultiplier = Mathf.Clamp01(1.2f - Vector3.Angle(_horizontalVelocity, -wallNormal) / 90);
         Vector3 directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal).normalized;
-        _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
+        _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
     }
 
     /// <summary>
@@ -128,9 +129,9 @@ public class Movement : MonoBehaviour
     /// <param name="isOnWalkableSlope">Is the player on a walkable slope</param>
     private void LimitVelocity(bool isOnSlope)
     {
-        if (isOnSlope && _rigidbody.velocity.magnitude > _maxSpeed)
+        if (isOnSlope && _rigidbody.velocity.magnitude > _maxSpeedGround)
         {
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeedGround;
             return;
         }
 
@@ -138,15 +139,15 @@ public class Movement : MonoBehaviour
         Vector3 rigidbodyVerticalVelocity = new(0, _rigidbody.velocity.y, 0);
 
         // Horizontal and vertical speeds are checked seperate from eachother to avoid rapid small bunny hops
-        if (rigidbodyHorizontalVelocity.magnitude > _maxSpeed)
+        if (rigidbodyHorizontalVelocity.magnitude > _maxSpeedGround)
         {
-            Vector3 horizontalVelocityLimited = rigidbodyHorizontalVelocity.normalized * _maxSpeed;
+            Vector3 horizontalVelocityLimited = rigidbodyHorizontalVelocity.normalized * _maxSpeedGround;
             _rigidbody.velocity = new Vector3(horizontalVelocityLimited.x, _rigidbody.velocity.y, horizontalVelocityLimited.z);
         }
 
-        if (rigidbodyVerticalVelocity.magnitude > _maxSpeed)
+        if (rigidbodyVerticalVelocity.magnitude > _maxSpeedAir)
         {
-            Vector3 verticalVelocityLimited = rigidbodyVerticalVelocity.normalized * _maxSpeed;
+            Vector3 verticalVelocityLimited = rigidbodyVerticalVelocity.normalized * _maxSpeedAir;
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, verticalVelocityLimited.y, _rigidbody.velocity.z);
         }
     }
