@@ -94,7 +94,7 @@ public class Movement : MonoBehaviour
             {
                 _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
             }
-            
+
         }
         else
         {
