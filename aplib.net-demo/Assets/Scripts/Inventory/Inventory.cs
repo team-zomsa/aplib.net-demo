@@ -6,11 +6,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    //TODO Add icon logic to Item class
-    //TODO Add hotbar Object which contains 4 subjobjects. They are linked to the inventory class and will display the right icons depending on inventory contents.
-    //TODO Add controls for using items to InputManager(?) class
-    //TODO Add controls for switching which item you're using to InputManager(?) class
-    //TODO Add logic for items with a duration and effect
+
     Queue<Item> _itemList;
     public float inventorySize;
     //The RawImage is the object on which the icon texture is projected
@@ -40,15 +36,13 @@ public class Inventory : MonoBehaviour
     void TestItemAdd()
     {
         PickUpItem(testItem);
-        PickUpItem(testItem2);/*
-        ActivateItem();
-        ActivateItem();*/
+        PickUpItem(testItem2);
     }
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
     /// </summary>
-    /// <param name="item"></param>
-    /// <param name="uses"></param>
+    /// <param name="item">The item that is fed into the inventory</param>
+    /// <param name="uses">the amount of uses that are added upon pickup</param>
     public void PickUpItem(Item item, float uses = 1)
     {
         float queueSize = _itemList.Count();
