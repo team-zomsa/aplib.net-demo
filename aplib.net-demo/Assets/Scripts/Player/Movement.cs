@@ -126,13 +126,27 @@ public class Movement : MonoBehaviour
     ///  Also accounts for vertical velocity when on a slope.
     /// </summary>
     /// <param name="isOnWalkableSlope">Is the player on a walkable slope</param>
-    private void LimitVelocity(bool isOnWalkableSlope)
+    private void LimitVelocity(bool isOnSlope)
     {
-        if (isOnWalkableSlope)
+        if (isOnSlope)
         {
-            // Hard cap speed
             if (_rigidbody.velocity.magnitude > _maxSpeed) _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
         }
+
+        Vector3 rigidbodyHorizontalVelocity = new(_rigidbody.velocity.x, 0, _rigidbody.velocity.z);
+        Vector3 rigidbodyVerticalVelocity = new(0, _rigidbody.velocity.y, 0);
+        // Horizontal and vertical speeds are checked seperate from eachother to avoid rapid small bunny hops
+        if (rigidbodyHorizontalVelocity.magnitude > _maxSpeed)
+        {
+            Vector3 horizontalVelocityLimited = rigidbodyHorizontalVelocity.normalized * _maxSpeed;
+            _rigidbody.velocity = new Vector3(horizontalVelocityLimited.x, _rigidbody.velocity.y, horizontalVelocityLimited.z);
+        }
+        if (rigidbodyVerticalVelocity.magnitude > _maxSpeed)
+        {
+            Vector3 verticalVelocityLimited = rigidbodyVerticalVelocity.normalized * _maxSpeed;
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, verticalVelocityLimited.y, _rigidbody.velocity.z);
+        }
+
     }
 
     /// <summary>
