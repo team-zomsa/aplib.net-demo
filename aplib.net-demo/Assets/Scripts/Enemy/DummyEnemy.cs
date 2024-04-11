@@ -4,15 +4,19 @@ using UnityEngine;
 /// Dummy basic enemy class to use as target during weapons testing.
 /// It respawns after dying.
 /// </summary>
-public class DummyEnemy : BasicEnemy
+public class DummyEnemy : AbstractEnemy
 {
     /// <summary>
     /// The spawn area for the enemy. 
-    /// The size is defined by the local scale of the transform.
     /// </summary>
-    [SerializeField] private Transform _spawnArea;
+    [SerializeField] private Area _spawnArea;
+    private Bounds _spawnBounds;
     [SerializeField] private bool _respawn;
-    private Vector3 _spawnRange => _spawnArea.localScale / 2.0f;
+
+    protected override void Start()
+    {
+        _spawnBounds = _spawnArea.Bounds;
+    }
 
     protected override void Die()
     {
@@ -27,10 +31,10 @@ public class DummyEnemy : BasicEnemy
     /// </summary>
     private void Respawn()
     {
-        Vector3 randomRange = new(Random.Range(-_spawnRange.x, _spawnRange.x),
-                                    Random.Range(-_spawnRange.y, _spawnRange.y),
-                                    Random.Range(-_spawnRange.z, _spawnRange.z));
-        transform.position = _spawnArea.position + randomRange;
+        Vector3 randomPoint = new Vector3(Random.Range(_spawnBounds.min.x, _spawnBounds.max.x),
+                                          Random.Range(_spawnBounds.min.y, _spawnBounds.max.y),
+                                          Random.Range(_spawnBounds.min.z, _spawnBounds.max.z));
+        transform.position = randomPoint;
         Health = _maxHealth;
     }
 }
