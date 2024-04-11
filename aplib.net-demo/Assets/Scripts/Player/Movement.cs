@@ -18,6 +18,7 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private float _groundDrag = 0.9f;
+    [SerializeField] private float _airDrag = 0.2f;
     [SerializeField] private float _slopeAngle = 40;
     [SerializeField] private float _slopeCheckRayExtraLength = 0.3f;
     [SerializeField] private float _wallCheckMaxDistance = 0.5f;
@@ -97,7 +98,7 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            _rigidbody.drag = 0.2f;
+            _rigidbody.drag = _airDrag;
             _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized);
 
             // Custom gravity for player while falling
@@ -134,10 +135,11 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            if (_rigidbody.velocity.magnitude > _maxSpeed && _isGrounded)
+            if (_isGrounded && _rigidbody.velocity.magnitude > _maxSpeed)
             {
-
-                _rigidbody.velocity = _rigidbody.velocity * 0.95f;
+                // Hard cap speed and limit only x and z
+                Vector3 limitedVelocity = _rigidbody.velocity.normalized * _maxSpeed;
+                _rigidbody.velocity = new Vector3(limitedVelocity.x, _rigidbody.velocity.y, limitedVelocity.z);
             }
         }
 
