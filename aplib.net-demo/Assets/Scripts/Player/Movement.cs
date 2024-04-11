@@ -129,8 +129,10 @@ public class Movement : MonoBehaviour
     private void LimitVelocity(bool isOnSlope)
     {
         if (isOnSlope)
+        if (isOnSlope && _rigidbody.velocity.magnitude > _maxSpeed)
         {
-            if (_rigidbody.velocity.magnitude > _maxSpeed) _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+            return;
         }
 
         Vector3 rigidbodyHorizontalVelocity = new(_rigidbody.velocity.x, 0, _rigidbody.velocity.z);
