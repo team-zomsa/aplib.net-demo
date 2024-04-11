@@ -2094,7 +2094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSpeed: 7
-  _acceleration: 140
+  _acceleration: 300
   _normalGravityScale: 1.7
   _fallingGravityScale: 2.5
   _jumpHeight: 7

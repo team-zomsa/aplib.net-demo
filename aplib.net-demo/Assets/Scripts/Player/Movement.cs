@@ -3,7 +3,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float _maxSpeed = 7;
-    [SerializeField] private float _acceleration = 100;
+    [SerializeField] private float _acceleration = 300;
     private Vector3 _horizontalVelocity;
     private Vector2 _horizontalInput;
 
@@ -128,7 +128,6 @@ public class Movement : MonoBehaviour
     /// <param name="isOnWalkableSlope">Is the player on a walkable slope</param>
     private void LimitVelocity(bool isOnSlope)
     {
-        if (isOnSlope)
         if (isOnSlope && _rigidbody.velocity.magnitude > _maxSpeed)
         {
             _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
