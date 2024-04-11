@@ -119,7 +119,6 @@ public class Movement : MonoBehaviour
         float angleMultiplier = Mathf.Clamp01(1.2f - Vector3.Angle(_horizontalVelocity, -wallNormal) / 90);
         Vector3 directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal).normalized;
         _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
-        Debug.DrawRay(transform.position, directionOnWall * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
     }
 
     /// <summary>
@@ -131,20 +130,9 @@ public class Movement : MonoBehaviour
     {
         if (isOnWalkableSlope)
         {
+            // Hard cap speed
             if (_rigidbody.velocity.magnitude > _maxSpeed) _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
         }
-        else
-        {
-            if (_isGrounded && _rigidbody.velocity.magnitude > _maxSpeed)
-            {
-                // Hard cap speed and limit only x and z
-                Vector3 limitedVelocity = _rigidbody.velocity.normalized * _maxSpeed;
-                _rigidbody.velocity = new Vector3(limitedVelocity.x, _rigidbody.velocity.y, limitedVelocity.z);
-            }
-        }
-
-        // Draw a ray to visualize the player's velocity and direction
-        Debug.DrawRay(transform.position, _rigidbody.velocity, Globals.s_VelocityColor);
     }
 
     /// <summary>
@@ -163,7 +151,6 @@ public class Movement : MonoBehaviour
             if (angle < _slopeAngle && angle != 0)
             {
                 directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
-                Debug.DrawRay(transform.position, directionOnSlope.normalized * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
                 return true;
             }
         }
@@ -183,7 +170,6 @@ public class Movement : MonoBehaviour
         if (Physics.SphereCast(transform.position, _playerRadius, _horizontalVelocity, out RaycastHit hit, _wallCheckMaxDistance, _groundMask))
         {
             wallNormal = hit.normal;
-            Debug.DrawRay(transform.position, wallNormal * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
             return true;
         }
         wallNormal = Vector3.zero;
@@ -210,5 +196,8 @@ public class Movement : MonoBehaviour
     /// </summary>
     public void OnJumpDown() => _jumpPressed = true;
 
+    /// <summary>
+    /// Set the jumpPressed flag to false when the player lets go of the jump button.
+    /// </summary>
     public void OnJumpUp() => _jumpPressed = false;
 }
