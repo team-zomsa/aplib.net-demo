@@ -1669,7 +1669,25 @@ PrefabInstance:
       propertyPath: _respawnPointTransform
       value: 
       objectReference: {fileID: 1686980026}
-    m_RemovedComponents: []
+    - target: {fileID: 5557680506848254193, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7848335009428172248, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: f0bc186bb893f79478f18ef7a8fc00e1,
+        type: 2}
+    - target: {fileID: 8000267981742703994, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8000267981742703994, guid: a97359d0503e62444882482848ac8602, type: 3}
+    - {fileID: 5557680506848254193, guid: a97359d0503e62444882482848ac8602, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1850,7 +1868,7 @@ PrefabInstance:
     - target: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
         type: 3}
       propertyPath: m_Name
-      value: Teleporter (1)
+      value: Teleporter 2
       objectReference: {fileID: 0}
     - target: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
         type: 3}
@@ -2480,7 +2498,7 @@ PrefabInstance:
     - target: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
         type: 3}
       propertyPath: m_Name
-      value: Teleporter
+      value: Teleporter 1
       objectReference: {fileID: 0}
     - target: {fileID: 6611721101361769460, guid: 1c88f3319232dace09ca6eab36996fbc,
         type: 3}
