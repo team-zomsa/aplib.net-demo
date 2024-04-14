@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Tiles
 {
@@ -7,6 +8,11 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public abstract class Tile
     {
+        /// <summary>
+        /// The game object in the scene, representing this tile.
+        /// </summary>
+        public GameObject GameObject { get; set; }
+
         /// <summary>
         /// The rotation of the tile. 0 = 0 degrees, 1 = 90 degrees, 2 = 180 degrees, 3 = 270 degrees.
         /// </summary>

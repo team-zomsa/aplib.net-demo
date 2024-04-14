@@ -19,10 +19,25 @@ namespace Assets.Scripts.WFC
         public List<Tile> Candidates { get; set; }
 
         /// <summary>
+        /// The x coordinate of this cell, within its grid.
+        /// </summary>
+        public int X { get; }
+
+        /// <summary>
+        /// The y coordinate of this cell, within its grid.
+        /// </summary>
+        public int Y { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
-        public Cell()
+        /// <param name="posX">The X coordinate of this cell, within its grid.</param>
+        /// <param name="posY">The Y coordinate of this cell, within its grid.</param>
+        public Cell(int posX, int posY)
         {
+            X = posX;
+            Y = posY;
+
             Tile = new Empty();
             Candidates = new List<Tile>()
             {
@@ -49,8 +64,13 @@ namespace Assets.Scripts.WFC
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
         /// <param name="tiles">The possible tiles that can be placed in this cell.</param>
-        public Cell(List<Tile> tiles)
+        /// <param name="posX">The X coordinate of this cell, within its grid.</param>
+        /// <param name="posY">The Y coordinate of this cell, within its grid.</param>
+        public Cell(int posX, int posY, List<Tile> tiles)
         {
+            X = posX;
+            Y = posY;
+
             Tile = new Empty();
             Candidates = tiles;
         }

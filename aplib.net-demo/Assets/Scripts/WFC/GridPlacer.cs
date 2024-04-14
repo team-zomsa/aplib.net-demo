@@ -35,7 +35,7 @@ namespace Assets.Scripts.WFC
         public RoomObjects RoomObjects;
 
         /// <summary>
-        /// Awake is called when the script instance is being loaded.
+        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
@@ -52,6 +52,8 @@ namespace Assets.Scripts.WFC
                     PlaceTile(x, y, _grid[x, y].Tile);
                 }
             }
+
+            JoinConnectedComponentsWithTeleporters();
         }
 
         /// <summary>
@@ -59,22 +61,22 @@ namespace Assets.Scripts.WFC
         /// </summary>
         public void TempFillFunction()
         {
-            _grid.PlaceRoom(2, 1, new Room(new List<bool> { false, true, true, false }));
+            _grid[0, 0].Tile = new TSection(3);
+            _grid[0, 1].Tile = new Crossing();
+            _grid[0, 2].Tile = new DeadEnd(2);
+            _grid[0, 3].Tile = new Straight(1);
+            _grid[1, 0].Tile = new TSection();
+            _grid[1, 1].Tile = new Straight();
+            _grid[1, 2].Tile = new Corner(2);
+            _grid[1, 3].Tile = new Crossing();
+            _grid[2, 0].Tile = new Corner();
+            _grid.PlaceRoom(2, 1, new Room(new List<bool> { true, true, true, true }));
 
-            _grid.PlaceRoom(4, 4, new Room(new List<bool> { false, true, true, false }));
-
-            // Road 1
-            _grid[2, 2].Tile = new Straight();
-            _grid[2, 3].Tile = new Straight();
-            _grid[2, 4].Tile = new Corner(2);
-            _grid[3, 4].Tile = new Straight(1);
-
-            // Road 2
-            _grid[3, 1].Tile = new Straight(1);
-            _grid[4, 1].Tile = new TSection(3);
-            _grid[4, 2].Tile = new Straight();
-            _grid[4, 3].Tile = new Straight();
-            _grid[4, 0].Tile = new DeadEnd();
+            _grid.PlaceRoom(3, 3, new Room(new List<bool> { true, true, true, true }));
+            _grid[3, 2].Tile = new Corner(1);
+            _grid[4, 2].Tile = new TSection(3);
+            _grid[4, 1].Tile = new Straight();
+            _grid.PlaceRoom(4, 0, new Room(new List<bool> { true, true, true, true }));
         }
 
         /// <summary>
@@ -87,18 +89,45 @@ namespace Assets.Scripts.WFC
         {
             GameObject prefab = tile switch
             {
-                Corner _ => RoomObjects.Corner,
-                Crossing _ => RoomObjects.Crossing,
-                DeadEnd _ => RoomObjects.DeadEnd,
-                Empty _ => RoomObjects.Empty,
-                Room _ => RoomObjects.Room,
-                Straight _ => RoomObjects.Straight,
-                TSection _ => RoomObjects.TSection,
-                _ => null
+                Corner   => RoomObjects.Corner,
+                Crossing => RoomObjects.Crossing,
+                DeadEnd  => RoomObjects.DeadEnd,
+                Empty    => RoomObjects.Empty,
+                Room     => RoomObjects.Room,
+                Straight => RoomObjects.Straight,
+                TSection => RoomObjects.TSection,
+                _        => null
             };
 
             if (prefab != null)
-                _ = Instantiate(prefab, new Vector3(x * _tileSizeX, 0, y * _tileSizeY), Quaternion.Euler(0, tile.Rotation * _tileRotation, 0), transform);
+            {
+                tile.GameObject = Instantiate(prefab,
+                    new Vector3(x * _tileSizeX, 0, y * _tileSizeY),
+                    Quaternion.Euler(0, tile.Rotation * _tileRotation, 0),
+                    transform);
+            }
         }
+
+        /// <summary>
+        /// Fist calculate the connected components of the grid, then join them with teleporters.
+        /// </summary>
+        private void JoinConnectedComponentsWithTeleporters()
+        {
+            IList<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents();
+
+            // We draw all the connected components individually
+            foreach (ISet<Cell> connectedComponent in connectedComponents)
+            {
+                Color color = GetUnusedColor();
+                foreach (Cell cell in connectedComponent)
+                    cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
+            }
+
+            // TODO the joining of the connected components with teleporters will be done in another PR.
+        }
+
+        private static Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan };
+        private static int _colorIndex = -1;
+        private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }
 }

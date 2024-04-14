@@ -18,6 +18,7 @@ namespace Assets.Scripts.Tiles
         /// <param name="rotate">The amount of times to rotate the tile.</param>
         public DeadEnd(int rotate = 0)
         {
+            rotate = (rotate + 4) % 4; // Normalise to [0..3]
             Rotation = rotate;
             AllowedDirections = new List<bool> { false, false, false, false };
 
