@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,21 +18,15 @@ public class Inventory : MonoBehaviour
     public Texture iconTexture;
     public GameObject inventoryObject;
     //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
-    public Item testItem;
-    public Item testItem2;
+
 
     /// <summary>
     /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons
     /// </summary>
     void Start()
     {
-        //since we reuse items, it helps to reset the values for each of them on startup to avoid rare bugs with item uses
-        testItem.Reset();
-        testItem2.Reset();
-
         icon = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
-        inventorySize = 4;
     }
 
     /// <summary>
@@ -108,13 +101,8 @@ public class Inventory : MonoBehaviour
     public void DisplayItem()
     {
         if (_itemList.Count == 0)
-        {
             icon.texture = iconTexture;
-        }
         else
-        {
-            icon.texture =
-                _itemList.Peek().iconTexture;
-        }
+            icon.texture = _itemList.Peek().iconTexture;
     }
 }
