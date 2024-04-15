@@ -22,7 +22,7 @@ public abstract class Item : MonoBehaviour
     /// <summary>
     /// Uses the item, by default just reduces uses by 1. Implementation will differ depending on the item itself.
     /// </summary>
-   public void UseItem()
+    public void UseItem()
     {
         uses -= 1;
         if (uses < 0)
@@ -37,7 +37,7 @@ public abstract class Item : MonoBehaviour
     {
         uses = startUses;
     }
-    
+
 
 
 }

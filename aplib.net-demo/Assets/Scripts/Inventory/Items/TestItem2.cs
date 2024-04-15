@@ -13,6 +13,6 @@ public class TestItem2 : Item
     /// </summary>
     void Update()
     {
-        
+
     }
 }

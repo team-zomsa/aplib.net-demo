@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private MouseLock _mouseLock;
-    [SerializeField] private Transform _playerTransform; 
+    [SerializeField] private Transform _playerTransform;
     [SerializeField] private Inventory _inventory;
     private ResetRigidbody _playerRespawn;
     private Movement _playerMovement;
