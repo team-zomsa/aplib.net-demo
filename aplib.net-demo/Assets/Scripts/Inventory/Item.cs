@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 /// <summary>
 ///  This is where you change variables that are shared between all the items. The values themselves you want to change in the prefab for the specific item you want.
@@ -24,6 +23,7 @@ public abstract class Item : MonoBehaviour
     {
         uses -= 1;
     }
+
     /// <summary>
     /// Resets the uses to the starting uses
     /// </summary>

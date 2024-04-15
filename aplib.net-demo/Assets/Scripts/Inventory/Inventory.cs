@@ -5,8 +5,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-
-    Queue<Item> _itemList;
+    private Queue<Item> _itemList;
     public float inventorySize;
     /// <summary>
     /// The RawImage is the object on which the icon texture is projected
@@ -17,18 +16,17 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public Texture iconTexture;
     public GameObject inventoryObject;
-    //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
 
+    //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
 
     /// <summary>
     /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons
     /// </summary>
-    void Start()
+    private void Start()
     {
         icon = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
     }
-
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
     /// </summary>
@@ -55,12 +53,12 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
+
         if (!alreadyInInventory && _itemList.Count < inventorySize)
         {
             _itemList.Enqueue(item);
             DisplayItem();
         }
-
     }
 
     /// <summary>
@@ -76,9 +74,10 @@ public class Inventory : MonoBehaviour
             if (_itemList.Peek().uses == 0)
             {
                 _itemList.Peek().Reset();
-                _itemList.Dequeue();
+                _ = _itemList.Dequeue();
             }
         }
+
         DisplayItem();
 
     }
@@ -98,11 +97,5 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// Fetches the icon of the first item in the queue and makes it the texture of the displayed image
     /// </summary>
-    public void DisplayItem()
-    {
-        if (_itemList.Count == 0)
-            icon.texture = iconTexture;
-        else
-            icon.texture = _itemList.Peek().iconTexture;
-    }
+    public void DisplayItem() => icon.texture = _itemList.Count == 0 ? iconTexture : _itemList.Peek().iconTexture;
 }
