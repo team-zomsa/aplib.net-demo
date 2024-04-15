@@ -513,7 +513,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8f1c15775f2e344f83de9541e4a7cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: 1
 --- !u!1001 &554766214
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3283,7 +3282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab4ebc97e438ddf4f82df525a42daa25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorID: 0
+  doorId: 0
   parent: {fileID: 0}
 --- !u!1 &2056787414
 GameObject:
