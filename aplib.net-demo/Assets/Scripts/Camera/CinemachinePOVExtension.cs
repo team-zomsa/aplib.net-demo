@@ -40,7 +40,7 @@ public class CinemachinePovExtension : CinemachineExtension
                     return;
 
                 Vector2 deltaInput = Cursor.lockState == CursorLockMode.Locked ? _inputManager.GetMouseDelta() : Vector2.zero;
-                _startingRotation.x += deltaInput.x *  _horizontalSpeed * Time.deltaTime;
+                _startingRotation.x += deltaInput.x * _horizontalSpeed * Time.deltaTime;
                 _startingRotation.y += deltaInput.y * _verticalSpeed * Time.deltaTime;
                 _startingRotation.y = Mathf.Clamp(_startingRotation.y, -_clampAngle, _clampAngle);
                 _cameraManager.PlayerVisTransform.localRotation = Quaternion.Euler(0f, _startingRotation.x, 0f);
