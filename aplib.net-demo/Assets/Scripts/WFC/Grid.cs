@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.WFC
 {
@@ -167,13 +168,13 @@ namespace Assets.Scripts.WFC
             ICollection<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
             foreach (Cell neighbour in neighbours)
             {
-                if      (cell.Tile.CanConnectInDirection(1) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(3))
+                if      (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West))
                     connectedNeighbours.Add(neighbour);
-                else if (cell.Tile.CanConnectInDirection(3) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(1))
+                else if (cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(East))
                     connectedNeighbours.Add(neighbour);
-                else if (cell.Tile.CanConnectInDirection(0) && neighbour.Y > cell.Y && neighbour.Tile.CanConnectInDirection(2))
+                else if (cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && neighbour.Tile.CanConnectInDirection(South))
                     connectedNeighbours.Add(neighbour);
-                else if (cell.Tile.CanConnectInDirection(2) && neighbour.Y < cell.Y && neighbour.Tile.CanConnectInDirection(0))
+                else if (cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && neighbour.Tile.CanConnectInDirection(North))
                     connectedNeighbours.Add(neighbour);
             }
 

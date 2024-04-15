@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Tiles;
 using System.Collections.Generic;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.WFC
 {
@@ -42,21 +43,21 @@ namespace Assets.Scripts.WFC
             Candidates = new List<Tile>()
             {
                 new Corner(),
-                new Corner(1),
-                new Corner(2),
-                new Corner(3),
+                new Corner(East),
+                new Corner(South),
+                new Corner(West),
                 new Crossing(),
                 new DeadEnd(),
-                new DeadEnd(1),
-                new DeadEnd(2),
-                new DeadEnd(3),
+                new DeadEnd(East),
+                new DeadEnd(South),
+                new DeadEnd(West),
                 new Empty(),
                 new Straight(),
-                new Straight(1),
+                new Straight(East),
                 new TSection(),
-                new TSection(1),
-                new TSection(2),
-                new TSection(3),
+                new TSection(East),
+                new TSection(South),
+                new TSection(West),
             };
         }
 

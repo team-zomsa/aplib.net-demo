@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Tiles;
 using System.Collections.Generic;
 using UnityEngine;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.WFC
 {
@@ -23,11 +24,6 @@ namespace Assets.Scripts.WFC
         /// The size of the tiles in the y-direction.
         /// </summary>
         private const int _tileSizeY = 16;
-
-        /// <summary>
-        /// The rotation of the tile.
-        /// </summary>
-        private const int _tileRotation = 90;
 
         /// <summary>
         /// Represents the room objects.
@@ -61,22 +57,22 @@ namespace Assets.Scripts.WFC
         /// </summary>
         public void TempFillFunction()
         {
-            _grid[0, 0].Tile = new TSection(3);
+            _grid[0, 0].Tile = new TSection(West);
             _grid[0, 1].Tile = new Crossing();
-            _grid[0, 2].Tile = new DeadEnd(2);
-            _grid[0, 3].Tile = new Straight(1);
+            _grid[0, 2].Tile = new DeadEnd(South);
+            _grid[0, 3].Tile = new Straight(East);
             _grid[1, 0].Tile = new TSection();
             _grid[1, 1].Tile = new Straight();
-            _grid[1, 2].Tile = new Corner(2);
+            _grid[1, 2].Tile = new Corner(South);
             _grid[1, 3].Tile = new Crossing();
             _grid[2, 0].Tile = new Corner();
-            _grid.PlaceRoom(2, 1, new Room(new List<bool> { true, true, true, true }));
+            _grid.PlaceRoom(2, 1, new Room(new List<Direction> { North, East, South, West }));
 
-            _grid.PlaceRoom(3, 3, new Room(new List<bool> { true, true, true, true }));
-            _grid[3, 2].Tile = new Corner(1);
-            _grid[4, 2].Tile = new TSection(3);
+            _grid.PlaceRoom(3, 3, new Room(new List<Direction> { North, East, South, West }));
+            _grid[3, 2].Tile = new Corner(East);
+            _grid[4, 2].Tile = new TSection(West);
             _grid[4, 1].Tile = new Straight();
-            _grid.PlaceRoom(4, 0, new Room(new List<bool> { true, true, true, true }));
+            _grid.PlaceRoom(4, 0, new Room(new List<Direction> { North, East, South, West }));
         }
 
         /// <summary>
@@ -103,7 +99,7 @@ namespace Assets.Scripts.WFC
             {
                 tile.GameObject = Instantiate(prefab,
                     new Vector3(x * _tileSizeX, 0, y * _tileSizeY),
-                    Quaternion.Euler(0, tile.Rotation * _tileRotation, 0),
+                    Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
                     transform);
             }
         }
