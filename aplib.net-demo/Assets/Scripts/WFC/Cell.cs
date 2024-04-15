@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.WFC
+namespace WFC
 {
     /// <summary>
     /// Represents a cell in the grid.

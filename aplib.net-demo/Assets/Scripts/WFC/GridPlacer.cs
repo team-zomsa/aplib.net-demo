@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.WFC
+namespace WFC
 {
     /// <summary>
     /// Represents the grid placer.

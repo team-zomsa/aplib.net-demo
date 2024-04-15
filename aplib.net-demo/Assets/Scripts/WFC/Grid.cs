@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.WFC
+namespace WFC
 {
     /// <summary>
     /// Represents a grid.
@@ -130,7 +130,7 @@ namespace Assets.Scripts.WFC
             if (cell.Y < Height - 1) neighbours.Add(this[cell.X, cell.Y + 1]);
             return neighbours;
         }
-        
+
         /// <summary>
         /// Given a cell, this method returns all directly adjacent cells, including diagonal neighbours.
         /// When the cell is on an edge, it will return less than 8 neighbours.
@@ -190,7 +190,7 @@ namespace Assets.Scripts.WFC
             ISet<Cell> unvisitedCells = new HashSet<Cell>(_cells.Where(cell => cell.Tile is not Empty)); // Deep copy
             IList<ISet<Cell>> connectedComponents = new List<ISet<Cell>>();
 
-            while (unvisitedCells.Any())
+            while (unvisitedCells.Count > 0)
             {
                 ISet<Cell> connectedComponent = new HashSet<Cell>();
                 connectedComponents.Add(connectedComponent);
@@ -211,19 +211,18 @@ namespace Assets.Scripts.WFC
         /// <remarks>The connected component is stored in <paramref name="connectedComponent"/>.</remarks>
         public void DetermineSingleConnectedComponent(in ISet<Cell> searchSpace, in ISet<Cell> connectedComponent, Cell cell)
         {
-            ISet<Cell> unvisitedCells = searchSpace;
             connectedComponent.Add(cell);
-            unvisitedCells.Remove(cell);
+            searchSpace.Remove(cell);
 
             ICollection<Cell> connectedNeighbours = GetConnectedNeighbours(cell);
             foreach (Cell connectedNeighbour in connectedNeighbours)
             {
-                if (!unvisitedCells.Contains(connectedNeighbour)) continue; // Already visited
-                
+                if (!searchSpace.Contains(connectedNeighbour)) continue; // Already visited
+
                 connectedComponent.Add(connectedNeighbour);
-                unvisitedCells.Remove(connectedNeighbour);
-                
-                DetermineSingleConnectedComponent(unvisitedCells, connectedComponent, connectedNeighbour);
+                searchSpace.Remove(connectedNeighbour);
+
+                DetermineSingleConnectedComponent(searchSpace, connectedComponent, connectedNeighbour);
             }
         }
     }
