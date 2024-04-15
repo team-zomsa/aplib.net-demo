@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 /// <summary>
 ///  This is where you change variables that are shared between all the items. The values themselves you want to change in the prefab for the specific item you want.
@@ -12,7 +11,6 @@ public abstract class Item : MonoBehaviour
 
     public float uses;
     public float startUses;
-    public string itemName;
     public bool stackable;
     //The RawImage is the object on which the icon texture is projected
     protected RawImage icon;
@@ -25,10 +23,6 @@ public abstract class Item : MonoBehaviour
     public void UseItem()
     {
         uses -= 1;
-        if (uses < 0)
-        {
-            Debug.LogError("Uses is " + uses + " it should not go below 0");
-        }
     }
     /// <summary>
     /// Resets the uses to the starting uses, doing it this way means we get reuse items without affecting performance
@@ -37,7 +31,6 @@ public abstract class Item : MonoBehaviour
     {
         uses = startUses;
     }
-
 
 
 }

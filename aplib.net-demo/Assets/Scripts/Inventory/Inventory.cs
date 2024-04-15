@@ -34,16 +34,8 @@ public class Inventory : MonoBehaviour
         icon = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
         inventorySize = 4;
-        TestItemAdd();
     }
-    /// <summary>
-    /// This is where you should test the items, see if you can add and activate some items using the PickUpItem(item) and ActivateItem() functions
-    /// /// </summary>
-    void TestItemAdd()
-    {
-        PickUpItem(testItem);
-        PickUpItem(testItem2);
-    }
+
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
     /// </summary>
@@ -53,10 +45,9 @@ public class Inventory : MonoBehaviour
     {
         float queueSize = _itemList.Count();
         bool alreadyInInventory = false;
-
         for (int i = 0; i < queueSize; i++)
         {
-            if (_itemList.ToList()[i].itemName == item.itemName)
+            if (_itemList.ToList()[i].name == item.name)
             {
                 if (item.stackable)
                 {
@@ -84,13 +75,19 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ActivateItem()
     {
+
         if (_itemList.Count() > 0)
         {
             _itemList.Peek().UseItem();
+
             if (_itemList.Peek().uses == 0)
-                _itemList.Dequeue().Reset();
-            DisplayItem();
+            {
+                _itemList.Peek().Reset();
+                _itemList.Dequeue();
+            }
         }
+        DisplayItem();
+
     }
 
     /// <summary>
