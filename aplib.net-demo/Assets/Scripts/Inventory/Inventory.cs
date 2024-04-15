@@ -27,6 +27,7 @@ public class Inventory : MonoBehaviour
         icon = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
     }
+
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
     /// </summary>

@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public abstract class Item : MonoBehaviour
 {
 
-
     public float uses;
     public float startUses;
     public bool stackable;
@@ -15,14 +14,10 @@ public abstract class Item : MonoBehaviour
     protected RawImage icon;
     public Texture iconTexture;
 
-
     /// <summary>
     /// Uses the item, by default just reduces uses by 1. Implementation will differ depending on the item itself.
     /// </summary>
-    public void UseItem()
-    {
-        uses -= 1;
-    }
+    public void UseItem() => uses -= 1;
 
     /// <summary>
     /// Resets the uses to the starting uses
