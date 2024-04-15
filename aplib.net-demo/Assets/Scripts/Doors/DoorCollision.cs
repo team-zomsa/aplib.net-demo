@@ -8,7 +8,7 @@ using UnityEngine;
 public class DoorCollision : MonoBehaviour
 {
     public int doorId;
-    [SerializeField] private GameObject parent;
+    [SerializeField] private GameObject _parent;
 
     /// <summary>
     /// Checks if the player has the right ID, and destroys the door if true
@@ -17,9 +17,9 @@ public class DoorCollision : MonoBehaviour
     private void OnTriggerEnter(Collider collidingObject)
     {
         //Delete door
-        if (collidingObject.gameObject.CompareTag("Player") && collidingObject.gameObject.GetComponent<TempItemID>().itemID == doorID)
+        if (collidingObject.gameObject.CompareTag("Player") && collidingObject.gameObject.GetComponent<TempItemId>().ItemId == doorId)
         {
-            Destroy(parent);
+            Destroy(_parent);
         }
     }
 }
