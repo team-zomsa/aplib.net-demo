@@ -27,6 +27,7 @@ public abstract class Item : MonoBehaviour
     /// <summary>
     /// Resets the uses to the starting uses, doing it this way means we get reuse items without affecting performance
     /// </summary>
+
     public void Reset()
     {
         uses = startUses;
