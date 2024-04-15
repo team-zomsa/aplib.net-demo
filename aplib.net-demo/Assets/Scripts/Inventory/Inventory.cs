@@ -9,8 +9,13 @@ public class Inventory : MonoBehaviour
 
     Queue<Item> _itemList;
     public float inventorySize;
-    //The RawImage is the object on which the icon texture is projected
+    /// <summary>
+    /// The RawImage is the object on which the icon texture is projected
+    /// </summary>
     public RawImage icon;
+    /// <summary>
+    /// the texture of the icon object
+    /// </summary>
     public Texture iconTexture;
     public GameObject inventoryObject;
     //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
