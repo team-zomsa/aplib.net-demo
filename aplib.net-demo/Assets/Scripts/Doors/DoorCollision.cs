@@ -17,7 +17,7 @@ public class DoorCollision : MonoBehaviour
     private void OnTriggerEnter(Collider collidingObject)
     {
         //Delete door
-        if (collidingObject.gameObject.tag == "Player" && collidingObject.gameObject.GetComponent<TempItemID>().itemID == doorID)
+        if (collidingObject.gameObject.CompareTag("Player") && collidingObject.gameObject.GetComponent<TempItemID>().itemID == doorID)
         {
             Destroy(parent);
         }
