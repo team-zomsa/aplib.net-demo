@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     private Queue<Item> _itemList;
+    private List<Key> _keyRing;
     public float inventorySize;
     /// <summary>
     /// The RawImage is the object on which the icon texture is projected
@@ -26,6 +27,7 @@ public class Inventory : MonoBehaviour
     {
         icon = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
+        _keyRing = new List<Key>();
     }
 
     /// <summary>
