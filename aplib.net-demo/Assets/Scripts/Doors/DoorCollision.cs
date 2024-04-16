@@ -5,6 +5,9 @@ using UnityEngine;
 /// the players is in range and the prerequisites are met (the right key, or in this case the right player ID).
 /// Set the ID in the editor for the collider
 /// </summary>
+/// <param name="_parent">the door object this script is attached to</param>
+/// <param name="doorId">the unique ID of the door, this is used to check whether the player has the right key/ID to open the door</param>
+
 public class DoorCollision : MonoBehaviour
 {
     public int doorId;
