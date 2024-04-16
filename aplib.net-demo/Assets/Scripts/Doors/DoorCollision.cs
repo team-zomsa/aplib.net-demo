@@ -2,12 +2,12 @@ using UnityEngine;
 
 /// <summary>
 /// This class handles collisions with the player and makes sure that the parent object (the door) disappears/opens when
-/// the players is in range and the prerequisites are met (the right key, or in this case the right player ID).
+/// the player is in range and the prerequisites are met (the right key, or in this case the right player ID).
 /// Set the ID in the editor for the collider
 /// </summary>
 public class DoorCollision : MonoBehaviour
 {
-    /// <summary>The unique ID of the door, this is used to check whether the player has the right key/ID to open the door</summary>
+    /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door</summary>
     public int doorId;
     /// <summary>the door object this script is attached to</summary>
     [SerializeField] private GameObject parent;
