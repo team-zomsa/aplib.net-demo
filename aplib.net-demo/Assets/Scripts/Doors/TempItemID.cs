@@ -5,6 +5,5 @@ using UnityEngine;
 /// </summary>
 public class TempItemId : MonoBehaviour
 {
-
     [SerializeField] public int itemId;
 }
