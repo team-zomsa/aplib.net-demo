@@ -20,7 +20,7 @@ public class Inventory : MonoBehaviour
     //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
 
     /// <summary>
-    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons
+    /// Creates the inventory queue and fetches the rawimage component to display the icons
     /// </summary>
     private void Start()
     {
@@ -29,21 +29,24 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
+    /// Converts queue to list to check if there are any items with matching names.
+    /// If there are it checks if they are stackable and adds uses. If they are not it does nothing. 
+    /// If there are not matching names it adds the item to the inventory;
     /// </summary>
     /// <param name="item">The item that is fed into the inventory</param>
     /// <param name="uses">the amount of uses that are added upon pickup</param>
     public void PickUpItem(Item item, float uses = 1)
     {
-        float queueSize = _itemList.Count();
+        float queueSize = _itemList.Count;
         bool alreadyInInventory = false;
+        List<Item> _tempItemList = _itemList.ToList();
         for (int i = 0; i < queueSize; i++)
         {
-            if (_itemList.ToList()[i].name == item.name)
+            if (_tempItemList[i].name == item.name)
             {
                 if (item.stackable)
                 {
-                    _itemList.ToList()[i].uses += uses;
+                    _tempItemList[i].uses += uses;
                     alreadyInInventory = true;
                     break;
                 }
@@ -68,12 +71,13 @@ public class Inventory : MonoBehaviour
     public void ActivateItem()
     {
 
-        if (_itemList.Count() > 0)
+        if (_itemList.Any())
         {
             _itemList.Peek().UseItem();
 
             if (_itemList.Peek().uses == 0)
             {
+                //since we reuse the items, upon dequeueing the item gets reset to its default uses, so that when it is picked up again, the amount of uses is correct
                 _itemList.Peek().Reset();
                 _ = _itemList.Dequeue();
             }
@@ -88,7 +92,7 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void SwitchItem()
     {
-        if (_itemList.Count > 0)
+        if (_itemList.Any())
         {
             _itemList.Enqueue(_itemList.Dequeue());
             DisplayItem();
