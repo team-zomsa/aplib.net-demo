@@ -8,13 +8,13 @@ public class Inventory : MonoBehaviour
     private Queue<Item> _itemList;
     public float inventorySize;
     /// <summary>
-    /// The RawImage is the object on which the icon texture is projected
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected
     /// </summary>
-    public RawImage icon;
+    private RawImage _inventoryIndicator;
     /// <summary>
-    /// the texture of the icon object
+    /// the texture of the _inventoryIndicator object
     /// </summary>
-    public Texture iconTexture;
+    public Texture emptyInventoryImage;
     public GameObject inventoryObject;
 
     //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
@@ -24,8 +24,9 @@ public class Inventory : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        icon = GetComponent<RawImage>();
+        _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
+        DisplayItem();
     }
 
     /// <summary>
@@ -52,7 +53,6 @@ public class Inventory : MonoBehaviour
                 }
                 else
                 {
-                    DisplayItem();
                     return;
                 }
             }
@@ -66,7 +66,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the icon to the next item in the queue
+    /// activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the _inventoryIndicator to the next item in the queue
     /// </summary>
     public void ActivateItem()
     {
@@ -100,7 +100,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Fetches the icon of the first item in the queue and makes it the texture of the displayed image
+    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image
     /// </summary>
-    public void DisplayItem() => icon.texture = _itemList.Count == 0 ? iconTexture : _itemList.Peek().iconTexture;
+    public void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }

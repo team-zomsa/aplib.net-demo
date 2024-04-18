@@ -3582,8 +3582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventorySize: 4
-  icon: {fileID: 0}
-  iconTexture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+  emptyInventoryImage: {fileID: 0}
   inventoryObject: {fileID: 1906849247}
 --- !u!114 &1906849249
 MonoBehaviour:

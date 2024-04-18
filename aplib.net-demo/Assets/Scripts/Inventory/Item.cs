@@ -10,7 +10,7 @@ public abstract class Item : MonoBehaviour
     public float uses;
     public float startUses;
     public bool stackable;
-    //The RawImage is the object on which the icon texture is projected
+    //The RawImage is the object on which the _inventoryIndicator texture is projected
     protected RawImage icon;
     public Texture iconTexture;
 
