@@ -10,11 +10,6 @@ namespace Assets.Scripts.WFC
     public class GridPlacer : MonoBehaviour
     {
         /// <summary>
-        /// Represents the grid.
-        /// </summary>
-        private Grid _grid;
-
-        /// <summary>
         /// The size of the tiles in the x-direction.
         /// </summary>
         private const int _tileSizeX = 16;
@@ -32,7 +27,17 @@ namespace Assets.Scripts.WFC
         /// <summary>
         /// Represents the room objects.
         /// </summary>
-        public RoomObjects RoomObjects;
+        [SerializeField] private RoomObjects _roomObjects;
+
+        /// <summary>
+        /// Represents the door object.
+        /// </summary>
+        [SerializeField] private GameObject _doorPrefab;
+
+        /// <summary>
+        /// Represents the grid.
+        /// </summary>
+        private Grid _grid;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -57,7 +62,7 @@ namespace Assets.Scripts.WFC
         /// <summary>
         /// A temporary function to fill the grid with rooms.
         /// </summary>
-        public void TempFillFunction()
+        private void TempFillFunction()
         {
             _grid.PlaceRoom(2, 1, new Room(new List<bool> { false, true, true, false }));
 
@@ -83,22 +88,62 @@ namespace Assets.Scripts.WFC
         /// <param name="x">The x-coordinates of the room.</param>
         /// <param name="y">The y-coordinates of the room.</param>
         /// <param name="tile">The tile that needs to be placed.</param>
-        public void PlaceTile(int x, int y, Tile tile)
+        /// <exception cref="UnityException">Thrown when the <paramref name="tile" /> is of an unkown type.</exception>
+        private void PlaceTile(int x, int y, Tile tile)
         {
+            if (tile is Room room) PlaceDoors(x, y, room);
+
             GameObject prefab = tile switch
             {
-                Corner _ => RoomObjects.Corner,
-                Crossing _ => RoomObjects.Crossing,
-                DeadEnd _ => RoomObjects.DeadEnd,
-                Empty _ => RoomObjects.Empty,
-                Room _ => RoomObjects.Room,
-                Straight _ => RoomObjects.Straight,
-                TSection _ => RoomObjects.TSection,
-                _ => null
+                Corner _ => _roomObjects.Corner,
+                Crossing _ => _roomObjects.Crossing,
+                DeadEnd _ => _roomObjects.DeadEnd,
+                Empty _ => _roomObjects.Empty,
+                Room _ => _roomObjects.Room,
+                Straight _ => _roomObjects.Straight,
+                TSection _ => _roomObjects.TSection,
+                _ => throw new UnityException("Unknown tile type when placing tile")
             };
 
-            if (prefab != null)
-                _ = Instantiate(prefab, new Vector3(x * _tileSizeX, 0, y * _tileSizeY), Quaternion.Euler(0, tile.Rotation * _tileRotation, 0), transform);
+            _ = Instantiate
+            (
+                prefab,
+                new Vector3(x * _tileSizeX, 0, y * _tileSizeY),
+                Quaternion.Euler(0, tile.Rotation * _tileRotation, 0),
+                transform
+            );
+        }
+
+        /// <summary>
+        /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
+        /// allowed directions of the room.
+        /// </summary>
+        /// <param name="x">The x-position of the room, in the grid.</param>
+        /// <param name="y">The y-position of the room, in the grid.</param>
+        /// <param name="room">The room for which the doors need to be spawned.</param>
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private void PlaceDoors(int x, int y, Room room)
+        {
+            for (int direction = 0; direction <= 3; direction++)
+            {
+                // Continue to next direction if no door needs to be placed
+                if (room.CanConnectInDirection(direction)) continue;
+
+                Vector3 roomPosition = new(x * _tileSizeX, 0, y * _tileSizeY);
+                Quaternion roomRotation = Quaternion.Euler(0, room.Rotation * _tileRotation, 0);
+                (Vector3 relativeDoorPosition, Quaternion relativeDoorRotation) = direction switch
+                {
+                    0 => (new Vector3(-_tileSizeX / 2f, 0, 0), Quaternion.Euler(0, -_tileRotation, 0)),
+                    1 => (new Vector3(0, 0, _tileSizeY / 2f), Quaternion.identity),
+                    2 => (new Vector3(_tileSizeX / 2f, 0, 0), Quaternion.Euler(0, _tileRotation, 0)),
+                    3 => (new Vector3(0, 0, -_tileSizeY / 2f), Quaternion.Euler(0, 2f * _tileRotation, 0)),
+                    _ => throw new UnityException("Invalid direction when placing door")
+                };
+                Vector3 doorPosition = roomPosition + relativeDoorPosition;
+                Quaternion doorRotation = roomRotation * relativeDoorRotation;
+
+                _ = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
+            }
         }
     }
 }
