@@ -12,7 +12,7 @@ public class DoorCollision : MonoBehaviour
     private static int _numberOfDoors;
 
     /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
-    [SerializeField] private int _doorId;
+    private int _doorId;
 
     /// <summary>Gives the door a unique ID on load.</summary>
     private void Awake()
