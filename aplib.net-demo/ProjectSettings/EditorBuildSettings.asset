@@ -11,7 +11,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddCamera.unity
     guid: 1782ac37f04835748bd49d8dc3cdb6e6
-  - enabled: 1
-    path: Assets/Scenes/SolveMazeTestScene.unity
-    guid: 5096aecbf691bad40ad36f468a69b052
   m_configObjects: {}
