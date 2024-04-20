@@ -70,3 +70,6 @@ aplib.net-demo/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 # Temporary auto-generated Android Assets
 aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa.meta
 aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Rider files
+.idea/

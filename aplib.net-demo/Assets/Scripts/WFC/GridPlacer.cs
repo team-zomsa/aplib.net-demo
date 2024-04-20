@@ -27,12 +27,14 @@ namespace Assets.Scripts.WFC
         /// <summary>
         /// Represents the room objects.
         /// </summary>
-        [SerializeField] private RoomObjects _roomObjects;
+        [SerializeField]
+        private RoomObjects _roomObjects;
 
         /// <summary>
         /// Represents the door object.
         /// </summary>
-        [SerializeField] private GameObject _doorPrefab;
+        [SerializeField]
+        private GameObject _doorPrefab;
 
         /// <summary>
         /// Represents the grid.
@@ -51,12 +53,8 @@ namespace Assets.Scripts.WFC
             TempFillFunction();
 
             for (int y = 0; y < _grid.Height; y++)
-            {
                 for (int x = 0; x < _grid.Width; x++)
-                {
                     PlaceTile(x, y, _grid[x, y].Tile);
-                }
-            }
         }
 
         /// <summary>
@@ -95,13 +93,13 @@ namespace Assets.Scripts.WFC
 
             GameObject prefab = tile switch
             {
-                Corner _ => _roomObjects.Corner,
-                Crossing _ => _roomObjects.Crossing,
-                DeadEnd _ => _roomObjects.DeadEnd,
-                Empty _ => _roomObjects.Empty,
-                Room _ => _roomObjects.Room,
-                Straight _ => _roomObjects.Straight,
-                TSection _ => _roomObjects.TSection,
+                Corner => _roomObjects.Corner,
+                Crossing => _roomObjects.Crossing,
+                DeadEnd => _roomObjects.DeadEnd,
+                Empty => _roomObjects.Empty,
+                Room => _roomObjects.Room,
+                Straight => _roomObjects.Straight,
+                TSection => _roomObjects.TSection,
                 _ => throw new UnityException("Unknown tile type when placing tile")
             };
 
