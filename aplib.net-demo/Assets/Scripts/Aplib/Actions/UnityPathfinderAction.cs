@@ -9,7 +9,7 @@ namespace Aplib.Integrations.Unity.Actions
     public class UnityPathfinderAction<TBeliefSet> : Core.Intent.Actions.Action<TBeliefSet>
         where TBeliefSet : IBeliefSet
     {
-        private static readonly Func<TBeliefSet, bool> _alwaysTrue = _ => true;
+        protected static readonly Func<TBeliefSet, bool> _alwaysTrue = _ => true;
 
         public UnityPathfinderAction(
             Func<TBeliefSet, Transform> objectQuery,
@@ -43,7 +43,7 @@ namespace Aplib.Integrations.Unity.Actions
         {
         }
 
-        private static Func<TBeliefSet, Vector3> ConstantLocation(Vector3 location) => _ => location;
+        protected static Func<TBeliefSet, Vector3> ConstantLocation(Vector3 location) => _ => location;
 
         private static Action<TBeliefSet> PathfindingAction(Func<TBeliefSet, Transform> objectQuery,
             Func<TBeliefSet, Vector3> locationQuery,

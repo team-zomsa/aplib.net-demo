@@ -6,11 +6,9 @@ using UnityEngine.AI;
 
 namespace Aplib.Integrations.Unity.Actions
 {
-    public class TransformPathfinderAction<TBeliefSet> : Core.Intent.Actions.Action<TBeliefSet>
+    public class TransformPathfinderAction<TBeliefSet> : UnityPathfinderAction<TBeliefSet>
         where TBeliefSet : IBeliefSet
     {
-        private static readonly Func<TBeliefSet, bool> _alwaysTrue = _ => true;
-
         public TransformPathfinderAction(Func<TBeliefSet, Transform> objectQuery,
             Vector3 location,
             float heightOffset = 0f,
@@ -31,47 +29,25 @@ namespace Aplib.Integrations.Unity.Actions
             Func<TBeliefSet, bool> guard = null,
             Metadata metadata = null)
             : base(
-                effect: PathfindingAction(objectQuery, location, heightOffset: heightOffset),
+                objectQuery,
+                location,
+                effect: PathfindingAction(objectQuery),
+                heightOffset: heightOffset,
                 guard: guard ?? _alwaysTrue,
                 metadata
             )
         {
         }
 
-        private static Func<TBeliefSet, Vector3> ConstantLocation(Vector3 location) => _ => location;
-
-        private static Action<TBeliefSet> PathfindingAction(Func<TBeliefSet, Transform> objectQuery,
-            Func<TBeliefSet, Vector3> locationQuery,
-            float speed = 7f,
-            float heightOffset = 0f) => beliefSet =>
+        private static Action<TBeliefSet, Vector3> PathfindingAction(Func<TBeliefSet, Transform> objectQuery) => (beliefSet, destination) =>
         {
             Transform transform = objectQuery(beliefSet);
-            Vector3 target = locationQuery(beliefSet);
-
-            NavMeshPath path = new();
-            NavMesh.CalculatePath(transform.position,
-                target,
-                NavMesh.AllAreas,
-                path
-            );
-
-            if (path.corners.Length <= 1)
-            {
-                return;
-            }
-
-
-            // Move Towards
-            Vector3 targetPosition = path.corners[1] + (Vector3.up * heightOffset);
-            Vector3 newPosition =
-                Vector3.MoveTowards(transform.position, targetPosition, maxDistanceDelta: Time.deltaTime * speed);
-            Debug.DrawLine(targetPosition, transform.position, Color.blue);
 
             // Calculate the new direction
-            Vector3 direction = newPosition - transform.position;
+            Vector3 direction = destination - transform.position;
             direction.Normalize();
 
-            transform.position = newPosition;
+            transform.position = destination;
 
             // If the direction is zero, don't rotate the object
             if (direction == Vector3.zero)
