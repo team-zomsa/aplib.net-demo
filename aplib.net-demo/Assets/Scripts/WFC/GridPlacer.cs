@@ -128,13 +128,15 @@ namespace Assets.Scripts.WFC
                 if (room.CanConnectInDirection(direction)) continue;
 
                 Vector3 roomPosition = new(x * _tileSizeX, 0, y * _tileSizeY);
+                float doorDepthExtend = _doorPrefab.GetComponent<Renderer>().bounds.extents.z;
+                float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
                 Quaternion roomRotation = Quaternion.Euler(0, room.Rotation * _tileRotation, 0);
                 (Vector3 relativeDoorPosition, Quaternion relativeDoorRotation) = direction switch
                 {
-                    0 => (new Vector3(-_tileSizeX / 2f, 0, 0), Quaternion.Euler(0, -_tileRotation, 0)),
-                    1 => (new Vector3(0, 0, _tileSizeY / 2f), Quaternion.identity),
-                    2 => (new Vector3(_tileSizeX / 2f, 0, 0), Quaternion.Euler(0, _tileRotation, 0)),
-                    3 => (new Vector3(0, 0, -_tileSizeY / 2f), Quaternion.Euler(0, 2f * _tileRotation, 0)),
+                    0 => (new Vector3(-doorDistanceFromRoomCenter, 0, 0), Quaternion.Euler(0, -_tileRotation, 0)),
+                    1 => (new Vector3(0, 0, doorDistanceFromRoomCenter), Quaternion.identity),
+                    2 => (new Vector3(doorDistanceFromRoomCenter, 0, 0), Quaternion.Euler(0, _tileRotation, 0)),
+                    3 => (new Vector3(0, 0, -doorDistanceFromRoomCenter), Quaternion.Euler(0, 2f * _tileRotation, 0)),
                     _ => throw new UnityException("Invalid direction when placing door")
                 };
                 Vector3 doorPosition = roomPosition + relativeDoorPosition;
