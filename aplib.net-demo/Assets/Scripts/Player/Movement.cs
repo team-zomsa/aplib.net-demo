@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] private float _maxSpeed = 7;
-    [SerializeField] private float _acceleration = 100;
+    [SerializeField] private float _maxSpeedGround = 7;
+    [SerializeField] private float _maxSpeedAir = 7;
+    [SerializeField] private float _acceleration = 300;
     private Vector3 _horizontalVelocity;
     private Vector2 _horizontalInput;
 
@@ -17,7 +18,8 @@ public class Movement : MonoBehaviour
     private bool _jumpPressed;
 
     [SerializeField] private LayerMask _groundMask;
-    [SerializeField] private float _groundDrag = 0.7f;
+    [SerializeField] private float _groundDrag = 0.9f;
+    [SerializeField] private float _airDrag = 0.2f;
     [SerializeField] private float _slopeAngle = 40;
     [SerializeField] private float _slopeCheckRayExtraLength = 0.3f;
     [SerializeField] private float _wallCheckMaxDistance = 0.5f;
@@ -84,20 +86,21 @@ public class Movement : MonoBehaviour
 
             if (isOnSlope)
             {
-                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * directionOnSlope);
+                _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * directionOnSlope);
 
                 // Apply gravity but perpendicular to the slope, to prevent sliding
                 _rigidbody.velocity += (_actualGravityScale - 1) * _gravity * Time.fixedDeltaTime * downHit.normal;
             }
             else
             {
-                _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
+                _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * _horizontalVelocity.normalized);
             }
+
         }
         else
         {
-            _rigidbody.drag = 0;
-            _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized);
+            _rigidbody.drag = _airDrag;
+            _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * _airMovementScale * _horizontalVelocity.normalized);
 
             // Custom gravity for player while falling
             _actualGravityScale = _rigidbody.velocity.y < 0 ? _fallingGravityScale : _normalGravityScale;
@@ -116,8 +119,7 @@ public class Movement : MonoBehaviour
     {
         float angleMultiplier = Mathf.Clamp01(1.2f - Vector3.Angle(_horizontalVelocity, -wallNormal) / 90);
         Vector3 directionOnWall = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal).normalized;
-        _rigidbody.AddForce(_maxSpeed * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
-        Debug.DrawRay(transform.position, directionOnWall * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
+        _rigidbody.AddForce(_maxSpeedGround * _acceleration * Time.fixedDeltaTime * angleMultiplier * directionOnWall);
     }
 
     /// <summary>
@@ -125,24 +127,29 @@ public class Movement : MonoBehaviour
     ///  Also accounts for vertical velocity when on a slope.
     /// </summary>
     /// <param name="isOnWalkableSlope">Is the player on a walkable slope</param>
-    private void LimitVelocity(bool isOnWalkableSlope)
+    private void LimitVelocity(bool isOnSlope)
     {
-        if (isOnWalkableSlope)
+        if (isOnSlope && _rigidbody.velocity.magnitude > _maxSpeedGround)
         {
-            if (_rigidbody.velocity.magnitude > _maxSpeed) _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
-        }
-        else
-        {
-            Vector3 rigidbodyHorizontalVelocity = new(_rigidbody.velocity.x, 0, _rigidbody.velocity.z);
-            if (rigidbodyHorizontalVelocity.magnitude > _maxSpeed)
-            {
-                Vector3 limitedVelocity = rigidbodyHorizontalVelocity.normalized * _maxSpeed;
-                _rigidbody.velocity = new Vector3(limitedVelocity.x, _rigidbody.velocity.y, limitedVelocity.z);
-            }
+            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeedGround;
+            return;
         }
 
-        // Draw a ray to visualize the player's velocity and direction
-        Debug.DrawRay(transform.position, _rigidbody.velocity, Globals.s_VelocityColor);
+        Vector3 rigidbodyHorizontalVelocity = new(_rigidbody.velocity.x, 0, _rigidbody.velocity.z);
+        Vector3 rigidbodyVerticalVelocity = new(0, _rigidbody.velocity.y, 0);
+
+        // Horizontal and vertical speeds are checked seperate from eachother to avoid rapid small bunny hops
+        if (rigidbodyHorizontalVelocity.magnitude > _maxSpeedGround)
+        {
+            Vector3 horizontalVelocityLimited = rigidbodyHorizontalVelocity.normalized * _maxSpeedGround;
+            _rigidbody.velocity = new Vector3(horizontalVelocityLimited.x, _rigidbody.velocity.y, horizontalVelocityLimited.z);
+        }
+
+        if (rigidbodyVerticalVelocity.magnitude > _maxSpeedAir)
+        {
+            Vector3 verticalVelocityLimited = rigidbodyVerticalVelocity.normalized * _maxSpeedAir;
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, verticalVelocityLimited.y, _rigidbody.velocity.z);
+        }
     }
 
     /// <summary>
@@ -161,7 +168,6 @@ public class Movement : MonoBehaviour
             if (angle < _slopeAngle && angle != 0)
             {
                 directionOnSlope = Vector3.ProjectOnPlane(_horizontalVelocity, downHit.normal).normalized;
-                Debug.DrawRay(transform.position, directionOnSlope.normalized * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
                 return true;
             }
         }
@@ -181,7 +187,6 @@ public class Movement : MonoBehaviour
         if (Physics.SphereCast(transform.position, _playerRadius, _horizontalVelocity, out RaycastHit hit, _wallCheckMaxDistance, _groundMask))
         {
             wallNormal = hit.normal;
-            Debug.DrawRay(transform.position, wallNormal * Globals.s_DebugRayLength, Globals.s_PhysicsColor);
             return true;
         }
         wallNormal = Vector3.zero;
@@ -194,8 +199,6 @@ public class Movement : MonoBehaviour
     private void HandleJump()
     {
         if (_jumpPressed && _isGrounded) _rigidbody.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
-
-        _jumpPressed = false;
     }
 
     /// <summary>
@@ -208,5 +211,10 @@ public class Movement : MonoBehaviour
     /// Set the jumpPressed flag to true when the player presses the jump button.
     /// Result of an InputAction.
     /// </summary>
-    public void OnJumpPressed() => _jumpPressed = true;
+    public void OnJumpDown() => _jumpPressed = true;
+
+    /// <summary>
+    /// Set the jumpPressed flag to false when the player lets go of the jump button.
+    /// </summary>
+    public void OnJumpUp() => _jumpPressed = false;
 }

@@ -39,7 +39,8 @@ public class InputManager : MonoBehaviour
         _activeWeapon = _playerWeapons[0];
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
-        _playerActions.Jump.performed += _ => _playerMovement.OnJumpPressed();
+        _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
+        _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
         _playerActions.Fire.performed += _ => _activeWeapon.UseWeapon();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
