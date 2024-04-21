@@ -26,7 +26,7 @@ public class MeleeWeapon : Weapon
 
     /// <summary>
     /// Ensure the height is at least twice the radius, because the height of the hitzone (capsule) must at least be the diameter of the spheres.
-    /// (If the two spheres are at the same position, the capsulse just becomes a sphere and height = 2 * radius)
+    /// (If the two spheres are at the same position, the capsule just becomes a sphere and height = 2 * radius)
     /// </summary>
     private void Start()
     {
