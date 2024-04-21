@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using System;
+using UnityEngine;
+
 
 /// <summary>
 /// This class has fuctions for ranged weapons.
@@ -11,7 +10,7 @@ using System;
 /// </summary>
 public class RangedWeapon : Weapon
 {
-    [SerializeField] private int _damage = 30;
+    [SerializeField] private int _damage = 50;
     [SerializeField] private int _range = 50;
 
     private Transform _playerTransform;
@@ -30,17 +29,19 @@ public class RangedWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        RaycastHit[] hits = Physics.RaycastAll(CameraManager.Instance.MainCamera.transform.position, CameraManager.Instance.MainCamera.transform.forward, _range);
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, _range);
 
+        // Grabs all objects that collide with this line by order of closest to the player till the furthest the range will let it be.
         IEnumerable<RaycastHit> orderedHits = hits.OrderBy(hit => hit.distance);
 
+        // Will damage only enemies and the ray will stop when it hits an object that is not an enemy.
         foreach (RaycastHit hit in orderedHits)
         {
             if (!hit.collider.CompareTag("Enemy"))
                 break;
 
-            // We need to check if the enemy has an BasicEnemy component before dealing damage
-            BasicEnemy enemy = hit.collider.GetComponent<BasicEnemy>() ?? hit.collider.GetComponentInParent<DummyEnemy>();
+            // Check if the enemy has a DummyEnemy component.
+            DummyEnemy enemy = hit.collider.GetComponentInParent<DummyEnemy>();
             if (enemy != null) enemy.TakeDamage(_damage);
         }
     }
