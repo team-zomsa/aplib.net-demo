@@ -3,18 +3,30 @@ using UnityEngine;
 
 /// <summary>
 /// A basic melee weapon that deals damage to enemies within a short range.
+/// The hitzone is a capsule shape defined by two spheres.
 /// </summary>
 public class MeleeWeapon : Weapon
 {
     [SerializeField] private int _damage = 25;
+
+    /// <summary>
+    /// The height of the hitzone in world units.
+    /// Could also be called length, but height is what Unity uses for capsules.
+    /// </summary>
     [SerializeField] private float _height = 4;
+
+    /// <summary>
+    /// The radius of the hitzone in world units.
+    /// The two spheres that define the hitzone have the same radius.
+    /// </summary>
     [SerializeField] private float _radius = 1.4f;
 
     private Vector3 _sphere1Center;
     private Vector3 _sphere2Center;
 
     /// <summary>
-    /// Set the player's visual transform instance and ensure the height is at least twice the radius.
+    /// Ensure the height is at least twice the radius, because the height of the hitzone (capsule) must at least be the diameter of the spheres.
+    /// (If the two spheres are at the same position, the capsulse just becomes a sphere and height = 2 * radius)
     /// </summary>
     private void Start()
     {

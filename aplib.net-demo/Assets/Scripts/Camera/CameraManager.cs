@@ -5,7 +5,7 @@ public class CameraManager : MonoBehaviour
 {
     [SerializeField] public Transform PlayerRotation;
     [SerializeField] public Transform PlayerCamFollow;
-    [SerializeField] private CinemachineVirtualCamera _cinemachineCamera;
+    [SerializeField] public CinemachineVirtualCamera CinemachineCamera;
     public static CameraManager Instance { get; private set; }
 
     /// <summary>
@@ -18,10 +18,5 @@ public class CameraManager : MonoBehaviour
         else
             Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        if (_cinemachineCamera == null)
-            _cinemachineCamera = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>();
-
-        _cinemachineCamera.Follow = PlayerCamFollow;
     }
 }
