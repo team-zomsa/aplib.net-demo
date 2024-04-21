@@ -2,7 +2,6 @@ using Aplib.Core;
 using Aplib.Core.Belief;
 using System;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Aplib.Integrations.Unity.Actions
 {
@@ -32,31 +31,31 @@ namespace Aplib.Integrations.Unity.Actions
                 objectQuery,
                 location,
                 effect: PathfindingAction(objectQuery),
-                heightOffset: heightOffset,
+                heightOffset,
                 guard: guard ?? _alwaysTrue,
                 metadata
             )
         {
         }
 
-        private static Action<TBeliefSet, Vector3> PathfindingAction(Func<TBeliefSet, Transform> objectQuery) => (beliefSet, destination) =>
-        {
-            Transform transform = objectQuery(beliefSet);
-
-            // Calculate the new direction
-            Vector3 direction = destination - transform.position;
-            direction.Normalize();
-
-            transform.position = destination;
-
-            // If the direction is zero, don't rotate the object
-            if (direction == Vector3.zero)
+        private static Action<TBeliefSet, Vector3> PathfindingAction(Func<TBeliefSet, Transform> objectQuery)
+            => (beliefSet, destination) =>
             {
-                return;
-            }
+                Transform transform = objectQuery(beliefSet);
 
+                // Calculate the new direction
+                Vector3 direction = destination - transform.position;
+                direction.Normalize();
 
-            transform.rotation = Quaternion.LookRotation(direction);
-        };
+                transform.position = destination;
+
+                // If the direction is zero, don't rotate the object
+                if (direction == Vector3.zero)
+                {
+                    return;
+                }
+
+                transform.rotation = Quaternion.LookRotation(direction);
+            };
     }
 }

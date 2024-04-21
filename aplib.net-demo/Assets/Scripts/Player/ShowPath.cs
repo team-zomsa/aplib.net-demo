@@ -21,7 +21,7 @@ public class ShowGoldenPath : MonoBehaviour
         elapsed += Time.deltaTime;
         if (elapsed > 1.0f)
         {
-            elapsed -= 1.0f;
+            elapsed = 0;
             NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
         }
 
