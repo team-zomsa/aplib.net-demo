@@ -1,11 +1,8 @@
 using Aplib.Core;
 using System.Collections;
 
-namespace Aplib.Integrations.Unity
+namespace Aplib
 {
-    /// <summary>
-    /// Represents a test runner for an agent.
-    /// </summary>
     public class AplibRunner
     {
         /// <summary>
@@ -26,10 +23,10 @@ namespace Aplib.Integrations.Unity
         {
             while (_agent.Status == CompletionStatus.Unfinished)
             {
-                // Perform computation or update the agent here.
+                // Perform computation or update the agent here
                 _agent.Update();
 
-                // Wait for the next frame.
+                // Wait for the next frame
                 yield return null;
             }
         }
