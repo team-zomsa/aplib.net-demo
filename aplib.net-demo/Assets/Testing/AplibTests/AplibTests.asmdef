@@ -5,6 +5,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Aplib.Integrations.Unity",
+        "Scripts",
         "Unity.InputSystem",
         "Unity.InputSystem.TestFramework"
     ],

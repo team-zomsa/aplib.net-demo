@@ -5,7 +5,7 @@ using Aplib.Core.Desire;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
-using Aplib.Integrations.Unity.Actions;
+using Assets.Scripts;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
@@ -47,11 +47,20 @@ public class CrossbowTestBeliefSet : BeliefSet
 
 public class CrossbowTest : InputTestFixture
 {
+    Mouse _mouse;
+
     [SetUp]
     public override void Setup()
     {
         base.Setup();
         SceneManager.LoadScene("RangedWeaponTestScene");
+    }
+
+    [TearDown]
+    public override void TearDown()
+    {
+        InputSystem.RemoveDevice(_mouse);
+        Object.Destroy(InputManager.Instance);
     }
 
     [UnityTest]
@@ -61,10 +70,10 @@ public class CrossbowTest : InputTestFixture
         CrossbowTestBeliefSet beliefSet = new();
 
         // Add mouse
-        Mouse mouse = InputSystem.AddDevice<Mouse>();
+        _mouse = InputSystem.AddDevice<Mouse>();
 
         // Action: shoot in front | might not work
-        Action<CrossbowTestBeliefSet> ShootEnemyInFront = new(beliefSet => Click(mouse.leftButton));
+        Action<CrossbowTestBeliefSet> ShootEnemyInFront = new(beliefSet => Click(_mouse.leftButton));
 
         // Action: rotate player
         Action<CrossbowTestBeliefSet> RotatePlayerToEnemy = new(beliefSet =>
@@ -84,7 +93,7 @@ public class CrossbowTest : InputTestFixture
             // Get the angle between the player's forward direction and the direction to the target position
             float angle = Vector3.SignedAngle(player.transform.forward, lookAtDirection, Vector3.up);
 
-            Set(mouse.delta, state: new Vector2(angle * multiplier / horizontalSpeed, 0));
+            Set(_mouse.delta, state: new Vector2(angle * multiplier / horizontalSpeed, 0));
         });
 
         // Tactic to kill enemy when in front
@@ -116,7 +125,7 @@ public class CrossbowTest : InputTestFixture
 
         bool Predicate(CrossbowTestBeliefSet beliefSet)
         {
-            Set(mouse.delta, Vector2.zero);
+            Set(_mouse.delta, Vector2.zero);
 
             // The player has killed the enemy
             return beliefSet.IsEnemyDead;
