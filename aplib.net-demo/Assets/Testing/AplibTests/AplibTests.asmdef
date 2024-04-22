@@ -4,7 +4,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Aplib.Integrations.Unity"
+        "Aplib.Integrations.Unity",
+        "Scripts"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
