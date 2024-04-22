@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace WFC
+namespace Assets.Scripts.Wfc
 {
     /// <summary>
     /// Represents the grid placer.
@@ -85,14 +85,14 @@ namespace WFC
         {
             GameObject prefab = tile switch
             {
-                Corner   => RoomObjects.Corner,
+                Corner => RoomObjects.Corner,
                 Crossing => RoomObjects.Crossing,
-                DeadEnd  => RoomObjects.DeadEnd,
-                Empty    => RoomObjects.Empty,
-                Room     => RoomObjects.Room,
+                DeadEnd => RoomObjects.DeadEnd,
+                Empty => RoomObjects.Empty,
+                Room => RoomObjects.Room,
                 Straight => RoomObjects.Straight,
                 TSection => RoomObjects.TSection,
-                _        => null
+                _ => null
             };
 
             if (prefab != null)
@@ -122,6 +122,7 @@ namespace WFC
             // TODO the joining of the connected components with teleporters will be done in another PR.
         }
 
+        // Here are temporary helper methods used to display the connected components in different colors.
         private static Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan };
         private static int _colorIndex = -1;
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];

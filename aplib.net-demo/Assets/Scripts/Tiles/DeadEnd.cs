@@ -5,7 +5,7 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a dead end tile.
-    /// <br/><br/>
+    /// <para/>
     /// Default orientation (north):
     /// <code>
     ///

@@ -5,7 +5,7 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a T-section tile.
-    /// <br/><br/>
+    /// <para/>
     /// Default orientation (north):
     /// <code>
     ///
@@ -21,7 +21,7 @@ namespace Assets.Scripts.Tiles
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TSection"/> class.
-        /// The default is a T-section with the top side opened.
+        /// The default is a T-section with the bottom side closed.
         /// </summary>
         /// <param name="facing">The direction in which the front of the tile should face.</param>
         public TSection(Direction facing = North)

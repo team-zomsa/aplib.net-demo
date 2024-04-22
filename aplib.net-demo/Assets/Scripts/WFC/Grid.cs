@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace WFC
+namespace Assets.Scripts.Wfc
 {
     /// <summary>
     /// Represents a grid.
@@ -78,7 +78,7 @@ namespace WFC
         /// <param name="index">Ranging from 0 to infinity, and beyond! But not too far, as you will get an exception.</param>
         /// <returns>The coordinates of the belonging tile.</returns>
         /// <exception cref="IndexOutOfRangeException">
-        /// When index is larger than <see cref="Width"/> times /// <see cref="Height"/>.
+        /// When index is larger than <see cref="Width"/> times <see cref="Height"/>.
         /// </exception>
         protected (int x, int y) IndexToCoordinates(int index)
         {
@@ -156,8 +156,8 @@ namespace WFC
         }
 
         /// <summary>
-        /// Given a cell, this method determines all directly adjacent neighbours which are connected by their <see cref="Tile"/>s.
-        /// These are at most 4, as diagonal tiles cannot be connected.
+        /// Given a cell, this method determines all directly adjacent neighbours which are connected by their
+        /// <see cref="Tile"/>s. These are at most 4, as diagonal tiles cannot be connected.
         /// </summary>
         /// <param name="cell">The cell whose connected tiles are to be determined.</param>
         /// <returns>The cells directly connected through their tiles</returns>
@@ -168,13 +168,10 @@ namespace WFC
             ICollection<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
             foreach (Cell neighbour in neighbours)
             {
-                if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West))
-                    connectedNeighbours.Add(neighbour);
-                else if (cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(East))
-                    connectedNeighbours.Add(neighbour);
-                else if (cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && neighbour.Tile.CanConnectInDirection(South))
-                    connectedNeighbours.Add(neighbour);
-                else if (cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && neighbour.Tile.CanConnectInDirection(North))
+                if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West)
+                    || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(East)
+                    || cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && neighbour.Tile.CanConnectInDirection(South)
+                    || cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && neighbour.Tile.CanConnectInDirection(North))
                     connectedNeighbours.Add(neighbour);
             }
 

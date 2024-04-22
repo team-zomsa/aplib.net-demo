@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace WFC
+namespace Assets.Scripts.Wfc
 {
     /// <summary>
     /// Represents the room objects.

@@ -17,7 +17,7 @@ namespace Assets.Scripts.Tiles
     public static class DirectionExtensions
     {
         /// <summary>
-        /// Rotates the direction X times to the right.
+        /// Rotates the direction X times clockwise.
         /// </summary>
         /// <param name="direction">The direction to rotate.</param>
         /// <param name="times">The number of times the direction must be rotated.</param>
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Tiles
             => (Direction)(((int)direction + times) % 4);
 
         /// <summary>
-        /// Rotates the direction X times to the left.
+        /// Rotates the direction X times counterclockwise.
         /// </summary>
         /// <param name="direction">The direction to rotate.</param>
         /// <param name="times">The number of times the direction must be rotated.</param>
@@ -38,8 +38,10 @@ namespace Assets.Scripts.Tiles
         /// Rotates the direction X times to the left or right.
         /// </summary>
         /// <param name="direction">The direction to rotate.</param>
-        /// <param name="times">The number of times the direction must be rotated.
-        /// Negative numbers indicate rotation towards the left.</param>
+        /// <param name="times">
+        /// The number of times the direction must be rotated.
+        /// Negative numbers indicate rotation towards the left.
+        /// </param>
         /// <returns>The adjusted direction.</returns>
         public static Direction Rotate(this Direction direction, int times)
             => times >= 0 ? direction.RotateRight(times) : direction.RotateLeft(-times);

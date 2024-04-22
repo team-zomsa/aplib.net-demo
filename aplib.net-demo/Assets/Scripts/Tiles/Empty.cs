@@ -4,7 +4,7 @@ namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents an empty tile.
-    /// <br/><br/>
+    /// <para/>
     /// Default orientation (north):
     /// <code>
     ///
