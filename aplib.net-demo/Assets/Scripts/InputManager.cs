@@ -4,18 +4,20 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private MouseLock _mouseLock;
+
     [SerializeField] private Transform _playerTransform;
-    private ResetRigidbody _playerRespawn;
-    private Movement _playerMovement;
+
     // TODO: Change when inventory is added
     // Doing it this way for now, change when inventory is implemented.
     private Weapon _activeWeapon;
 
+    private Vector2 _horizontalInput;
+
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
+    private Movement _playerMovement;
+    private ResetRigidbody _playerRespawn;
     private PlayerInput.UIActions _uiActions;
-
-    private Vector2 _horizontalInput;
 
     public static InputManager Instance { get; private set; }
 
@@ -25,17 +27,22 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         if (Instance != null && Instance != this)
+        {
             Destroy(gameObject);
+        }
         else
+        {
             Instance = this;
-        DontDestroyOnLoad(gameObject);
+        }
+
+        //DontDestroyOnLoad(gameObject);
 
         _input = new PlayerInput();
         _playerActions = _input.Player;
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
         _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
-        List<Weapon> _playerWeapons = new List<Weapon>(_playerTransform.GetComponentsInChildren<Weapon>());
+        List<Weapon> _playerWeapons = new(collection: _playerTransform.GetComponentsInChildren<Weapon>());
         _activeWeapon = _playerWeapons[0];
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
@@ -48,11 +55,6 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Get the change in mouse position since the last frame.
-    /// </summary>
-    public Vector2 GetMouseDelta() => _playerActions.Look.ReadValue<Vector2>();
-
-    /// <summary>
     /// Pass the input to the movement script.
     /// </summary>
     private void Update() => _playerMovement.ReceiveHorizontalInput(_horizontalInput);
@@ -60,4 +62,9 @@ public class InputManager : MonoBehaviour
     private void OnEnable() => _input?.Enable();
 
     private void OnDisable() => _input?.Disable();
+
+    /// <summary>
+    /// Get the change in mouse position since the last frame.
+    /// </summary>
+    public Vector2 GetMouseDelta() => _playerActions.Look.ReadValue<Vector2>();
 }

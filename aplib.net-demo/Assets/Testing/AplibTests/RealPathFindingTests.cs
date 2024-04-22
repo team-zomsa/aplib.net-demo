@@ -31,23 +31,32 @@ namespace Tests.AplibTests
 
     public class RealPathFindingTests : InputTestFixture
     {
-        [SetUp]
         public override void Setup()
         {
             base.Setup();
 
             // Load the scene
             SceneManager.LoadScene("PathfindingTest3");
+            Debug.Log("DOING THIS SHIT!!");
+        }
+
+        public override void TearDown()
+        {
+            SceneManager.UnloadSceneAsync("PathfindingTest3");
+            Object.Destroy(InputManager.Instance);
         }
 
         [UnityTest]
         public IEnumerator RealPathfindingTests()
         {
+            Debug.Log("DOING THIS SHIT?!!?!");
             RpfBeliefset beliefSet = new();
 
             // Create a input device for the player.
             Keyboard keyboard = InputSystem.AddDevice<Keyboard>();
             Mouse mouse = InputSystem.AddDevice<Mouse>();
+
+            Debug.Log("DOING THIS SHIT!!!");
 
             // Create an intent for the agent that moves the agent towards the target position.
             UnityPathfinderAction<RpfBeliefset> unityPathfinderAction = new(
@@ -73,6 +82,7 @@ namespace Tests.AplibTests
 
                     // Get the angle between the player's forward direction and the direction to the target position
                     float angle = Vector3.SignedAngle(player.transform.forward, direction, Vector3.up);
+
                     Set(mouse.delta, state: new Vector2(x: angle * multiplier / horizontalSpeed, 0));
 
                     // Use the input device to move the player towards the target position
@@ -89,6 +99,7 @@ namespace Tests.AplibTests
                     {
                         Release(keyboard.wKey);
                         Set(mouse.delta, Vector2.zero);
+
                         GameObject player = beliefset.Player;
                         Vector3 target = beliefset.TargetPosition;
                         return Vector3.Distance(player.transform.position, target) < 1f;
@@ -103,9 +114,14 @@ namespace Tests.AplibTests
 
             AplibRunner testRunner = new(agent);
 
+            Debug.Log("Testing the runner");
+
             // Use the Assert class to test conditions.
             // Use yield to skip a frame.
             yield return testRunner.Test();
+
+            InputSystem.RemoveDevice(mouse);
+            InputSystem.RemoveDevice(keyboard);
 
             // Assert that the player has reached the target position
             Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);

@@ -32,6 +32,9 @@ public class PathfindingTests
         // Load the scene
         SceneManager.LoadScene("PathfindingTest2");
 
+    [TearDown]
+    public void TearDown() => Object.Destroy(InputManager.Instance);
+
     [UnityTest]
     public IEnumerator TransformPathfindingTest()
     {

@@ -87,5 +87,12 @@ namespace Tests.AplibTests
             Debug.Log("Starting test MyFirstAplibTest");
             SceneManager.LoadScene("FirstTestScene");
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            SceneManager.UnloadSceneAsync("PathfindingTest3");
+            Object.Destroy(InputManager.Instance);
+        }
     }
 }

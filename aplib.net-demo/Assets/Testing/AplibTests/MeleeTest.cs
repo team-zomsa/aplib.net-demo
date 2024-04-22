@@ -9,6 +9,7 @@ using Aplib.Integrations.Unity.Actions;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -17,36 +18,35 @@ namespace Tests.AplibTests
     public class MeleeBeliefSet : BeliefSet
     {
         /// <summary>
-        /// The player object in the scene.
-        /// </summary>
-        public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
-
-        /// <summary>
         /// If the enemy exists in the scene
         /// </summary>
-        public Belief<GameObject, bool> EnemyExists = new(GameObject.Find("Target Dummy Body"), x => x != null);
+        public Belief<GameObject, bool> EnemyExists =
+            new(reference: GameObject.Find("Target Dummy Body"), x => x != null);
 
         /// <summary>
         /// The target position that the player needs to move towards.
         /// Find the first enemy in the scene.
         /// </summary>
-        public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Target Dummy Body"), x =>
-        {
-            if (x == null)
-                return Vector3.zero;
-            return x.transform.position;
-        });
+        public Belief<GameObject, Vector3> EnemyPosition = new(reference: GameObject.Find("Target Dummy Body"),
+            x =>
+            {
+                if (x == null)
+                {
+                    return Vector3.zero;
+                }
+
+                return x.transform.position;
+            }
+        );
+
+        /// <summary>
+        /// The player object in the scene.
+        /// </summary>
+        public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
     }
 
     public class MeleeAplibTest
     {
-        [SetUp]
-        public void SetUp()
-        {
-            Debug.Log("Starting test MeleeTest");
-            SceneManager.LoadScene("MeleeTestScene");
-        }
-
         [UnityTest]
         public IEnumerator PerformMeleeTest()
         {
@@ -81,9 +81,11 @@ namespace Tests.AplibTests
             PrimitiveTactic<MeleeBeliefSet> attackTactic = new(attackAction);
 
             // Goal: Reach the target position and attack the enemy
-            PrimitiveGoalStructure<MeleeBeliefSet> moveGoal = new(goal: new Goal<MeleeBeliefSet>(moveTactic, MovePredicate));
-            PrimitiveGoalStructure<MeleeBeliefSet> attackGoal = new(goal: new Goal<MeleeBeliefSet>(attackTactic, EnemyKilledPredicate));
-            SequentialGoalStructure<MeleeBeliefSet> finalGoal = new SequentialGoalStructure<MeleeBeliefSet>(moveGoal, attackGoal);
+            PrimitiveGoalStructure<MeleeBeliefSet> moveGoal =
+                new(goal: new Goal<MeleeBeliefSet>(moveTactic, MovePredicate));
+            PrimitiveGoalStructure<MeleeBeliefSet> attackGoal =
+                new(goal: new Goal<MeleeBeliefSet>(attackTactic, EnemyKilledPredicate));
+            SequentialGoalStructure<MeleeBeliefSet> finalGoal = new(moveGoal, attackGoal);
 
             DesireSet<MeleeBeliefSet> desire = new(finalGoal);
 
@@ -110,6 +112,21 @@ namespace Tests.AplibTests
             }
 
             bool EnemyKilledPredicate(MeleeBeliefSet beliefSet) => !beliefSet.EnemyExists;
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            Debug.Log("Starting test MeleeTest");
+            SceneManager.LoadScene("MeleeTestScene");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            SceneManager.UnloadSceneAsync("PathfindingTest3");
+            InputSystem.settings.updateMode = InputSettings.UpdateMode.ProcessEventsManually;
+            Object.Destroy(InputManager.Instance);
         }
     }
 }
