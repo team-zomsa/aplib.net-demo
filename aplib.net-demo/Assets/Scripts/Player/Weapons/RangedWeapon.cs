@@ -13,15 +13,6 @@ public class RangedWeapon : Weapon
     [SerializeField] private int _damage = 50;
     [SerializeField] private int _range = 50;
 
-    private Transform _playerTransform;
-
-
-    // Set weapon transformation (pos and angle) at the player transform.
-    void Start()
-    {
-        _playerTransform = transform.parent;
-    }
-
     /// <summary>
     /// Shoots a ray from the players's position in the direction it is facing.
     /// Look for an entity with an Enemy tag within range and deal damage to it.

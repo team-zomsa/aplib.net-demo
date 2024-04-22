@@ -1706,6 +1706,11 @@ PrefabInstance:
       propertyPath: _respawnPointTransform
       value: 
       objectReference: {fileID: 1686980026}
+    - target: {fileID: 4704915512707521697, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _respawnPointTransform
+      value: 
+      objectReference: {fileID: 1686980026}
     m_RemovedComponents:
     - {fileID: 3394594136835305103, guid: a97359d0503e62444882482848ac8602, type: 3}
     m_RemovedGameObjects:
@@ -3929,6 +3934,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6098721876212132164, guid: a32b9718dd054174cb328e71472939bb,
+        type: 3}
+      propertyPath: _damage
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
