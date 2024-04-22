@@ -76,6 +76,7 @@ namespace Tests.AplibTests
 
             // Tactic: Move the player towards the target position
             PrimitiveTactic<MeleeBeliefSet> moveTactic = new(transformPathfinderAction);
+
             // Tactic: Attack the enemy
             PrimitiveTactic<MeleeBeliefSet> attackTactic = new(attackAction);
 
