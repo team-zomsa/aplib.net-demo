@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Aplib.Integrations.Unity",
         "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework"
+        "Unity.InputSystem.TestFramework",
+        "Scripts"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
