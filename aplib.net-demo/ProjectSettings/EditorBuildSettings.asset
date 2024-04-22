@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PathfindingTest2.unity
     guid: c3927a9f0650d264faab9f985b89a8b1
+  - enabled: 1
+    path: Assets/Scenes/RangedWeaponTestScene.unity
+    guid: 254572ebc9a5e314a9d4e02ac8f4d358
   m_configObjects: {}

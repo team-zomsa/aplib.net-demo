@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1157,7 +1157,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53597eb9099ea944b4b47688ff12f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerVisTransform: {fileID: 513851085}
+  PlayerRotation: {fileID: 513851085}
+  PlayerCamFollow: {fileID: 47903880}
+  CinemachineCamera: {fileID: 101199010}
 --- !u!1 &505467528
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,7 +1241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea6676c278c51f44aecf76adb1d4961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 7
+  _maxSpeedGround: 7
+  _maxSpeedAir: 7
   _acceleration: 140
   _normalGravityScale: 1.7
   _fallingGravityScale: 2.5
@@ -1249,6 +1252,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _groundDrag: 0.8
+  _airDrag: 0.2
   _slopeAngle: 40
   _slopeCheckRayExtraLength: 0.3
   _wallCheckMaxDistance: 0.5
@@ -3175,6 +3179,7 @@ GameObject:
   - component: {fileID: 1986361814}
   - component: {fileID: 1986361817}
   - component: {fileID: 1986361819}
+  - component: {fileID: 1986361820}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -3219,6 +3224,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Damping: 0
+--- !u!114 &1986361820
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986361813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c41ac9245b87c4192012080077d830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Damping: 0
