@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] public Transform PlayerVisTransform;
-
+    [SerializeField] public Transform PlayerRotation;
+    [SerializeField] public Transform PlayerCamFollow;
+    [SerializeField] public CinemachineVirtualCamera CinemachineCamera;
     public static CameraManager Instance { get; private set; }
 
     /// <summary>

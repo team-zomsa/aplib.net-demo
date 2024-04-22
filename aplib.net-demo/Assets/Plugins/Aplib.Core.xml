@@ -1,0 +1,1033 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aplib.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Aplib.Core.BdiAgent`1">
+            <summary>
+            Represents an agent that performs actions based on goals and beliefs.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.BdiAgent`1.Status">
+            <inheritdoc />
+        </member>
+        <member name="P:Aplib.Core.BdiAgent`1._beliefSet">
+            <summary>
+            Gets the beliefset of the agent.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.BdiAgent`1._desireSet">
+            <summary>
+            Gets the desire of the agent.
+            </summary>
+            <remarks>
+            The desire contains all goal structures and the current goal.
+            </remarks>
+        </member>
+        <member name="M:Aplib.Core.BdiAgent`1.#ctor(`0,Aplib.Core.Desire.IDesireSet{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.BdiAgent`1" /> class.
+            </summary>
+            <param name="beliefSet">The beliefset of the agent.</param>
+            <param name="desireSet"></param>
+        </member>
+        <member name="M:Aplib.Core.BdiAgent`1.Update">
+            <summary>
+            Performs a single BDI cycle, in which the agent updates its beliefs, selects a concrete goal,
+            chooses a concrete action to achieve the selected goal, and executes the chosen action.
+            </summary>
+            <remarks>This method will get called every frame of the game.</remarks>
+        </member>
+        <member name="T:Aplib.Core.Belief.Belief`2">
+            <summary>
+            The <see cref="T:Aplib.Core.Belief.Belief`2"/> class represents the agent's belief of a single object.
+            Some <i>object reference</i> is used to generate/update an <i>observation</i> 
+            (i.e., some piece of information of the game state as perceived by an agent).
+            </summary>
+            <remarks>
+            It implements the <see cref="T:Aplib.Core.Belief.IBelief"/> interface.
+            It supports implicit conversion to <typeparamref name="TObservation"/>.
+            </remarks>
+            <typeparam name="TReference">The type of the object reference used to generate/update the observation.</typeparam>
+            <typeparam name="TObservation">The type of the observation that the belief represents.</typeparam>
+        </member>
+        <member name="F:Aplib.Core.Belief.Belief`2._reference">
+            <summary>
+            The object reference used to generate/update the observation.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.Belief.Belief`2._getObservationFromReference">
+            <summary>
+            A function that takes an object reference and generates/updates an observation.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.Belief.Belief`2._shouldUpdate">
+            <summary>
+            A condition on when the observation should be updated.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.Belief.Belief`2._observation">
+            <summary>
+            The observation represented by the belief (i.e., some piece of information of the game state as perceived by an agent).
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.Belief`2.#ctor(`0,System.Func{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Belief.Belief`2"/> class with an object reference,
+            and a function to generate/update the observation using the object reference.
+            </summary>
+            <param name="reference">A function that takes an object reference and generates/updates an observation.</param>
+            <param name="getObservationFromReference">A function that takes an object reference and generates/updates an observation.</param>
+        </member>
+        <member name="M:Aplib.Core.Belief.Belief`2.#ctor(`0,System.Func{`0,`1},System.Func{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Belief.Belief`2"/> class with an object reference,
+            a function to generate/update the observation using the object reference,
+            and a condition on when the observation should be updated.
+            </summary>
+            <param name="reference">The object reference used to generate/update the observation.</param>
+            <param name="getObservationFromReference">A function that takes an object reference and generates/updates an observation.</param>
+            <param name="shouldUpdate">A condition on when the observation should be updated.</param>
+        </member>
+        <member name="M:Aplib.Core.Belief.Belief`2.op_Implicit(Aplib.Core.Belief.Belief{`0,`1})~`1">
+            <summary>
+            Implicit conversion operator to allow a <see cref="T:Aplib.Core.Belief.Belief`2"/> object 
+            to be used where a <typeparamref name="TObservation"/> is expected.
+            </summary>
+            <param name="belief">The <see cref="T:Aplib.Core.Belief.Belief`2"/> object to convert.</param>
+        </member>
+        <member name="M:Aplib.Core.Belief.Belief`2.UpdateBelief">
+            <summary>
+            Generates/updates the observation if the shouldUpdate condition is satisfied.
+            The observation is then updated by calling the getObservationFromReference function.
+            </summary>
+        </member>
+        <member name="T:Aplib.Core.Belief.BeliefSet">
+            <summary>
+            The <see cref="T:Aplib.Core.Belief.BeliefSet"/> class can be inherited to define a set of beliefs for an agent.
+            All <i>public fields</i> of type <see cref="T:Aplib.Core.Belief.IBelief"/> that are defined in the inheriting class
+            are automatically updated when calling <see cref="M:Aplib.Core.Belief.BeliefSet.UpdateBeliefs"/>.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.Belief.BeliefSet._beliefs">
+            <summary>
+            An array storing all <i>public fields</i> of type <see cref="T:Aplib.Core.Belief.IBelief"/> that are defined in the inheriting class.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.BeliefSet.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Belief.BeliefSet"/> class, 
+            and stores all <i>public fields</i> of type <see cref="T:Aplib.Core.Belief.IBelief"/> (that have been defined in the inheriting class) in an array.
+            All public <see cref="T:Aplib.Core.Belief.IBelief"/> fields are then automatically updated when calling <see cref="M:Aplib.Core.Belief.BeliefSet.UpdateBeliefs"/>.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.BeliefSet.UpdateBeliefs">
+            <summary>
+            Updates all objects of type <see cref="T:Aplib.Core.Belief.IBelief"/> that are defined as <i>public fields</i> in the inheriting class.
+            </summary>
+        </member>
+        <member name="T:Aplib.Core.Belief.IBelief">
+            <summary>
+            A belief represents/encapsulates an observation (i.e., piece of information of the game state as perceived by an agent).
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.IBelief.UpdateBelief">
+            <summary>
+            Updates the belief based on information of the game state.
+            </summary>
+        </member>
+        <member name="T:Aplib.Core.Belief.IBeliefSet">
+            <summary>
+            A belief set defines beliefs for an agent.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.IBeliefSet.UpdateBeliefs">
+            <summary>
+            Updates all beliefs in the belief set.
+            </summary>
+        </member>
+        <member name="T:Aplib.Core.Belief.MemoryBelief`2">
+            <summary>
+            The <see cref="T:Aplib.Core.Belief.MemoryBelief`2"/> class represents the agent's belief of a single object,
+            but with additional "memory" of previous observations.
+            Some <i>object reference</i> is used to generate/update an <i>observation</i> 
+            (i.e., some piece of information on the game state as perceived by an agent).
+            This belief also stores a limited amount of previous observations in memory.
+            </summary>
+            <remarks>
+            It implements the <see cref="T:Aplib.Core.Belief.IBelief"/> interface.
+            It supports implicit conversion to <typeparamref name="TObservation"/>.
+            </remarks>
+            <typeparam name="TReference">The type of the reference used to generate/update the observation.</typeparam>
+            <typeparam name="TObservation">The type of the observation the belief represents.</typeparam>
+        </member>
+        <member name="F:Aplib.Core.Belief.MemoryBelief`2._memorizedObservations">
+            <summary>
+            A "memorized" resouce, from the last time the belief was updated.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.MemoryBelief`2.#ctor(`0,System.Func{`0,`1},System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Belief.MemoryBelief`2"/> class with an object reference,
+            and a function to generate/update the observation using the object reference.
+            Also initializes the memory array with a specified number of slots.
+            </summary>
+            <param name="reference">The reference used to generate/update the observation.</param>
+            <param name="getObservationFromReference">A function that takes a reference and generates/updates a observation.</param>
+            <param name="framesToRemember">The number of frames to remember back.</param>
+        </member>
+        <member name="M:Aplib.Core.Belief.MemoryBelief`2.#ctor(`0,System.Func{`0,`1},System.Int32,System.Func{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Belief.MemoryBelief`2"/> class with an object reference,
+            a function to generate/update the observation using the object reference,
+            and a condition on when the observation should be updated.
+            Also initializes the memory array with a specified number of slots.
+            </summary>
+            <param name="reference">The reference used to generate/update the observation.</param>
+            <param name="getObservationFromReference">A function that takes a reference and generates/updates a observation.</param>
+            <param name="framesToRemember">The number of frames to remember back.</param>
+            <param name="shouldUpdate">A function that sets a condition on when the observation should be updated.</param>
+        </member>
+        <member name="M:Aplib.Core.Belief.MemoryBelief`2.UpdateBelief">
+            <summary>
+            Generates/updates the observation.
+            Also stores the previous observation in memory.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Belief.MemoryBelief`2.GetMostRecentMemory">
+            <summary>
+            Gets the most recently memorized observation.
+            </summary>
+            <returns> The most recent memory of the observation.</returns>
+        </member>
+        <member name="M:Aplib.Core.Belief.MemoryBelief`2.GetMemoryAt(System.Int32,System.Boolean)">
+            <summary>
+            Gets the memorized observation at a specific index.
+            A higher index means a memory further back in time.
+            If the index is out of bounds, returns the element closest to the index that is in bounds.
+            </summary>
+            <returns> The memory of the observation at the specified index.</returns>
+        </member>
+        <member name="M:Aplib.Core.Belief.MemoryBelief`2.GetAllMemories">
+            <summary>
+            Gets all the memorized observations.
+            The first element is the newest memory.
+            </summary>
+            <returns> An array of all the memorized observations.</returns>
+        </member>
+        <member name="T:Aplib.Core.CircularArray`1">
+            <summary>
+            An array that wraps around when it reaches its end.
+            Functionally works like a queue with indexing.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.CircularArray`1.Length">
+            <summary>
+            The length of the array.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.CircularArray`1"/> class.
+            </summary>
+            <param name="size">The size of the array.</param>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.#ctor(`0[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.CircularArray`1"/> class.
+            </summary>
+            <param name="array">An array to use as the circular array.</param>
+        </member>
+        <member name="P:Aplib.Core.CircularArray`1.Item(System.Int32)">
+            <summary>
+            Gets the element at the specified index.
+            </summary>
+            <param name="index">The index of the element to get.</param>
+            <returns>The element at the specified index.</returns>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.DecrementHead">
+            <summary>
+            Decrements the head of the array.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.Put(`0)">
+            <summary>
+            Puts an element at the start of the array.
+            </summary>
+            <param name="value">The element to add to the array</param>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.GetHead">
+            <summary>
+            Gets the element at the head of the array.
+            </summary>
+            <returns>The element at the head of the array</returns>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.GetFirst">
+            <summary>
+            Gets the first element of the array.
+            </summary>
+            <returns>The last element of the array</returns>
+        </member>
+        <member name="M:Aplib.Core.CircularArray`1.ToArray(System.Int32,System.Int32)">
+            <summary>
+            Converts the circular array to an array.
+            The head should be the last element of the array.
+            Copies from start to end inclusive.
+            </summary>
+            <param name="start">The start index of the range to copy.</param>
+            <param name="end">The end index of the range to copy.</param>
+            <returns>The circular array as a normal array</returns>
+        </member>
+        <member name="T:Aplib.Core.CompletionStatus">
+            <summary>
+            Represents the state of a completable object.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.CompletionStatus.Unfinished">
+            <summary>
+            Represents the status of a completable object that is not yet completed.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.CompletionStatus.Success">
+            <summary>
+            Represents the status of a completable object that has been successfully completed.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.CompletionStatus.Failure">
+            <summary>
+            Represents the status of a completable object that has failed to complete.
+            </summary>
+        </member>
+        <member name="T:Aplib.Core.Desire.DesireSet`1">
+            <inheritdoc />
+        </member>
+        <member name="P:Aplib.Core.Desire.DesireSet`1._mainGoal">
+            <summary>
+            Stores the main goal structure of the agent.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Desire.DesireSet`1.Status">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.DesireSet`1.#ctor(Aplib.Core.Desire.IGoalStructure{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Desire.DesireSet`1" /> class.
+            </summary>
+            <param name="mainGoal">The main goal structure that the agent needs to complete.</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.DesireSet`1.GetCurrentGoal(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.DesireSet`1.UpdateStatus(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aplib.Core.Desire.FirstOfGoalStructure`1">
+            <summary>
+            Represents a goal structure that will complete if any of its children complete.
+            </summary>
+            <remarks>
+            The children of this goal structure will be executed in the order they are given.
+            </remarks>
+            <typeparam name="TBeliefSet">The beliefset of the agent.</typeparam>
+        </member>
+        <member name="M:Aplib.Core.Desire.FirstOfGoalStructure`1.#ctor(Aplib.Core.Desire.IGoalStructure{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Desire.FirstOfGoalStructure`1" /> class.
+            </summary>
+            <param name="children">The children of the goal structure.</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.FirstOfGoalStructure`1.GetCurrentGoal(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.FirstOfGoalStructure`1.UpdateStatus(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.FirstOfGoalStructure`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.FirstOfGoalStructure`1.Dispose(System.Boolean)">
+            <summary>
+            Disposes of the goal structure.
+            </summary>
+            <param name="disposing">Whether we are actually disposing.</param>
+        </member>
+        <member name="T:Aplib.Core.Desire.GoalStructure`1">
+            <summary>
+            Describes a structure of goals that need to be fulfilled.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Desire.GoalStructure`1.Status">
+            <inheritdoc />
+        </member>
+        <member name="F:Aplib.Core.Desire.GoalStructure`1._children">
+            <summary>
+            The children of the goal structure.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.Desire.GoalStructure`1._currentGoalStructure">
+            <summary>
+            The goal structure that is currently being fulfilled.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Desire.GoalStructure`1.#ctor(System.Collections.Generic.IEnumerable{Aplib.Core.Desire.IGoalStructure{`0}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Desire.GoalStructure`1" /> class.
+            </summary>
+            <param name="children">The children of the goal structure.</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.GoalStructure`1.GetCurrentGoal(`0)">
+            <summary>
+            Gets the current goal using the given <see cref="T:Aplib.Core.Belief.IBeliefSet" />.
+            </summary>
+            <param name="beliefSet">The belief set of the agent.</param>
+            <returns>The current goal to be fulfilled.</returns>
+        </member>
+        <member name="M:Aplib.Core.Desire.GoalStructure`1.UpdateStatus(`0)">
+            <summary>
+            Updates the state of the goal structure.
+            </summary>
+            <param name="beliefSet">The belief set of the agent.</param>
+        </member>
+        <member name="T:Aplib.Core.Desire.Goals.CommonHeuristicFunctions`1">
+            <summary>
+            Contains helper methods to generate commonly used heuristic functions.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.CommonHeuristicFunctions`1.Boolean(System.Func{`0,System.Boolean})">
+            <summary>
+            Converts a boolean-based heuristic function to a <see cref="T:Aplib.Core.Desire.Goals.Goal`1.HeuristicFunction"/>.
+            </summary>
+            <param name="heuristicFunction">
+            A heuristic function which returns true only when the state is considered completed.
+            </param>
+            <returns>A heuristic function which wraps around the boolean-based heuristic function.</returns>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.CommonHeuristicFunctions`1.Constant(System.Single)">
+            <summary>
+            A <see cref="T:Aplib.Core.Desire.Goals.Goal`1.HeuristicFunction"/> which always returns <see cref="T:Aplib.Core.Desire.Goals.Heuristics"/> with the same distance.
+            </summary>
+            <param name="distance">The distance which the heuristic function must always return.</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.CommonHeuristicFunctions`1.Completed">
+            <summary>
+            Returns a heuristic function which always, at all times, and forever, returns a value indicating the state
+            can be seen as completed.
+            </summary>
+            <returns>Said heuristic function.</returns>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.CommonHeuristicFunctions`1.Uncompleted">
+            <summary>
+            Returns a heuristic function which always, at all times, and forever, returns a value indicating the state
+            can be seen as NOT completed.
+            </summary>
+            <returns>Said heuristic function.</returns>
+        </member>
+        <member name="T:Aplib.Core.Desire.Goals.Goal`1">
+            <summary>
+            A goal effectively combines a heuristic function with a tactic, and aims to meet the heuristic function by
+            applying the tactic. Goals are combined in a <see cref="T:Aplib.Core.Desire.GoalStructure`1" />, and are used to prepare tests
+            or do
+            the testing.
+            </summary>
+            <seealso cref="T:Aplib.Core.Desire.GoalStructure`1" />
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+        </member>
+        <member name="T:Aplib.Core.Desire.Goals.Goal`1.HeuristicFunction">
+            <summary>
+            The abstract definition of what is means to test the Goal's heuristic function. Returns <see cref="T:Aplib.Core.Desire.Goals.Heuristics" />, as
+            they represent how close we are to matching the heuristic function, and if the goal is completed.
+            </summary>
+            <seealso cref="M:Aplib.Core.Desire.Goals.Goal`1.GetStatus(`0)" />
+        </member>
+        <member name="P:Aplib.Core.Desire.Goals.Goal`1.Metadata">
+            <summary>
+            Gets the metadata of the goal.
+            </summary>
+            <remark>
+            This metadata may be useful for debugging or logging.
+            </remark>
+        </member>
+        <member name="P:Aplib.Core.Desire.Goals.Goal`1.Tactic">
+            <summary>
+            The <see cref="T:Aplib.Core.Intent.Tactics.Tactic`1" /> used to achieve this <see cref="T:Aplib.Core.Desire.Goals.Goal`1" />, which is executed during every
+            iteration of the BDI cycle.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Desire.Goals.Goal`1.Status">
+            <inheritdoc />
+        </member>
+        <member name="P:Aplib.Core.Desire.Goals.Goal`1._epsilon">
+            <summary>
+            The goal is considered to be completed, when the distance of the <see cref="M:Aplib.Core.Desire.Goals.Goal`1.DetermineCurrentHeuristics(`0)" /> is below
+            this value.
+            </summary>
+        </member>
+        <member name="F:Aplib.Core.Desire.Goals.Goal`1._heuristicFunction">
+            <summary>
+            The concrete implementation of this Goal's <see cref="T:Aplib.Core.Desire.Goals.Goal`1.HeuristicFunction" />. Used to test whether this goal is
+            completed.
+            </summary>
+            <seealso cref="M:Aplib.Core.Desire.Goals.Goal`1.GetStatus(`0)" />
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.Goal`1.#ctor(Aplib.Core.Intent.Tactics.ITactic{`0},Aplib.Core.Desire.Goals.Goal{`0}.HeuristicFunction,System.Double,Aplib.Core.Metadata)">
+            <summary>
+            Creates a new goal which works with <see cref="T:Aplib.Core.Desire.Goals.Heuristics" />.
+            </summary>
+            <param name="tactic">The tactic used to approach this goal.</param>
+            <param name="heuristicFunction">The heuristic function which defines whether a goal is reached</param>
+            <param name="epsilon">
+            The goal is considered to be completed, when the distance of the <see cref="M:Aplib.Core.Desire.Goals.Goal`1.DetermineCurrentHeuristics(`0)" /> is below
+            this value.
+            </param>
+            <param name="metadata">
+            Metadata about this goal, used to quickly display the goal in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.Goal`1.#ctor(Aplib.Core.Intent.Tactics.ITactic{`0},System.Func{`0,System.Boolean},System.Double,Aplib.Core.Metadata)">
+            <summary>
+            Creates a new goal which works with boolean-based <see cref="T:Aplib.Core.Desire.Goals.Heuristics" />.
+            </summary>
+            <param name="tactic">The tactic used to approach this goal.</param>
+            <param name="predicate">The heuristic function (or specifically predicate) which defines whether a goal is reached</param>
+            <param name="epsilon">
+            The goal is considered to be completed, when the distance of the <see cref="M:Aplib.Core.Desire.Goals.Goal`1.DetermineCurrentHeuristics(`0)" /> is below
+            this value.
+            </param>
+            <param name="metadata">
+            Metadata about this goal, used to quickly display the goal in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.Goal`1.DetermineCurrentHeuristics(`0)">
+            <summary>
+            Gets the <see cref="T:Aplib.Core.Desire.Goals.Heuristics" /> of the current state of the game.
+            </summary>
+            <remarks>If no heuristics have been calculated yet, they will be calculated first.</remarks>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.Goal`1.GetStatus(`0)">
+            <summary>
+            Tests whether the goal has been achieved, bases on the <see cref="F:Aplib.Core.Desire.Goals.Goal`1._heuristicFunction" /> and the
+            <see cref="M:Aplib.Core.Desire.Goals.Goal`1.DetermineCurrentHeuristics(`0)" />. When the distance of the heuristics is smaller than <see cref="P:Aplib.Core.Desire.Goals.Goal`1._epsilon" />,
+            the goal is considered to be completed.
+            </summary>
+            <returns>An enum representing whether the goal is complete and if so, with what result.</returns>
+            <seealso cref="P:Aplib.Core.Desire.Goals.Goal`1._epsilon" />
+        </member>
+        <member name="T:Aplib.Core.Desire.Goals.Heuristics">
+            <summary>
+            Contains all information on how close the associated state is to its goal.
+            Can be used to optimise search algorithms.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Desire.Goals.Heuristics.Distance">
+            <summary>
+            The logical distance the current state is to its goal.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.Heuristics.Boolean(System.Boolean)">
+            <summary>
+            Creates a heuristic value representing just a boolean. The heuristic value is considered '0' or 'done' when
+            the boolean is true. Non-zero otherwise.
+            </summary>
+            <param name="value">True if completed, False if not completed.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Aplib.Core.Desire.Goals.IGoal`1">
+            <summary>
+            Defines a goal that can be achieved by a <see cref="T:Aplib.Core.Intent.Tactics.Tactic`1" />.
+            </summary>
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+        </member>
+        <member name="P:Aplib.Core.Desire.Goals.IGoal`1.Tactic">
+            <summary>
+            The <see cref="T:Aplib.Core.Intent.Tactics.Tactic`1" /> used to achieve this <see cref="T:Aplib.Core.Desire.Goals.Goal`1" />, which is executed during every
+            iteration of the BDI cycle.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.IGoal`1.DetermineCurrentHeuristics(`0)">
+            <summary>
+            Gets the <see cref="T:Aplib.Core.Desire.Goals.Heuristics" /> of the current state of the game.
+            </summary>
+            <remarks>If no heuristics have been calculated yet, they will be calculated first.</remarks>
+        </member>
+        <member name="M:Aplib.Core.Desire.Goals.IGoal`1.GetStatus(`0)">
+            <summary>
+            Tests whether the goal has been achieved, based on the <see cref="F:Aplib.Core.Desire.Goals.Goal`1._heuristicFunction" /> and the
+            <see cref="M:Aplib.Core.Desire.Goals.Goal`1.DetermineCurrentHeuristics(`0)" />. When the distance of the heuristics is smaller than <see cref="P:Aplib.Core.Desire.Goals.Goal`1._epsilon" />
+            , the goal is considered to be completed.
+            </summary>
+            <returns>An enum representing whether the goal is complete and if so, with what result.</returns>
+            <seealso cref="P:Aplib.Core.Desire.Goals.Goal`1._epsilon" />
+        </member>
+        <member name="T:Aplib.Core.Desire.IDesireSet`1">
+            <summary>
+            Represents a set of goals that the agent has.
+            This is the main structure that the agent will use to determine what it should do next.
+            </summary>
+            <typeparam name="TBeliefSet"></typeparam>
+        </member>
+        <member name="M:Aplib.Core.Desire.IDesireSet`1.GetCurrentGoal(`0)">
+            <summary>
+            Gets the current goal using the given <see cref="T:Aplib.Core.Belief.IBeliefSet" />.
+            </summary>
+            <param name="beliefSet">The belief set of the agent.</param>
+            <returns>The current goal to be fulfilled.</returns>
+        </member>
+        <member name="M:Aplib.Core.Desire.IDesireSet`1.UpdateStatus(`0)">
+            <summary>
+            Updates the status of this <see cref="T:Aplib.Core.Desire.IDesireSet`1"/>.
+            </summary>
+            <param name="beliefSet">The belief set of the agent.</param>
+        </member>
+        <member name="T:Aplib.Core.Desire.IGoalStructure`1">
+            <summary>
+            Represents a goal structure.
+            </summary>
+            <remarks>
+            A goal structure is a structure of predicates that must be fulfilled in order to complete a test.
+            </remarks>
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+        </member>
+        <member name="M:Aplib.Core.Desire.IGoalStructure`1.GetCurrentGoal(`0)">
+            <summary>
+            Gets the current goal using the given <see cref="T:Aplib.Core.Belief.IBeliefSet" />.
+            </summary>
+            <param name="beliefSet">The belief set of the agent.</param>
+            <returns>The current goal to be fulfilled.</returns>
+        </member>
+        <member name="M:Aplib.Core.Desire.IGoalStructure`1.UpdateStatus(`0)">
+            <summary>
+            Updates the state of the goal structure.
+            </summary>
+            <param name="beliefSet">The belief set of the agent.</param>
+        </member>
+        <member name="T:Aplib.Core.Desire.PrimitiveGoalStructure`1">
+            <summary>
+            Represents a goal structure that will complete if any of its children complete.
+            </summary>
+            <remarks>
+            This is the most primitive goal structure. It is used to represent a single goal that is not part of a larger
+            structure.
+            This goal structure will only return the goal it was created with if the goal is not yet finished.
+            </remarks>
+            <typeparam name="TBeliefSet">The beliefset of the agent.</typeparam>
+        </member>
+        <member name="M:Aplib.Core.Desire.PrimitiveGoalStructure`1.#ctor(Aplib.Core.Desire.Goals.IGoal{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Desire.PrimitiveGoalStructure`1" /> class.
+            </summary>
+            <param name="goal">The goal to fulfill.</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.PrimitiveGoalStructure`1.GetCurrentGoal(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.PrimitiveGoalStructure`1.UpdateStatus(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aplib.Core.Desire.RepeatGoalStructure`1">
+            <summary>
+            Represents a goal structure that will complete if any of its children complete.
+            </summary>
+            <remarks>
+            This structure will repeatedly execute the goal it was created with until the goal is finished.
+            </remarks>
+            <typeparam name="TBeliefSet">The beliefset of the agent.</typeparam>
+        </member>
+        <member name="M:Aplib.Core.Desire.RepeatGoalStructure`1.#ctor(Aplib.Core.Desire.IGoalStructure{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Desire.RepeatGoalStructure`1" /> class.
+            </summary>
+            <param name="goalStructure">The goalstructure to repeat</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.RepeatGoalStructure`1.GetCurrentGoal(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.RepeatGoalStructure`1.UpdateStatus(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aplib.Core.Desire.SequentialGoalStructure`1">
+            <summary>
+            Represents a sequential goal structure.
+            </summary>
+            <remarks>
+            This class is a specific type of goal structure where goals are processed sequentially.
+            All goals must be completed in order for the goal structure to be completed.
+            </remarks>
+            <typeparam name="TBeliefSet">The type of belief set that this goal structure operates on.</typeparam>
+        </member>
+        <member name="P:Aplib.Core.Desire.SequentialGoalStructure`1._childrenEnumerator">
+            <summary>
+            Gets or sets the enumerator for the children of the goal structure.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Desire.SequentialGoalStructure`1.#ctor(Aplib.Core.Desire.IGoalStructure{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Desire.SequentialGoalStructure`1" /> class.
+            </summary>
+            <param name="children">The children of the goal structure.</param>
+        </member>
+        <member name="M:Aplib.Core.Desire.SequentialGoalStructure`1.GetCurrentGoal(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.SequentialGoalStructure`1.UpdateStatus(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.SequentialGoalStructure`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Desire.SequentialGoalStructure`1.Dispose(System.Boolean)">
+            <summary>
+            Disposes the enumerator.
+            </summary>
+            <param name="disposing">Whether the object is being disposed.</param>
+        </member>
+        <member name="T:Aplib.Core.IAgent">
+            <summary>
+            Defines an agent that can play a game.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.IAgent.Status">
+            <summary>
+            Gets the status of the agent.
+            </summary>
+            <remarks>
+            This reflects whether the agent has achieved or failed its goals.
+            </remarks>
+        </member>
+        <member name="M:Aplib.Core.IAgent.Update">
+            <summary>
+            Updates the agent's state and goals.
+            </summary>
+            <remarks>This method will get called every frame of the game.</remarks>
+        </member>
+        <member name="T:Aplib.Core.ICompletable">
+            <summary>
+            Defines an object that can be completed.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.ICompletable.Status">
+            <summary>
+            Gets the completion status of the object.
+            </summary>
+        </member>
+        <member name="T:Aplib.Core.Intent.Actions.Action`1">
+            <summary>
+            Describes an action that can be executed and guarded.
+            </summary>
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+        </member>
+        <member name="P:Aplib.Core.Intent.Actions.Action`1.Metadata">
+            <summary>
+            Gets the metadata of the action.
+            </summary>
+            <remark>
+            This metadata may be useful for debugging or logging.
+            </remark>
+        </member>
+        <member name="P:Aplib.Core.Intent.Actions.Action`1._effect">
+            <summary>
+            Gets or sets the effect of the action.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Intent.Actions.Action`1._guard">
+            <summary>
+            Gets or sets the guard of the action.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.Action`1.#ctor(System.Action{`0},Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Actions.Action`1" /> class.
+            </summary>=
+            <param name="effect">The effect of the action.</param>
+            <param name="metadata">
+            Metadata about this action, used to quickly display the action in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.Action`1.#ctor(System.Action{`0},System.Func{`0,System.Boolean},Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Actions.Action`1" /> class.
+            </summary>
+            <param name="effect">The effect of the action.</param>
+            <param name="guard">The guard of the action.</param>
+            <param name="metadata">
+            Metadata about this action, used to quickly display the action in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.Action`1.#ctor(Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new empty instance of the <see cref="T:Aplib.Core.Intent.Actions.Action`1" /> class.
+            </summary>
+            <remarks>Only meant for internal use</remarks>
+            <param name="metadata">
+            Metadata about this action, used to quickly display the action in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.Action`1.Execute(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.Action`1.IsActionable(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Aplib.Core.Intent.Actions.GuardedAction`2">
+            <summary>
+            Describes an action that can be executed and guarded with a query that stores the result of the guard.
+            The result can be used in the effect.
+            </summary>
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+            <typeparam name="TQuery">The type of the query of the action</typeparam>
+        </member>
+        <member name="P:Aplib.Core.Intent.Actions.GuardedAction`2._storedGuardResult">
+            <summary>
+            Gets or sets the result of the guard.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Intent.Actions.GuardedAction`2._effect">
+            <summary>
+            Gets or sets the effect of the action.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Intent.Actions.GuardedAction`2._guard">
+            <summary>
+            Gets or sets the guard of the action.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.GuardedAction`2.#ctor(System.Action{`0,`1},System.Func{`0,`1},Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Actions.GuardedAction`2"/> class.
+            </summary>
+            <param name="effect">The effect of the action.</param>
+            <param name="guard">The guard of the action.</param>
+            <param name="metadata">
+            Metadata about this action, used to quickly display the action in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.GuardedAction`2.Execute(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.GuardedAction`2.IsActionable(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Aplib.Core.Intent.Actions.IAction`1">
+            <summary>
+            Represents an action that can be executed on a belief set.
+            </summary>
+            <typeparam name="TBeliefSet">The type of the belief set that the action uses.</typeparam>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.IAction`1.Execute(`0)">
+            <summary>
+            Executes the action on the specified belief set.
+            </summary>
+            <param name="beliefSet">The belief set on which the action is executed.</param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Actions.IAction`1.IsActionable(`0)">
+            <summary>
+            Guard the action against unwanted execution. The result is stored and can be used in the effect.
+            </summary>
+            <param name="beliefSet">The belief set on which the action is executed.</param>
+            <returns>True if the action is actionable, false otherwise.</returns>
+        </member>
+        <member name="T:Aplib.Core.Intent.Tactics.AnyOfTactic`1">
+            <summary>
+            Represents a tactic that executes any of the provided sub-tactics.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Intent.Tactics.AnyOfTactic`1._subTactics">
+            <summary>
+            Gets or sets the sub-tactics of the tactic.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.AnyOfTactic`1.#ctor(Aplib.Core.Metadata,Aplib.Core.Intent.Tactics.ITactic{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.AnyOfTactic`1"/> class with the specified sub-tactics.
+            </summary>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+            <param name="subTactics">The list of sub-tactics.</param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.AnyOfTactic`1.#ctor(System.Func{`0,System.Boolean},Aplib.Core.Metadata,Aplib.Core.Intent.Tactics.ITactic{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.AnyOfTactic`1"/> class with the specified sub-tactics and guard condition.
+            </summary>
+            <param name="guard">The guard condition.</param>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+            <param name="subTactics">The list of sub-tactics.</param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.AnyOfTactic`1.GetAction(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Aplib.Core.Intent.Tactics.FirstOfTactic`1">
+            <summary>
+            Represents a tactic that executes the first enabled action from a list of sub-tactics.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.FirstOfTactic`1.#ctor(Aplib.Core.Metadata,Aplib.Core.Intent.Tactics.Tactic{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.FirstOfTactic`1"/> class with the specified sub-tactics.
+            </summary>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+            <param name="subTactics">The list of sub-tactics.</param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.FirstOfTactic`1.#ctor(System.Func{`0,System.Boolean},Aplib.Core.Metadata,Aplib.Core.Intent.Tactics.Tactic{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.FirstOfTactic`1"/> class with the specified sub-tactics and guard condition.
+            </summary>
+            <param name="guard">The guard condition.</param>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+            <param name="subTactics">The list of sub-tactics.</param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.FirstOfTactic`1.GetAction(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aplib.Core.Intent.Tactics.ITactic`1">
+            <summary>
+            Represents a tactic that an agent can use to achieve its goals.
+            A tactic is a strategy for achieving a particular goal.
+            </summary>
+            <typeparam name="TBeliefSet">The type of the belief set that the tactic uses.</typeparam>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.ITactic`1.GetAction(`0)">
+            <summary>
+            Gets the first enabled action of the tactic.
+            </summary>
+            <remark>
+            An action is a specific operation that an agent can perform.
+            The action returned by this method is the first action that the tactic can perform,
+            given the current state of the world as represented by the belief set.
+            </remark>
+            <returns>
+            A concrete <see cref="T:Aplib.Core.Intent.Actions.IAction`1"/> that the tactic can perform, or null if no actions are enabled.
+            </returns>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.ITactic`1.IsActionable(`0)">
+            <summary>
+            Determines whether the tactic is actionable.
+            </summary>
+            <returns>True if the tactic is actionable, false otherwise.</returns>
+        </member>
+        <member name="T:Aplib.Core.Intent.Tactics.PrimitiveTactic`1">
+            <summary>
+            Represents a primitive tactic
+            </summary>
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+        </member>
+        <member name="F:Aplib.Core.Intent.Tactics.PrimitiveTactic`1._action">
+            <summary>
+            Gets the action of the primitive tactic.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.PrimitiveTactic`1.#ctor(Aplib.Core.Intent.Actions.IAction{`0},Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.PrimitiveTactic`1"/> class with the specified action.
+            </summary>
+            <param name="action">The action of the primitive tactic.</param>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.PrimitiveTactic`1.#ctor(Aplib.Core.Intent.Actions.IAction{`0},System.Func{`0,System.Boolean},Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.PrimitiveTactic`1"/> class with the specified action and guard.
+            </summary>
+            <param name="action">The action of the primitive tactic.</param>
+            <param name="guard">The guard of the primitive tactic.</param>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.PrimitiveTactic`1.GetAction(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.PrimitiveTactic`1.IsActionable(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Aplib.Core.Intent.Tactics.Tactic`1">
+            <summary>
+            Tactics are the real meat of <see cref="T:Aplib.Core.Desire.Goals.Goal`1"/>s, as they define how the agent can approach the goal in hopes
+            of finding a solution which makes the Goal's heuristic function evaluate to being completed. A tactic represents
+            a smart combination of <see cref="T:Aplib.Core.Intent.Actions.Action`1"/>s, which are executed in a Believe Desire Intent Cycle.
+            </summary>
+            <seealso cref="T:Aplib.Core.Desire.Goals.Goal`1"/>
+            <seealso cref="T:Aplib.Core.Intent.Actions.Action`1"/>
+            <typeparam name="TBeliefSet">The belief set of the agent.</typeparam>
+        </member>
+        <member name="P:Aplib.Core.Intent.Tactics.Tactic`1.Metadata">
+            <summary>
+            Gets the metadata of the tactic.
+            </summary>
+            <remark>
+            This metadata may be useful for debugging or logging.
+            </remark>
+        </member>
+        <member name="P:Aplib.Core.Intent.Tactics.Tactic`1._guard">
+            <summary>
+            Gets or sets the guard of the tactic.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.Tactic`1.#ctor(Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.Tactic`1"/>.
+            </summary>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.Tactic`1.#ctor(System.Func{`0,System.Boolean},Aplib.Core.Metadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aplib.Core.Intent.Tactics.Tactic`1"/> class with a specified guard.
+            </summary>
+            <param name="guard">The guard of the tactic.</param>
+            <param name="metadata">
+            Metadata about this tactic, used to quickly display the tactic in several contexts.
+            </param>
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.Tactic`1.GetAction(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aplib.Core.Intent.Tactics.Tactic`1.IsActionable(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aplib.Core.Metadata">
+            <summary>
+            Data structure to store information about a component which may be useful for debugging or logging.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Metadata.Id">
+            <summary>
+                Gets the unique identifier of the component.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Metadata.Name">
+            <summary>
+            Gets the name used to display the component during debugging, logging, or general overviews.
+            </summary>
+        </member>
+        <member name="P:Aplib.Core.Metadata.Description">
+            <summary>
+            Gets the description used to describe the component during debugging, logging, or general overviews.
+            </summary>
+        </member>
+        <member name="M:Aplib.Core.Metadata.#ctor(System.String,System.String)">
+            <summary>
+            Store information about a component which may be useful for debugging or logging or general overviews.
+            </summary>
+            <param name="name">The name used to display the component.</param>
+            <param name="description">The description used to describe the component.</param>
+        </member>
+        <member name="M:Aplib.Core.Metadata.#ctor(System.Guid,System.String,System.String)">
+            <summary>
+            Store information about a component which may be useful for debugging or logging or general overviews.
+            </summary>
+            <remarks>This constructor is mainly for testing.</remarks>
+            <param name="id">A unique identifier for the component.</param>
+            <param name="name">The name used to display the component.</param>
+            <param name="description">The description used to describe the component.</param>
+        </member>
+    </members>
+</doc>
