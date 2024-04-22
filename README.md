@@ -23,9 +23,10 @@ The tests, of which most importantly the play mode tests, that are used to demon
 
 
 ## Running the game
-A build of the game can also be ran in two ways:
+A build of the game can also be ran in multiple ways:
 1. A WebGL build gets generated and uploaded to GitHub pages automatically, and can be visited here: [Aplib.Net Demo Game](https://team-zomsa.github.io/aplib.net-demo/).
 2. The game can also be ran locally. Builds get generated automatically for Windows-64bit, Linux-64bit and OSX, these can be found in the [GitHub Release](https://github.com/team-zomsa/aplib.net-demo/releases).
+3. The game can be built locally, by cloning the repository and opening the project in Unity, making sure to have the correct Unity version installed, as mentioned in the [Overview](#overview) section. Then go to the build settings, select the platform you want to build for, and press `Build`. The build settings menu can be opened by pressing `Ctrl + Shift + B` or by navigating to the `File` tab, then `Build Settings`.
 
 
 ## Contributing
