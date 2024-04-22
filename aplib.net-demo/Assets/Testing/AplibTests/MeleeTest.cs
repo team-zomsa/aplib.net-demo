@@ -22,14 +22,20 @@ namespace Tests.AplibTests
         public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
 
         /// <summary>
-        /// The target position that the player needs to move towards.
+        /// If the enemy exists in the scene
         /// </summary>
-        public Belief<Transform, Vector3> EnemyPosition = new(GameObject.Find("Target Dummy Body").transform, x => x.position);
+        public Belief<GameObject, bool> EnemyExists = new(GameObject.Find("Target Dummy Body"), x => x != null);
 
         /// <summary>
-        /// The enemy component in the scene.
+        /// The target position that the player needs to move towards.
+        /// Find the first enemy in the scene.
         /// </summary>
-        public Belief<GameObject, AbstractEnemy> EnemyComponent = new(reference: GameObject.Find("Target Dummy Body"), x => x.GetComponent<AbstractEnemy>());
+        public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Target Dummy Body"), x =>
+        {
+            if (x == null)
+                return Vector3.zero;
+            return x.transform.position;
+        });
     }
 
     public class MeleeAplibTest
@@ -101,12 +107,7 @@ namespace Tests.AplibTests
                 return Vector3.Distance(player.transform.position, target) < 2f;
             }
 
-            bool EnemyKilledPredicate(MeleeBeliefSet beliefSet)
-            {
-                // The enemy has been killed
-                AbstractEnemy enemy = beliefSet.EnemyComponent;
-                return enemy.Health <= 0;
-            }
+            bool EnemyKilledPredicate(MeleeBeliefSet beliefSet) => !beliefSet.EnemyExists;
         }
     }
 }

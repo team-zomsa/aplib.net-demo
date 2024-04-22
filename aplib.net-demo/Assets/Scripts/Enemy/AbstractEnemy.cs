@@ -40,6 +40,6 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// </summary>
     protected virtual void Die()
     {
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }
