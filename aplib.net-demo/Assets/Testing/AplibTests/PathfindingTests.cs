@@ -32,7 +32,7 @@ public class PathfindingTests
         // Load the scene
         SceneManager.LoadScene("PathfindingTest2");
 
-    // [UnityTest]
+    [UnityTest]
     public IEnumerator TransformPathfindingTest()
     {
         MyFirstBeliefSet rootBeliefSet = new();
