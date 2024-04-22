@@ -1244,7 +1244,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea6676c278c51f44aecf76adb1d4961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 7
+  _maxSpeedGround: 7
+  _maxSpeedAir: 7
   _acceleration: 140
   _normalGravityScale: 1.7
   _fallingGravityScale: 2.5
@@ -1254,6 +1255,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _groundDrag: 0.8
+  _airDrag: 0.2
   _slopeAngle: 40
   _slopeCheckRayExtraLength: 0.3
   _wallCheckMaxDistance: 0.5
@@ -3580,9 +3582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85e7a85c2cfe201479ec25b65f90f668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventorySize: 0
-  icon: {fileID: 0}
-  iconTexture: {fileID: 2800000, guid: ec056aec3d958f648bd39a3d20b5e404, type: 3}
+  inventorySize: 4
+  emptyInventoryImage: {fileID: 2800000, guid: 8d003bcfe1c8c044893bf31bdf72fba7, type: 3}
   inventoryObject: {fileID: 1906849247}
   testItem: {fileID: 4686296907527808933, guid: 0aa49cdb913785247b76da6c0bc01de7,
     type: 3}
