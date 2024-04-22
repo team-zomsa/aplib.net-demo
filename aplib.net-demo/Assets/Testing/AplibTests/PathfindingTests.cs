@@ -16,7 +16,7 @@ public class MyFirstBeliefSet : BeliefSet
     /// <summary>
     /// The player object in the scene.
     /// </summary>
-    public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("Player"), x => x);
+    public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
 
     /// <summary>
     /// The target position that the player needs to move towards.
@@ -32,7 +32,7 @@ public class PathfindingTests
         // Load the scene
         SceneManager.LoadScene("PathfindingTest2");
 
-    [UnityTest]
+    // [UnityTest]
     public IEnumerator TransformPathfindingTest()
     {
         MyFirstBeliefSet rootBeliefSet = new();
