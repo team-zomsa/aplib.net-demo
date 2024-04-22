@@ -57,7 +57,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Update() => _playerMovement.ReceiveHorizontalInput(_horizontalInput);
 
-    private void OnEnable() => _input.Enable();
+    private void OnEnable() => _input?.Enable();
 
-    private void OnDisable() => _input.Disable();
+    private void OnDisable() => _input?.Disable();
 }
