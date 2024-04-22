@@ -23,25 +23,23 @@ public class CrossbowTestBeliefSet : BeliefSet
     /// <summary>
     /// The enemy position that the player needs to look towards.
     /// </summary>
-    public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Target Dummy Body"), x => x.transform.position);
+    public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Target Dummy Body"),
+        x => x != null ? x.transform.position : Vector3.zero);
 
     /// <summary>
     /// Bool that returns if enemy is dead or alive.
     /// </summary>
-    public Belief<GameObject, bool> IsEnemyDead = new(GameObject.Find("Target Dummy Body"), x => (x == null));
+    public Belief<GameObject, bool> IsEnemyDead = new(GameObject.Find("Target Dummy Body"), x => x == null);
 
     public Belief<GameObject, bool> IsEnemyInFront = new(
         reference: GameObject.Find("PlayerRotation"),
         getObservationFromReference: x =>
         {
-            Debug.Log("Enemy in front");
             if (!Physics.Raycast(x.transform.position, x.transform.forward, out RaycastHit hit, 100))
             {
-                Debug.Log("Did not find anything");
                 return false;
             }
 
-            Debug.Log(hit.collider.gameObject.name);
             return hit.collider.gameObject.name == "Target Dummy Body";
         }
     );
@@ -56,7 +54,6 @@ public class CrossbowTest : InputTestFixture
         SceneManager.LoadScene("RangedWeaponTestScene");
     }
 
-
     [UnityTest]
     public IEnumerator PerformCrossbowTest()
     {
@@ -64,13 +61,10 @@ public class CrossbowTest : InputTestFixture
         CrossbowTestBeliefSet beliefSet = new();
 
         // Add mouse
-        Keyboard board = InputSystem.AddDevice<Keyboard>();
         Mouse mouse = InputSystem.AddDevice<Mouse>();
 
-        Debug.Log("HELLO THIS IS BLA BLA BLA 1111/");
-
         // Action: shoot in front | might not work
-        Action<CrossbowTestBeliefSet> ShootEnemyInFront = new(beliefSet => { Debug.Log("HIAAAA"); Click(mouse.leftButton); });
+        Action<CrossbowTestBeliefSet> ShootEnemyInFront = new(beliefSet => Click(mouse.leftButton));
 
         // Action: rotate player
         Action<CrossbowTestBeliefSet> RotatePlayerToEnemy = new(beliefSet =>
@@ -90,15 +84,7 @@ public class CrossbowTest : InputTestFixture
             // Get the angle between the player's forward direction and the direction to the target position
             float angle = Vector3.SignedAngle(player.transform.forward, lookAtDirection, Vector3.up);
 
-            Debug.Log("Angle angle");
-
-            Debug.DrawLine(enemyPosition, player.transform.position);
-
-            Debug.Log($"Angle {angle}");
-
-            Set(mouse.delta, state: new Vector2(x: angle * multiplier / horizontalSpeed, 0));
-
-            Debug.Log(mouse.delta.value);
+            Set(mouse.delta, state: new Vector2(angle * multiplier / horizontalSpeed, 0));
         });
 
         // Tactic to kill enemy when in front
