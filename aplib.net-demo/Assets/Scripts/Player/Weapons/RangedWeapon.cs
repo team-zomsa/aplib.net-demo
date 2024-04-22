@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 /// <summary>
 /// This class has fuctions for ranged weapons.
 /// A bullet shoots through multiple enemies when they are on the same line in 3D space.
