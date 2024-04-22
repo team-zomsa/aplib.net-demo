@@ -28,6 +28,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private readonly List<Cell> _cells;
 
+        // TODO: Move random
         private readonly Random _random = new Random();
 
         /// <summary>
@@ -46,11 +47,11 @@ namespace Assets.Scripts.Wfc
         /// Gets or sets the cell at the specified coordinates.
         /// </summary>
         /// <param name="x">The x-coordinate of the cell.</param>
-        /// <param name="y">The y-coordinate of the cell.</param>
-        public Cell this[int x, int y]
+        /// <param name="z">The z-coordinate of the cell.</param>
+        public Cell this[int x, int z]
         {
-            get => _cells[CoordinatesToIndex(x, y)];
-            set => _cells[CoordinatesToIndex(x, y)] = value;
+            get => _cells[CoordinatesToIndex(x, z)];
+            set => _cells[CoordinatesToIndex(x, z)] = value;
         }
 
         /// <summary>
@@ -70,30 +71,20 @@ namespace Assets.Scripts.Wfc
         {
             for (int i = 0; i < Width * Height; i++)
             {
-                (int x, int y) = IndexToCoordinates(i);
-                _cells.Add(new Cell(x, y));
+                (int x, int z) = IndexToCoordinates(i);
+                _cells.Add(new Cell(x, z));
             }
 
             for (int x = 0; x < Width; x++)
             {
-                Cell cell1 = this[x, 0];
-
-                cell1.Candidates.RemoveAll(tile => tile.CanConnectInDirection(South));
-
-                Cell cell2 = this[x, Height - 1];
-
-                cell2.Candidates.RemoveAll(tile => tile.CanConnectInDirection(North));
+                this[x, 0].Candidates.RemoveAll(tile => tile.CanConnectInDirection(South));
+                this[x, Height - 1].Candidates.RemoveAll(tile => tile.CanConnectInDirection(North));
             }
 
-            for (int y = 0; y < Height; y++)
+            for (int z = 0; z < Height; z++)
             {
-                Cell cell1 = this[0, y];
-
-                cell1.Candidates.RemoveAll(tile => tile.CanConnectInDirection(West));
-
-                Cell cell2 = this[Width - 1, y];
-
-                cell2.Candidates.RemoveAll(tile => tile.CanConnectInDirection(East));
+                this[0, z].Candidates.RemoveAll(tile => tile.CanConnectInDirection(West));
+                this[Width - 1, z].Candidates.RemoveAll(tile => tile.CanConnectInDirection(East));
             }
         }
 
@@ -105,7 +96,7 @@ namespace Assets.Scripts.Wfc
         /// <exception cref="IndexOutOfRangeException">
         /// When index is larger than <see cref="Width"/> times <see cref="Height"/>.
         /// </exception>
-        protected (int x, int y) IndexToCoordinates(int index)
+        private (int x, int z) IndexToCoordinates(int index)
         {
             if (index >= Width * Height) throw new IndexOutOfRangeException("Index specified is out of range.");
             return (index % Width, index / Width);
@@ -115,49 +106,41 @@ namespace Assets.Scripts.Wfc
         /// Given coordinates, calculates the index of the belonging tile.
         /// </summary>
         /// <param name="x">The X coordinate of the tile in question.</param>
-        /// <param name="y">The Y coordinate of the tile in question.</param>
+        /// <param name="z">The Z coordinate of the tile in question.</param>
         /// <returns>The index of the tile in question.</returns>
         /// <exception cref="IndexOutOfRangeException">
-        /// When x or y exceed the <see cref="Width"/> or <see cref="Height"/>.
+        /// When x or z exceed the <see cref="Width"/> or <see cref="Height"/>.
         /// </exception>
-        protected int CoordinatesToIndex(int x, int y)
+        private int CoordinatesToIndex(int x, int z)
         {
-            if (x >= Width || y >= Height) throw new IndexOutOfRangeException("Coordinates specified are out of range.");
-            return y * Width + x;
+            if (x >= Width || z >= Height) throw new IndexOutOfRangeException("Coordinates specified are out of range.");
+            return z * Width + x;
         }
 
         /// <summary>
         /// Places a room at the specified coordinates in the grid.
         /// </summary>
         /// <param name="x">The x-coordinates of the room.</param>
-        /// <param name="y">The y-coordinates of the room.</param>
+        /// <param name="z">The z-coordinates of the room.</param>
         /// <param name="room">The room that needs to be placed.</param>
-        public void PlaceRoom(int x, int y, Room room)
+        public void PlaceRoom(int x, int z, Room room)
         {
-            this[x, y].Tile = room;
-            this[x, y].Candidates = new List<Tile>();
+            this[x, z].Tile = room;
+            this[x, z].Candidates = new List<Tile>();
 
-            RemoveUnconnectedNeighbourCandidates(this[x, y]);
+            RemoveUnconnectedNeighbourCandidates(this[x, z]);
         }
 
         /// <summary>
-        /// Places a room at the specified coordinates in the grid.
+        /// Places a room at random coordinates in the grid.
         /// </summary>
-        /// <param name="x">The x-coordinates of the room.</param>
-        /// <param name="y">The y-coordinates of the room.</param>
-        /// <param name="room">The room that needs to be placed.</param>
         public void PlaceRandomRoom()
         {
             List<Cell> notFinished = _cells.FindAll(cell => cell.Candidates.Count > 0);
 
-            if (notFinished.Count == 0)
-            {
-                throw new Exception("All cells are fully collapsed.");
-            }
-
             int index = _random.Next(notFinished.Count);
             Cell cell = notFinished[index];
-            PlaceRoom(cell.X, cell.Y, new Room(new() { North, East, South, West }));
+            PlaceRoom(cell.X, cell.Z, new Room(new() { North, East, South, West }));
 
             RemoveUnconnectedNeighbourCandidates(cell);
         }
@@ -170,13 +153,13 @@ namespace Assets.Scripts.Wfc
         /// <returns>All neighbouring cells, excluding diagonal neighbours.</returns>
         /// <remarks>This does not check if the tiles in the cells are connected.</remarks>
         /// <seealso cref="GetConnectedNeighbours"/>
-        public IEnumerable<Cell> Get4NeighbouringCells(Cell cell)
+        private IEnumerable<Cell> Get4NeighbouringCells(Cell cell)
         {
             ICollection<Cell> neighbours = new Collection<Cell>();
-            if (cell.X > 0) neighbours.Add(this[cell.X - 1, cell.Y]);
-            if (cell.X < Width - 1) neighbours.Add(this[cell.X + 1, cell.Y]);
-            if (cell.Y > 0) neighbours.Add(this[cell.X, cell.Y - 1]);
-            if (cell.Y < Height - 1) neighbours.Add(this[cell.X, cell.Y + 1]);
+            if (cell.X > 0) neighbours.Add(this[cell.X - 1, cell.Z]);
+            if (cell.X < Width - 1) neighbours.Add(this[cell.X + 1, cell.Z]);
+            if (cell.Z > 0) neighbours.Add(this[cell.X, cell.Z - 1]);
+            if (cell.Z < Height - 1) neighbours.Add(this[cell.X, cell.Z + 1]);
             return neighbours;
         }
 
@@ -193,12 +176,12 @@ namespace Assets.Scripts.Wfc
             ICollection<Cell> neighbours = new Collection<Cell>();
             for (int i = -1; i < 2; i++)
             {
-                if (cell.X + i < 0 || cell.X + i >= Width) continue; // No out of range
+                if (cell.X + i < 0 || cell.X + i >= Width) continue; // Not out of range
                 for (int j = -1; j < 2; j++)
                 {
                     if (i == j && i == 0) continue; // Skip the cell itself
-                    if (cell.Y + j < 0 || cell.Y + j >= Height) continue; // No out of range
-                    neighbours.Add(this[cell.X + i, cell.Y + j]);
+                    if (cell.Z + j < 0 || cell.Z + j >= Height) continue; // Not out of range
+                    neighbours.Add(this[cell.X + i, cell.Z + j]);
                 }
             }
             return neighbours;
@@ -211,7 +194,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell whose connected tiles are to be determined.</param>
         /// <returns>The cells directly connected through their tiles</returns>
         /// <remarks>Assumes that the cells are assigned a tile.</remarks>
-        public IEnumerable<Cell> GetConnectedNeighbours(Cell cell)
+        private IEnumerable<Cell> GetConnectedNeighbours(Cell cell)
         {
             ICollection<Cell> connectedNeighbours = new Collection<Cell>();
             IEnumerable<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
@@ -219,8 +202,8 @@ namespace Assets.Scripts.Wfc
             {
                 if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West)
                     || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(East)
-                    || cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && neighbour.Tile.CanConnectInDirection(South)
-                    || cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && neighbour.Tile.CanConnectInDirection(North))
+                    || cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z && neighbour.Tile.CanConnectInDirection(South)
+                    || cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z && neighbour.Tile.CanConnectInDirection(North))
                     connectedNeighbours.Add(neighbour);
             }
 
@@ -255,7 +238,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="connectedComponent">The <see cref="ISet{Cell}"/> in which the connected component is stored.</param>
         /// <param name="cell">The cell to start searching from.</param>
         /// <remarks>The connected component is stored in <paramref name="connectedComponent"/>.</remarks>
-        public void DetermineSingleConnectedComponent(in ISet<Cell> searchSpace, in ISet<Cell> connectedComponent, Cell cell)
+        private void DetermineSingleConnectedComponent(in ISet<Cell> searchSpace, in ISet<Cell> connectedComponent, Cell cell)
         {
             connectedComponent.Add(cell);
             searchSpace.Remove(cell);
@@ -272,6 +255,10 @@ namespace Assets.Scripts.Wfc
             }
         }
 
+        /// <summary>
+        /// Removes all candidates from the neighbours of the given cell, which cannot be connected to the cell.
+        /// </summary>
+        /// <param name="cell">The cell whose neighbours need to be updated.</param>
         public void RemoveUnconnectedNeighbourCandidates(Cell cell)
         {
             IEnumerable<Cell> neighbours = Get4NeighbouringCells(cell);
@@ -280,18 +267,20 @@ namespace Assets.Scripts.Wfc
             {
                 neighbour.Candidates.RemoveAll(tile =>
                     !cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && tile.CanConnectInDirection(West)
-                      || !cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && tile.CanConnectInDirection(East)
-                      || !cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && tile.CanConnectInDirection(South)
-                      || !cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && tile.CanConnectInDirection(North));
-
-                neighbour.Candidates.RemoveAll(tile =>
-                    cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && !tile.CanConnectInDirection(West)
-                    || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && !tile.CanConnectInDirection(East)
-                    || cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && !tile.CanConnectInDirection(South)
-                    || cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && !tile.CanConnectInDirection(North));
+                        || cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && !tile.CanConnectInDirection(West)
+                        || !cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && tile.CanConnectInDirection(East)
+                        || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && !tile.CanConnectInDirection(East)
+                        || !cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z && tile.CanConnectInDirection(South)
+                        || cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z && !tile.CanConnectInDirection(South)
+                        || !cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z && tile.CanConnectInDirection(North)
+                        || cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z && !tile.CanConnectInDirection(North));
             }
         }
 
+        /// <summary>
+        /// Gets the cells with the lowest entropy.
+        /// </summary>
+        /// <returns>Returns the cells with the lowest entropy</returns>
         public List<Cell> GetLowestEntropyCells()
         {
             List<Cell> notFinished = _cells.FindAll(cell => cell.Candidates.Count > 0);
@@ -299,6 +288,10 @@ namespace Assets.Scripts.Wfc
             return notFinished.FindAll(cell => cell.Entropy == lowestEntropy);
         }
 
+        /// <summary>
+        /// Checks if the grid is fully collapsed.
+        /// </summary>
+        /// <returns>Returns true if the grid is fully collapsed, false otherwise.</returns>
         public bool IsFullyCollapsed() => _cells.TrueForAll(cell => cell.Candidates.Count == 0);
     }
 }

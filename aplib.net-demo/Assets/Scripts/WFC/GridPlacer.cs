@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Assets.Scripts.Tiles.Direction;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
@@ -20,38 +20,93 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// The size of the tiles in the x-direction.
         /// </summary>
-        private const int _tileSizeX = 16;
+        public int tileSizeX = 16;
 
         /// <summary>
         /// The size of the tiles in the y-direction.
         /// </summary>
-        private const int _tileSizeY = 16;
+        [FormerlySerializedAs("tileSizeY")] public int tileSizeZ = 16;
 
         /// <summary>
         /// Represents the room objects.
         /// </summary>
-        public RoomObjects RoomObjects;
+        public RoomObjects roomObjects;
 
-        private readonly Random _random = new Random();
+        // TODO: Move random
+        private readonly Random _random = new();
+
+        /// <summary>
+        /// The width of the grid in the x-direction.
+        /// </summary>
+        public int gridWidthX = 10;
+
+        /// <summary>
+        /// The width of the grid in the z-direction.
+        /// </summary>
+        public int gridWidthZ = 10;
+
+        /// <summary>
+        /// The amount of rooms that need to be placed.
+        /// </summary>
+        public int amountOfRooms = 5;
 
         /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
-            int gridWidthX = 10;
-            int gridWidthY = 10;
+            MakeScene();
+        }
 
-            _grid = new Grid(gridWidthX, gridWidthY);
+        /// <summary>
+        /// Updates the scene.
+        /// </summary>
+        /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
+        public void UpdateScene()
+        {
+            if (amountOfRooms > gridWidthX * gridWidthZ)
+            {
+                throw new Exception("The amount of rooms is larger than the available places in the grid.");
+            }
+
+            GameObject[] allObjects = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+
+            foreach (GameObject go in allObjects!)
+            {
+                if (go.name.Contains("(Clone)"))
+                    Destroy(go);
+            }
+
+            MakeScene();
+        }
+
+        /// <summary>
+        /// Makes the scene.
+        /// </summary>
+        private void MakeScene()
+        {
+            MakeGrid();
+
+            PlaceGrid();
+
+            JoinConnectedComponentsWithTeleporters();
+        }
+
+        /// <summary>
+        /// Makes the grid.
+        /// </summary>
+        private void MakeGrid()
+        {
+            _grid = new Grid(gridWidthX, gridWidthZ);
 
             _grid.Init();
 
-            int amountOfRooms = 25;
+            int noRooms = 0;
 
-            while (amountOfRooms > 0)
+            while (noRooms < amountOfRooms)
             {
                 _grid.PlaceRandomRoom();
-                amountOfRooms--;
+                noRooms++;
             }
 
             while (!_grid.IsFullyCollapsed())
@@ -66,45 +121,45 @@ namespace Assets.Scripts.Wfc
 
                 _grid.RemoveUnconnectedNeighbourCandidates(cell);
             }
+        }
 
-            for (int y = 0; y < _grid.Height; y++)
+        /// <summary>
+        /// Places the grid in the world.
+        /// </summary>
+        private void PlaceGrid()
+        {
+            for (int z = 0; z < _grid.Height; z++)
             {
                 for (int x = 0; x < _grid.Width; x++)
                 {
-                    PlaceTile(x, y, _grid[x, y].Tile);
+                    PlaceTile(x, z, _grid[x, z].Tile);
                 }
             }
-
-            JoinConnectedComponentsWithTeleporters();
         }
 
         /// <summary>
         /// Places a tile at the specified coordinates in the world.
         /// </summary>
         /// <param name="x">The x-coordinates of the room.</param>
-        /// <param name="y">The y-coordinates of the room.</param>
+        /// <param name="z">The z-coordinates of the room.</param>
         /// <param name="tile">The tile that needs to be placed.</param>
-        public void PlaceTile(int x, int y, Tile tile)
+        private void PlaceTile(int x, int z, Tile tile)
         {
             GameObject prefab = tile switch
             {
-                Corner => RoomObjects.Corner,
-                Crossing => RoomObjects.Crossing,
-                DeadEnd => RoomObjects.DeadEnd,
-                Empty => RoomObjects.Empty,
-                Room => RoomObjects.Room,
-                Straight => RoomObjects.Straight,
-                TSection => RoomObjects.TSection,
-                _ => null
+                Corner => roomObjects.Corner,
+                Crossing => roomObjects.Crossing,
+                DeadEnd => roomObjects.DeadEnd,
+                Room => roomObjects.Room,
+                Straight => roomObjects.Straight,
+                TSection => roomObjects.TSection,
+                _ => roomObjects.Empty
             };
 
-            if (prefab != null)
-            {
-                tile.GameObject = Instantiate(prefab,
-                    new Vector3(x * _tileSizeX, 0, y * _tileSizeY),
-                    Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
-                    transform);
-            }
+            tile.GameObject = Instantiate(prefab,
+                new Vector3(x * tileSizeX, 0, z * tileSizeZ),
+                Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
+                transform);
         }
 
         /// <summary>
@@ -126,7 +181,7 @@ namespace Assets.Scripts.Wfc
         }
 
         // Here are temporary helper methods used to display the connected components in different colors.
-        private static Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan };
+        private static readonly Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan };
         private static int _colorIndex = -1;
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }

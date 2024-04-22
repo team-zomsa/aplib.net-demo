@@ -27,17 +27,22 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// The y coordinate of this cell, within its grid.
         /// </summary>
-        public int Y { get; }
+        public int Z { get; }
+
+        /// <summary>
+        /// Gets the entropy of the cell.
+        /// </summary>
+        public int Entropy => Candidates.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
         /// <param name="posX">The X coordinate of this cell, within its grid.</param>
-        /// <param name="posY">The Y coordinate of this cell, within its grid.</param>
-        public Cell(int posX, int posY)
+        /// <param name="posZ">The Z coordinate of this cell, within its grid.</param>
+        public Cell(int posX, int posZ)
         {
             X = posX;
-            Y = posY;
+            Z = posZ;
 
             Tile = new Empty();
             Candidates = new List<Tile>()
@@ -66,16 +71,14 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="tiles">The possible tiles that can be placed in this cell.</param>
         /// <param name="posX">The X coordinate of this cell, within its grid.</param>
-        /// <param name="posY">The Y coordinate of this cell, within its grid.</param>
-        public Cell(int posX, int posY, List<Tile> tiles)
+        /// <param name="posZ">The Z coordinate of this cell, within its grid.</param>
+        public Cell(int posX, int posZ, List<Tile> tiles)
         {
             X = posX;
-            Y = posY;
+            Z = posZ;
 
             Tile = new Empty();
             Candidates = tiles;
         }
-
-        public int Entropy => Candidates.Count;
     }
 }
