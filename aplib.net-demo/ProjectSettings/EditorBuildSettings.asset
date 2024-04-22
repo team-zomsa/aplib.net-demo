@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PathfindingTest2.unity
     guid: c3927a9f0650d264faab9f985b89a8b1
+  - enabled: 1
+    path: Assets/Scenes/PathfindingTest3.unity
+    guid: 9f7b229833d8206459408b67a7dca93f
   m_configObjects: {}
