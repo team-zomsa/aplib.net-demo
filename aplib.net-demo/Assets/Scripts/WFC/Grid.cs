@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using static Assets.Scripts.Tiles.Direction;
+using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
 {
@@ -26,6 +27,8 @@ namespace Assets.Scripts.Wfc
         /// The cells of the grid.
         /// </summary>
         private readonly List<Cell> _cells;
+
+        private readonly Random _random = new Random();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
@@ -70,6 +73,28 @@ namespace Assets.Scripts.Wfc
                 (int x, int y) = IndexToCoordinates(i);
                 _cells.Add(new Cell(x, y));
             }
+
+            for (int x = 0; x < Width; x++)
+            {
+                Cell cell1 = this[x, 0];
+
+                cell1.Candidates.RemoveAll(tile => tile.CanConnectInDirection(South));
+
+                Cell cell2 = this[x, Height - 1];
+
+                cell2.Candidates.RemoveAll(tile => tile.CanConnectInDirection(North));
+            }
+
+            for (int y = 0; y < Height; y++)
+            {
+                Cell cell1 = this[0, y];
+
+                cell1.Candidates.RemoveAll(tile => tile.CanConnectInDirection(West));
+
+                Cell cell2 = this[Width - 1, y];
+
+                cell2.Candidates.RemoveAll(tile => tile.CanConnectInDirection(East));
+            }
         }
 
         /// <summary>
@@ -111,6 +136,30 @@ namespace Assets.Scripts.Wfc
         {
             this[x, y].Tile = room;
             this[x, y].Candidates = new List<Tile>();
+
+            RemoveUnconnectedNeighbourCandidates(this[x, y]);
+        }
+
+        /// <summary>
+        /// Places a room at the specified coordinates in the grid.
+        /// </summary>
+        /// <param name="x">The x-coordinates of the room.</param>
+        /// <param name="y">The y-coordinates of the room.</param>
+        /// <param name="room">The room that needs to be placed.</param>
+        public void PlaceRandomRoom()
+        {
+            List<Cell> notFinished = _cells.FindAll(cell => cell.Candidates.Count > 0);
+
+            if (notFinished.Count == 0)
+            {
+                throw new Exception("All cells are fully collapsed.");
+            }
+
+            int index = _random.Next(notFinished.Count);
+            Cell cell = notFinished[index];
+            PlaceRoom(cell.X, cell.Y, new Room(new() { North, East, South, West }));
+
+            RemoveUnconnectedNeighbourCandidates(cell);
         }
 
         /// <summary>
@@ -222,5 +271,34 @@ namespace Assets.Scripts.Wfc
                 DetermineSingleConnectedComponent(searchSpace, connectedComponent, connectedNeighbour);
             }
         }
+
+        public void RemoveUnconnectedNeighbourCandidates(Cell cell)
+        {
+            IEnumerable<Cell> neighbours = Get4NeighbouringCells(cell);
+
+            foreach (Cell neighbour in neighbours)
+            {
+                neighbour.Candidates.RemoveAll(tile =>
+                    !cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && tile.CanConnectInDirection(West)
+                      || !cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && tile.CanConnectInDirection(East)
+                      || !cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && tile.CanConnectInDirection(South)
+                      || !cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && tile.CanConnectInDirection(North));
+
+                neighbour.Candidates.RemoveAll(tile =>
+                    cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && !tile.CanConnectInDirection(West)
+                    || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && !tile.CanConnectInDirection(East)
+                    || cell.Tile.CanConnectInDirection(North) && neighbour.Y > cell.Y && !tile.CanConnectInDirection(South)
+                    || cell.Tile.CanConnectInDirection(South) && neighbour.Y < cell.Y && !tile.CanConnectInDirection(North));
+            }
+        }
+
+        public List<Cell> GetLowestEntropyCells()
+        {
+            List<Cell> notFinished = _cells.FindAll(cell => cell.Candidates.Count > 0);
+            int lowestEntropy = notFinished.Min(cell => cell.Entropy);
+            return notFinished.FindAll(cell => cell.Entropy == lowestEntropy);
+        }
+
+        public bool IsFullyCollapsed() => _cells.TrueForAll(cell => cell.Candidates.Count == 0);
     }
 }

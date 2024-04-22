@@ -75,5 +75,7 @@ namespace Assets.Scripts.Wfc
             Tile = new Empty();
             Candidates = tiles;
         }
+
+        public int Entropy => Candidates.Count;
     }
 }

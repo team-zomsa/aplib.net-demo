@@ -1,7 +1,9 @@
 ﻿using Assets.Scripts.Tiles;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
+using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
 {
@@ -30,16 +32,40 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         public RoomObjects RoomObjects;
 
+        private readonly Random _random = new Random();
+
         /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
-            _grid = new Grid(5, 5);
+            int gridWidthX = 10;
+            int gridWidthY = 10;
+
+            _grid = new Grid(gridWidthX, gridWidthY);
 
             _grid.Init();
 
-            TempFillFunction();
+            int amountOfRooms = 25;
+
+            while (amountOfRooms > 0)
+            {
+                _grid.PlaceRandomRoom();
+                amountOfRooms--;
+            }
+
+            while (!_grid.IsFullyCollapsed())
+            {
+                List<Cell> lowestEntropyCells = _grid.GetLowestEntropyCells();
+
+                int index = _random.Next(lowestEntropyCells.Count);
+
+                Cell cell = lowestEntropyCells[index];
+                cell.Tile = cell.Candidates[_random.Next(cell.Candidates.Count)];
+                cell.Candidates.Clear();
+
+                _grid.RemoveUnconnectedNeighbourCandidates(cell);
+            }
 
             for (int y = 0; y < _grid.Height; y++)
             {
@@ -50,29 +76,6 @@ namespace Assets.Scripts.Wfc
             }
 
             JoinConnectedComponentsWithTeleporters();
-        }
-
-        /// <summary>
-        /// A temporary function to fill the grid with rooms.
-        /// </summary>
-        public void TempFillFunction()
-        {
-            _grid[0, 0].Tile = new TSection(West);
-            _grid[0, 1].Tile = new Crossing();
-            _grid[0, 2].Tile = new DeadEnd(South);
-            _grid[0, 3].Tile = new Straight(East);
-            _grid[1, 0].Tile = new TSection();
-            _grid[1, 1].Tile = new Straight();
-            _grid[1, 2].Tile = new Corner(South);
-            _grid[1, 3].Tile = new Crossing();
-            _grid[2, 0].Tile = new Corner();
-            _grid.PlaceRoom(2, 1, new Room(new List<Direction> { North, East, South, West }));
-
-            _grid.PlaceRoom(3, 3, new Room(new List<Direction> { North, East, South, West }));
-            _grid[3, 2].Tile = new Corner(East);
-            _grid[4, 2].Tile = new TSection(West);
-            _grid[4, 1].Tile = new Straight();
-            _grid.PlaceRoom(4, 0, new Room(new List<Direction> { North, East, South, West }));
         }
 
         /// <summary>
