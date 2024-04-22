@@ -72,4 +72,4 @@ aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa.meta
 aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Rider files
-.idea/
+**/.idea/

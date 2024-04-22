@@ -1,8 +1,9 @@
 ﻿using Assets.Scripts.Tiles;
 using System.Collections.Generic;
 using UnityEngine;
+using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.WFC
+namespace Assets.Scripts.Wfc
 {
     /// <summary>
     /// Represents the grid placer.
@@ -18,11 +19,6 @@ namespace Assets.Scripts.WFC
         /// The size of the tiles in the y-direction.
         /// </summary>
         private const int _tileSizeY = 16;
-
-        /// <summary>
-        /// The rotation of the tile.
-        /// </summary>
-        private const int _tileRotation = 90;
 
         /// <summary>
         /// Represents the room objects.
@@ -42,7 +38,7 @@ namespace Assets.Scripts.WFC
         private Grid _grid;
 
         /// <summary>
-        /// Awake is called when the script instance is being loaded.
+        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
@@ -55,6 +51,8 @@ namespace Assets.Scripts.WFC
             for (int y = 0; y < _grid.Height; y++)
                 for (int x = 0; x < _grid.Width; x++)
                     PlaceTile(x, y, _grid[x, y].Tile);
+
+            JoinConnectedComponentsWithTeleporters();
         }
 
         /// <summary>
@@ -62,22 +60,22 @@ namespace Assets.Scripts.WFC
         /// </summary>
         private void TempFillFunction()
         {
-            _grid.PlaceRoom(2, 1, new Room(new List<bool> { false, true, true, false }));
+            _grid[0, 0].Tile = new TSection(West);
+            _grid[0, 1].Tile = new Crossing();
+            _grid[0, 2].Tile = new DeadEnd(South);
+            _grid[0, 3].Tile = new Straight(East);
+            _grid[1, 0].Tile = new TSection();
+            _grid[1, 1].Tile = new Straight();
+            _grid[1, 2].Tile = new Corner(South);
+            _grid[1, 3].Tile = new Crossing();
+            _grid[2, 0].Tile = new Corner();
+            _grid.PlaceRoom(2, 1, new Room(new List<Direction> { North, East, South, West }));
 
-            _grid.PlaceRoom(4, 4, new Room(new List<bool> { false, true, true, false }));
-
-            // Road 1
-            _grid[2, 2].Tile = new Straight();
-            _grid[2, 3].Tile = new Straight();
-            _grid[2, 4].Tile = new Corner(2);
-            _grid[3, 4].Tile = new Straight(1);
-
-            // Road 2
-            _grid[3, 1].Tile = new Straight(1);
-            _grid[4, 1].Tile = new TSection(3);
-            _grid[4, 2].Tile = new Straight();
-            _grid[4, 3].Tile = new Straight();
-            _grid[4, 0].Tile = new DeadEnd();
+            _grid.PlaceRoom(3, 3, new Room(new List<Direction> { North, East, South, West }));
+            _grid[3, 2].Tile = new Corner(East);
+            _grid[4, 2].Tile = new TSection(West);
+            _grid[4, 1].Tile = new Straight();
+            _grid.PlaceRoom(4, 0, new Room(new List<Direction> { North, East, South, West }));
         }
 
         /// <summary>
@@ -103,11 +101,11 @@ namespace Assets.Scripts.WFC
                 _ => throw new UnityException("Unknown tile type when placing tile")
             };
 
-            _ = Instantiate
+            tile.GameObject = Instantiate
             (
                 prefab,
                 new Vector3(x * _tileSizeX, 0, y * _tileSizeY),
-                Quaternion.Euler(0, tile.Rotation * _tileRotation, 0),
+                Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
                 transform
             );
         }
@@ -122,21 +120,19 @@ namespace Assets.Scripts.WFC
         // ReSharper disable once SuggestBaseTypeForParameter
         private void PlaceDoors(int x, int y, Room room)
         {
-            for (int direction = 0; direction <= 3; direction++)
+            foreach (Direction direction in room.ConnectingDirections)
             {
-                // Continue to next direction if no door needs to be placed
-                if (room.CanConnectInDirection(direction)) continue;
-
                 Vector3 roomPosition = new(x * _tileSizeX, 0, y * _tileSizeY);
                 float doorDepthExtend = _doorPrefab.GetComponent<Renderer>().bounds.extents.z;
                 float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
-                Quaternion roomRotation = Quaternion.Euler(0, room.Rotation * _tileRotation, 0);
-                (Vector3 relativeDoorPosition, Quaternion relativeDoorRotation) = direction switch
+                Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
+                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotateLeft().RotationDegrees(), 0);
+                Vector3 relativeDoorPosition = direction switch
                 {
-                    0 => (new Vector3(-doorDistanceFromRoomCenter, 0, 0), Quaternion.Euler(0, -_tileRotation, 0)),
-                    1 => (new Vector3(0, 0, doorDistanceFromRoomCenter), Quaternion.identity),
-                    2 => (new Vector3(doorDistanceFromRoomCenter, 0, 0), Quaternion.Euler(0, _tileRotation, 0)),
-                    3 => (new Vector3(0, 0, -doorDistanceFromRoomCenter), Quaternion.Euler(0, 2f * _tileRotation, 0)),
+                    North => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
+                    East => new Vector3(0, 0, doorDistanceFromRoomCenter),
+                    South => new Vector3(doorDistanceFromRoomCenter, 0, 0),
+                    West => new Vector3(0, 0, -doorDistanceFromRoomCenter),
                     _ => throw new UnityException("Invalid direction when placing door")
                 };
                 Vector3 doorPosition = roomPosition + relativeDoorPosition;
@@ -145,5 +141,32 @@ namespace Assets.Scripts.WFC
                 _ = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
             }
         }
+
+        /// <summary>
+        /// Fist calculate the connected components of the grid, then join them with teleporters.
+        /// </summary>
+        private void JoinConnectedComponentsWithTeleporters()
+        {
+            IEnumerable<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents();
+
+            // We draw all the connected components individually
+            foreach (ISet<Cell> connectedComponent in connectedComponents)
+            {
+                Color color = GetUnusedColor();
+                foreach (Cell cell in connectedComponent)
+                    cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
+            }
+
+            // TODO the joining of the connected components with teleporters will be done in another PR.
+        }
+
+        // Here are temporary helper methods used to display the connected components in different colors.
+        private static readonly Color[] _colors =
+        {
+            Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan
+        };
+
+        private static int _colorIndex = -1;
+        private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }
 }
