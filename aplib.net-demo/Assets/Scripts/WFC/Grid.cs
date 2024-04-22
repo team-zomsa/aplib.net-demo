@@ -121,7 +121,7 @@ namespace Assets.Scripts.Wfc
         /// <returns>All neighbouring cells, excluding diagonal neighbours.</returns>
         /// <remarks>This does not check if the tiles in the cells are connected.</remarks>
         /// <seealso cref="GetConnectedNeighbours"/>
-        public ICollection<Cell> Get4NeighbouringCells(Cell cell)
+        public IEnumerable<Cell> Get4NeighbouringCells(Cell cell)
         {
             ICollection<Cell> neighbours = new Collection<Cell>();
             if (cell.X > 0) neighbours.Add(this[cell.X - 1, cell.Y]);
@@ -162,10 +162,10 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell whose connected tiles are to be determined.</param>
         /// <returns>The cells directly connected through their tiles</returns>
         /// <remarks>Assumes that the cells are assigned a tile.</remarks>
-        public ICollection<Cell> GetConnectedNeighbours(Cell cell)
+        public IEnumerable<Cell> GetConnectedNeighbours(Cell cell)
         {
             ICollection<Cell> connectedNeighbours = new Collection<Cell>();
-            ICollection<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
+            IEnumerable<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
             foreach (Cell neighbour in neighbours)
             {
                 if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West)
@@ -182,7 +182,7 @@ namespace Assets.Scripts.Wfc
         /// This method goes through all cells in this grid, to determine all connected components.
         /// </summary>
         /// <returns>A collection of sets of cells, where the sets of cells represent the connected components.</returns>
-        public IList<ISet<Cell>> DetermineConnectedComponents()
+        public IEnumerable<ISet<Cell>> DetermineConnectedComponents()
         {
             ISet<Cell> unvisitedCells = new HashSet<Cell>(_cells.Where(cell => cell.Tile is not Empty)); // Deep copy
             IList<ISet<Cell>> connectedComponents = new List<ISet<Cell>>();
@@ -211,7 +211,7 @@ namespace Assets.Scripts.Wfc
             connectedComponent.Add(cell);
             searchSpace.Remove(cell);
 
-            ICollection<Cell> connectedNeighbours = GetConnectedNeighbours(cell);
+            IEnumerable<Cell> connectedNeighbours = GetConnectedNeighbours(cell);
             foreach (Cell connectedNeighbour in connectedNeighbours)
             {
                 if (!searchSpace.Contains(connectedNeighbour)) continue; // Already visited

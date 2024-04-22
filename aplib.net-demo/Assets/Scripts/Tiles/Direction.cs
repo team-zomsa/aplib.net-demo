@@ -55,10 +55,10 @@ namespace Assets.Scripts.Tiles
             => (Direction)(((int)direction + 2) % 4);
 
         /// <summary>
-        /// Calculates how much degrees to the right the given direction is rotated from the north.
+        /// Calculates how many degrees clockwise the given direction is rotated from the north.
         /// </summary>
         /// <param name="direction"></param>
-        /// <returns>The right handed rotation in degrees, [0..360)</returns>
+        /// <returns>The clockwise rotation in degrees, [0..360)</returns>
         public static int RotationDegrees(this Direction direction) => (int)direction * 90;
     }
 }

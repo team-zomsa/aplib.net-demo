@@ -109,7 +109,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void JoinConnectedComponentsWithTeleporters()
         {
-            IList<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents();
+            IEnumerable<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents();
 
             // We draw all the connected components individually
             foreach (ISet<Cell> connectedComponent in connectedComponents)
