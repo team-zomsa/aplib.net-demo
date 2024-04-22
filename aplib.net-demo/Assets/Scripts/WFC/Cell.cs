@@ -42,19 +42,19 @@ namespace WFC
             Tile = new Empty();
             Candidates = new List<Tile>()
             {
-                new Corner(),
+                new Corner(North),
                 new Corner(East),
                 new Corner(South),
                 new Corner(West),
                 new Crossing(),
-                new DeadEnd(),
+                new DeadEnd(North),
                 new DeadEnd(East),
                 new DeadEnd(South),
                 new DeadEnd(West),
                 new Empty(),
-                new Straight(),
+                new Straight(North),
                 new Straight(East),
-                new TSection(),
+                new TSection(North),
                 new TSection(East),
                 new TSection(South),
                 new TSection(West),

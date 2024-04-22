@@ -124,9 +124,9 @@ namespace WFC
         public ICollection<Cell> Get4NeighbouringCells(Cell cell)
         {
             ICollection<Cell> neighbours = new Collection<Cell>();
-            if (cell.X > 0)          neighbours.Add(this[cell.X - 1, cell.Y]);
-            if (cell.X < Width - 1)  neighbours.Add(this[cell.X + 1, cell.Y]);
-            if (cell.Y > 0)          neighbours.Add(this[cell.X, cell.Y - 1]);
+            if (cell.X > 0) neighbours.Add(this[cell.X - 1, cell.Y]);
+            if (cell.X < Width - 1) neighbours.Add(this[cell.X + 1, cell.Y]);
+            if (cell.Y > 0) neighbours.Add(this[cell.X, cell.Y - 1]);
             if (cell.Y < Height - 1) neighbours.Add(this[cell.X, cell.Y + 1]);
             return neighbours;
         }
@@ -154,7 +154,7 @@ namespace WFC
             }
             return neighbours;
         }
-        
+
         /// <summary>
         /// Given a cell, this method determines all directly adjacent neighbours which are connected by their <see cref="Tile"/>s.
         /// These are at most 4, as diagonal tiles cannot be connected.
@@ -168,7 +168,7 @@ namespace WFC
             ICollection<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
             foreach (Cell neighbour in neighbours)
             {
-                if      (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West))
+                if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West))
                     connectedNeighbours.Add(neighbour);
                 else if (cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(East))
                     connectedNeighbours.Add(neighbour);
