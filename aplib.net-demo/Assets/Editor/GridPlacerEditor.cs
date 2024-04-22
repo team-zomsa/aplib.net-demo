@@ -21,7 +21,17 @@ namespace Editors
             gridPlacer.amountOfRooms = EditorGUILayout.IntField("Amount of Rooms", gridPlacer.amountOfRooms);
 
             if (GUILayout.Button("Update Scene"))
-                gridPlacer.UpdateScene();
+            {
+                GameObject[] allObjects = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+
+                foreach (GameObject go in allObjects!)
+                {
+                    if (go.name.Contains("(Clone)"))
+                        Destroy(go);
+                }
+
+                gridPlacer.MakeScene();
+            }
         }
     }
 }

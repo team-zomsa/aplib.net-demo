@@ -59,32 +59,16 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Updates the scene.
+        /// Makes the scene.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
-        public void UpdateScene()
+        public void MakeScene()
         {
             if (amountOfRooms > gridWidthX * gridWidthZ)
             {
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
             }
 
-            GameObject[] allObjects = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-
-            foreach (GameObject go in allObjects!)
-            {
-                if (go.name.Contains("(Clone)"))
-                    Destroy(go);
-            }
-
-            MakeScene();
-        }
-
-        /// <summary>
-        /// Makes the scene.
-        /// </summary>
-        private void MakeScene()
-        {
             MakeGrid();
 
             PlaceGrid();
