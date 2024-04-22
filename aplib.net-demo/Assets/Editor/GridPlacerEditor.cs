@@ -14,6 +14,8 @@ namespace Editors
         {
             GridPlacer gridPlacer = (GridPlacer)target;
             gridPlacer.roomObjects = (RoomObjects)EditorGUILayout.ObjectField("Room objects", gridPlacer.roomObjects, typeof(RoomObjects), false);
+            gridPlacer.useSeed = EditorGUILayout.Toggle("Use seed", gridPlacer.useSeed);
+            if (gridPlacer.useSeed) gridPlacer.seed = EditorGUILayout.IntField("Seed", gridPlacer.seed);
             gridPlacer.tileSizeX = EditorGUILayout.IntField("Tile size X", gridPlacer.tileSizeX);
             gridPlacer.tileSizeZ = EditorGUILayout.IntField("Tile size Z", gridPlacer.tileSizeZ);
             gridPlacer.gridWidthX = EditorGUILayout.IntField("Grid Width X", gridPlacer.gridWidthX);

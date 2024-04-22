@@ -28,18 +28,22 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private readonly List<Cell> _cells;
 
-        // TODO: Move random
-        private readonly Random _random = new Random();
+        /// <summary>
+        /// The random number generator.
+        /// </summary>
+        private readonly Random _random;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Grid"/> class.
         /// </summary>
         /// <param name="width">The width of the grid.</param>
         /// <param name="height">The height of the grid.</param>
-        public Grid(int width, int height)
+        /// <param name="random">The random number generator.</param>
+        public Grid(int width, int height, Random random)
         {
             Width = width;
             Height = height;
+            _random = random;
             _cells = new List<Cell>();
         }
 

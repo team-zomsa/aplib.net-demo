@@ -32,8 +32,20 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         public RoomObjects roomObjects;
 
-        // TODO: Move random
-        private readonly Random _random = new();
+        /// <summary>
+        /// A boolean that indicates whether a seed is used.
+        /// </summary>
+        public bool useSeed;
+
+        /// <summary>
+        /// The seed used for the random number generator.
+        /// </summary>
+        public int seed;
+
+        /// <summary>
+        /// The random number generator.
+        /// </summary>
+        private Random _random = new();
 
         /// <summary>
         /// The width of the grid in the x-direction.
@@ -69,6 +81,11 @@ namespace Assets.Scripts.Wfc
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
             }
 
+            if (useSeed)
+            {
+                _random = new Random(seed);
+            }
+
             MakeGrid();
 
             PlaceGrid();
@@ -81,7 +98,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void MakeGrid()
         {
-            _grid = new Grid(gridWidthX, gridWidthZ);
+            _grid = new Grid(gridWidthX, gridWidthZ, _random);
 
             _grid.Init();
 
