@@ -1,29 +1,33 @@
 using System.Collections.Generic;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a T-section tile.
-    /// _______
-    /// |_____|
+    /// <para/>
+    /// Default orientation (north):
+    /// <code>
+    ///
+    ///  front
+    ///    ↑
     /// ___ ___
     /// |_| |_|
+    /// _______
+    /// |_____|
+    /// </code>
     /// </summary>
     public class TSection : Tile
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TSection"/> class.
-        /// The default is a T-section with the top side closed.
+        /// The default is a T-section with the bottom side closed.
         /// </summary>
-        /// <param name="rotate">The amount of times to rotate the tile.</param>
-        public TSection(int rotate = 0)
+        /// <param name="facing">The direction in which the front of the tile should face.</param>
+        public TSection(Direction facing = North)
         {
-            Rotation = rotate;
-            AllowedDirections = new List<bool> { true, true, true, true };
-
-            int index = rotate % 4;
-
-            AllowedDirections[index] = false;
+            Facing = facing;
+            ConnectingDirections = new List<Direction> { facing, facing.RotateLeft(), facing.RotateRight() };
         }
     }
 }

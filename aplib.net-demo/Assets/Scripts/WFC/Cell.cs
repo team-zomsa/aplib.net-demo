@@ -1,7 +1,8 @@
 ﻿using Assets.Scripts.Tiles;
 using System.Collections.Generic;
+using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.WFC
+namespace Assets.Scripts.Wfc
 {
     /// <summary>
     /// Represents a cell in the grid.
@@ -19,29 +20,44 @@ namespace Assets.Scripts.WFC
         public List<Tile> Candidates { get; set; }
 
         /// <summary>
+        /// The x coordinate of this cell, within its grid.
+        /// </summary>
+        public int X { get; }
+
+        /// <summary>
+        /// The y coordinate of this cell, within its grid.
+        /// </summary>
+        public int Y { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
-        public Cell()
+        /// <param name="posX">The X coordinate of this cell, within its grid.</param>
+        /// <param name="posY">The Y coordinate of this cell, within its grid.</param>
+        public Cell(int posX, int posY)
         {
+            X = posX;
+            Y = posY;
+
             Tile = new Empty();
             Candidates = new List<Tile>()
             {
-                new Corner(),
-                new Corner(1),
-                new Corner(2),
-                new Corner(3),
+                new Corner(North),
+                new Corner(East),
+                new Corner(South),
+                new Corner(West),
                 new Crossing(),
-                new DeadEnd(),
-                new DeadEnd(1),
-                new DeadEnd(2),
-                new DeadEnd(3),
+                new DeadEnd(North),
+                new DeadEnd(East),
+                new DeadEnd(South),
+                new DeadEnd(West),
                 new Empty(),
-                new Straight(),
-                new Straight(1),
-                new TSection(),
-                new TSection(1),
-                new TSection(2),
-                new TSection(3),
+                new Straight(North),
+                new Straight(East),
+                new TSection(North),
+                new TSection(East),
+                new TSection(South),
+                new TSection(West),
             };
         }
 
@@ -49,8 +65,13 @@ namespace Assets.Scripts.WFC
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
         /// <param name="tiles">The possible tiles that can be placed in this cell.</param>
-        public Cell(List<Tile> tiles)
+        /// <param name="posX">The X coordinate of this cell, within its grid.</param>
+        /// <param name="posY">The Y coordinate of this cell, within its grid.</param>
+        public Cell(int posX, int posY, List<Tile> tiles)
         {
+            X = posX;
+            Y = posY;
+
             Tile = new Empty();
             Candidates = tiles;
         }

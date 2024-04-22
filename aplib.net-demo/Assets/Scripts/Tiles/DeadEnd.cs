@@ -1,13 +1,21 @@
 using System.Collections.Generic;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a dead end tile.
+    /// <para/>
+    /// Default orientation (north):
+    /// <code>
+    ///
+    ///  front
+    ///    ↑
     /// ___ ___
     /// | | | |
     /// | |_| |
     /// |_____|
+    /// </code>
     /// </summary>
     public class DeadEnd : Tile
     {
@@ -15,15 +23,11 @@ namespace Assets.Scripts.Tiles
         /// Initializes a new instance of the <see cref="DeadEnd"/> class.
         /// The default is a north facing tile.
         /// </summary>
-        /// <param name="rotate">The amount of times to rotate the tile.</param>
-        public DeadEnd(int rotate = 0)
+        /// <param name="facing">The direction in which the front of the tile should face.</param>
+        public DeadEnd(Direction facing = North)
         {
-            Rotation = rotate;
-            AllowedDirections = new List<bool> { false, false, false, false };
-
-            int index = rotate % 4;
-
-            AllowedDirections[index] = true;
+            Facing = facing;
+            ConnectingDirections = new List<Direction> { facing };
         }
     }
 }
