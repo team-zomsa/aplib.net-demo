@@ -1110,7 +1110,7 @@ Transform:
   m_GameObject: {fileID: 410252877}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.84, y: 1.73, z: -20.64}
+  m_LocalPosition: {x: 0, y: 1.73, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2094,7 +2094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSpeed: 7
-  _acceleration: 140
+  _acceleration: 300
   _normalGravityScale: 1.7
   _fallingGravityScale: 2.5
   _jumpHeight: 7
@@ -2103,6 +2103,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _groundDrag: 0.8
+  _airDrag: 0.2
   _slopeAngle: 40
   _slopeCheckRayExtraLength: 0.3
   _wallCheckMaxDistance: 0.5
@@ -2182,7 +2183,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.56
   m_Height: 1.9
