@@ -73,3 +73,6 @@ aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Ignore rider files
 **/.idea/
+
+# Ignore Top Level scenes
+aplib.net-demo/[Aa]ssets/*[Tt]est[Ss]cene*.unity*
