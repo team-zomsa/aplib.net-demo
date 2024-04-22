@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/FirstTestScene.unity
     guid: 0159818066d429f41b9c1794261beda0
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/PathfindingTests/PathfindingTest3.unity
+    guid: 9f7b229833d8206459408b67a7dca93f
   m_configObjects: {}
