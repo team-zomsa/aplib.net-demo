@@ -16,12 +16,16 @@ public class CinemachinePovExtension : CinemachineExtension
 
     /// <summary>
     /// Initialise the input manager, camera manager, and starting rotation.
+    /// Also set the virtual camera's follow target to the player's camera follow target.
     /// </summary>
     protected override void Awake()
     {
         _inputManager = InputManager.Instance;
         _cameraManager = CameraManager.Instance;
         _startingRotation = transform.localRotation.eulerAngles;
+        CinemachineVirtualCamera virtualCam = gameObject.GetComponent<CinemachineVirtualCamera>();
+        _cameraManager.CinemachineCamera = virtualCam;
+        virtualCam.Follow = _cameraManager.PlayerCamFollow;
         base.Awake();
     }
 
@@ -36,14 +40,14 @@ public class CinemachinePovExtension : CinemachineExtension
             {
                 // Make sure to not perform this piece of code when the input manager is null,
                 // as that means the game is not running
-                if (_inputManager == null)
+                if (!Application.isPlaying)
                     return;
 
                 Vector2 deltaInput = Cursor.lockState == CursorLockMode.Locked ? _inputManager.GetMouseDelta() : Vector2.zero;
                 _startingRotation.x += deltaInput.x * _horizontalSpeed * Time.deltaTime;
                 _startingRotation.y += deltaInput.y * _verticalSpeed * Time.deltaTime;
                 _startingRotation.y = Mathf.Clamp(_startingRotation.y, -_clampAngle, _clampAngle);
-                _cameraManager.PlayerVisTransform.localRotation = Quaternion.Euler(0f, _startingRotation.x, 0f);
+                _cameraManager.PlayerRotation.localRotation = Quaternion.Euler(0f, _startingRotation.x, 0f);
                 state.RawOrientation = Quaternion.Euler(-_startingRotation.y, _startingRotation.x, 0f);
             }
         }
