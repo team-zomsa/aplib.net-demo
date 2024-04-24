@@ -47,7 +47,7 @@ public class Inventory : MonoBehaviour
 
                 _tempItemList[i].uses += uses;
                 alreadyInInventory = true;
-                break; // See other comment
+                break;
             }
         }
 
