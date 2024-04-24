@@ -12,25 +12,32 @@ namespace Editors
         /// </summary>
         public override void OnInspectorGUI()
         {
-            GridPlacer gridPlacer = (GridPlacer)target;
-            gridPlacer.roomObjects = (RoomObjects)EditorGUILayout.ObjectField("Room objects", gridPlacer.roomObjects, typeof(RoomObjects), false);
-            gridPlacer.useSeed = EditorGUILayout.Toggle("Use seed", gridPlacer.useSeed);
-            if (gridPlacer.useSeed) gridPlacer.seed = EditorGUILayout.IntField("Seed", gridPlacer.seed);
-            gridPlacer.tileSizeX = EditorGUILayout.IntField("Tile size X", gridPlacer.tileSizeX);
-            gridPlacer.tileSizeZ = EditorGUILayout.IntField("Tile size Z", gridPlacer.tileSizeZ);
-            gridPlacer.gridWidthX = EditorGUILayout.IntField("Grid Width X", gridPlacer.gridWidthX);
-            gridPlacer.gridWidthZ = EditorGUILayout.IntField("Grid Width Z", gridPlacer.gridWidthZ);
-            gridPlacer.amountOfRooms = EditorGUILayout.IntField("Amount of Rooms", gridPlacer.amountOfRooms);
+            SerializedObject gridPlacerSettings = serializedObject;
+
+            SerializedProperty roomObjects = gridPlacerSettings.FindProperty("_roomObjects");
+            SerializedProperty useSeed = gridPlacerSettings.FindProperty("_useSeed");
+            SerializedProperty seed = gridPlacerSettings.FindProperty("_seed");
+            SerializedProperty tileSizeX = gridPlacerSettings.FindProperty("_tileSizeX");
+            SerializedProperty tileSizeZ = gridPlacerSettings.FindProperty("_tileSizeZ");
+            SerializedProperty gridWidthX = gridPlacerSettings.FindProperty("_gridWidthX");
+            SerializedProperty gridWidthZ = gridPlacerSettings.FindProperty("_gridWidthZ");
+            SerializedProperty amountOfRooms = gridPlacerSettings.FindProperty("_amountOfRooms");
+
+            roomObjects.objectReferenceValue = EditorGUILayout.ObjectField("Room objects", roomObjects.objectReferenceValue, typeof(RoomObjects), false);
+            useSeed.boolValue = EditorGUILayout.Toggle("Use seed", useSeed.boolValue);
+            if (useSeed.boolValue) seed.intValue = EditorGUILayout.IntField("Seed", seed.intValue);
+            tileSizeX.intValue = EditorGUILayout.IntField("Tile size X", tileSizeX.intValue);
+            tileSizeZ.intValue = EditorGUILayout.IntField("Tile size Z", tileSizeZ.intValue);
+            gridWidthX.intValue = EditorGUILayout.IntField("Grid Width X", gridWidthX.intValue);
+            gridWidthZ.intValue = EditorGUILayout.IntField("Grid Width Z", gridWidthZ.intValue);
+            amountOfRooms.intValue = EditorGUILayout.IntField("Amount of Rooms", amountOfRooms.intValue);
+
+            gridPlacerSettings.ApplyModifiedProperties();
 
             if (GUILayout.Button("Update Scene"))
             {
-                GameObject[] allObjects = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-
-                foreach (GameObject go in allObjects!)
-                {
-                    if (go.name.Contains("(Clone)"))
-                        Destroy(go);
-                }
+                GridPlacer gridPlacer = (GridPlacer)target;
+                foreach (Transform child in gridPlacer.transform) Destroy(child.gameObject);
 
                 gridPlacer.MakeScene();
             }

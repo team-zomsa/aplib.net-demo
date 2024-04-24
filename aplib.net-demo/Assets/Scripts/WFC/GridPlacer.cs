@@ -20,27 +20,32 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// The size of the tiles in the x-direction.
         /// </summary>
-        public int tileSizeX = 16;
+        [SerializeField]
+        private int _tileSizeX = 16;
 
         /// <summary>
-        /// The size of the tiles in the y-direction.
+        /// The size of the tiles in the z-direction.
         /// </summary>
-        [FormerlySerializedAs("tileSizeY")] public int tileSizeZ = 16;
+        [SerializeField]
+        private int _tileSizeZ = 16;
 
         /// <summary>
         /// Represents the room objects.
         /// </summary>
-        public RoomObjects roomObjects;
+        [SerializeField]
+        private RoomObjects _roomObjects;
 
         /// <summary>
         /// A boolean that indicates whether a seed is used.
         /// </summary>
-        public bool useSeed;
+        [SerializeField]
+        private bool _useSeed;
 
         /// <summary>
         /// The seed used for the random number generator.
         /// </summary>
-        public int seed;
+        [SerializeField]
+        private int _seed;
 
         /// <summary>
         /// The random number generator.
@@ -50,17 +55,20 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// The width of the grid in the x-direction.
         /// </summary>
-        public int gridWidthX = 10;
+        [SerializeField]
+        private int _gridWidthX = 10;
 
         /// <summary>
         /// The width of the grid in the z-direction.
         /// </summary>
-        public int gridWidthZ = 10;
+        [SerializeField]
+        private int _gridWidthZ = 10;
 
         /// <summary>
         /// The amount of rooms that need to be placed.
         /// </summary>
-        public int amountOfRooms = 5;
+        [SerializeField]
+        private int _amountOfRooms = 5;
 
         /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
@@ -76,15 +84,10 @@ namespace Assets.Scripts.Wfc
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
         public void MakeScene()
         {
-            if (amountOfRooms > gridWidthX * gridWidthZ)
-            {
+            if (_amountOfRooms > _gridWidthX * _gridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
-            }
 
-            if (useSeed)
-            {
-                _random = new Random(seed);
-            }
+            if (_useSeed) _random = new Random(_seed);
 
             MakeGrid();
 
@@ -98,16 +101,16 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void MakeGrid()
         {
-            _grid = new Grid(gridWidthX, gridWidthZ, _random);
+            _grid = new Grid(_gridWidthX, _gridWidthZ, _random);
 
             _grid.Init();
 
-            int noRooms = 0;
+            int numberOfRooms = 0;
 
-            while (noRooms < amountOfRooms)
+            while (numberOfRooms < _amountOfRooms)
             {
                 _grid.PlaceRandomRoom();
-                noRooms++;
+                numberOfRooms++;
             }
 
             while (!_grid.IsFullyCollapsed())
@@ -148,17 +151,17 @@ namespace Assets.Scripts.Wfc
         {
             GameObject prefab = tile switch
             {
-                Corner => roomObjects.Corner,
-                Crossing => roomObjects.Crossing,
-                DeadEnd => roomObjects.DeadEnd,
-                Room => roomObjects.Room,
-                Straight => roomObjects.Straight,
-                TSection => roomObjects.TSection,
-                _ => roomObjects.Empty
+                Corner => _roomObjects.Corner,
+                Crossing => _roomObjects.Crossing,
+                DeadEnd => _roomObjects.DeadEnd,
+                Room => _roomObjects.Room,
+                Straight => _roomObjects.Straight,
+                TSection => _roomObjects.TSection,
+                _ => _roomObjects.Empty
             };
 
             tile.GameObject = Instantiate(prefab,
-                new Vector3(x * tileSizeX, 0, z * tileSizeZ),
+                new Vector3(x * _tileSizeX, 0, z * _tileSizeZ),
                 Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
                 transform);
         }

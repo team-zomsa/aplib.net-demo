@@ -270,12 +270,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileSizeX: 16
-  tileSizeZ: 16
-  roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
-  gridWidthX: 10
-  gridWidthZ: 10
-  amountOfRooms: 5
+  _tileSizeX: 16
+  _tileSizeZ: 16
+  _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
+  _useSeed: 0
+  _seed: 0
+  _gridWidthX: 10
+  _gridWidthZ: 10
+  _amountOfRooms: 5
 --- !u!4 &1185445774
 Transform:
   m_ObjectHideFlags: 0
