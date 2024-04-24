@@ -94,7 +94,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image
+    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
     /// </summary>
     public void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }
