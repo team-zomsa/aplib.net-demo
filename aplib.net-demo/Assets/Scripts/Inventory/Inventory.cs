@@ -20,7 +20,7 @@ public class Inventory : MonoBehaviour
     //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
 
     /// <summary>
-    /// Creates the inventory queue and fetches the rawimage component to display the icons
+    /// Creates the inventory queue and fetches the rawimage component to display the icons.
     /// </summary>
     private void Start()
     {
