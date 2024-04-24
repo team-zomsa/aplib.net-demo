@@ -68,9 +68,7 @@ public class Inventory : MonoBehaviour
             _itemList.Peek().UseItem();
 
             if (_itemList.Peek().uses == 0)
-            {
                 _ = _itemList.Dequeue();
-            }
         }
 
         DisplayItem();
