@@ -17,7 +17,8 @@ namespace Teleporter
 
         /// <summary>
         /// An offset from this teleporter's position, on which the player will be teleported to when teleporting to this
-        /// teleporter. That's a lot of teleporting in one sentence.
+        /// teleporter.
+
         /// </summary>
         public Vector3 landingPointOffset = new(0, 1, 0);
 
@@ -76,11 +77,8 @@ namespace Teleporter
             {
                 // Do not teleport when the player triggers this because of being teleported to this teleporter
                 _shouldIgnoreNextPlayerEntryTrigger = false;
-                Debug.Log("Ignore!");
                 return;
             }
-
-            Debug.Log("Enter!");
 
             FX.SetActive(true);
             _waitThenTeleportCoroutine = StartCoroutine(WaitThenTeleport()); // Store reference to be able to stop it prematurely
@@ -94,8 +92,6 @@ namespace Teleporter
         private void OnTriggerExit(Collider other)
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
-
-            Debug.Log("Exit!");
 
             FX.SetActive(false);
             if (_waitThenTeleportCoroutine != null) // Can be null when player gets teleported to this teleporter
