@@ -34,8 +34,8 @@ public class Inventory : MonoBehaviour
     /// If there are it checks if they are stackable and adds uses. If they are not it does nothing. 
     /// If there are not matching names it adds the item to the inventory;
     /// </summary>
-    /// <param name="item">The item that is fed into the inventory</param>
-    /// <param name="uses">the amount of uses that are added upon pickup</param>
+    /// <param name="item">The item that is fed into the inventory.</param>
+    /// <param name="uses">the amount of uses that are added upon pickup.</param>
     public void PickUpItem(Item item, float uses = 1)
     {
         float queueSize = _itemList.Count;
