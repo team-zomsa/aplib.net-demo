@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour
     private Queue<Item> _itemList;
     public float inventorySize;
     /// <summary>
-    /// The RawImage is the object on which the _inventoryIndicator texture is projected
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
     /// </summary>
     private RawImage _inventoryIndicator;
     /// <summary>
