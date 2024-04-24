@@ -120,15 +120,18 @@ namespace Assets.Scripts.Wfc
         // ReSharper disable once SuggestBaseTypeForParameter
         private void PlaceDoors(int x, int y, Room room)
         {
+            Vector3 roomPosition = new(x * _tileSizeX, 0, y * _tileSizeY);
+            // Get (half of) the depth of the door model
+            float doorDepthExtend = _doorPrefab.GetComponent<Renderer>().bounds.extents.z;
+            // Calculate the distance from the room center to where a door should be placed
+            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
+
+            Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
+
             foreach (Direction direction in room.ConnectingDirections)
             {
                 // # Calculate where the door should be placed
 
-                Vector3 roomPosition = new(x * _tileSizeX, 0, y * _tileSizeY);
-                // Get (half of) the width of the door model
-                float doorDepthExtend = _doorPrefab.GetComponent<Renderer>().bounds.extents.z;
-                // Calculate the distance from the room center to where the door should be placed
-                float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
                 Vector3 relativeDoorPosition = direction switch
                 {
                     North => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
@@ -141,7 +144,6 @@ namespace Assets.Scripts.Wfc
 
                 // # Calculate the rotation the door should have
 
-                Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
                 // The `RotateLeft` here is because the rotation of the grid and the rotation of the door model do not
                 // line up
                 Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotateLeft().RotationDegrees(), 0);
