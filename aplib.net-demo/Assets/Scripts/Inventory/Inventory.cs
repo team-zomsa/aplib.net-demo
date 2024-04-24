@@ -28,6 +28,24 @@ public class Inventory : MonoBehaviour
         icon = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
         _keyRing = new List<Key>();
+        KeyTest();
+    }
+
+    private void KeyTest()
+    {
+        Key testkey;
+        Key testkey2;
+        testkey = new Key(1);
+        testkey2 = new Key(2);
+        PickUpKey(testkey);
+        PickUpKey(testkey2);
+        Debug.Log(_keyRing);
+        Debug.Log("Querying for 0 -> " + KeyQuery(0));
+        Debug.Log("Querying for 1 -> " + KeyQuery(1));
+        Debug.Log("Querying for 2 -> " + KeyQuery(2));
+        Debug.Log("Querying for 3 -> " + KeyQuery(3));
+        Debug.Log("Querying for 1 -> " + KeyQuery(1));
+
     }
 
     /// <summary>
@@ -62,6 +80,31 @@ public class Inventory : MonoBehaviour
             _itemList.Enqueue(item);
             DisplayItem();
         }
+    }
+    /// <summary>
+    /// Adds the picked up key to the keychain
+    /// </summary>
+    /// <param name="key">the picked up key</param>
+    public void PickUpKey(Key key) => _keyRing.Add(key);
+
+    /// <summary>
+    /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed
+    /// </summary>
+    /// <param name="doorId">The Id of the inputted door that is then checked against all the keys in the keyring</param>
+    /// <returns></returns>
+    public bool KeyQuery(int doorId)
+    {
+        foreach (Key k in _keyRing)
+        {
+            if (k.id == doorId)
+            {
+                _ = _keyRing.Remove(k);
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     /// <summary>

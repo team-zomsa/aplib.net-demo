@@ -1,13 +1,17 @@
 public class Key : Item
 {
     /*
-    todo: flesh out the pickup function with picking up keys
-    change the door collision to check the list in the inventory (make inventory static?)
-    find key image (see through?) 
-    create key display on top left of screen with number
-    add number to doors
+  TODO  change the door collision to check the list in the inventory
      */
+    /// <summary>
+    /// The key ID, to check which door it can open
+    /// </summary>
     public int id;
+    /// <summary>
+    /// the constructor that gives the key its Id
+    /// </summary>
+    /// <param name="constrId">the Id the key is given</param>
+    public Key(int constrId) => id = constrId;
     private void Start()
     {
         stackable = false;
