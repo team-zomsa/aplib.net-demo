@@ -45,16 +45,12 @@ public class Inventory : MonoBehaviour
         {
             if (_tempItemList[i].name == item.name)
             {
-                if (item.stackable)
-                {
-                    _tempItemList[i].uses += uses;
-                    alreadyInInventory = true;
-                    break;
-                }
-                else
-                {
+                if (!item.stackable)
                     return;
-                }
+
+                _tempItemList[i].uses += uses;
+                alreadyInInventory = true;
+                break; // See other comment
             }
         }
 
