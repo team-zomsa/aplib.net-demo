@@ -6,7 +6,6 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class Item : MonoBehaviour
 {
-
     public float uses;
     public float startUses;
     public bool stackable;
