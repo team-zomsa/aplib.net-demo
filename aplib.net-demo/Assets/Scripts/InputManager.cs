@@ -48,7 +48,6 @@ public class InputManager : MonoBehaviour
         _playerActions.Fire.performed += _ => _activeWeapon.UseWeapon();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
-
     }
 
     /// <summary>
