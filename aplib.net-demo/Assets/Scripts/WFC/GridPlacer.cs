@@ -122,11 +122,13 @@ namespace Assets.Scripts.Wfc
         {
             foreach (Direction direction in room.ConnectingDirections)
             {
+                // # Calculate where the door should be placed
+
                 Vector3 roomPosition = new(x * _tileSizeX, 0, y * _tileSizeY);
+                // Get (half of) the width of the door model
                 float doorDepthExtend = _doorPrefab.GetComponent<Renderer>().bounds.extents.z;
+                // Calculate the distance from the room center to where the door should be placed
                 float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
-                Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
-                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotateLeft().RotationDegrees(), 0);
                 Vector3 relativeDoorPosition = direction switch
                 {
                     North => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
@@ -136,7 +138,16 @@ namespace Assets.Scripts.Wfc
                     _ => throw new UnityException("Invalid direction when placing door")
                 };
                 Vector3 doorPosition = roomPosition + relativeDoorPosition;
+
+                // # Calculate the rotation the door should have
+
+                Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
+                // The `RotateLeft` here is because the rotation of the grid and the rotation of the door model do not
+                // line up
+                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotateLeft().RotationDegrees(), 0);
                 Quaternion doorRotation = roomRotation * relativeDoorRotation;
+
+                // # Spawn the door
 
                 _ = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
             }
