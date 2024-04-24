@@ -82,7 +82,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Puts the first item you have in the last slot;
+    /// Puts the first item you have in the last slot.
     /// </summary>
     public void SwitchItem()
     {
