@@ -12,7 +12,7 @@ public class Inventory : MonoBehaviour
     /// </summary>
     private RawImage _inventoryIndicator;
     /// <summary>
-    /// the texture of the _inventoryIndicator object
+    /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
     public GameObject inventoryObject;
