@@ -17,8 +17,6 @@ public class Inventory : MonoBehaviour
     public Texture emptyInventoryImage;
     public GameObject inventoryObject;
 
-    //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
-
     /// <summary>
     /// Creates the inventory queue and fetches the rawimage component to display the icons
     /// </summary>
@@ -38,10 +36,9 @@ public class Inventory : MonoBehaviour
     /// <param name="uses">the amount of uses that are added upon pickup</param>
     public void PickUpItem(Item item, float uses = 1)
     {
-        float queueSize = _itemList.Count;
         bool alreadyInInventory = false;
         List<Item> _tempItemList = _itemList.ToList();
-        for (int i = 0; i < queueSize; i++)
+        for (int i = 0; i < _itemList.Count; i++)
         {
             if (_tempItemList[i].name == item.name)
             {
@@ -77,8 +74,6 @@ public class Inventory : MonoBehaviour
 
             if (_itemList.Peek().uses == 0)
             {
-                //since we reuse the items, upon dequeueing the item gets reset to its default uses, so that when it is picked up again, the amount of uses is correct
-                _itemList.Peek().Reset();
                 _ = _itemList.Dequeue();
             }
         }
