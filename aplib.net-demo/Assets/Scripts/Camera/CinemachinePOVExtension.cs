@@ -40,7 +40,7 @@ public class CinemachinePovExtension : CinemachineExtension
             {
                 // Make sure to not perform this piece of code when the input manager is null,
                 // as that means the game is not running
-                if (_inputManager == null)
+                if (!Application.isPlaying)
                     return;
 
                 Vector2 deltaInput = Cursor.lockState == CursorLockMode.Locked ? _inputManager.GetMouseDelta() : Vector2.zero;
