@@ -72,7 +72,7 @@ public class Inventory : MonoBehaviour
 
             if (_itemList.Peek().uses == 0)
             {
-                //since we reuse the items, upon dequeueing the item gets reset to its default uses, so that when it is picked up again, the amount of uses is correct
+                // Since we reuse the items, upon dequeueing the item gets reset to its default uses, so that when it is picked up again, the amount of uses is correct.
                 _itemList.Peek().Reset();
                 _ = _itemList.Dequeue();
             }
