@@ -62,7 +62,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the _inventoryIndicator to the next item in the queue
+    /// Activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the _inventoryIndicator to the next item in the queue.
     /// </summary>
     public void ActivateItem()
     {
