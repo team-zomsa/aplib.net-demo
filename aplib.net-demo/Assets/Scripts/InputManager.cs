@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class InputManager : MonoBehaviour
     private Movement _playerMovement;
     // TODO: Change when inventory is added
     // Doing it this way for now, change when inventory is implemented.
-    private Weapon _activeWeapon;
+    [CanBeNull] private Weapon _activeWeapon;
 
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
@@ -35,14 +36,17 @@ public class InputManager : MonoBehaviour
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
         _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
-        List<Weapon> _playerWeapons = new List<Weapon>(_playerTransform.GetComponentsInChildren<Weapon>());
-        _activeWeapon = _playerWeapons[0];
+        List<Weapon> playerWeapons = new(_playerTransform.GetComponentsInChildren<Weapon>());
+
+        if (playerWeapons.Count > 0)
+            _activeWeapon = playerWeapons[0];
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
-        _playerActions.Fire.performed += _ => _activeWeapon.UseWeapon();
+        if (_activeWeapon)
+            _playerActions.Fire.performed += _ => _activeWeapon!.UseWeapon();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
     }
