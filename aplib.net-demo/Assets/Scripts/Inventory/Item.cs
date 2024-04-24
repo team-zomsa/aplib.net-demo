@@ -20,7 +20,7 @@ public abstract class Item : MonoBehaviour
     public void UseItem() => uses -= 1;
 
     /// <summary>
-    /// Resets the uses to the starting uses
+    /// Resets the uses to the starting uses.
     /// </summary>
     public void Reset()
         => uses = startUses;
