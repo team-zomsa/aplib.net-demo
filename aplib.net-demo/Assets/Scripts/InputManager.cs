@@ -12,7 +12,6 @@ public class InputManager : MonoBehaviour
     // Doing it this way for now, change when inventory is implemented.
     private Weapon _activeWeapon;
 
-
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
     private PlayerInput.UIActions _uiActions;
