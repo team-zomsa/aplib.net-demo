@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+
 /// <summary>
 ///  This is where you change variables that are shared between all the items. The values themselves you want to change in the prefab for the specific item you want.
 ///  To create a new item: Create a new script that inherits from this one, and then make a prefab that has that script attached.
