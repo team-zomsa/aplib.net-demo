@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
@@ -7,9 +8,9 @@ namespace Assets.Scripts.Items
     /// </summary>
     public class PickupableItem : MonoBehaviour
     {
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
-            if (!collision.collider.CompareTag("Player"))
+            if (!other.CompareTag("Player"))
                 return;
 
             GameObject inventoryObject = GameObject.Find("InventoryObject");
