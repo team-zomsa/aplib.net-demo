@@ -516,6 +516,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3394594136835305103, guid: a97359d0503e62444882482848ac8602, type: 3}
     m_RemovedGameObjects:
@@ -576,6 +581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mouseLock: {fileID: 2067055331}
   _playerTransform: {fileID: 1250020207}
+  _inventory: {fileID: 0}
 --- !u!4 &1444036427
 Transform:
   m_ObjectHideFlags: 0
@@ -620,9 +626,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tileSizeX: 16
+  _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
     type: 3}
+  _useSeed: 0
+  _seed: 0
+  _gridWidthX: 10
+  _gridWidthZ: 10
+  _amountOfRooms: 5
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
