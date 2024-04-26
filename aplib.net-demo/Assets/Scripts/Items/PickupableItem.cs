@@ -6,6 +6,7 @@ namespace Assets.Scripts.Items
     /// <summary>
     /// Attach this class to make object pickupable.
     /// </summary>
+    [RequireComponent(typeof(Item))]
     public class PickupableItem : MonoBehaviour
     {
         private void OnTriggerEnter(Collider other)
@@ -23,12 +24,6 @@ namespace Assets.Scripts.Items
             }
 
             Item item = gameObject.GetComponent<Item>();
-
-            if (!item)
-            {
-                Debug.LogWarning("Item not found!");
-                return;
-            }
 
             inventory.PickUpItem(item);
             Destroy(gameObject);
