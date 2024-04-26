@@ -193,6 +193,7 @@ namespace Assets.Scripts.Wfc
             {
                 // # Calculate where the door should be placed
 
+                // North is in the negative x direction
                 Vector3 relativeDoorPosition = direction switch
                 {
                     North => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
