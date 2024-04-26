@@ -77,9 +77,19 @@ namespace Assets.Scripts.Wfc
         private Random _random = new();
 
         /// <summary>
+        /// The `Renderer` component for the door prefab.
+        /// </summary>
+        /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
+        private Renderer _doorRenderer;
+
+        /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
-        public void Awake() => MakeScene();
+        public void Awake()
+        {
+            _doorRenderer = _doorPrefab.GetComponent<Renderer>();
+            MakeScene();
+        }
 
         /// <summary>
         /// Makes the scene.
@@ -183,7 +193,7 @@ namespace Assets.Scripts.Wfc
         {
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
             // Get (half of) the depth of the door model
-            float doorDepthExtend = _doorPrefab.GetComponent<Renderer>().bounds.extents.z;
+            float doorDepthExtend = _doorRenderer.bounds.extents.z;
             // Calculate the distance from the room center to where a door should be placed
             float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
 
