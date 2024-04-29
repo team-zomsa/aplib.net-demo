@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4813045938263836328}
   - component: {fileID: 453676098226850901}
   m_Layer: 0
-  m_Name: Portal FX
+  m_Name: Teleporter FX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

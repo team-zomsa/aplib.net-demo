@@ -211,10 +211,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f7e1d58a96a751d856554c803caf03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleportDelay: 2
-  FX: {fileID: 4066457424294169230}
+  _teleportWindUpTime: 2
+  _landingPointOffset: {x: 0, y: 1, z: 0}
+  _fx: {fileID: 4066457424294169230}
   targetTeleporter: {fileID: 0}
-  landingPointOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &5318633677791491817
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,7 +477,7 @@ PrefabInstance:
     - target: {fileID: 3675704376147994443, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
       propertyPath: m_Name
-      value: Portal FX
+      value: Teleporter FX
       objectReference: {fileID: 0}
     - target: {fileID: 4813045938263836328, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
@@ -551,7 +551,7 @@ PrefabInstance:
     - target: {fileID: 3675704376147994443, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
       propertyPath: m_Name
-      value: Portal FX (2)
+      value: Teleporter FX (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4813045938263836328, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
@@ -635,7 +635,7 @@ PrefabInstance:
     - target: {fileID: 3675704376147994443, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
       propertyPath: m_Name
-      value: Portal FX (1)
+      value: Teleporter FX (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4813045938263836328, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
@@ -724,7 +724,7 @@ PrefabInstance:
     - target: {fileID: 3675704376147994443, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}
       propertyPath: m_Name
-      value: Portal FX (3)
+      value: Teleporter FX (3)
       objectReference: {fileID: 0}
     - target: {fileID: 4813045938263836328, guid: a7f972eeb1107cbbab2eac89d8a22ca6,
         type: 3}

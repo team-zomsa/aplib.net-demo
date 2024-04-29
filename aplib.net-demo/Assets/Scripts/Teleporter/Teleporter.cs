@@ -14,14 +14,14 @@ namespace Teleporter
         /// </summary>
         [Header("Parameters")]
         [SerializeField]
-        private float teleportWindUpTime = 2f;
+        private float _teleportWindUpTime = 2f;
 
         /// <summary>
         /// An offset from this teleporter's position, on which the player will be teleported to when teleporting to this
         /// teleporter.
         /// </summary>
         [SerializeField]
-        private Vector3 landingPointOffset = new(0, 1, 0);
+        private Vector3 _landingPointOffset = new(0, 1, 0);
 
         /// <summary>
         /// A reference to the FX parent gameobject, containing all special effects of the teleporter to be
@@ -29,7 +29,7 @@ namespace Teleporter
         /// </summary>
         [Header("References")]
         [SerializeField]
-        private GameObject FX;
+        private GameObject _fx;
 
         /// <summary>
         /// The teleporter to which the player must be teleported. This is a one-directional link. To be bidirectional,
@@ -40,7 +40,7 @@ namespace Teleporter
         /// <summary>
         /// The absolute position to which the player will be teleported to when teleporting to this teleporter.
         /// </summary>
-        public Vector3 LandingPoint => transform.position + landingPointOffset;
+        public Vector3 LandingPoint => transform.position + _landingPointOffset;
 
         /// <summary>
         /// A simple reference to the player's transform, for performance reasons.
@@ -82,7 +82,7 @@ namespace Teleporter
                 return;
             }
 
-            FX.SetActive(true);
+            _fx.SetActive(true);
             _waitThenTeleportCoroutine = StartCoroutine(WaitThenTeleport()); // Store reference to be able to stop it prematurely
         }
 
@@ -95,18 +95,18 @@ namespace Teleporter
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
 
-            FX.SetActive(false);
+            _fx.SetActive(false);
             if (_waitThenTeleportCoroutine != null) // Can be null when player gets teleported to this teleporter
                 StopCoroutine(_waitThenTeleportCoroutine); // Stop coroutine prematurely when player exits during wind up time
         }
 
         /// <summary>
-        /// Waits for <see cref="teleportWindUpTime"/>, then starts the teleport. This allows the FX to play.
+        /// Waits for <see cref="_teleportWindUpTime"/>, then starts the teleport. This allows the FX to play.
         /// </summary>
         /// <returns>IEnumerator representing coroutine</returns>
         private IEnumerator WaitThenTeleport()
         {
-            yield return new WaitForSeconds(teleportWindUpTime);
+            yield return new WaitForSeconds(_teleportWindUpTime);
             
             // Teleport the player
             targetTeleporter.TeleportReceive(_playerTransform);
