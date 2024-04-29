@@ -4,11 +4,11 @@ using UnityEngine;
 /// Very basic enemy class.
 /// </summary>
 [RequireComponent(typeof(PathFind))]
+[RequireComponent(typeof(HealthComponent))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
-    [SerializeField] protected int _maxHealth = 100;
     [SerializeField] protected int _damagePoints = 25;
-    public int Health { get; protected set; }
+    protected HealthComponent _healthComponent;
     private PathFind _pathFind;
 
     /// <summary>
@@ -16,8 +16,8 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// </summary>
     protected virtual void Awake()
     {
-        Health = _maxHealth;
         _pathFind = GetComponent<PathFind>();
+        _healthComponent = GetComponent<HealthComponent>();
     }
 
     /// <summary>
@@ -34,27 +34,23 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// <param name="damage"></param>
     public virtual void TakeDamage(int damage)
     {
-        Health -= damage;
-        if (Health <= 0)
-            Die();
+        _healthComponent.ReduceHealth(damage);
     }
 
     /// <summary>
     /// Kills the enemy.
     /// </summary>
-    protected virtual void Die()
+    protected virtual void OnDeath()
     {
         Destroy(gameObject);
     }
 
     /// <summary>
     /// Deals damage to a target.
-    /// (Player does not have health yet!)
     /// </summary>
-    protected virtual void DealDamage(Object target)
+    protected virtual void DealDamage(HealthComponent target)
     {
-        // TODO:: implement when Health component is added
-        // target.TakeDamage(_damagePoints);
+        target.ReduceHealth(_damagePoints);
     }
 
     /// <summary>

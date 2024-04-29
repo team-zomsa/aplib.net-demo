@@ -22,12 +22,12 @@ public class DummyEnemy : AbstractEnemy
         _spawnBounds = _spawnArea.Bounds;
     }
 
-    protected override void Die()
+    protected override void OnDeath()
     {
         if (_respawn)
             Respawn();
         else
-            base.Die();
+            base.OnDeath();
     }
 
     /// <summary>
@@ -39,6 +39,6 @@ public class DummyEnemy : AbstractEnemy
                                           Random.Range(_spawnBounds.min.y, _spawnBounds.max.y),
                                           Random.Range(_spawnBounds.min.z, _spawnBounds.max.z));
         transform.position = randomPoint;
-        Health = _maxHealth;
+        _healthComponent.Reset();
     }
 }
