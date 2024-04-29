@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
+using static Assets.Scripts.Tiles.Direction;
 using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
@@ -12,11 +12,6 @@ namespace Assets.Scripts.Wfc
     /// </summary>
     public class GridPlacer : MonoBehaviour
     {
-        /// <summary>
-        /// Represents the grid.
-        /// </summary>
-        private Grid _grid;
-
         /// <summary>
         /// The size of the tiles in the x-direction.
         /// </summary>
@@ -36,6 +31,12 @@ namespace Assets.Scripts.Wfc
         private RoomObjects _roomObjects;
 
         /// <summary>
+        /// Represents the door object.
+        /// </summary>
+        [SerializeField]
+        private GameObject _doorPrefab;
+
+        /// <summary>
         /// A boolean that indicates whether a seed is used.
         /// </summary>
         [SerializeField]
@@ -46,11 +47,6 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         [SerializeField]
         private int _seed;
-
-        /// <summary>
-        /// The random number generator.
-        /// </summary>
-        private Random _random = new();
 
         /// <summary>
         /// The width of the grid in the x-direction.
@@ -71,10 +67,27 @@ namespace Assets.Scripts.Wfc
         private int _amountOfRooms = 5;
 
         /// <summary>
+        /// Represents the grid.
+        /// </summary>
+        private Grid _grid;
+
+        /// <summary>
+        /// The random number generator.
+        /// </summary>
+        private Random _random = new();
+
+        /// <summary>
+        /// The `Renderer` component for the door prefab.
+        /// </summary>
+        /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
+        private Renderer _doorRenderer;
+
+        /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
+            _doorRenderer = _doorPrefab.GetComponent<Renderer>();
             MakeScene();
         }
 
@@ -134,10 +147,7 @@ namespace Assets.Scripts.Wfc
         {
             for (int z = 0; z < _grid.Height; z++)
             {
-                for (int x = 0; x < _grid.Width; x++)
-                {
-                    PlaceTile(x, z, _grid[x, z].Tile);
-                }
+                for (int x = 0; x < _grid.Width; x++) PlaceTile(x, z, _grid[x, z].Tile);
             }
         }
 
@@ -149,6 +159,8 @@ namespace Assets.Scripts.Wfc
         /// <param name="tile">The tile that needs to be placed.</param>
         private void PlaceTile(int x, int z, Tile tile)
         {
+            if (tile is Room room) PlaceDoors(x, z, room);
+
             GameObject prefab = tile switch
             {
                 Corner => _roomObjects.Corner,
@@ -160,10 +172,59 @@ namespace Assets.Scripts.Wfc
                 _ => _roomObjects.Empty
             };
 
-            tile.GameObject = Instantiate(prefab,
+            tile.GameObject = Instantiate
+            (
+                prefab,
                 new Vector3(x * _tileSizeX, 0, z * _tileSizeZ),
                 Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
-                transform);
+                transform
+            );
+        }
+
+        /// <summary>
+        /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
+        /// allowed directions of the room.
+        /// </summary>
+        /// <param name="x">The x-position of the room, in the grid.</param>
+        /// <param name="z">The z-position of the room, in the grid.</param>
+        /// <param name="room">The room for which the doors need to be spawned.</param>
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private void PlaceDoors(int x, int z, Room room)
+        {
+            Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
+            // Get (half of) the depth of the door model
+            float doorDepthExtend = _doorRenderer.bounds.extents.z;
+            // Calculate the distance from the room center to where a door should be placed
+            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
+
+            Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
+
+            foreach (Direction direction in room.ConnectingDirections)
+            {
+                // # Calculate where the door should be placed
+
+                // North is in the negative x direction
+                Vector3 relativeDoorPosition = direction switch
+                {
+                    North => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
+                    East => new Vector3(0, 0, doorDistanceFromRoomCenter),
+                    South => new Vector3(doorDistanceFromRoomCenter, 0, 0),
+                    West => new Vector3(0, 0, -doorDistanceFromRoomCenter),
+                    _ => throw new UnityException("Invalid direction when placing door")
+                };
+                Vector3 doorPosition = roomPosition + relativeDoorPosition;
+
+                // # Calculate the rotation the door should have
+
+                // The `RotateLeft` here is because the rotation of the grid and the rotation of the door model do not
+                // line up
+                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotateLeft().RotationDegrees(), 0);
+                Quaternion doorRotation = roomRotation * relativeDoorRotation;
+
+                // # Spawn the door
+
+                _ = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
+            }
         }
 
         /// <summary>
@@ -185,7 +246,11 @@ namespace Assets.Scripts.Wfc
         }
 
         // Here are temporary helper methods used to display the connected components in different colors.
-        private static readonly Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan };
+        private static readonly Color[] _colors =
+        {
+            Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan
+        };
+
         private static int _colorIndex = -1;
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }

@@ -71,5 +71,5 @@ aplib.net-demo/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa.meta
 aplib.net-demo/[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# Ignore rider files
+# Rider files
 **/.idea/
