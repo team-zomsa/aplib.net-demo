@@ -18,10 +18,9 @@ public class PathFind : MonoBehaviour
     {
         _agent = GetComponent<NavMeshAgent>();
         GameObject goalObject = GameObject.FindGameObjectWithTag(_tagToFind);
-        if (goalObject == null)
+        if (goalObject is null)
             Debug.LogError("No object with tag " + _tagToFind + " found!");
-        else
-            _goal = goalObject.transform;
+        _goal = goalObject.transform;
     }
 
     /// <summary>
@@ -29,10 +28,10 @@ public class PathFind : MonoBehaviour
     /// </summary>
     public void UpdateAgent()
     {
-        if (_goal != null)
-        {
-            _agent.SetDestination(_goal.position);
-            _agent.transform.LookAt(_goal);
-        }
+        if (_goal is null) return;
+
+        _agent.SetDestination(_goal.position);
+        _agent.transform.LookAt(_goal);
     }
 }
+
