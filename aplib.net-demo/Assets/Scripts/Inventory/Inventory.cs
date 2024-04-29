@@ -66,7 +66,7 @@ public class Inventory : MonoBehaviour
     /// Adds the picked up key to the keychain.
     /// </summary>
     /// <param name="key">the picked up key</param>
-    public void PickUpKey(Key key) => _keyRing.Add(key);
+    public void StoreKey(Key key) => _keyRing.Add(key);
 
     /// <summary>
     /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed.
