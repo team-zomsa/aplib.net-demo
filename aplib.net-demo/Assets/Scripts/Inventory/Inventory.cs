@@ -23,27 +23,9 @@ public class Inventory : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        icon = GetComponent<RawImage>();
+        _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
         _keyRing = new List<Key>();
-        KeyTest();
-    }
-
-    private void KeyTest()
-    {
-        Key testkey;
-        Key testkey2;
-        testkey = new Key(1);
-        testkey2 = new Key(2);
-        PickUpKey(testkey);
-        PickUpKey(testkey2);
-        Debug.Log(_keyRing);
-        Debug.Log("Querying for 0 -> " + KeyQuery(0));
-        Debug.Log("Querying for 1 -> " + KeyQuery(1));
-        Debug.Log("Querying for 2 -> " + KeyQuery(2));
-        Debug.Log("Querying for 3 -> " + KeyQuery(3));
-        Debug.Log("Querying for 1 -> " + KeyQuery(1));
-
     }
 
     /// <summary>
@@ -65,14 +47,14 @@ public class Inventory : MonoBehaviour
                 _tempItemList[i].uses += uses;
                 alreadyInInventory = true;
                 break;
-                }
-                else
-                {
-                    DisplayItem();
-                    return;
-                }
+            }
+            else
+            {
+                DisplayItem();
+                return;
             }
         }
+
 
         if (!alreadyInInventory && _itemList.Count < inventorySize)
         {
