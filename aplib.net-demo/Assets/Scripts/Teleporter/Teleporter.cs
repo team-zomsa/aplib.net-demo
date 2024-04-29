@@ -37,7 +37,7 @@ namespace Teleporter
         /// <summary>
         /// The absolute position to which the player will be teleported to when teleporting to this teleporter.
         /// </summary>
-        protected Vector3 _landingPoint => transform.position + landingPointOffset;
+        public Vector3 LandingPoint => transform.position + landingPointOffset;
 
         /// <summary>
         /// A simple reference to the player's transform, for performance reasons.
@@ -115,7 +115,7 @@ namespace Teleporter
         /// <param name="objectTransform">The transform to teleport</param>
         public void TeleportReceive(Transform objectTransform)
         {
-            objectTransform.position = _landingPoint;
+            objectTransform.position = LandingPoint;
             // Prevent this action from triggering logic which are intended for when the player walks in.
             _shouldIgnoreNextPlayerEntryTrigger = true;
         }
@@ -125,9 +125,9 @@ namespace Teleporter
         /// </summary>
         private void OnDrawGizmosSelected()
         {
-            Gizmos.DrawWireSphere(_landingPoint, 0.2f); // Indicate own landingPoint
-            Gizmos.DrawSphere(targetTeleporter._landingPoint, 0.3f); // Indicate target landingPoint
-            Gizmos.DrawLine(_landingPoint, targetTeleporter._landingPoint); // Indicate which portals is targeted
+            Gizmos.DrawWireSphere(LandingPoint, 0.2f); // Indicate own landingPoint
+            Gizmos.DrawSphere(targetTeleporter.LandingPoint, 0.3f); // Indicate target landingPoint
+            Gizmos.DrawLine(LandingPoint, targetTeleporter.LandingPoint); // Indicate which portals is targeted
         }
     }
 }
