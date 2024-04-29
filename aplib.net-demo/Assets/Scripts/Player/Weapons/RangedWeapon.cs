@@ -30,8 +30,8 @@ public class RangedWeapon : Weapon
             if (!hit.collider.CompareTag("Enemy"))
                 break;
 
-            // Check if the enemy has a DummyEnemy component.
-            DummyEnemy enemy = hit.collider.GetComponentInParent<DummyEnemy>();
+            // Check if the enemy has an AbstractEnemy component.
+            AbstractEnemy enemy = hit.collider.GetComponent<AbstractEnemy>();
             if (enemy != null) enemy.TakeDamage(_damage);
         }
     }

@@ -3,11 +3,13 @@ using UnityEngine;
 /// <summary>
 /// Very basic enemy class.
 /// </summary>
+[RequireComponent(typeof(PathFind))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
     [SerializeField] protected int _maxHealth = 100;
     [SerializeField] protected int _damagePoints = 25;
     public int Health { get; protected set; }
+    private PathFind _pathFind;
 
     /// <summary>
     /// Initializes the enemy's health to the maximum value.
@@ -15,6 +17,7 @@ public abstract class AbstractEnemy : MonoBehaviour
     protected virtual void Awake()
     {
         Health = _maxHealth;
+        _pathFind = GetComponent<PathFind>();
     }
 
     /// <summary>
@@ -45,23 +48,20 @@ public abstract class AbstractEnemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Deals damage to the player.
+    /// Deals damage to a target.
+    /// (Player does not have health yet!)
     /// </summary>
-    protected virtual int DealDamage()
+    protected virtual void DealDamage(Object target)
     {
-        return _damagePoints;
+        // TODO:: implement when Health component is added
+        // target.TakeDamage(_damagePoints);
     }
 
     /// <summary>
-    /// Call this to pathfind to the player.
+    /// Update the pathfinding agent.
     /// </summary>
-    protected virtual void PathFindToEnemy()
-    {
-        // do this through navmesh
-    }
-
     protected virtual void Update()
     {
-        PathFindToEnemy();
+        _pathFind.UpdateAgent();
     }
 }
