@@ -1,8 +1,5 @@
 public class Key : Item
 {
-    /*
-  TODO  change the door collision to check the list in the inventory
-     */
     /// <summary>
     /// The key ID, to check which door it can open
     /// </summary>

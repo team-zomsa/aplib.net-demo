@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour
     public GameObject inventoryObject;
 
     /// <summary>
-    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons
+    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
     /// </summary>
     private void Start()
     {
@@ -29,7 +29,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory;
+    /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory.
     /// </summary>
     /// <param name="item">The item that is fed into the inventory</param>
     /// <param name="uses">the amount of uses that are added upon pickup</param>
@@ -63,15 +63,15 @@ public class Inventory : MonoBehaviour
         }
     }
     /// <summary>
-    /// Adds the picked up key to the keychain
+    /// Adds the picked up key to the keychain.
     /// </summary>
     /// <param name="key">the picked up key</param>
     public void PickUpKey(Key key) => _keyRing.Add(key);
 
     /// <summary>
-    /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed
+    /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed.
     /// </summary>
-    /// <param name="doorId">The Id of the inputted door that is then checked against all the keys in the keyring</param>
+    /// <param name="doorId">The Id of the inputted door that is then checked against all the keys in the keyring.</param>
     /// <returns></returns>
     public bool KeyQuery(int doorId)
     {
@@ -89,7 +89,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the icon to the next item in the queue
+    /// Activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the icon to the next item in the queue.
     /// </summary>
     public void ActivateItem()
     {
