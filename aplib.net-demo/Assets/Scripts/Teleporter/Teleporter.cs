@@ -13,21 +13,24 @@ namespace Teleporter
         /// The duration of the delay before the player gets teleported.
         /// </summary>
         [Header("Parameters")]
-        public float teleportWindUpTime = 2f;
+        [SerializeField]
+        private float teleportWindUpTime = 2f;
 
         /// <summary>
         /// An offset from this teleporter's position, on which the player will be teleported to when teleporting to this
         /// teleporter.
         /// </summary>
-        public Vector3 landingPointOffset = new(0, 1, 0);
+        [SerializeField]
+        private Vector3 landingPointOffset = new(0, 1, 0);
 
         /// <summary>
         /// A reference to the FX parent gameobject, containing all special effects of the teleporter to be
         /// activated during wind up.
         /// </summary>
         [Header("References")]
-        public GameObject FX;
-        
+        [SerializeField]
+        private GameObject FX;
+
         /// <summary>
         /// The teleporter to which the player must be teleported. This is a one-directional link. To be bidirectional,
         /// the target teleported must target this teleporter as back.
