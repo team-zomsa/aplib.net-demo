@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class AbstractEnemy : MonoBehaviour
 {
     [SerializeField] protected int _maxHealth = 100;
+    [SerializeField] protected int _damagePoints = 25;
     public int Health { get; protected set; }
 
     /// <summary>
@@ -41,5 +42,26 @@ public abstract class AbstractEnemy : MonoBehaviour
     protected virtual void Die()
     {
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Deals damage to the player.
+    /// </summary>
+    protected virtual int DealDamage()
+    {
+        return _damagePoints;
+    }
+
+    /// <summary>
+    /// Call this to pathfind to the player.
+    /// </summary>
+    protected virtual void PathFindToEnemy()
+    {
+        // do this through navmesh
+    }
+
+    protected virtual void Update()
+    {
+        PathFindToEnemy();
     }
 }
