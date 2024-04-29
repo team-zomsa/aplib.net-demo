@@ -1,13 +1,21 @@
 using System.Collections.Generic;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a straight tile.
+    /// <para/>
+    /// Default orientation (north):
+    /// <code>
+    ///
+    ///  front
+    ///    ↑
     /// ___ ___
     /// | | | |
     /// | | | |
     /// |_| |_|
+    /// </code>
     /// </summary>
     public class Straight : Tile
     {
@@ -15,13 +23,12 @@ namespace Assets.Scripts.Tiles
         /// Initializes a new instance of the <see cref="Straight"/> class.
         /// The default is a vertical tile.
         /// </summary>
-        /// <param name="rotate">The amount of times to rotate the tile.</param>
-        public Straight(int rotate = 0)
+        /// <param name="facing">The direction in which the front of the tile should face.</param>
+        public Straight(Direction facing = North)
         {
-            Rotation = rotate;
-            bool isVertical = rotate % 2 == 0;
+            Facing = facing;
 
-            AllowedDirections = new List<bool> { isVertical, !isVertical, isVertical, !isVertical };
+            ConnectingDirections = new List<Direction> { facing, facing.Opposite() };
         }
     }
 }

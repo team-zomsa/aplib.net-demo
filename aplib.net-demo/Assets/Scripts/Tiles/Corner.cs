@@ -1,31 +1,33 @@
 using System.Collections.Generic;
+using static Assets.Scripts.Tiles.Direction;
 
 namespace Assets.Scripts.Tiles
 {
     /// <summary>
     /// Represents a corner tile.
+    /// <para/>
+    /// Default orientation (north):
+    /// <code>
+    ///
+    ///  front
+    ///    ↑
     /// ___ ___
-    /// | | |_|
-    /// | |____
+    /// |_| | |
+    /// ____| |
     /// |_____|
+    /// </code>
     /// </summary>
     public class Corner : Tile
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Corner"/> class.
-        /// The default is a top-right corner.
+        /// The default is a top-left corner.
         /// </summary>
-        /// <param name="rotate">The amount of times to rotate the tile.</param>
-        public Corner(int rotate = 0)
+        /// <param name="facing">The direction in which the front of the tile should face.</param>
+        public Corner(Direction facing = North)
         {
-            Rotation = rotate;
-            AllowedDirections = new List<bool> { false, false, false, false };
-
-            int index = rotate % 4;
-            int nextIndex = (index + 1) % 4;
-
-            AllowedDirections[index] = true;
-            AllowedDirections[nextIndex] = true;
+            Facing = facing;
+            ConnectingDirections = new List<Direction> { facing, facing.RotateLeft() };
         }
     }
 }

@@ -9,16 +9,14 @@ public class Inventory : MonoBehaviour
     private List<Key> _keyRing;
     public float inventorySize;
     /// <summary>
-    /// The RawImage is the object on which the icon texture is projected
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
     /// </summary>
-    public RawImage icon;
+    private RawImage _inventoryIndicator;
     /// <summary>
-    /// the texture of the icon object
+    /// The texture of the _inventoryIndicator object.
     /// </summary>
-    public Texture iconTexture;
+    public Texture emptyInventoryImage;
     public GameObject inventoryObject;
-
-    //here you would add all the possible items you can add, you add them to the inventory by calling PickUpItem method with the right item
 
     /// <summary>
     /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons
@@ -55,17 +53,18 @@ public class Inventory : MonoBehaviour
     /// <param name="uses">the amount of uses that are added upon pickup</param>
     public void PickUpItem(Item item, float uses = 1)
     {
-        float queueSize = _itemList.Count();
         bool alreadyInInventory = false;
-        for (int i = 0; i < queueSize; i++)
+        List<Item> _tempItemList = _itemList.ToList();
+        for (int i = 0; i < _itemList.Count; i++)
         {
-            if (_itemList.ToList()[i].name == item.name)
+            if (_tempItemList[i].name == item.name)
             {
-                if (item.stackable)
-                {
-                    _itemList.ToList()[i].uses += uses;
-                    alreadyInInventory = true;
-                    break;
+                if (!item.stackable)
+                    return;
+
+                _tempItemList[i].uses += uses;
+                alreadyInInventory = true;
+                break;
                 }
                 else
                 {
@@ -113,27 +112,23 @@ public class Inventory : MonoBehaviour
     public void ActivateItem()
     {
 
-        if (_itemList.Count() > 0)
+        if (_itemList.Any())
         {
             _itemList.Peek().UseItem();
 
             if (_itemList.Peek().uses == 0)
-            {
-                _itemList.Peek().Reset();
                 _ = _itemList.Dequeue();
-            }
         }
 
         DisplayItem();
-
     }
 
     /// <summary>
-    /// Puts the first item you have in the last slot;
+    /// Puts the first item you have in the last slot.
     /// </summary>
     public void SwitchItem()
     {
-        if (_itemList.Count > 0)
+        if (_itemList.Any())
         {
             _itemList.Enqueue(_itemList.Dequeue());
             DisplayItem();
@@ -141,7 +136,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Fetches the icon of the first item in the queue and makes it the texture of the displayed image
+    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
     /// </summary>
-    public void DisplayItem() => icon.texture = _itemList.Count == 0 ? iconTexture : _itemList.Peek().iconTexture;
+    public void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }
