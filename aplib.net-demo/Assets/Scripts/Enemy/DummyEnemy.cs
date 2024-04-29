@@ -10,9 +10,13 @@ public class DummyEnemy : AbstractEnemy
     /// The spawn area for the enemy. 
     /// </summary>
     [SerializeField] private Area _spawnArea;
-    private Bounds _spawnBounds;
     [SerializeField] private bool _respawn;
+    private Bounds _spawnBounds;
 
+    /// <summary>
+    /// Set the spawn bounds.
+    /// This needs to happen in start, because the spawn area is not initialized yet in Awake.
+    /// </summary>
     protected override void Start()
     {
         _spawnBounds = _spawnArea.Bounds;
