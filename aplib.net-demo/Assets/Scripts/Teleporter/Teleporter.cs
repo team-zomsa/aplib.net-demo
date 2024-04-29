@@ -18,7 +18,6 @@ namespace Teleporter
         /// <summary>
         /// An offset from this teleporter's position, on which the player will be teleported to when teleporting to this
         /// teleporter.
-
         /// </summary>
         public Vector3 landingPointOffset = new(0, 1, 0);
 
