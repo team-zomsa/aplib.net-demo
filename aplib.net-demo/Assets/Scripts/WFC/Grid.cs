@@ -144,7 +144,16 @@ namespace Assets.Scripts.Wfc
 
             int index = _random.Next(notFinished.Count);
             Cell cell = notFinished[index];
-            PlaceRoom(cell.X, cell.Z, new Room(new() { North, East, South, West }));
+
+            List<Direction> directions = new() { North, East, South, West };
+
+            if (cell.X == 0) directions.Remove(North);
+            else if (cell.X == Width - 1) directions.Remove(South);
+
+            if (cell.Z == 0) directions.Remove(West);
+            else if (cell.Z == Height - 1) directions.Remove(East);
+
+            PlaceRoom(cell.X, cell.Z, new Room(directions));
 
             RemoveUnconnectedNeighbourCandidates(cell);
         }

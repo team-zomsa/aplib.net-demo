@@ -273,6 +273,8 @@ MonoBehaviour:
   _tileSizeX: 16
   _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
+  _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
+    type: 3}
   _useSeed: 0
   _seed: 0
   _gridWidthX: 10
