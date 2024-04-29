@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] private MouseLock _mouseLock;
     [SerializeField] private Transform _playerTransform;
+    [SerializeField] private Inventory _inventory;
     private ResetRigidbody _playerRespawn;
     private Movement _playerMovement;
     // TODO: Change when inventory is added
@@ -21,7 +22,7 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance { get; private set; }
 
     /// <summary>
-    /// Make this class a singleton and subscribe to the player's input events.
+    /// Make this class a singleton and subscribe to the player's input events. To change controls, check Assets/Input/PlayerInput.inputactions.
     /// </summary>
     private void Awake()
     {
@@ -45,6 +46,8 @@ public class InputManager : MonoBehaviour
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
+        _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
+        _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         if (_activeWeapon)
             _playerActions.Fire.performed += _ => _activeWeapon!.UseWeapon();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
