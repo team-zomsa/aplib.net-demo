@@ -22,12 +22,12 @@ public class DummyEnemy : AbstractEnemy
         _spawnBounds = _spawnArea.Bounds;
     }
 
-    protected override void OnDeath()
+    protected override void OnDeath(HealthComponent healthComponent)
     {
         if (_respawn)
             Respawn();
         else
-            base.OnDeath();
+            base.OnDeath(healthComponent);
     }
 
     /// <summary>

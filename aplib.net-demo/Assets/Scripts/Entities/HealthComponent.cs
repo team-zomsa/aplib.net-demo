@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 /// <summary>
 /// Health component that can be added to any GameObject.
@@ -7,15 +8,39 @@ using UnityEngine;
 /// </summary>
 public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] private int _maxHealth = 100;
-    public int Health { get; private set; }
+    /// <summary>
+    /// Event that is fired when the GameObject dies.
+    /// </summary>
+    public event Action<HealthComponent> Death;
+
+    /// <summary>
+    /// Event that is fired when the GameObject is hurt, with the amount of damage taken.
+    /// </summary>
+    public event Action<HealthComponent, int> Hurt;
+
+    /// <summary>
+    /// Event that is fired when the GameObject is healed, with the amount of health restored.
+    /// </summary>
+    public event Action<HealthComponent, int> Healed;
+
+    /// <summary>
+    /// Whether the GameObject is dead.
+    /// </summary>
     public bool IsDead => Health <= 0;
+
+    /// <summary>
+    /// The current health of the GameObject.
+    /// </summary>
+    public int Health { get; private set; }
+    
+    [SerializeField]
+    private int _maxHealth = 100;
 
     private void Awake()
     {
         Health = _maxHealth;
     }
-
+    
     /// <summary>
     /// Reduces the GameObject's health by the specified amount.
     /// If the health reaches zero, the GameObject dies.
@@ -25,10 +50,16 @@ public class HealthComponent : MonoBehaviour
     public void ReduceHealth(int amount)
     {
         Health -= amount;
-        if (Health <= 0)
+        if (amount >= 0)
+            Hurt?.Invoke(this, amount);
+        else
+            Healed?.Invoke(this, -amount);
+        
+        if (IsDead)
             Die();
     }
 
+    
     /// <summary>
     /// Resets the GameObject's health to the maximum value.
     /// </summary>
@@ -43,6 +74,13 @@ public class HealthComponent : MonoBehaviour
     /// </summary>
     private void Die()
     {
-        SendMessage("OnDeath", SendMessageOptions.DontRequireReceiver);
+        Death?.Invoke(this);
+    }
+
+    private void OnDestroy()
+    {
+        Death = null;
+        Hurt = null;
+        Healed = null;
     }
 }
