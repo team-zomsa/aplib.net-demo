@@ -5343,36 +5343,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5571891225875827801, guid: f467669cc78c8714383ff9fa4bce38ef,
-        type: 3}
-      propertyPath: m_Speed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571891225875827801, guid: f467669cc78c8714383ff9fa4bce38ef,
-        type: 3}
-      propertyPath: m_StoppingDistance
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571891225875827801, guid: f467669cc78c8714383ff9fa4bce38ef,
-        type: 3}
-      propertyPath: m_ObstacleAvoidanceType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6903289118291040228, guid: f467669cc78c8714383ff9fa4bce38ef,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6903289118291040228, guid: f467669cc78c8714383ff9fa4bce38ef,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6903289118291040228, guid: f467669cc78c8714383ff9fa4bce38ef,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 7480288689146226739, guid: f467669cc78c8714383ff9fa4bce38ef,
         type: 3}
       propertyPath: m_Name

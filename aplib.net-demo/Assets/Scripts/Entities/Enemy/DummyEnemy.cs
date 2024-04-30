@@ -10,7 +10,7 @@ public class DummyEnemy : AbstractEnemy
     /// The spawn area for the enemy. 
     /// </summary>
     [SerializeField] private Area _spawnArea;
-    [SerializeField] private bool _respawn;
+    [SerializeField] private bool _respawn = true;
     private Bounds _spawnBounds;
 
     /// <summary>
@@ -19,6 +19,7 @@ public class DummyEnemy : AbstractEnemy
     /// </summary>
     protected override void Start()
     {
+        _spawnArea ??= GetComponentInParent<Area>();
         _spawnBounds = _spawnArea.Bounds;
     }
 
