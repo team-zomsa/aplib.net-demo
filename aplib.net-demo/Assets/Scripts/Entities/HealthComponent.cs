@@ -76,11 +76,4 @@ public class HealthComponent : MonoBehaviour
     {
         Death?.Invoke(this);
     }
-
-    private void OnDestroy()
-    {
-        Death = null;
-        Hurt = null;
-        Healed = null;
-    }
 }
