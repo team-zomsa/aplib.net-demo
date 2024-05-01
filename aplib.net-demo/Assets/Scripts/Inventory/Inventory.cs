@@ -63,9 +63,9 @@ public class Inventory : MonoBehaviour
         }
     }
     /// <summary>
-    /// Adds the picked up key to the keychain.
+    /// Adds a key to the keychain.
     /// </summary>
-    /// <param name="key">the picked up key</param>
+    /// <param name="key">The key to be stored.</param>
     public void StoreKey(Key key) => _keyRing.Add(key);
 
     /// <summary>
