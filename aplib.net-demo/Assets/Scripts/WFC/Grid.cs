@@ -147,11 +147,11 @@ namespace Assets.Scripts.Wfc
 
             List<Direction> directions = new() { North, East, South, West };
 
-            if (cell.X == 0) directions.Remove(North);
-            else if (cell.X == Width - 1) directions.Remove(South);
+            if (cell.X == 0) directions.Remove(West);
+            else if (cell.X == Width - 1) directions.Remove(East);
 
-            if (cell.Z == 0) directions.Remove(West);
-            else if (cell.Z == Height - 1) directions.Remove(East);
+            if (cell.Z == 0) directions.Remove(South);
+            else if (cell.Z == Height - 1) directions.Remove(North);
 
             PlaceRoom(cell.X, cell.Z, new Room(directions));
 
