@@ -8,6 +8,7 @@ using UnityEngine;
 public abstract class AbstractEnemy : MonoBehaviour
 {
     [SerializeField] protected int _damagePoints = 25;
+    [SerializeField] protected string _targetTag = "Player";
     protected HealthComponent _healthComponent;
     protected PathFind _pathFind;
 
@@ -17,6 +18,7 @@ public abstract class AbstractEnemy : MonoBehaviour
     protected virtual void Awake()
     {
         _pathFind = GetComponent<PathFind>();
+        _pathFind.TagToFind = _targetTag;
         _healthComponent = GetComponent<HealthComponent>();
         _healthComponent.Death += OnDeath;
         _healthComponent.Healed += OnHealed;

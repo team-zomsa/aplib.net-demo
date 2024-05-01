@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -48,14 +49,23 @@ public class MeleeWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        UpdateHitZone();
-        foreach (Collider collider in Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-            .Where(c => c.CompareTag("Enemy")))
+        foreach (Collider collider in GetHitZone())
         {
             // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
             HealthComponent enemy = collider.GetComponent<HealthComponent>();
             enemy?.ReduceHealth(_damage);
         }
+    }
+
+    /// <summary>
+    /// Get the targets currently in the hitzone
+    /// </summary>
+    /// <returns>A collection of targets</returns>
+    public IEnumerable<Collider> GetHitZone()
+    {
+        UpdateHitZone();
+        return Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
+            .Where(c => c.CompareTag(_targetTag));
     }
 
     /// <summary>

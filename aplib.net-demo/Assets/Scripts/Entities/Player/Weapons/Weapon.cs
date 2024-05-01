@@ -5,5 +5,11 @@ using UnityEngine;
 /// </summary>
 public abstract class Weapon : MonoBehaviour
 {
+    [SerializeField] protected string _targetTag = "Enemy";
+    public string TargetTag
+    {
+        get => _targetTag;
+        set => _targetTag = value;
+    }
     public virtual void UseWeapon() { }
 }
