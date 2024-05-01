@@ -8,8 +8,9 @@ public class Key : Item
     /// <summary>
     /// the constructor that gives the key its Id
     /// </summary>
-    /// <param name="constrId">the Id the key is given</param>
-    public Key(int constrId) => id = constrId;
+    /// <param name="id">The ID the key is given.</param>
+    public Key(int id) => Id = id;
+    
     private void Start()
     {
         stackable = false;
