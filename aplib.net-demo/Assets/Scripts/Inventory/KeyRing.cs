@@ -5,10 +5,6 @@ public class KeyRing : MonoBehaviour
 {
     private List<Key> _keyRing;
 
-    /// <summary>
-    /// Creates the keyring
-    /// </summary>
-    private void Start() => _keyRing = new List<Key>();
 
     /// <summary>
     /// Adds a key to the keychain.
