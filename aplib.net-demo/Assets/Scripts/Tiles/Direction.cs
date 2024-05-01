@@ -5,9 +5,24 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public enum Direction
     {
-        North = 0, // The positive z-direction.
-        East = 1, // The poritive x-direction.
+        /// <summary>
+        /// The positive z-direction.
+        /// </summary>
+        North = 0,
+
+        /// <summary>
+        /// The positive x-direction.
+        /// </summary>
+        East = 1,
+
+        /// <summary>
+        /// The negative z-direction.
+        /// </summary>
         South = 2,
+
+        /// <summary>
+        /// The negative x-direction.
+        /// </summary>
         West = 3
     }
 
