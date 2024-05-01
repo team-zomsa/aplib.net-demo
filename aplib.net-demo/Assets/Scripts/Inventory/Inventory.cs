@@ -89,7 +89,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the icon to the next item in the queue.
+    /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new item is selected.
     /// </summary>
     public void ActivateItem()
     {
