@@ -6,7 +6,7 @@ public class Key : Item
     public int Id { get; private set; }
     
     /// <summary>
-    /// the constructor that gives the key its Id
+    /// Initializes a key with a given ID.
     /// </summary>
     /// <param name="id">The ID the key is given.</param>
     public Key(int id) => Id = id;
