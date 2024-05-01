@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     private Queue<Item> _itemList;
-    private List<Key> _keyRing;
     public float inventorySize;
     /// <summary>
     /// The RawImage is the object on which the _inventoryIndicator texture is projected.
@@ -25,7 +24,6 @@ public class Inventory : MonoBehaviour
     {
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
-        _keyRing = new List<Key>();
     }
 
     /// <summary>
@@ -55,37 +53,11 @@ public class Inventory : MonoBehaviour
             }
         }
 
-
         if (!alreadyInInventory && _itemList.Count < inventorySize)
         {
             _itemList.Enqueue(item);
             DisplayItem();
         }
-    }
-    /// <summary>
-    /// Adds a key to the keychain.
-    /// </summary>
-    /// <param name="key">The key to be stored.</param>
-    public void StoreKey(Key key) => _keyRing.Add(key);
-
-    /// <summary>
-    /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed.
-    /// </summary>
-    /// <param name="doorId">The ID of the inputted door that is then checked against all the keys in the keyring.</param>
-    /// <returns></returns>
-    public bool KeyQuery(int doorId)
-    {
-        foreach (Key k in _keyRing)
-        {
-            if (k.id == doorId)
-            {
-                _ = _keyRing.Remove(k);
-                return true;
-            }
-        }
-
-        return false;
-
     }
 
     /// <summary>
