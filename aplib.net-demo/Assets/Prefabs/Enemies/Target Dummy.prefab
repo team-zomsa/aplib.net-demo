@@ -162,8 +162,9 @@ GameObject:
   - component: {fileID: 1418525110766382054}
   - component: {fileID: 4590109529191846469}
   - component: {fileID: 5571891225875827801}
-  - component: {fileID: 1787987632429940786}
-  - component: {fileID: 1904885426386081571}
+  - component: {fileID: 887001559674557453}
+  - component: {fileID: 6183104069211195236}
+  - component: {fileID: 4628526191064518394}
   m_Layer: 0
   m_Name: Target Dummy Body
   m_TagString: Enemy
@@ -283,7 +284,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 3
---- !u!114 &1787987632429940786
+--- !u!114 &887001559674557453
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -296,7 +297,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tagToFind: Player
---- !u!114 &1904885426386081571
+--- !u!114 &6183104069211195236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5361096258398959275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df13592fc54e30d41b6bdc56196d02c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 100
+--- !u!114 &4628526191064518394
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,7 +322,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c59c29b542ca7544b9626b77aa5b427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 100
   _damagePoints: 25
   _spawnArea: {fileID: 3563055558079486355}
   _respawn: 1
