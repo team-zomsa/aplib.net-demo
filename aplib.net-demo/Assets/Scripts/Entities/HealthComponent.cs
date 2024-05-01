@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 /// <summary>
 /// Health component that can be added to any GameObject.
@@ -32,7 +32,7 @@ public class HealthComponent : MonoBehaviour
     /// The current health of the GameObject.
     /// </summary>
     public int Health { get; private set; }
-    
+
     [SerializeField]
     private int _maxHealth = 100;
 
@@ -40,26 +40,27 @@ public class HealthComponent : MonoBehaviour
     {
         Health = _maxHealth;
     }
-    
+
     /// <summary>
     /// Reduces the GameObject's health by the specified amount.
     /// If the health reaches zero, the GameObject dies.
     /// Healing can be done by passing a negative value.
     /// </summary>
-    /// <param name="amount">The amount </param>
+    /// <param name="amount">The amount of health to be subtracted.</param> 
     public void ReduceHealth(int amount)
     {
         Health -= amount;
+
         if (amount >= 0)
             Hurt?.Invoke(this, amount);
         else
             Healed?.Invoke(this, -amount);
-        
+
         if (IsDead)
             Die();
     }
 
-    
+
     /// <summary>
     /// Resets the GameObject's health to the maximum value.
     /// </summary>
