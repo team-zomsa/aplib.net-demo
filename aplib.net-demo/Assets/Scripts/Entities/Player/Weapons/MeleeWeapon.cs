@@ -52,9 +52,9 @@ public class MeleeWeapon : Weapon
         foreach (Collider collider in Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
             .Where(c => c.CompareTag("Enemy")))
         {
-            // Check if the collider with enemy tag has an AbstractEnemy component. If so, deal damage to it. 
-            AbstractEnemy enemy = collider.GetComponent<AbstractEnemy>();
-            enemy?.TakeDamage(_damage);
+            // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
+            HealthComponent enemy = collider.GetComponent<HealthComponent>();
+            enemy?.ReduceHealth(_damage);
         }
     }
 

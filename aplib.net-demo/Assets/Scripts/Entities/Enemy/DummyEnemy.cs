@@ -10,7 +10,7 @@ public class DummyEnemy : AbstractEnemy
     /// The spawn area for the enemy. 
     /// </summary>
     [SerializeField] private Area _spawnArea;
-    [SerializeField] private bool _respawn;
+    [SerializeField] private bool _respawn = true;
     private Bounds _spawnBounds;
 
     /// <summary>
@@ -19,15 +19,16 @@ public class DummyEnemy : AbstractEnemy
     /// </summary>
     protected override void Start()
     {
+        _spawnArea ??= GetComponentInParent<Area>();
         _spawnBounds = _spawnArea.Bounds;
     }
 
-    protected override void Die()
+    protected override void OnDeath(HealthComponent healthComponent)
     {
         if (_respawn)
             Respawn();
         else
-            base.Die();
+            base.OnDeath(healthComponent);
     }
 
     /// <summary>
@@ -39,6 +40,6 @@ public class DummyEnemy : AbstractEnemy
                                           Random.Range(_spawnBounds.min.y, _spawnBounds.max.y),
                                           Random.Range(_spawnBounds.min.z, _spawnBounds.max.z));
         transform.position = randomPoint;
-        Health = _maxHealth;
+        _healthComponent.Reset();
     }
 }
