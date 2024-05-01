@@ -21,15 +21,11 @@ public class KeyRing : MonoBehaviour
     /// </summary>
     /// <param name="doorId">The ID of the inputted door that is then checked against all the keys in the keyring.</param>
     /// <returns></returns>
-    public bool KeyQuery(int doorId)
+    public bool KeyQuery(Door door)
     {
         foreach (Key k in _keyRing)
         {
-            if (k.Id == doorId)
-            {
-                _ = _keyRing.Remove(k);
-                return true;
-            }
+            _ = door.TryOpenDoor(k);
         }
 
         return false;
