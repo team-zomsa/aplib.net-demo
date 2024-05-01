@@ -71,7 +71,7 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed.
     /// </summary>
-    /// <param name="doorId">The Id of the inputted door that is then checked against all the keys in the keyring.</param>
+    /// <param name="doorId">The ID of the inputted door that is then checked against all the keys in the keyring.</param>
     /// <returns></returns>
     public bool KeyQuery(int doorId)
     {
