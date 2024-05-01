@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class KeyRing : MonoBehaviour
 {
-    private List<Key> _keyRing;
-
+    private readonly List<Key> _keyRing = new();
 
     /// <summary>
     /// Adds a key to the keychain.
