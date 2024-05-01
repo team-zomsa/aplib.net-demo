@@ -2308,6 +2308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mouseLock: {fileID: 630626820}
   _playerTransform: {fileID: 413534494}
+  _inventory: {fileID: 0}
 --- !u!4 &1105410511
 Transform:
   m_ObjectHideFlags: 0

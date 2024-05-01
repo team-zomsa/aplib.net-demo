@@ -21,7 +21,7 @@ namespace Assets.Scripts.Tiles
         /// <summary>
         /// The directions in which this tile can connect to other tiles.
         /// </summary>
-        protected List<Direction> ConnectingDirections;
+        public List<Direction> ConnectingDirections { get; protected set; }
 
         /// <summary>
         /// Checks if the tile can connect in a given direction.
