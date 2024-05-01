@@ -51,7 +51,7 @@ namespace Teleporter
         /// A reference to the coroutine running while teleporting. Stored, such that the teleporting can be cancelled.
         /// </summary>
         private Coroutine _waitThenTeleportCoroutine;
-        
+
         /// <summary>
         /// When the player gets teleported to this teleporter, you do not want logic to trigger which would normally
         /// be triggered when the player walks into the teleporter. For example, the player should not trigger this
@@ -60,7 +60,7 @@ namespace Teleporter
         private bool _shouldIgnoreNextPlayerEntryTrigger;
 
         /// <summary>
-        /// Get global GameObjet references once.
+        /// Get global GameObject references once.
         /// </summary>
         private void Start()
         {
@@ -74,8 +74,8 @@ namespace Teleporter
         private void OnTriggerEnter(Collider other)
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
-            
-            if (_shouldIgnoreNextPlayerEntryTrigger) 
+
+            if (_shouldIgnoreNextPlayerEntryTrigger)
             {
                 // Do not teleport when the player triggers this because of being teleported to this teleporter
                 _shouldIgnoreNextPlayerEntryTrigger = false;
@@ -87,7 +87,7 @@ namespace Teleporter
         }
 
         /// <summary>
-        /// Triggered when the player exits prematurely to cancel the teleport, AND when the teleport was successful
+        /// Triggered when the player exits prematurely to cancel the teleport, OR when the teleport was successful
         /// (as the player thus also exits it).
         /// </summary>
         /// <param name="other">The object which should be the player</param>
@@ -107,7 +107,7 @@ namespace Teleporter
         private IEnumerator WaitThenTeleport()
         {
             yield return new WaitForSeconds(_teleportWindUpTime);
-            
+
             // Teleport the player
             targetTeleporter.TeleportReceive(_playerTransform);
         }

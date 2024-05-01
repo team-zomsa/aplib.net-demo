@@ -33,11 +33,13 @@ namespace Tests.AplibTests
 
     public class TeleporterAplibTests
     {
+        private const string _sceneName = "TeleporterTestScene";
+
         [SetUp]
         public void SetUp()
         {
             Debug.Log($"Starting {nameof(TeleporterAplibTests)}");
-            SceneManager.LoadScene("TeleporterTestScene");
+            SceneManager.LoadScene(_sceneName);
         }
 
         [UnityTest]
@@ -54,7 +56,7 @@ namespace Tests.AplibTests
 
             Action<TeleporterBeliefSet> waitForTeleportAction = new(
                 effect: _ => { Debug.Log("Waiting for teleport..."); },
-                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Transform) beliefSet.PlayerTransform).position)
+                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Transform)beliefSet.PlayerTransform).position)
                     .magnitude < 0.4f);
 
             TransformPathfinderAction<TeleporterBeliefSet> walkOutOfTeleporter = new(
@@ -99,6 +101,13 @@ namespace Tests.AplibTests
 
             // Assert
             Assert.AreEqual(CompletionStatus.Success, agent.Status);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Debug.Log($"Finished {nameof(TeleporterAplibTests)}");
+            SceneManager.UnloadSceneAsync(_sceneName);
         }
     }
 }

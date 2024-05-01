@@ -59,7 +59,7 @@ namespace Teleporter
         }
 
         /// <summary>
-        /// (Re)set to initial state
+        /// (Re)set to initial state.
         /// </summary>
         private void OnEnable()
         {
