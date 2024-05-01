@@ -1,7 +1,7 @@
 public class Key : Item
 {
     /// <summary>
-    /// The key ID, to check which door it can open
+    /// The key ID, to check which door it can open.
     /// </summary>
     public int Id { get; private set; }
     
