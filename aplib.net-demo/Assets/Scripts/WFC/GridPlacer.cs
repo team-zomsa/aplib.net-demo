@@ -206,10 +206,10 @@ namespace Assets.Scripts.Wfc
                 // North is in the negative x direction
                 Vector3 relativeDoorPosition = direction switch
                 {
-                    North => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
-                    East => new Vector3(0, 0, doorDistanceFromRoomCenter),
-                    South => new Vector3(doorDistanceFromRoomCenter, 0, 0),
-                    West => new Vector3(0, 0, -doorDistanceFromRoomCenter),
+                    North => new Vector3(0, 0, doorDistanceFromRoomCenter),
+                    East => new Vector3(doorDistanceFromRoomCenter, 0, 0),
+                    South => new Vector3(0, 0, -doorDistanceFromRoomCenter),
+                    West => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
                     _ => throw new UnityException("Invalid direction when placing door")
                 };
                 Vector3 doorPosition = roomPosition + relativeDoorPosition;
@@ -218,7 +218,7 @@ namespace Assets.Scripts.Wfc
 
                 // The `RotateLeft` here is because the rotation of the grid and the rotation of the door model do not
                 // line up
-                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotateLeft().RotationDegrees(), 0);
+                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
                 Quaternion doorRotation = roomRotation * relativeDoorRotation;
 
                 // # Spawn the door
