@@ -31,7 +31,7 @@ public class Inventory : MonoBehaviour
     /// </summary>
     /// <param name="item">The item that is fed into the inventory</param>
     /// <param name="uses">The amount of uses that are added upon pickup.</param>
-    public void PickUpItem(Item item, float uses = 1)
+    public void PickUpItem(Item item)
     {
         bool alreadyInInventory = false;
         List<Item> _tempItemList = _itemList.ToList();
@@ -42,14 +42,9 @@ public class Inventory : MonoBehaviour
                 if (!item.stackable)
                     return;
 
-                _tempItemList[i].uses += uses;
+                _tempItemList[i].uses += item.startUses;
                 alreadyInInventory = true;
                 break;
-            }
-            else
-            {
-                DisplayItem();
-                return;
             }
         }
 
