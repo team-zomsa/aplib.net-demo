@@ -33,13 +33,15 @@ public class Door : MonoBehaviour
 
         //Once the keys and doors are given matching id's, we can use this
         /*
-                if (collidingObject.gameObject.CompareTag("Player") && collidingObject.GetComponent<KeyRing>().KeyQuery(this))
-                {
-                    Destroy(transform.parent.gameObject);
-                }*/
+          if (collidingObject.gameObject.CompareTag("Player") && collidingObject.GetComponent<KeyRing>().KeyQuery(this))
+            {
+              Destroy(transform.parent.gameObject);
+            }
+        */
     }
+
     /// <summary>
-    /// Matches the given key's ID with the door's ID, returns true if the same
+    /// Matches the given key's ID with the door's ID, returns true if the same.
     /// </summary>
     /// <param name="key">The key that is being checked for the same ID as the door</param>
     /// <returns></returns>

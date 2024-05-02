@@ -13,7 +13,6 @@ public class InputManager : MonoBehaviour
     // Doing it this way for now, change when inventory is implemented.
     [CanBeNull] private Weapon _activeWeapon;
 
-
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
     private PlayerInput.UIActions _uiActions;
@@ -53,7 +52,6 @@ public class InputManager : MonoBehaviour
             _playerActions.Fire.performed += _ => _activeWeapon!.UseWeapon();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
-
     }
 
     /// <summary>
