@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 4639094785897223686}
   - component: {fileID: 4704915512707521697}
   - component: {fileID: 4120109883158613966}
+  - component: {fileID: 926564437708444879}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -455,6 +456,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
+--- !u!114 &926564437708444879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3350569462782925553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72fc9e12715db454a865b9ad24e83cac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4312664866236832737
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,6 +623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b3854aa34cbf646a86eace240d179f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetTag: Enemy
   _damage: 25
   _height: 4
   _radius: 1.4

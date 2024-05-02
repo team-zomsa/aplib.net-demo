@@ -24,15 +24,16 @@ public class MeleeWeapon : Weapon
 
     private Vector3 _sphere1Center;
     private Vector3 _sphere2Center;
+    private IEnumerable<Collider> _targets;
 
     /// <summary>
     /// Ensure the height is at least twice the radius, because the height of the hitzone (capsule) must at least be the diameter of the spheres.
     /// (If the two spheres are at the same position, the capsule just becomes a sphere and height = 2 * radius)
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         if (_height < 2 * _radius) _height = 2 * _radius;
-        UpdateHitZone();
+        EnemiesWithinRange();
     }
 
     /// <summary>
@@ -49,23 +50,27 @@ public class MeleeWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        foreach (Collider collider in GetHitZone())
+        if (EnemiesWithinRange()) 
         {
-            // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
-            HealthComponent enemy = collider.GetComponent<HealthComponent>();
-            enemy?.ReduceHealth(_damage);
+            foreach (Collider collider in _targets)
+            {
+                // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
+                HealthComponent enemy = collider.GetComponent<HealthComponent>();
+                enemy?.ReduceHealth(_damage);
+            }
         }
     }
 
     /// <summary>
-    /// Get the targets currently in the hitzone
+    /// Whether the weapon can hit any enemies in the hitzone.
     /// </summary>
-    /// <returns>A collection of targets</returns>
-    public IEnumerable<Collider> GetHitZone()
+    /// <returns>True if there are enemies in the hitzone, false otherwise.</returns>
+    public bool EnemiesWithinRange()
     {
         UpdateHitZone();
-        return Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-            .Where(c => c.CompareTag(_targetTag));
+        _targets = Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
+                    .Where(c => c.CompareTag(TargetTag));
+        return _targets.Any();
     }
 
     /// <summary>

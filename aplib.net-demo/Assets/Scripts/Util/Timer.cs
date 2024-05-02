@@ -5,11 +5,16 @@
 public class Timer
 {
     private float _time;
-    private float _duration;
+    private readonly float _duration;
 
     public Timer(float duration)
     {
         _duration = duration;
+    }
+
+    public float GetTime()
+    {
+        return _time;
     }
 
     public void Update(float deltaTime)
