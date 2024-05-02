@@ -30,7 +30,6 @@ public class Inventory : MonoBehaviour
     /// Converts queue to list to check if there are any items with matching names. If there are it checks if they are stackable and adds uses. If they are not it does nothing. If there are not matching names it adds the item to the inventory.
     /// </summary>
     /// <param name="item">The item that is fed into the inventory.</param>
-    /// <param name="uses">The amount of uses that are added upon pickup.</param>
     public void PickUpItem(Item item)
     {
         bool alreadyInInventory = false;
