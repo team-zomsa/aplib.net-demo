@@ -6,7 +6,7 @@ public class KeyRing : MonoBehaviour
     private readonly List<Key> _keyRing = new();
 
     /// <summary>
-    /// Adds a key to the keychain.
+    /// Adds a key to the keyring.
     /// </summary>
     /// <param name="key">The key to be stored.</param>
     public void StoreKey(Key key) => _keyRing.Add(key);
@@ -16,14 +16,11 @@ public class KeyRing : MonoBehaviour
     /// </summary>
     /// <param name="doorId">The ID of the inputted door that is then checked against all the keys in the keyring.</param>
     /// <returns></returns>
-    public bool KeyQuery(Door door)
+    public void KeyQuery(Door door)
     {
         foreach (Key k in _keyRing)
         {
             _ = door.TryOpenDoor(k);
         }
-
-        return false;
-
     }
 }

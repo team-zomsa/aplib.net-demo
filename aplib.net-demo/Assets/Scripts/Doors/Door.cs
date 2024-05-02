@@ -41,7 +41,7 @@ public class Door : MonoBehaviour
     /// <summary>
     /// Matches the given key's ID with the door's ID, returns true if the same
     /// </summary>
-    /// <param name="k">The key that is being checked for the same ID as the door</param>
+    /// <param name="key">The key that is being checked for the same ID as the door</param>
     /// <returns></returns>
-    public bool TryOpenDoor(Key k) => k.Id == _doorId;
+    public bool TryOpenDoor(Key key) => key.Id == _doorId;
 }
