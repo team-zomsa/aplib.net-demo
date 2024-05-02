@@ -60,7 +60,6 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ActivateItem()
     {
-
         if (_itemList.Any())
         {
             _itemList.Peek().UseItem();
