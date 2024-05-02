@@ -7,7 +7,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class PathFind : MonoBehaviour
 {
-    [SerializeField] private string _tagToFind = "Player";
+    [SerializeField] public string TagToFind = "Player";
     private Transform _goal;
     private NavMeshAgent _agent;
 
@@ -17,9 +17,9 @@ public class PathFind : MonoBehaviour
     private void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
-        GameObject goalObject = GameObject.FindGameObjectWithTag(_tagToFind);
+        GameObject goalObject = GameObject.FindGameObjectWithTag(TagToFind);
         if (goalObject is null)
-            Debug.LogError("No object with tag " + _tagToFind + " found!");
+            Debug.LogError("No object with tag " + TagToFind + " found!");
         _goal = goalObject.transform;
     }
 

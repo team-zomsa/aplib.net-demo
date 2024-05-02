@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// This class has fuctions for ranged weapons.
@@ -9,8 +10,25 @@ using UnityEngine;
 /// </summary>
 public class RangedWeapon : Weapon
 {
+    /// <summary>
+    /// The tag of the target that the weapon can hit.
+    /// </summary>
+    [SerializeField] public string TargetTag = "Enemy";
+
+    /// <summary>
+    /// By default, assume the weapon will be fired by the player, from the camera.
+    /// </summary>
+    [SerializeField] public Transform FirePoint;
+
     [SerializeField] private int _damage = 50;
     [SerializeField] private int _range = 50;
+    private IEnumerable<RaycastHit> _orderedHits;
+
+    private void Start()
+    {
+        if (FirePoint == null)
+            FirePoint = Camera.main.transform;
+    }
 
     /// <summary>
     /// Shoots a ray from the players's position in the direction it is facing.
@@ -19,20 +37,32 @@ public class RangedWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, _range);
-
-        // Grabs all objects that collide with this line by order of closest to the player till the furthest the range will let it be.
-        IEnumerable<RaycastHit> orderedHits = hits.OrderBy(hit => hit.distance);
+        if (!EnemiesInRange())
+            return;
 
         // Will damage only enemies and the ray will stop when it hits an object that is not an enemy.
-        foreach (RaycastHit hit in orderedHits)
+        foreach (RaycastHit hit in _orderedHits)
         {
-            if (!hit.collider.CompareTag("Enemy"))
+            if (!hit.collider.CompareTag(TargetTag))
                 break;
 
             // Check if the enemy has a Health component.
             HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
             enemy?.ReduceHealth(_damage);
         }
+    }
+
+    /// <summary>
+    /// Shoot a ray from the firepoint in the direction it is facing.
+    /// Check only if the first object hit is an enemy.
+    /// </summary>
+    /// <returns>True if the first object hit is an enemy.</returns>
+    public bool EnemiesInRange()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(FirePoint.position, FirePoint.transform.forward, _range);
+        _orderedHits = hits.OrderBy(hit => hit.distance);
+        RaycastHit firstHit = _orderedHits.FirstOrDefault();
+
+        return firstHit.collider != null && firstHit.collider.CompareTag(TargetTag);
     }
 }
