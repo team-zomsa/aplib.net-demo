@@ -24,6 +24,5 @@ public class KeyRing : MonoBehaviour
         }
 
         return false;
-
     }
 }
