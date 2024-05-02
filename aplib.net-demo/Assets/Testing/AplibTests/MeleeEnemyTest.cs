@@ -22,12 +22,12 @@ namespace Tests.AplibTests
         public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("Player"), x => x);
 
         /// <summary>
-        /// The palyer Health value
+        /// The palyer Health value.
         /// </summary>
         public Belief<GameObject, HealthComponent> PlayerHealth = new(GameObject.Find("Player"), x => x.GetComponent<HealthComponent>());
 
         /// <summary>
-        /// If the enemy exists in the scene
+        /// If the enemy exists in the scene.
         /// </summary>
         public Belief<GameObject, bool> EnemyExists = new(GameObject.Find("Melee Enemy Body"), x => x != null);
 

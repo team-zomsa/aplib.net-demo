@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// Melee enemy that attacks the player when in range.
-/// It inherits from DummyEnemy to add respawn functionality 
+/// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
 public class MeleeEnemy : DummyEnemy
 {
