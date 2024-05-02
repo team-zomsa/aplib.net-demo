@@ -624,7 +624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetTag: Enemy
-  _damage: 25
+  Damage: 50
   _height: 4
   _radius: 1.4
 --- !u!1 &7098545768077989620

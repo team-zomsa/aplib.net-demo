@@ -8,7 +8,10 @@ using UnityEngine;
 /// </summary>
 public class MeleeWeapon : Weapon
 {
-    [SerializeField] private int _damage = 25;
+    /// <summary>
+    /// The amount of damage the weapon deals.
+    /// </summary>
+    [SerializeField] public int Damage = 25;
 
     /// <summary>
     /// The height of the hitzone in world units.
@@ -54,22 +57,24 @@ public class MeleeWeapon : Weapon
         {
             foreach (Collider collider in _targets)
             {
+                Debug.Log ("Found collider with tag: " + collider.name);
                 // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
                 HealthComponent enemy = collider.GetComponent<HealthComponent>();
-                enemy?.ReduceHealth(_damage);
+                enemy?.ReduceHealth(Damage);
             }
         }
     }
 
     /// <summary>
     /// Whether the weapon can hit any enemies in the hitzone.
+    /// If the multiple colliders are part of the same object, count them as one.
     /// </summary>
     /// <returns>True if there are enemies in the hitzone, false otherwise.</returns>
     public bool EnemiesWithinRange()
     {
         UpdateHitZone();
         _targets = Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-                    .Where(c => c.CompareTag(TargetTag));
+                    .Where(c => c.CompareTag(TargetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
         return _targets.Any();
     }
 

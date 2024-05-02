@@ -5298,6 +5298,11 @@ PrefabInstance:
       propertyPath: _respawnPointTransform
       value: 
       objectReference: {fileID: 1686980026}
+    - target: {fileID: 7041301678518361281, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: Damage
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalPosition.x

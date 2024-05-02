@@ -633,7 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4599e7b963b12841b4d6bec7d195031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damagePoints: 25
+  _damagePoints: 50
   _targetTag: Player
   _spawnArea: {fileID: 0}
   _respawn: 1
