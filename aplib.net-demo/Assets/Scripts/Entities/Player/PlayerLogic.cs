@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(ResetRigidbody))]
-public class Player : MonoBehaviour
+public class PlayerLogic : MonoBehaviour
 {
     private HealthComponent _healthComponent;
     private ResetRigidbody _resetRigidbody;

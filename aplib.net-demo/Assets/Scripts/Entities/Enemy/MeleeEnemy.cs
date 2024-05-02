@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Melee enemy that attacks the player when in range.
+/// It inherits from DummyEnemy to add respawn functionality 
+/// </summary>
 public class MeleeEnemy : DummyEnemy
 {
     [SerializeField] private float _attackCooldown = 2f;
