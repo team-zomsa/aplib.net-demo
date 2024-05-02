@@ -18,23 +18,21 @@ public class Inventory : MonoBehaviour
     public GameObject inventoryObject;
 
     /// <summary>
-    /// Creates the inventory queue and fetches the rawimage component to display the icons.
+    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
     /// </summary>
     private void Start()
     {
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
-        DisplayItem();
     }
 
     /// <summary>
-    /// Converts queue to list to check if there are any items with matching names.
+    /// Converts queue to list to check if there are any items with matching names. 
     /// If there are it checks if they are stackable and adds uses. If they are not it does nothing. 
-    /// If there are not matching names it adds the item to the inventory;
+    /// If there are not matching names it adds the item to the inventory.
     /// </summary>
     /// <param name="item">The item that is fed into the inventory.</param>
-    /// <param name="uses">the amount of uses that are added upon pickup.</param>
-    public void PickUpItem(Item item, float uses = 1)
+    public void PickUpItem(Item item)
     {
         bool alreadyInInventory = false;
         List<Item> _tempItemList = _itemList.ToList();
@@ -45,7 +43,7 @@ public class Inventory : MonoBehaviour
                 if (!item.stackable)
                     return;
 
-                _tempItemList[i].uses += uses;
+                _tempItemList[i].uses += item.startUses;
                 alreadyInInventory = true;
                 break;
             }
@@ -59,7 +57,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Activates the item in the first inventory slot. if uses are 0, it is also removed, then it changes the _inventoryIndicator to the next item in the queue.
+    /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new item is selected.
     /// </summary>
     public void ActivateItem()
     {
