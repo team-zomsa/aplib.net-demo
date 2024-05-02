@@ -35,7 +35,7 @@ namespace Teleporter
         /// The teleporter to which the player must be teleported. This is a one-directional link. To be bidirectional,
         /// the target teleported must target this teleporter as back.
         /// </summary>
-        public Teleporter targetTeleporter;
+        public Teleporter targetTeleporter { get; set; }
 
         /// <summary>
         /// The absolute position to which the player will be teleported to when teleporting to this teleporter.
@@ -65,6 +65,7 @@ namespace Teleporter
         private void Start()
         {
             _playerTransform = GameObject.FindWithTag("Player").transform;
+            if (_playerTransform == null) Debug.LogError("No player was found.");
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Tiles;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
 using Random = System.Random;
@@ -65,6 +66,9 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         [SerializeField]
         private int _amountOfRooms = 5;
+
+        [SerializeField]
+        private GameObject _teleporterPrefab;
 
         /// <summary>
         /// Represents the grid.
@@ -228,30 +232,58 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Fist calculate the connected components of the grid, then join them with teleporters.
+        /// First calculate the connected components of the grid, then join them with teleporters.
         /// </summary>
         private void JoinConnectedComponentsWithTeleporters()
         {
-            IEnumerable<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents();
+            IList<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents().ToList();
 
-            // We draw all the connected components individually
-            foreach (ISet<Cell> connectedComponent in connectedComponents)
-            {
-                Color color = GetUnusedColor();
-                foreach (Cell cell in connectedComponent)
-                    cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
-            }
-
-            // TODO the joining of the connected components with teleporters will be done in another PR.
+            for (int i = 0; i < connectedComponents.Count - 1; i++)
+                for (int j = i + 1; j < connectedComponents.Count; j++) // Binomial product of connected components
+                    ConnectConnectedComponentsWithTeleporters(connectedComponents[i], connectedComponents[j]);
         }
 
-        // Here are temporary helper methods used to display the connected components in different colors.
-        private static readonly Color[] _colors =
+        /// <summary>
+        /// Given two connected components, this method will connect these two <i><b>even more</b></i>.
+        /// It will place a teleporter between them, making navigation in both directions possible.
+        /// </summary>
+        /// <param name="connectedComponent1">Arbitrary connected component 1</param>
+        /// <param name="connectedComponent2">Arbitrary connected component 2, but not different from <paramref name="connectedComponent1"/>.</param>
+        private void ConnectConnectedComponentsWithTeleporters(IEnumerable<Cell> connectedComponent1, IEnumerable<Cell> connectedComponent2)
         {
-            Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan
-        };
+            // if (connectedComponent1.Count < 2 || connectedComponent2.Count < 2) TODO
+            // {
+            //     throw new NotSupportedException(
+            //         "A connected component consisting of a single cell can not be ensured to have one telepoter.");
+            // }
 
-        private static int _colorIndex = -1;
-        private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
+            // Determine which cells to connect
+            Cell cell1 = connectedComponent1.First();
+            Cell cell2 = connectedComponent2.Last(); // Last as opposed to first, to ensure that a single room only has one portal
+
+            ConnectCellsWithTeleporters(cell1, cell2);
+        }
+
+        private void ConnectCellsWithTeleporters(Cell a, Cell b)
+        {
+            Teleporter.Teleporter teleporterA = PlaceTeleporter(CentreOfCell(a));
+            Teleporter.Teleporter teleporterB = PlaceTeleporter(CentreOfCell(b));
+
+            teleporterA.targetTeleporter = teleporterB;
+            teleporterB.targetTeleporter = teleporterA;
+        }
+
+        private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
+        {
+            // Give all teleporters a parent object for organization
+            GameObject teleportersParent = GameObject.Find("Teleporters");
+            if (teleportersParent == null)
+                teleportersParent = new GameObject("Teleporters");
+
+            return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
+                .GetComponent<Teleporter.Teleporter>();
+        }
+
+        public Vector3 CentreOfCell(Cell cell) => new((cell.X + .0f) * _tileSizeX, 0, (cell.Z + .0f) * _tileSizeZ);
     }
 }
