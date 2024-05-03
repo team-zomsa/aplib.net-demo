@@ -232,58 +232,59 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// First calculate the connected components of the grid, then join them with teleporters.
+        /// Linearly connect all connected components, such that every teleporter is a one-way ticket to the next connected component.
+        /// The last teleporter is connected to itself, to indicate that it should not teleport the player anywhere.
         /// </summary>
+        /// <remarks>Assumes there is at least one non-empty cell and thus at least one connected component.</remarks>
         private void JoinConnectedComponentsWithTeleporters()
         {
-            IList<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents().ToList();
+            Vector3 teleporterHeightOffset = Vector3.up * 0.7f;
+            using IEnumerator<ISet<Cell>> connectedComponentsEnumerator = _grid.DetermineConnectedComponents().GetEnumerator();
+            Teleporter.Teleporter previousTeleporter = null;
+            int placedTeleporters = 0;
 
-            for (int i = 0; i < connectedComponents.Count - 1; i++)
-                for (int j = i + 1; j < connectedComponents.Count; j++) // Binomial product of connected components
-                    ConnectConnectedComponentsWithTeleporters(connectedComponents[i], connectedComponents[j]);
+            while (connectedComponentsEnumerator.MoveNext())
+            {
+                Cell nextCell = connectedComponentsEnumerator.Current!.Last();
+                Teleporter.Teleporter nextTeleporter = PlaceTeleporter(CentreOfCell(nextCell) + teleporterHeightOffset);
+
+                if (previousTeleporter != null) // If this is not the first iteration
+                    previousTeleporter.targetTeleporter = nextTeleporter;
+                previousTeleporter = nextTeleporter;
+
+                placedTeleporters++;
+            }
+
+            // Explicitly do not target the final teleporter to another one.
+            previousTeleporter!.targetTeleporter = previousTeleporter; // Assumes there is at least one connected component.
+
+            if (placedTeleporters == 1)
+            {
+                // If there is only one connected component, there is no need for teleporters.
+                Destroy(previousTeleporter.gameObject);
+            }
         }
 
         /// <summary>
-        /// Given two connected components, this method will connect these two <i><b>even more</b></i>.
-        /// It will place a teleporter between them, making navigation in both directions possible.
+        /// Places a teleporter at a given location.
         /// </summary>
-        /// <param name="connectedComponent1">Arbitrary connected component 1</param>
-        /// <param name="connectedComponent2">Arbitrary connected component 2, but not different from <paramref name="connectedComponent1"/>.</param>
-        private void ConnectConnectedComponentsWithTeleporters(IEnumerable<Cell> connectedComponent1, IEnumerable<Cell> connectedComponent2)
-        {
-            // if (connectedComponent1.Count < 2 || connectedComponent2.Count < 2) TODO
-            // {
-            //     throw new NotSupportedException(
-            //         "A connected component consisting of a single cell can not be ensured to have one telepoter.");
-            // }
-
-            // Determine which cells to connect
-            Cell cell1 = connectedComponent1.First();
-            Cell cell2 = connectedComponent2.Last(); // Last as opposed to first, to ensure that a single room only has one portal
-
-            ConnectCellsWithTeleporters(cell1, cell2);
-        }
-
-        private void ConnectCellsWithTeleporters(Cell a, Cell b)
-        {
-            Teleporter.Teleporter teleporterA = PlaceTeleporter(CentreOfCell(a));
-            Teleporter.Teleporter teleporterB = PlaceTeleporter(CentreOfCell(b));
-
-            teleporterA.targetTeleporter = teleporterB;
-            teleporterB.targetTeleporter = teleporterA;
-        }
-
+        /// <param name="coordinates">The coordinates of the teleporter.</param>
+        /// <returns>A reference to the <see cref="Teleporter.Teleporter"/> component of the teleporter.</returns>
+        /// <remarks>All teleporters are clustered under a 'Teleporter' empty gameobject.</remarks>
         private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
         {
             // Give all teleporters a parent object for organization
-            GameObject teleportersParent = GameObject.Find("Teleporters");
-            if (teleportersParent == null)
-                teleportersParent = new GameObject("Teleporters");
+            GameObject teleportersParent = GameObject.Find("Teleporters") ?? new GameObject("Teleporters");
 
             return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
                 .GetComponent<Teleporter.Teleporter>();
         }
 
-        public Vector3 CentreOfCell(Cell cell) => new((cell.X + .0f) * _tileSizeX, 0, (cell.Z + .0f) * _tileSizeZ);
+        /// <summary>
+        /// Calculates the centre of a cell's floor in world coordinates.
+        /// </summary>
+        /// <param name="cell">The cell to calculate its centre of.</param>
+        /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
+        public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
     }
 }

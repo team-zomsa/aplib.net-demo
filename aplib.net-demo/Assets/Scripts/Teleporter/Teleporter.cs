@@ -76,6 +76,14 @@ namespace Teleporter
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
 
+            if (targetTeleporter == null)
+            {
+                Debug.LogError("No target teleporter set for this teleporter. Won't teleport.");
+            }
+
+            // Prevent teleporting to self. Can be used to mark this teleporter as not targeting another one explicitly.
+            if (targetTeleporter == GetComponent<Teleporter>()) return;
+
             if (_shouldIgnoreNextPlayerEntryTrigger)
             {
                 // Do not teleport when the player triggers this because of being teleported to this teleporter
