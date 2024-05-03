@@ -67,6 +67,9 @@ namespace Assets.Scripts.Wfc
         [SerializeField]
         private int _amountOfRooms = 5;
 
+        /// <summary>
+        /// The teleporter prefab, used to link connected components.
+        /// </summary>
         [SerializeField]
         private GameObject _teleporterPrefab;
 
@@ -111,6 +114,8 @@ namespace Assets.Scripts.Wfc
             PlaceGrid();
 
             JoinConnectedComponentsWithTeleporters();
+
+            PlacePlayer();
         }
 
         /// <summary>
@@ -232,36 +237,50 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Linearly connect all connected components, such that every teleporter is a one-way ticket to the next connected component.
+        /// Linearly connect all connected components, such that every connected component has two bidirectional teleporters.
         /// The last teleporter is connected to itself, to indicate that it should not teleport the player anywhere.
         /// </summary>
-        /// <remarks>Assumes there is at least one non-empty cell and thus at least one connected component.</remarks>
+        /// <remarks>Assumes that every connected component has at least two cells.</remarks>
         private void JoinConnectedComponentsWithTeleporters()
         {
-            Vector3 teleporterHeightOffset = Vector3.up * 0.7f;
+            // Prepare some variables
+            Vector3 teleporterHeightOffset = Vector3.up * 0.7f; // Distance from the floor
             using IEnumerator<ISet<Cell>> connectedComponentsEnumerator = _grid.DetermineConnectedComponents().GetEnumerator();
-            Teleporter.Teleporter previousTeleporter = null;
-            int placedTeleporters = 0;
 
+            Teleporter.Teleporter previousExitTeleporter = null;
+            int connectedComponentsProcessed = 0;
+
+            // Keep connecting the next connected component with the previous one, by placing a pair of teleporters.
             while (connectedComponentsEnumerator.MoveNext())
             {
-                Cell nextCell = connectedComponentsEnumerator.Current!.Last();
-                Teleporter.Teleporter nextTeleporter = PlaceTeleporter(CentreOfCell(nextCell) + teleporterHeightOffset);
+                // Link current and previous connected component bidirectionally,
+                // if the current connected component is not the first connected component
+                if (connectedComponentsProcessed > 0)
+                {
+                    // Place an entry teleporter, so that the previous connected component can be linked through this teleporter.
+                    Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
+                    Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + teleporterHeightOffset);
 
-                if (previousTeleporter != null) // If this is not the first iteration
-                    previousTeleporter.targetTeleporter = nextTeleporter;
-                previousTeleporter = nextTeleporter;
+                    // Link the entry teleporter back to the previous connected component, bidirectionally.
+                    previousExitTeleporter!.targetTeleporter = entryTeleporter;
+                    entryTeleporter.targetTeleporter = previousExitTeleporter;
+                }
 
-                placedTeleporters++;
+                // Place the exit teleporter of the current connected component at the end of the connected component.
+                // (Assuming that the connected component has at least two cells, `nextExitCell` will never equal `nextEntryCell`)
+                Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
+                Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + teleporterHeightOffset);
+
+                // Update iteration progress
+                previousExitTeleporter = exitTeleporter;
+                connectedComponentsProcessed++;
             }
 
-            // Explicitly do not target the final teleporter to another one.
-            previousTeleporter!.targetTeleporter = previousTeleporter; // Assumes there is at least one connected component.
-
-            if (placedTeleporters == 1)
+            // If at least one exit portal has been placed, the final exit teleporter will not be linked to
+            // another connected component, for this final exit teleporter belongs to the final connected component.
+            if (connectedComponentsProcessed > 0)
             {
-                // If there is only one connected component, there is no need for teleporters.
-                Destroy(previousTeleporter.gameObject);
+                Destroy(previousExitTeleporter!.gameObject);
             }
         }
 
@@ -269,7 +288,7 @@ namespace Assets.Scripts.Wfc
         /// Places a teleporter at a given location.
         /// </summary>
         /// <param name="coordinates">The coordinates of the teleporter.</param>
-        /// <returns>A reference to the <see cref="Teleporter.Teleporter"/> component of the teleporter.</returns>
+        /// <returns>A reference to the <see cref="Teleporter"/> component of the teleporter.</returns>
         /// <remarks>All teleporters are clustered under a 'Teleporter' empty gameobject.</remarks>
         private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
         {
@@ -286,5 +305,10 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to calculate its centre of.</param>
         /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
         public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
+
+        private void PlacePlayer()
+        {
+
+        }
     }
 }
