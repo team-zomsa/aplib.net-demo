@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4699750310654139305}
   m_Layer: 0
   m_Name: Backpack
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -457,7 +457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetTag: Enemy
-  _damage: 25
+  Damage: 25
   _height: 4
   _radius: 1.4
 --- !u!1 &6690696244981897467

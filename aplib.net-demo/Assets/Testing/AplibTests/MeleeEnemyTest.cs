@@ -50,11 +50,20 @@ namespace Tests.AplibTests
     /// </summary>
     public class MeleeEnemyAplibTest
     {
+        private string _sceneName = "MeleeEnemyTestScene";
+
         [SetUp]
         public void SetUp()
         {
-            Debug.Log("Starting test MeleeEnemyTest");
-            SceneManager.LoadScene("MeleeEnemyTestScene");
+            Debug.Log($"Starting {nameof(MeleeEnemyAplibTest)}");
+            SceneManager.LoadScene(_sceneName);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Debug.Log($"Finished {nameof(MeleeEnemyAplibTest)}");
+            SceneManager.UnloadSceneAsync(_sceneName);
         }
 
         [UnityTest]

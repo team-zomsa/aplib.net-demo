@@ -57,7 +57,6 @@ public class MeleeWeapon : Weapon
         {
             foreach (Collider collider in _targets)
             {
-                Debug.Log ("Found collider with tag: " + collider.name);
                 // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
                 HealthComponent enemy = collider.GetComponent<HealthComponent>();
                 enemy?.ReduceHealth(Damage);
