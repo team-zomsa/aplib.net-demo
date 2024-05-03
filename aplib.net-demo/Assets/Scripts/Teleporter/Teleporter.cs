@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Teleporter
 {
@@ -35,6 +36,7 @@ namespace Teleporter
         /// The teleporter to which the player must be teleported. This is a one-directional link. To be bidirectional,
         /// the target teleported must target this teleporter as back.
         /// </summary>
+        [field: SerializeField]
         public Teleporter targetTeleporter { get; set; }
 
         /// <summary>
@@ -138,8 +140,11 @@ namespace Teleporter
         private void OnDrawGizmosSelected()
         {
             Gizmos.DrawWireSphere(LandingPoint, 0.2f); // Indicate own landingPoint
-            Gizmos.DrawSphere(targetTeleporter.LandingPoint, 0.3f); // Indicate target landingPoint
-            Gizmos.DrawLine(LandingPoint, targetTeleporter.LandingPoint); // Indicate which portals is targeted
+            if (targetTeleporter != null)
+            {
+                Gizmos.DrawSphere(targetTeleporter.LandingPoint, 0.3f); // Indicate target landingPoint
+                Gizmos.DrawLine(LandingPoint, targetTeleporter.LandingPoint); // Indicate which portals is targeted
+            }
         }
     }
 }

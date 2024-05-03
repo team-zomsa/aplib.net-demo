@@ -11,7 +11,17 @@ PrefabInstance:
     - target: {fileID: 3350569462782925553, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: ConnectingConnectedComponents
+      objectReference: {fileID: 0}
+    - target: {fileID: 6254012458074700434, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 183
+      objectReference: {fileID: 0}
+    - target: {fileID: 6254012458074700434, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
