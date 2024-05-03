@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
+using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
 using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
@@ -13,6 +14,11 @@ namespace Assets.Scripts.Wfc
     /// </summary>
     public class GridPlacer : MonoBehaviour
     {
+        /// <summary>
+        /// Represents the grid.
+        /// </summary>
+        public Grid Grid { get; private set; }
+
         /// <summary>
         /// The size of the tiles in the x-direction.
         /// </summary>
@@ -74,11 +80,6 @@ namespace Assets.Scripts.Wfc
         private GameObject _teleporterPrefab;
 
         /// <summary>
-        /// Represents the grid.
-        /// </summary>
-        private Grid _grid;
-
-        /// <summary>
         /// The random number generator.
         /// </summary>
         private Random _random = new();
@@ -123,21 +124,21 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void MakeGrid()
         {
-            _grid = new Grid(_gridWidthX, _gridWidthZ, _random);
+            Grid = new Grid(_gridWidthX, _gridWidthZ, _random);
 
-            _grid.Init();
+            Grid.Init();
 
             int numberOfRooms = 0;
 
             while (numberOfRooms < _amountOfRooms)
             {
-                _grid.PlaceRandomRoom();
+                Grid.PlaceRandomRoom();
                 numberOfRooms++;
             }
 
-            while (!_grid.IsFullyCollapsed())
+            while (!Grid.IsFullyCollapsed())
             {
-                List<Cell> lowestEntropyCells = _grid.GetLowestEntropyCells();
+                List<Cell> lowestEntropyCells = Grid.GetLowestEntropyCells();
 
                 int index = _random.Next(lowestEntropyCells.Count);
 
@@ -145,7 +146,7 @@ namespace Assets.Scripts.Wfc
                 cell.Tile = cell.Candidates[_random.Next(cell.Candidates.Count)];
                 cell.Candidates.Clear();
 
-                _grid.RemoveUnconnectedNeighbourCandidates(cell);
+                Grid.RemoveUnconnectedNeighbourCandidates(cell);
             }
         }
 
@@ -154,9 +155,9 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void PlaceGrid()
         {
-            for (int z = 0; z < _grid.Height; z++)
+            for (int z = 0; z < Grid.Height; z++)
             {
-                for (int x = 0; x < _grid.Width; x++) PlaceTile(x, z, _grid[x, z].Tile);
+                for (int x = 0; x < Grid.Width; x++) PlaceTile(x, z, Grid[x, z].Tile);
             }
         }
 
@@ -245,7 +246,7 @@ namespace Assets.Scripts.Wfc
         {
             // Prepare some variables
             Vector3 teleporterHeightOffset = Vector3.up * 0.7f; // Distance from the floor
-            using IEnumerator<ISet<Cell>> connectedComponentsEnumerator = _grid.DetermineConnectedComponents().GetEnumerator();
+            using IEnumerator<ConnectedComponent> connectedComponentsEnumerator = Grid.DetermineConnectedComponents().GetEnumerator();
 
             Teleporter.Teleporter previousExitTeleporter = null;
             int connectedComponentsProcessed = 0;
@@ -320,12 +321,12 @@ namespace Assets.Scripts.Wfc
             Rigidbody rigidBody = player.GetComponent<Rigidbody>();
 
             // Find the first room that is not empty and place the player there
-            for (int i = 0; i < _grid.NumberOfCells; i++)
+            for (int i = 0; i < Grid.NumberOfCells; i++)
             {
-                if (_grid[i].Tile is not Room) continue;
+                if (Grid[i].Tile is not Room) continue;
 
                 // Room found, set player position and break
-                rigidBody.position = CentreOfCell(_grid[i]) + playerHeightOffset;
+                rigidBody.position = CentreOfCell(Grid[i]) + playerHeightOffset;
                 break;
             }
         }
