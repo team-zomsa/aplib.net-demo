@@ -306,9 +306,28 @@ namespace Assets.Scripts.Wfc
         /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
         public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
+        /// <summary>
+        /// Finds the first room in the grid, and places the player in the centre of that room.
+        /// </summary>
+        /// <exception cref="UnityException">If no player is found, this step fails.</exception>
+        /// <remarks>Assumes that there is at least one room.</remarks>
         private void PlacePlayer()
         {
+            Vector3 playerHeightOffset = Vector3.up * 0.7f; // Distance from the floor
 
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player == null) throw new UnityException("No player was found.");
+            Rigidbody rigidBody = player.GetComponent<Rigidbody>();
+
+            // Find the first room that is not empty and place the player there
+            for (int i = 0; i < _grid.NumberOfCells; i++)
+            {
+                if (_grid[i].Tile is not Room) continue;
+
+                // Room found, set player position and break
+                rigidBody.position = CentreOfCell(_grid[i]) + playerHeightOffset;
+                break;
+            }
         }
     }
 }
