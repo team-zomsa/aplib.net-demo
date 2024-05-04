@@ -9,8 +9,10 @@ using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Wfc;
 using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -34,6 +36,7 @@ namespace Tests.AplibTests
             SceneManager.LoadScene(_sceneName);
         }
 
+
         /// <summary>
         /// This test first collects a single cell from every connected component.
         /// It then tries to make the player - spawning in an arbitrary room - visit every one of those cells,
@@ -43,6 +46,31 @@ namespace Tests.AplibTests
         [UnityTest]
         public IEnumerator CanVisitEveryConnectedComponent()
         {
+            // Before the tests can begin, we must generate Nev Mash Data such that path finding works. Furthermore,
+            // Nav Mesh Data from different connected components must be linked through Nav Mesh Links.
+            NavMeshBuildSettings buildSettings = NavMesh.GetSettingsByIndex(0);
+            NavMeshData navMeshData = NavMeshBuilder.BuildNavMeshData(buildSettings, collectNavMeshSources(),
+                new Bounds(Vector3.zero, new Vector3(300, 50, 300)), Vector3.zero, Quaternion.identity); // TODO make grid the bounds
+            NavMesh.AddNavMeshData(navMeshData);
+            NavMeshBuilder.UpdateNavMeshData(navMeshData, buildSettings, collectNavMeshSources(),
+                new Bounds(Vector3.zero, new Vector3(300, 50, 300)));
+
+            List<NavMeshBuildSource> collectNavMeshSources()
+            {
+                GameObject environment = GameObject.Find("Environment");
+
+                List<NavMeshBuildSource> sources = environment.GetComponentsInChildren<MeshFilter>()
+                    .Select(meshFilter => new NavMeshBuildSource // TODO exclude modivied meshes?
+                    {
+                        shape = NavMeshBuildSourceShape.Mesh,
+                        sourceObject = meshFilter.sharedMesh,
+                        transform = meshFilter.gameObject.transform.localToWorldMatrix,
+                        area = 0,
+                    }).ToList();
+
+                return sources.ToList();
+            }
+
             // Arrange
             ConnectedComponentsBeliefSet rootBeliefSet = new();
             GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
