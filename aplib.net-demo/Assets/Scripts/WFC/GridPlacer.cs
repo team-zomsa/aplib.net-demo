@@ -227,7 +227,7 @@ namespace Assets.Scripts.Wfc
                 // Spawn the door
                 GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
                 Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
-                GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, doorPosition + Vector3.forward + Vector3.up, doorRotation, transform);
+                GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, doorPosition + relativeDoorPosition * 0.4f + Vector3.up, doorRotation, transform);
                 Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
                 keyComponent.Id = doorComponent.DoorId;
             }
