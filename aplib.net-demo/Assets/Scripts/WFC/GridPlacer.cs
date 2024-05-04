@@ -37,6 +37,12 @@ namespace Assets.Scripts.Wfc
         private GameObject _doorPrefab;
 
         /// <summary>
+        /// Represents the key object.
+        /// </summary>
+        [SerializeField]
+        private GameObject _keyPrefab;
+
+        /// <summary>
         /// A boolean that indicates whether a seed is used.
         /// </summary>
         [SerializeField]
@@ -192,8 +198,10 @@ namespace Assets.Scripts.Wfc
         private void PlaceDoors(int x, int z, Room room)
         {
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
+
             // Get (half of) the depth of the door model
             float doorDepthExtend = _doorRenderer.bounds.extents.z;
+
             // Calculate the distance from the room center to where a door should be placed
             float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
 
@@ -201,9 +209,7 @@ namespace Assets.Scripts.Wfc
 
             foreach (Direction direction in room.ConnectingDirections)
             {
-                // # Calculate where the door should be placed
-
-                // North is in the negative x direction
+                // Calculate where the door should be placed
                 Vector3 relativeDoorPosition = direction switch
                 {
                     North => new Vector3(0, 0, doorDistanceFromRoomCenter),
@@ -214,16 +220,16 @@ namespace Assets.Scripts.Wfc
                 };
                 Vector3 doorPosition = roomPosition + relativeDoorPosition;
 
-                // # Calculate the rotation the door should have
-
-                // The `RotateLeft` here is because the rotation of the grid and the rotation of the door model do not
-                // line up
+                // Calculate the rotation the door should have
                 Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
                 Quaternion doorRotation = roomRotation * relativeDoorRotation;
 
-                // # Spawn the door
-
-                _ = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
+                // Spawn the door
+                GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
+                Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
+                GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, doorPosition + Vector3.forward + Vector3.up, doorRotation, transform);
+                Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
+                keyComponent.Id = doorComponent.DoorId;
             }
         }
 
