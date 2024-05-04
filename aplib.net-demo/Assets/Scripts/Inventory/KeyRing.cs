@@ -15,12 +15,19 @@ public class KeyRing : MonoBehaviour
     /// Checks the ID of all keys in the keyring against the inputted doorId, if a match is found, true is returned and the key is consumed.
     /// </summary>
     /// <param name="doorId">The ID of the inputted door that is then checked against all the keys in the keyring.</param>
-    /// <returns></returns>
-    public void KeyQuery(Door door)
+    /// <returns>True if the correct key is present otherwise False.</returns>
+    public bool KeyQuery(Door door)
     {
         foreach (Key k in _keyRing)
         {
-            _ = door.TryOpenDoor(k);
+            bool opened = door.TryOpenDoor(k);
+            if (opened)
+            {
+                _keyRing.Remove(k);
+                return true;
+            }
         }
+
+        return false;
     }
 }
