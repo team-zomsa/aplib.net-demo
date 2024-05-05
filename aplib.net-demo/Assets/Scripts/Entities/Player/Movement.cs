@@ -34,6 +34,8 @@ public class Movement : MonoBehaviour
     [SerializeField]
     private Transform _playerVisTransform;
 
+    private PlayerSound _footStep;
+
     /// <summary>
     /// Initialize the player's rigidbody and collider, and freeze the player's rotation.
     /// </summary>
@@ -41,6 +43,7 @@ public class Movement : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<CapsuleCollider>();
+        _footStep = GetComponent<PlayerSound>();
         _playerHeight = _controller.height;
         _playerRadius = _controller.radius;
         _gravity = Physics.gravity.y;
@@ -109,6 +112,10 @@ public class Movement : MonoBehaviour
 
         if (isWallColliding) HandleWallCollision(wallNormal);
         LimitVelocity(isOnSlope);
+
+        // Lastly, play a footstep sound when the player is grounded, at certain intervals
+        if (_isGrounded && _rigidbody.velocity.magnitude > 0.1f)
+            _footStep.Step();
     }
 
     /// <summary>
