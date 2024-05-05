@@ -900,7 +900,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _respawnPointTransform
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1394023845}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -940,6 +940,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1250020204}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1394023844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1394023845}
+  m_Layer: 0
+  m_Name: RespawnPoint
+  m_TagString: Respawn
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1394023845
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394023844}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 2, z: -7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1426663000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,7 +1033,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mouseLock: {fileID: 2067055331}
   _playerTransform: {fileID: 1250020207}
-  _inventory: {fileID: 0}
+  _inventory: {fileID: 134152955}
 --- !u!4 &1444036427
 Transform:
   m_ObjectHideFlags: 0
@@ -1574,3 +1605,4 @@ SceneRoots:
   - {fileID: 1455078763}
   - {fileID: 1250020204}
   - {fileID: 1151453251}
+  - {fileID: 1394023845}
