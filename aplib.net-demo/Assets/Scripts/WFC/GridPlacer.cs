@@ -112,8 +112,29 @@ namespace Assets.Scripts.Wfc
 
             PlaceGrid();
 
+            // GameObject player = GameObject.FindWithTag("Player");
+            //
+            // if (player is null)
+            // {
+            //     Debug.LogWarning("Player not found!");
+            //     return;
+            // }
+
+            // Vector3 playerHeightOffset = Vector3.up * 0.7f; // Distance from the floor
+
+            // Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
+            // playerRigidbody.position = CentreOfCell(_grid[1, 1]) + playerHeightOffset;
+
+            // GameObject respawnPoint = GameObject.FindWithTag("Respawn");
+            //
+            // Debug.Log(respawnPoint);
+            //
+            // respawnPoint.transform.position = CentreOfCell(_grid[1, 1]) + playerHeightOffset;
+
             JoinConnectedComponentsWithTeleporters();
         }
+
+        private Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         /// <summary>
         /// Makes the grid.
