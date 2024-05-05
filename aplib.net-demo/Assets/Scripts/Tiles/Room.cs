@@ -7,10 +7,17 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public class Room : Tile
     {
+        public List<Direction> Doors;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Room"/> class.
         /// </summary>
         /// <param name="connectingDirections">The allowed directions of the tile.</param>
-        public Room(List<Direction> connectingDirections) => ConnectingDirections = connectingDirections;
+        /// <param name="doors">The doors of the room.</param>
+        public Room(List<Direction> connectingDirections, List<Direction> doors)
+        {
+            ConnectingDirections = connectingDirections;
+            Doors = doors;
+        }
     }
 }

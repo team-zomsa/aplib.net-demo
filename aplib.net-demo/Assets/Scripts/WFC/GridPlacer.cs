@@ -112,7 +112,9 @@ namespace Assets.Scripts.Wfc
 
             PlaceGrid();
 
-            SetRandomPLayerSpawn();
+            Cell randomPlayerSpawn = _grid.GetRandomFilledCell();
+
+            SetRandomPLayerSpawn(randomPlayerSpawn);
 
             JoinConnectedComponentsWithTeleporters();
         }
@@ -209,7 +211,7 @@ namespace Assets.Scripts.Wfc
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 
-            foreach (Direction direction in room.ConnectingDirections)
+            foreach (Direction direction in room.Doors)
             {
                 // Calculate where the door should be placed
                 Vector3 relativeDoorPosition = direction switch
@@ -226,7 +228,7 @@ namespace Assets.Scripts.Wfc
                 Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
                 Quaternion doorRotation = roomRotation * relativeDoorRotation;
 
-                // Spawn the door
+                // Spawn the door and key
                 GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
                 Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
                 GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, doorPosition + relativeDoorPosition * 0.4f + Vector3.up, doorRotation, transform);
@@ -235,7 +237,7 @@ namespace Assets.Scripts.Wfc
             }
         }
 
-        private void SetRandomPLayerSpawn()
+        private void SetRandomPLayerSpawn(Cell playerSpawnCell)
         {
             GameObject player = GameObject.FindWithTag("Player");
 
@@ -247,7 +249,7 @@ namespace Assets.Scripts.Wfc
 
             Vector3 playerHeightOffset = Vector3.up * 0.7f; // Distance from the floor
 
-            Vector3 spawningPoint = CentreOfCell(_grid.GetRandomFilledCell()) + playerHeightOffset;
+            Vector3 spawningPoint = CentreOfCell(playerSpawnCell) + playerHeightOffset;
 
             Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
             playerRigidbody.position = spawningPoint;

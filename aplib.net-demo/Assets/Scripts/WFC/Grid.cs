@@ -153,7 +153,9 @@ namespace Assets.Scripts.Wfc
             if (cell.Z == 0) directions.Remove(South);
             else if (cell.Z == Height - 1) directions.Remove(North);
 
-            PlaceRoom(cell.X, cell.Z, new Room(directions));
+            List<Direction> doors = directions.ToList(); // Temporary deep copy of directions
+
+            PlaceRoom(cell.X, cell.Z, new Room(directions, doors));
 
             RemoveUnconnectedNeighbourCandidates(cell);
         }
