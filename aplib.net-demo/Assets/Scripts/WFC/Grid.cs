@@ -306,5 +306,15 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <returns>Returns true if the grid is fully collapsed, false otherwise.</returns>
         public bool IsFullyCollapsed() => _cells.TrueForAll(cell => cell.Candidates.Count == 0);
+
+        /// <summary>
+        /// Gets a random filled cell.
+        /// </summary>
+        /// <returns>The random selected filled cell.</returns>
+        public Cell GetRandomFilledCell()
+        {
+            List<Cell> filledCells = _cells.FindAll(cell => cell.Tile is not Empty);
+            return filledCells[_random.Next(filledCells.Count)];
+        }
     }
 }
