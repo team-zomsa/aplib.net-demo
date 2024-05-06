@@ -22,20 +22,27 @@ namespace Tests.AplibTests
         public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
 
         /// <summary>
-        /// If the enemy exists in the scene
+        /// Whether the enemy exists in the scene.
         /// </summary>
-        public Belief<GameObject, bool> EnemyExists = new(GameObject.Find("Target Dummy Body"), x => x != null);
+        public Belief<GameObject, bool> EnemyExists = new
+        (
+            reference: GameObject.Find("Target Dummy Body"),
+            getObservationFromReference: enemy => enemy
+        );
 
         /// <summary>
         /// The target position that the player needs to move towards.
         /// Find the first enemy in the scene.
         /// </summary>
-        public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Target Dummy Body"), x =>
-        {
-            if (x == null)
-                return Vector3.zero;
-            return x.transform.position;
-        });
+        public Belief<GameObject, Vector3> EnemyPosition = new
+        (
+            reference: GameObject.Find("Target Dummy Body"),
+            getObservationFromReference: enemy =>
+            {
+                if (enemy) return enemy.transform.position;
+                else return Vector3.zero;
+            }
+        );
     }
 
     public class MeleeAplibTest
@@ -55,20 +62,20 @@ namespace Tests.AplibTests
 
             // Create an intent for the agent that moves the agent towards the target position.
             TransformPathfinderAction<MeleeBeliefSet> transformPathfinderAction = new(
-                b =>
+                objectQuery: beliefSet =>
                 {
-                    GameObject player = b.Player;
+                    GameObject player = beliefSet.Player;
                     return player.transform;
                 },
-                beliefSet.EnemyPosition,
-                0.9f
+                location: beliefSet => beliefSet.EnemyPosition,
+                heightOffset: 0.9f
             );
 
-            // Create an attack action for the agent, that attacks the enemy
+            // Create an attack action for the agent, that attacks the enemy.
             Action<MeleeBeliefSet> attackAction = new(
-                b =>
+                effect: beliefSet =>
                 {
-                    GameObject player = b.Player;
+                    GameObject player = beliefSet.Player;
                     MeleeWeapon weapon = player.GetComponentInChildren<MeleeWeapon>();
                     weapon.UseWeapon();
                 }
@@ -83,7 +90,7 @@ namespace Tests.AplibTests
             // Goal: Reach the target position and attack the enemy
             PrimitiveGoalStructure<MeleeBeliefSet> moveGoal = new(goal: new Goal<MeleeBeliefSet>(moveTactic, MovePredicate));
             PrimitiveGoalStructure<MeleeBeliefSet> attackGoal = new(goal: new Goal<MeleeBeliefSet>(attackTactic, EnemyKilledPredicate));
-            SequentialGoalStructure<MeleeBeliefSet> finalGoal = new SequentialGoalStructure<MeleeBeliefSet>(moveGoal, attackGoal);
+            SequentialGoalStructure<MeleeBeliefSet> finalGoal = new(moveGoal, attackGoal);
 
             DesireSet<MeleeBeliefSet> desire = new(finalGoal);
 

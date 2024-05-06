@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using static Assets.Scripts.Tiles.Direction;
 using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
 using Random = System.Random;
@@ -263,8 +264,15 @@ namespace Assets.Scripts.Wfc
                     Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + teleporterHeightOffset);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
-                    previousExitTeleporter!.targetTeleporter = entryTeleporter;
-                    entryTeleporter.targetTeleporter = previousExitTeleporter;
+                    previousExitTeleporter!.TargetTeleporter = entryTeleporter;
+                    entryTeleporter.TargetTeleporter = previousExitTeleporter;
+
+                    // Create an OffMeshLink between the two teleporters.
+                    OffMeshLink offMeshLink = previousExitTeleporter.gameObject.AddComponent<OffMeshLink>();
+                    offMeshLink.startTransform = previousExitTeleporter.transform;
+                    offMeshLink.endTransform = entryTeleporter.transform;
+                    offMeshLink.autoUpdatePositions = true;
+                    offMeshLink.area = NavMesh.GetAreaFromName("PlayerWalkable");
                 }
 
                 // Place the exit teleporter of the current connected component at the end of the connected component.

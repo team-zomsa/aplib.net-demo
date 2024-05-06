@@ -26,6 +26,7 @@ namespace Tests.AplibTests
         public Belief<Teleporter.Teleporter, Vector3> TeleporterInLocation = new(
             reference: GameObject.Find("Teleporter 1").GetComponent<Teleporter.Teleporter>(),
             x => x.LandingPoint);
+
         public Belief<Teleporter.Teleporter, Vector3> TeleporterOutLocation = new(
             reference: GameObject.Find("Teleporter 2").GetComponent<Teleporter.Teleporter>(),
             x => x.LandingPoint);

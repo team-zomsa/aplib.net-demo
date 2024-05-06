@@ -37,61 +37,6 @@ namespace Tests.AplibTests
         }
 
         /// <summary>
-        /// Before the tests can begin, we must generate Nev Mash Data such that path finding works. Furthermore,
-        /// Nav Mesh Data from different connected components must be linked through Nav Mesh Links.
-        /// </summary>
-        private void BakeNavMesh()
-        {
-            // Before baking the nav mesh, we must link nav mesh data from different connected components linked through
-            // teleporters, such that the agent knows how to use the teleporters.
-            // Gather one teleporter from every teleporter pair
-            // Teleporter.Teleporter[] allTeleporters = GameObject.Find("Teleporters").GetComponentsInChildren<Teleporter.Teleporter>();
-            // List<Teleporter.Teleporter> entryTeleporters = new();
-            // foreach (Teleporter.Teleporter teleporter in allTeleporters)
-            // {
-            //     if (entryTeleporters.Any(x => x.targetTeleporter == teleporter))
-            //         continue;
-            //     entryTeleporters.Add(teleporter);
-            // }
-            //
-            // List<OffMeshLink> offMeshLinks = entryTeleporters.Select(teleporter => new OffMeshLink
-            //     {
-            //         activated = true,
-            //         area = 0,          // Walkable
-            //         costOverride = -1, // Explicitly use the default value
-            //         biDirectional = true,
-            //         startTransform = new RectTransform { position = teleporter.LandingPoint },
-            //         endTransform = new RectTransform { position = teleporter.targetTeleporter.LandingPoint }
-            //     }).ToList();
-
-            // Now, we bake!
-            NavMeshBuildSettings buildSettings = NavMesh.GetSettingsByIndex(0);
-            NavMeshData navMeshData = NavMeshBuilder.BuildNavMeshData(buildSettings, collectNavMeshSources(),
-                new Bounds(Vector3.zero, new Vector3(300, 50, 300)), Vector3.zero, Quaternion.identity); // TODO make grid the bounds
-            NavMesh.AddNavMeshData(navMeshData);
-            // NavMeshBuilder.UpdateNavMeshData(navMeshData, buildSettings, collectNavMeshSources(),
-            //     new Bounds(Vector3.zero, new Vector3(300, 50, 300))); // TODO obsolete?
-
-            return;
-
-            List<NavMeshBuildSource> collectNavMeshSources()
-            {
-                GameObject environment = GameObject.Find("Environment");
-
-                return (from meshFilter in environment.GetComponentsInChildren<MeshFilter>()
-                        where meshFilter.gameObject.GetComponent<Door>() == null // Do not include doors in baking
-                        select new NavMeshBuildSource
-                        {
-                            shape = NavMeshBuildSourceShape.Mesh,
-                            sourceObject = meshFilter.sharedMesh,
-                            transform = meshFilter.gameObject.transform.localToWorldMatrix,
-                            area = 0,
-                        }).ToList();
-            }
-        }
-
-
-        /// <summary>
         /// This test first collects a single cell from every connected component.
         /// It then tries to make the player - spawning in an arbitrary room - visit every one of those cells,
         /// in an arbitrary order. If it succeeds in visiting every cell, it has visited every connected component.
@@ -100,8 +45,6 @@ namespace Tests.AplibTests
         [UnityTest]
         public IEnumerator CanVisitEveryConnectedComponent()
         {
-            BakeNavMesh();
-
             // Arrange
             ConnectedComponentsBeliefSet rootBeliefSet = new();
             GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
@@ -168,13 +111,6 @@ namespace Tests.AplibTests
 
             // Assert
             Assert.AreEqual(CompletionStatus.Success, agent.Status);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Debug.Log($"Finished {nameof(ConnectedComponentsTests)}");
-            SceneManager.UnloadSceneAsync(_sceneName);
         }
     }
 }

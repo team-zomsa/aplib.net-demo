@@ -18,13 +18,6 @@ namespace Teleporter
         private float _teleportWindUpTime = 2f;
 
         /// <summary>
-        /// An offset from this teleporter's position, on which the player will be teleported to when teleporting to this
-        /// teleporter.
-        /// </summary>
-        [SerializeField]
-        private Vector3 _landingPointOffset = new(0, 1, 0);
-
-        /// <summary>
         /// A reference to the FX parent gameobject, containing all special effects of the teleporter to be
         /// activated during wind up.
         /// </summary>
@@ -33,16 +26,23 @@ namespace Teleporter
         private GameObject _fx;
 
         /// <summary>
+        /// A transform object indicating where the player will be teleported to when teleporting to this
+        /// teleporter.
+        /// </summary>
+        [SerializeField]
+        private Transform _landingPointTransform;
+
+        /// <summary>
         /// The teleporter to which the player must be teleported. This is a one-directional link. To be bidirectional,
         /// the target teleported must target this teleporter as back.
         /// </summary>
         [field: SerializeField]
-        public Teleporter targetTeleporter { get; set; }
+        public Teleporter TargetTeleporter { get; set; }
 
         /// <summary>
         /// The absolute position to which the player will be teleported to when teleporting to this teleporter.
         /// </summary>
-        public Vector3 LandingPoint => transform.position + _landingPointOffset;
+        public Vector3 LandingPoint => _landingPointTransform.position;
 
         /// <summary>
         /// A simple reference to the player's transform, for performance reasons.
@@ -78,13 +78,13 @@ namespace Teleporter
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
 
-            if (targetTeleporter == null)
+            if (TargetTeleporter == null)
             {
                 Debug.LogError("No target teleporter set for this teleporter. Won't teleport.");
             }
 
             // Prevent teleporting to self. Can be used to mark this teleporter as not targeting another one explicitly.
-            if (targetTeleporter == GetComponent<Teleporter>()) return;
+            if (TargetTeleporter == GetComponent<Teleporter>()) return;
 
             if (_shouldIgnoreNextPlayerEntryTrigger)
             {
@@ -120,7 +120,7 @@ namespace Teleporter
             yield return new WaitForSeconds(_teleportWindUpTime);
 
             // Teleport the player
-            targetTeleporter.TeleportReceive(_playerTransform);
+            TargetTeleporter.TeleportReceive(_playerTransform);
         }
 
         /// <summary>
@@ -140,10 +140,10 @@ namespace Teleporter
         private void OnDrawGizmosSelected()
         {
             Gizmos.DrawWireSphere(LandingPoint, 0.2f); // Indicate own landingPoint
-            if (targetTeleporter != null)
+            if (TargetTeleporter != null)
             {
-                Gizmos.DrawSphere(targetTeleporter.LandingPoint, 0.3f); // Indicate target landingPoint
-                Gizmos.DrawLine(LandingPoint, targetTeleporter.LandingPoint); // Indicate which portals is targeted
+                Gizmos.DrawSphere(TargetTeleporter.LandingPoint, 0.3f); // Indicate target landingPoint
+                Gizmos.DrawLine(LandingPoint, TargetTeleporter.LandingPoint); // Indicate which portals is targeted
             }
         }
     }
