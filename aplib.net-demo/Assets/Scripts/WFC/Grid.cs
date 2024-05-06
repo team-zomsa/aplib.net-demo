@@ -203,6 +203,25 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
+        /// Check if two cells are connected.
+        /// </summary>
+        /// <param name="cell">The first cell.</param>
+        /// <param name="neighbour">The second cell.</param>
+        /// <returns>True if the two cells are connected, otherwise false.</returns>
+        private bool IsConnected(Cell cell, Cell neighbour) => cell.Tile.CanConnectInDirection(East) &&
+                                                                neighbour.X > cell.X &&
+                                                                neighbour.Tile.CanConnectInDirection(West)
+                                                                || cell.Tile.CanConnectInDirection(West) &&
+                                                                neighbour.X < cell.X &&
+                                                                neighbour.Tile.CanConnectInDirection(East)
+                                                                || cell.Tile.CanConnectInDirection(North) &&
+                                                                neighbour.Z > cell.Z &&
+                                                                neighbour.Tile.CanConnectInDirection(South)
+                                                                || cell.Tile.CanConnectInDirection(South) &&
+                                                                neighbour.Z < cell.Z &&
+                                                                neighbour.Tile.CanConnectInDirection(North);
+
+        /// <summary>
         /// Given a cell, this method determines all directly adjacent neighbours which are connected by their
         /// <see cref="Tile"/>s. These are at most 4, as diagonal tiles cannot be connected.
         /// </summary>
@@ -215,14 +234,123 @@ namespace Assets.Scripts.Wfc
             IEnumerable<Cell> neighbours = Get4NeighbouringCells(cell); // Note: no diagonal neighbours
             foreach (Cell neighbour in neighbours)
             {
-                if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && neighbour.Tile.CanConnectInDirection(West)
-                    || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X && neighbour.Tile.CanConnectInDirection(East)
-                    || cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z && neighbour.Tile.CanConnectInDirection(South)
-                    || cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z && neighbour.Tile.CanConnectInDirection(North))
+                if (IsConnected(cell, neighbour))
                     connectedNeighbours.Add(neighbour);
             }
 
             return connectedNeighbours;
+        }
+
+        /// <summary>
+        /// Given a cell and a neighbour, this method determines the direction in which the neighbour is connected to the cell.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <param name="neighbour">The neighbouring cell.</param>
+        /// <returns>The direction in which the neighbour is connected to the cell, or null if they are not connected.</returns>
+        private Direction? GetDirection(Cell cell, Cell neighbour)
+        {
+            if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X &&
+                neighbour.Tile.CanConnectInDirection(West))
+                return East;
+
+            if (cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X &&
+                     neighbour.Tile.CanConnectInDirection(East))
+                return West;
+
+            if (cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z &&
+                     neighbour.Tile.CanConnectInDirection(South))
+                return North;
+
+            if (cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z &&
+                     neighbour.Tile.CanConnectInDirection(North))
+                return South;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Given a cell, this method determines all directly adjacent neighbours which are connected by their <see cref="Tile"/>.
+        /// </summary>
+        /// <param name="cell">The cell whose connected tiles are to be determined.</param>
+        /// <returns>The cells directly connected through their tiles.</returns>
+        private (IEnumerable<Cell> connectedNeighbours, IEnumerable<Cell> neighbouringRooms) GetConnectedNeighboursWithoutDoors(Cell cell)
+        {
+            ICollection<Cell> connectedNeighbours = new Collection<Cell>();
+            ICollection<Cell> neighbouringRooms = new Collection<Cell>();
+            IEnumerable<Cell> neighbours = Get4NeighbouringCells(cell);
+
+            foreach (Cell neighbour in neighbours)
+            {
+                Direction? direction = GetDirection(cell, neighbour);
+
+                if (direction is null) continue; // Cells are not connected
+
+                Room cellRoom = cell.Tile as Room;
+                Room neighbourRoom = neighbour.Tile as Room;
+
+                bool cellHasDoor = cellRoom?.DoorInDirection(direction.Value) ?? false;
+                bool neighbourHasDoor = neighbourRoom?.DoorInDirection(direction.Value.Opposite()) ?? false;
+
+                if (!cellHasDoor && !neighbourHasDoor)
+                {
+                    connectedNeighbours.Add(neighbour);
+                }
+                else
+                {
+                    neighbouringRooms.Add(neighbour);
+                }
+            }
+
+            return (connectedNeighbours, neighbouringRooms);
+        }
+
+        /// <summary>
+        /// This method goes through all cells in this grid, to determine all connected components between doors.
+        /// </summary>
+        /// <returns>A collection of sets of cells, where the sets of cells represent the connected components.</returns>
+        public IEnumerable<(ISet<Cell>, ISet<Cell>)> DetermineConnectedComponentsBetweenDoors()
+        {
+            ISet<Cell> unvisitedCells = new HashSet<Cell>(_cells.Where(cell => cell.Tile is not Empty)); // Deep copy
+            IList<(ISet<Cell>, ISet<Cell>)> connectedComponents = new List<(ISet<Cell>, ISet<Cell>)>();
+
+            while (unvisitedCells.Count > 0)
+            {
+                ISet<Cell> connectedComponent = new HashSet<Cell>();
+                ISet<Cell> neighbouringRooms = new HashSet<Cell>();
+                connectedComponents.Add((connectedComponent, neighbouringRooms));
+
+                // Determine connected component, which updates unvisitedCells and connectedComponent
+                DetermineSingleConnectedComponentBetweenDoors(unvisitedCells, connectedComponent, neighbouringRooms, unvisitedCells.First());
+            }
+
+            return connectedComponents;
+        }
+
+        /// <summary>
+        /// Given a cell, this method determines the connected component to which the cell belongs.
+        /// </summary>
+        /// <param name="searchSpace">The cells which are considered to be possibly connected to <paramref name="cell"/>.</param>
+        /// <param name="connectedComponent">The <see cref="ISet{Cell}"/> in which the connected component is stored.</param>
+        /// <param name="neighbouringRooms">The <see cref="ISet{Cell}"/> in which the neighbouring rooms are stored.</param>
+        /// <param name="cell">The cell to start searching from.</param>
+        private void DetermineSingleConnectedComponentBetweenDoors(in ISet<Cell> searchSpace, in ISet<Cell> connectedComponent, in ISet<Cell> neighbouringRooms, Cell cell)
+        {
+            connectedComponent.Add(cell);
+            searchSpace.Remove(cell);
+
+            (IEnumerable<Cell> connectedNeighbours, IEnumerable<Cell> rooms) = GetConnectedNeighboursWithoutDoors(cell);
+
+            neighbouringRooms.UnionWith(rooms);
+
+            foreach (Cell connectedNeighbour in connectedNeighbours)
+            {
+                if (!searchSpace.Contains(connectedNeighbour)) continue; // Already visited
+
+                connectedComponent.Add(connectedNeighbour);
+                searchSpace.Remove(connectedNeighbour);
+
+                DetermineSingleConnectedComponentBetweenDoors(searchSpace, connectedComponent, neighbouringRooms, connectedNeighbour);
+            }
         }
 
         /// <summary>
