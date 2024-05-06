@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b3854aa34cbf646a86eace240d179f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 25
+  TargetTag: Enemy
+  Damage: 50
   _height: 4
   _radius: 1.4
 --- !u!1 &5064525661200628015

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,7 +8,10 @@ using UnityEngine;
 /// </summary>
 public class MeleeWeapon : Weapon
 {
-    [SerializeField] private int _damage = 25;
+    /// <summary>
+    /// The amount of damage the weapon deals.
+    /// </summary>
+    [SerializeField] public int Damage = 25;
 
     /// <summary>
     /// The height of the hitzone in world units.
@@ -23,15 +27,16 @@ public class MeleeWeapon : Weapon
 
     private Vector3 _sphere1Center;
     private Vector3 _sphere2Center;
+    private IEnumerable<Collider> _targets;
 
     /// <summary>
     /// Ensure the height is at least twice the radius, because the height of the hitzone (capsule) must at least be the diameter of the spheres.
     /// (If the two spheres are at the same position, the capsule just becomes a sphere and height = 2 * radius)
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         if (_height < 2 * _radius) _height = 2 * _radius;
-        UpdateHitZone();
+        EnemiesWithinRange();
     }
 
     /// <summary>
@@ -48,14 +53,28 @@ public class MeleeWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        UpdateHitZone();
-        foreach (Collider collider in Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-            .Where(c => c.CompareTag("Enemy")))
+        if (EnemiesWithinRange())
         {
-            // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
-            HealthComponent enemy = collider.GetComponent<HealthComponent>();
-            enemy?.ReduceHealth(_damage);
+            foreach (Collider collider in _targets)
+            {
+                // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
+                HealthComponent enemy = collider.GetComponent<HealthComponent>();
+                enemy?.ReduceHealth(Damage);
+            }
         }
+    }
+
+    /// <summary>
+    /// Whether the weapon can hit any enemies in the hitzone.
+    /// If the multiple colliders are part of the same object, count them as one.
+    /// </summary>
+    /// <returns>True if there are enemies in the hitzone, false otherwise.</returns>
+    public bool EnemiesWithinRange()
+    {
+        UpdateHitZone();
+        _targets = Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
+                    .Where(c => c.CompareTag(TargetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
+        return _targets.Any();
     }
 
     /// <summary>

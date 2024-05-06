@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1558264426942698920}
   m_Layer: 0
   m_Name: Backpack
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401829e9f268f72498bac453844467b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tagToFind: Player
+  TagToFind: Player
 --- !u!114 &6183104069211195236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,6 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damagePoints: 25
+  _targetTag: Player
   _spawnArea: {fileID: 3563055558079486355}
   _respawn: 1
 --- !u!1 &6630535104659245811
