@@ -116,7 +116,9 @@ namespace Assets.Scripts.Wfc
 
             SetRandomPLayerSpawn(randomPlayerSpawn);
 
-            JoinConnectedComponentsWithTeleporters();
+            // JoinConnectedComponentsWithTeleporters();
+
+            ColorConnectedComponents();
         }
 
         /// <summary>
@@ -264,6 +266,23 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// Fist calculate the connected components of the grid, then join them with teleporters.
         /// </summary>
+        private void ColorConnectedComponents()
+        {
+            IEnumerable<(ISet<Cell>, ISet<Cell>)> connectedComponents = _grid.DetermineConnectedComponentsBetweenDoors();
+
+            // We draw all the connected components individually
+            foreach ((ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) in connectedComponents)
+            {
+                Color color = GetUnusedColor();
+                Debug.Log("Connected component: " + connectedComponent.Count + " rooms, " + neighbouringRooms.Count + " neighbouring rooms, Color: " + color);
+                foreach (Cell cell in connectedComponent)
+                    cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
+            }
+        }
+
+        /// <summary>
+        /// Fist calculate the connected components of the grid, then join them with teleporters.
+        /// </summary>
         private void JoinConnectedComponentsWithTeleporters()
         {
             IEnumerable<ISet<Cell>> connectedComponents = _grid.DetermineConnectedComponents();
@@ -282,7 +301,44 @@ namespace Assets.Scripts.Wfc
         // Here are temporary helper methods used to display the connected components in different colors.
         private static readonly Color[] _colors =
         {
-            Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan
+            Color.red,
+            Color.blue,
+            Color.green,
+            Color.yellow,
+            Color.magenta,
+            Color.cyan,
+            Color.black,
+            Color.gray,
+            Color.Lerp(Color.red, Color.blue, 0.5f),
+            Color.Lerp(Color.red, Color.yellow, 0.5f),
+            Color.Lerp(Color.yellow, Color.blue, 0.5f),
+            Color.Lerp(Color.black, Color.red, 0.5f),
+            Color.Lerp(Color.white, Color.red, 0.5f),
+            Color.Lerp(Color.black, Color.blue, 0.5f),
+            Color.Lerp(Color.white, Color.blue, 0.5f),
+            Color.Lerp(Color.black, Color.green, 0.5f),
+            Color.Lerp(Color.white, Color.green, 0.5f),
+            Color.Lerp(Color.black, Color.yellow, 0.5f),
+            Color.Lerp(Color.white, Color.yellow, 0.5f),
+            Color.Lerp(Color.black, Color.magenta, 0.5f),
+            Color.Lerp(Color.white, Color.magenta, 0.5f),
+            Color.Lerp(Color.black, Color.cyan, 0.5f),
+            Color.Lerp(Color.white, Color.cyan, 0.5f),
+            Color.Lerp(Color.red, Color.blue, 0.25f),
+            Color.Lerp(Color.red, Color.yellow, 0.25f),
+            Color.Lerp(Color.yellow, Color.blue, 0.25f),
+            Color.Lerp(Color.black, Color.red, 0.25f),
+            Color.Lerp(Color.white, Color.red, 0.25f),
+            Color.Lerp(Color.black, Color.blue, 0.25f),
+            Color.Lerp(Color.white, Color.blue, 0.25f),
+            Color.Lerp(Color.black, Color.green, 0.25f),
+            Color.Lerp(Color.white, Color.green, 0.25f),
+            Color.Lerp(Color.black, Color.yellow, 0.25f),
+            Color.Lerp(Color.white, Color.yellow, 0.25f),
+            Color.Lerp(Color.black, Color.magenta, 0.25f),
+            Color.Lerp(Color.white, Color.magenta, 0.25f),
+            Color.Lerp(Color.black, Color.cyan, 0.25f),
+            Color.Lerp(Color.white, Color.cyan, 0.25f),
         };
 
         private static int _colorIndex = -1;
