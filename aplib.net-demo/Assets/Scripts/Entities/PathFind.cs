@@ -7,7 +7,10 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class PathFind : MonoBehaviour
 {
-    [SerializeField] public string TagToFind = "Player";
+    /// <summary>
+    /// The tag of the object to follow.
+    /// </summary>
+    public string TagToFind = "Player";
     private Transform _goal;
     private NavMeshAgent _agent;
 

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// This class has fuctions for ranged weapons.
@@ -11,19 +10,16 @@ using UnityEngine.UIElements;
 public class RangedWeapon : Weapon
 {
     /// <summary>
-    /// The tag of the target that the weapon can hit.
+    /// The point from which the weapon will be fired.
     /// </summary>
-    [SerializeField] public string TargetTag = "Enemy";
-
-    /// <summary>
-    /// By default, assume the weapon will be fired by the player, from the camera.
-    /// </summary>
-    [SerializeField] public Transform FirePoint;
-
+    public Transform FirePoint;
     [SerializeField] private int _damage = 50;
     [SerializeField] private int _range = 50;
     private IEnumerable<RaycastHit> _orderedHits;
 
+    /// <summary>
+    /// By default, assume the weapon will be fired by the player, from the camera.
+    /// </summary>
     private void Start()
     {
         if (FirePoint == null)

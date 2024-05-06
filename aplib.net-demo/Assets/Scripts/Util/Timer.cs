@@ -1,3 +1,4 @@
+
 /// <summary>
 /// Basic timer class 
 /// </summary>

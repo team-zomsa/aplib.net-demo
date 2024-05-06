@@ -324,11 +324,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damagePoints: 25
+  _targetTag: Player
   _spawnArea: {fileID: 3563055558079486355}
   _respawn: 1
   _attackRange: 25
   _attackCooldown: 2
-  _targetTag: Player
 --- !u!1 &6630535104659245811
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,11 +508,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6098721876212132164, guid: a32b9718dd054174cb328e71472939bb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 91225418248312668, guid: a32b9718dd054174cb328e71472939bb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5202241195086748576}
   m_SourcePrefab: {fileID: 100100000, guid: a32b9718dd054174cb328e71472939bb, type: 3}
+--- !u!1 &80292484268422520 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 91225418248312668, guid: a32b9718dd054174cb328e71472939bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 25148708888683044}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5202241195086748576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80292484268422520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c4b9d599f768aa48a6b33a42965724d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetTag: Enemy
+  FirePoint: {fileID: 8794975453294518190}
+  _damage: 50
+  _range: 50
 --- !u!4 &5877475829324217071 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5893423824817281227, guid: a32b9718dd054174cb328e71472939bb,

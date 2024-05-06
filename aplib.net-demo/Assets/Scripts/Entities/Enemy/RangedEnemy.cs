@@ -4,7 +4,6 @@ public class RangedEnemy : DummyEnemy
 {
     [SerializeField] private float _attackRange = 25f;
     [SerializeField] private float _attackCooldown = 2f;
-    [SerializeField] private string _targetTag = "Player";
 
     private RangedWeapon _rangedWeapon;
     private Timer _attackTimer;
