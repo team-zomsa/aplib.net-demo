@@ -9,12 +9,18 @@ public abstract class Weapon : MonoBehaviour
     protected PlayerSound _playerSound;
 
     /// <summary>
+    /// The tag of the target that the weapon can hit.
+    /// </summary>
+    public string TargetTag = "Enemy";
+
+    /// <summary>
     /// Get the PlayerSound component from the root object.
     /// </summary>
     protected void Start()
-    {
-        _playerSound = transform.root.GetComponent<PlayerSound>();
-    }
+        => _playerSound = transform.root.GetComponent<PlayerSound>();
 
-    public virtual void UseWeapon() { }
+    /// <summary>
+    /// Use the weapon.
+    /// </summary>
+    public abstract void UseWeapon();
 }
