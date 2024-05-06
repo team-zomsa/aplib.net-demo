@@ -9,11 +9,6 @@ using UnityEngine;
 public class MeleeWeapon : Weapon
 {
     /// <summary>
-    /// The amount of damage the weapon deals.
-    /// </summary>
-    [SerializeField] public int Damage = 25;
-
-    /// <summary>
     /// The height of the hitzone in world units.
     /// Could also be called length, but height is what Unity uses for capsules.
     /// </summary>
@@ -40,6 +35,20 @@ public class MeleeWeapon : Weapon
     }
 
     /// <summary>
+    /// Initialize the weapon with the damage, height, radius and target tag.
+    /// </summary>
+    /// <param name="damage">The amount of damage the weapon will deal.</param>
+    /// <param name="height">The height of the hitzone in world units.</param>
+    /// <param name="radius">The radius of the hitzone in world units.</param>
+    /// <param name="targetTag">The tag of the target.</param>
+    public void Initialize(int damage, string targetTag, float height, float radius)
+    {
+        base.Initialize(damage, targetTag);
+        _height = height;
+        _radius = radius;
+    }
+
+    /// <summary>
     /// Update the HitZone Capsule defined by the locations of the two spheres.
     /// </summary>
     private void UpdateHitZone()
@@ -59,7 +68,7 @@ public class MeleeWeapon : Weapon
             {
                 // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
                 HealthComponent enemy = collider.GetComponent<HealthComponent>();
-                enemy?.ReduceHealth(Damage);
+                enemy?.ReduceHealth(_damage);
             }
         }
     }
@@ -73,7 +82,7 @@ public class MeleeWeapon : Weapon
     {
         UpdateHitZone();
         _targets = Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-                    .Where(c => c.CompareTag(TargetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
+                    .Where(c => c.CompareTag(_targetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
         return _targets.Any();
     }
 

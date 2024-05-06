@@ -180,8 +180,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5361096258398959275}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.9830579, z: -0, w: 0.18329534}
+  m_LocalPosition: {x: -1.6251347, y: 0, z: 1.6887137}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -189,7 +189,7 @@ Transform:
   - {fileID: 7108001343937068821}
   - {fileID: 5877475829324217071}
   m_Father: {fileID: 1714929719199334556}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 158.876, z: 0}
 --- !u!33 &5547584709331460924
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -327,8 +327,9 @@ MonoBehaviour:
   _targetTag: Player
   _spawnArea: {fileID: 3563055558079486355}
   _respawn: 1
-  _attackRange: 25
-  _attackCooldown: 2
+  _attackRange: 10
+  _visionRange: 15
+  _attackCooldown: 3
 --- !u!1 &6630535104659245811
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,9 +537,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c4b9d599f768aa48a6b33a42965724d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetTag: Enemy
-  FirePoint: {fileID: 8794975453294518190}
+  _targetTag: Enemy
   _damage: 50
+  _firePoint: {fileID: 0}
   _range: 50
 --- !u!4 &5877475829324217071 stripped
 Transform:

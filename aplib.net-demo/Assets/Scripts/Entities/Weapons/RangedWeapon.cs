@@ -12,8 +12,7 @@ public class RangedWeapon : Weapon
     /// <summary>
     /// The point from which the weapon will be fired.
     /// </summary>
-    public Transform FirePoint;
-    [SerializeField] private int _damage = 50;
+    [SerializeField] private Transform _firePoint;
     [SerializeField] private int _range = 50;
     private IEnumerable<RaycastHit> _orderedHits;
 
@@ -22,8 +21,22 @@ public class RangedWeapon : Weapon
     /// </summary>
     private void Start()
     {
-        if (FirePoint == null)
-            FirePoint = Camera.main.transform;
+        if (_firePoint == null)
+            _firePoint = Camera.main.transform;
+    }
+
+    /// <summary>
+    /// Initialize the weapon with the fire point, damage, range and target tag.
+    /// </summary>
+    /// <param name="firePoint">The point from which the weapon will be fired.</param>
+    /// <param name="damage">The amount of damage the weapon will deal.</param>
+    /// <param name="range">The range of the weapon.</param>
+    /// <param name="targetTag">The tag of the target.</param>
+    public void Initialize(int damage, string targetTag, Transform firePoint, int range)
+    {
+        base.Initialize(damage, targetTag);
+        _firePoint = firePoint;
+        _range = range;
     }
 
     /// <summary>
@@ -33,13 +46,13 @@ public class RangedWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        if (!EnemiesInRange())
+        if (!EnemiesInLineOfSight())
             return;
 
         // Will damage only enemies and the ray will stop when it hits an object that is not an enemy.
         foreach (RaycastHit hit in _orderedHits)
         {
-            if (!hit.collider.CompareTag(TargetTag))
+            if (!hit.collider.CompareTag(_targetTag))
                 break;
 
             // Check if the enemy has a Health component.
@@ -53,12 +66,12 @@ public class RangedWeapon : Weapon
     /// Check only if the first object hit is an enemy.
     /// </summary>
     /// <returns>True if the first object hit is an enemy.</returns>
-    public bool EnemiesInRange()
+    public bool EnemiesInLineOfSight()
     {
-        RaycastHit[] hits = Physics.RaycastAll(FirePoint.position, FirePoint.transform.forward, _range);
+        RaycastHit[] hits = Physics.RaycastAll(_firePoint.position, _firePoint.transform.forward, _range);
         _orderedHits = hits.OrderBy(hit => hit.distance);
         RaycastHit firstHit = _orderedHits.FirstOrDefault();
 
-        return firstHit.collider != null && firstHit.collider.CompareTag(TargetTag);
+        return firstHit.collider != null && firstHit.collider.CompareTag(_targetTag);
     }
 }

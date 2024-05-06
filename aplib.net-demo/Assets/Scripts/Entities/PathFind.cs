@@ -17,7 +17,7 @@ public class PathFind : MonoBehaviour
     /// <summary>
     /// Get the agent and find the goal object by tag.
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         GameObject goalObject = GameObject.FindGameObjectWithTag(TagToFind);
@@ -35,6 +35,34 @@ public class PathFind : MonoBehaviour
 
         _agent.SetDestination(_goal.position);
         _agent.transform.LookAt(_goal);
+    }
+
+    /// <summary>
+    /// Set the distance at which the agent will stop from the goal.
+    /// </summary>
+    /// <param name="distance"></param>
+    public void SetStoppingDistance(float distance)
+    {
+        _agent.stoppingDistance = distance;
+    }
+
+    /// <summary>
+    /// Start/stop the agent.
+    /// </summary>
+    /// <param name="enabled">True to enable the agent, false to disable it.</param>
+    public void ToggleAgent(bool enabled)
+    {
+        _agent.isStopped = !enabled;
+    }
+
+    /// <summary>
+    /// Check if the goal is within a certain range.
+    /// </summary>
+    /// <param name="range">The range to check.</param>
+    /// <returns>True if the goal is within the range, false otherwise.</returns>
+    public bool GoalWithinRange(float range)
+    {
+        return Vector3.Distance(transform.position, _goal.position) <= range;
     }
 }
 
