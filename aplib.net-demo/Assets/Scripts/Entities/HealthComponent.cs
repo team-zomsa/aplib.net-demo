@@ -36,7 +36,7 @@ public class HealthComponent : MonoBehaviour
     /// <summary>
     /// The maximum health of the GameObject.
     /// </summary>
-    public int MaxHealth {get => _maxHealth;}
+    public int MaxHealth { get => _maxHealth; }
 
     [SerializeField]
     private int _maxHealth = 100;
