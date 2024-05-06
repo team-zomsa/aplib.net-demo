@@ -37,12 +37,7 @@ namespace Tests.AplibTests
         public Belief<GameObject, Vector3> EnemyPosition = new
         (
             reference: GameObject.Find("Target Dummy Body"),
-            getObservationFromReference: enemy =>
-            {
-                if (enemy) return enemy.transform.position;
-                else return Vector3.zero;
-            }
-        );
+            getObservationFromReference: enemy => enemy ? enemy.transform.position : Vector3.zero);
     }
 
     public class MeleeAplibTest

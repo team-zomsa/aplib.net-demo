@@ -66,8 +66,9 @@ namespace Teleporter
         /// </summary>
         private void Start()
         {
-            _playerRigidbody = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
-            if (_playerRigidbody == null) Debug.LogError("No player was found.");
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player == null) Debug.LogError("No player was found.");
+            _playerRigidbody = player.GetComponent<Rigidbody>();
         }
 
         /// <summary>
@@ -105,8 +106,6 @@ namespace Teleporter
         private void OnTriggerExit(Collider other)
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
-
-            Debug.Log("Player exited teleporter.");
 
             _fx.SetActive(false);
             if (_waitThenTeleportCoroutine != null) // Can be null when player gets teleported to this teleporter
