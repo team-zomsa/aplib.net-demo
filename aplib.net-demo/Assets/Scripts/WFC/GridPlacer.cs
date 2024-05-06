@@ -283,7 +283,6 @@ namespace Assets.Scripts.Wfc
             foreach ((ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) in connectedComponents)
             {
                 Color color = GetUnusedColor();
-                Debug.Log("Connected component: " + connectedComponent.Count + " rooms, " + neighbouringRooms.Count + " neighbouring rooms, Color: " + color);
                 foreach (Cell cell in connectedComponent)
                     cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
             }
