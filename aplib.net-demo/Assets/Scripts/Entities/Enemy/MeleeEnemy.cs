@@ -1,3 +1,4 @@
+using Entities.Weapons;
 using System.Collections;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ public class MeleeEnemy : DummyEnemy
     {
         base.Awake();
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
-        _meleeWeapon.TargetTag = _targetTag;
+        _meleeWeapon.targetTag = _targetTag;
         _meleeWeapon.Damage = _damagePoints;
         _cooldownTimer = new(_attackCooldown);
     }
@@ -31,10 +32,10 @@ public class MeleeEnemy : DummyEnemy
     /// Updates the timer and starts the swing if the cooldown is finished and enemies are in sight.
     /// </summary>
     protected override void Update()
-    {   
+    {
         if (_isSwinging)
             return;
-            
+
         base.Update();
         _cooldownTimer.Update(Time.deltaTime);
 
@@ -66,5 +67,5 @@ public class MeleeEnemy : DummyEnemy
         _meleeWeapon.UseWeapon();
         transform.localScale /= _sizeIncrease;
         _isSwinging = false;
-    }    
+    }
 }

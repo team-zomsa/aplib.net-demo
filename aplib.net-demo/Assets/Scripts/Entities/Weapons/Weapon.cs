@@ -1,17 +1,20 @@
 using UnityEngine;
 
-/// <summary>
-/// Abstract weapons class as a base for all weapons.
-/// </summary>
-public abstract class Weapon : MonoBehaviour
+namespace Entities.Weapons
 {
     /// <summary>
-    /// The tag of the target that the weapon can hit.
+    /// Abstract weapons class as a base for all weapons.
     /// </summary>
-    public string TargetTag = "Enemy";
+    public abstract class Weapon : MonoBehaviour
+    {
+        /// <summary>
+        /// The tag of the target that the weapon can hit.
+        /// </summary>
+        public string targetTag = "Enemy";
 
-    /// <summary>
-    /// Use the weapon.
-    /// </summary>
-    public abstract void UseWeapon();
+        /// <summary>
+        /// Use the weapon.
+        /// </summary>
+        public abstract void UseWeapon();
+    }
 }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7069036620070996254}
-  - component: {fileID: 4693412011037971015}
+  - component: {fileID: 5046753033352191610}
   m_Layer: 7
   m_Name: MeleeWeapon
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 3174438518899563183}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4693412011037971015
+--- !u!114 &5046753033352191610
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetTag: Enemy
-  Damage: 50
+  Damage: 25
   _height: 4
   _radius: 1.4
 --- !u!1 &5064525661200628015

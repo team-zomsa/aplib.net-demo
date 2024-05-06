@@ -6,6 +6,7 @@ using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity.Actions;
+using Entities.Weapons;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
@@ -77,7 +78,7 @@ namespace Tests.AplibTests
                 b =>
                 {
                     GameObject player = b.Player;
-                    return player.transform;
+                    return player.GetComponent<Rigidbody>();
                 },
                 beliefSet.EnemyPosition,
                 0.9f
@@ -138,7 +139,7 @@ namespace Tests.AplibTests
 
             bool EnemyKilledPredicate(MeleeEnemyBeliefSet beliefSet) => !beliefSet.EnemyExists;
 
-            bool PlayerDamagedPredicate(MeleeEnemyBeliefSet beliefSet) 
+            bool PlayerDamagedPredicate(MeleeEnemyBeliefSet beliefSet)
             {
                 HealthComponent health = beliefSet.PlayerHealth;
 
