@@ -19,8 +19,11 @@ public class DummyEnemy : AbstractEnemy
     /// </summary>
     protected override void Start()
     {
-        _spawnArea ??= GetComponentInParent<Area>();
-        _spawnBounds = _spawnArea.Bounds;
+        _spawnArea ??= transform.parent.GetComponentInChildren<Area>();
+        if (_spawnArea is null)
+            Debug.LogError("No spawn area found for enemy " + name);
+        else
+            _spawnBounds = _spawnArea.Bounds;
     }
 
     protected override void OnDeath(HealthComponent healthComponent)
