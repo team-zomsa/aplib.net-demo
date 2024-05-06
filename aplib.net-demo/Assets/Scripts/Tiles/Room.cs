@@ -19,5 +19,12 @@ namespace Assets.Scripts.Tiles
             ConnectingDirections = connectingDirections;
             Doors = doors;
         }
+
+        /// <summary>
+        /// Checks if there is a door in the given direction.
+        /// </summary>
+        /// <param name="direction">The given direction.</param>
+        /// <returns>True if there is a door in the given direction otherwise False.</returns>
+        public bool DoorInDirection(Direction direction) => Doors.Contains(direction);
     }
 }
