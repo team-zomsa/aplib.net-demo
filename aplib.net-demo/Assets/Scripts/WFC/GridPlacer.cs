@@ -239,6 +239,10 @@ namespace Assets.Scripts.Wfc
             }
         }
 
+        /// <summary>
+        /// Sets the player spawn point to a random room.
+        /// </summary>
+        /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
         private void SetRandomPLayerSpawn(Cell playerSpawnCell)
         {
             GameObject player = GameObject.FindWithTag("Player");
@@ -261,10 +265,15 @@ namespace Assets.Scripts.Wfc
             respawnPoint.transform.position = spawningPoint;
         }
 
+        /// <summary>
+        /// Returns the center of the cell in world coordinates.
+        /// </summary>
+        /// <param name="cell">The cell for which the center needs to be calculated.</param>
+        /// <returns>The center of the cell in world coordinates.</returns>
         private Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         /// <summary>
-        /// Fist calculate the connected components of the grid, then join them with teleporters.
+        /// Colors the connected components of the grid.
         /// </summary>
         private void ColorConnectedComponents()
         {
