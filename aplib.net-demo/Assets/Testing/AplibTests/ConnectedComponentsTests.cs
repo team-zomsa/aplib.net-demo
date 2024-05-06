@@ -9,14 +9,12 @@ using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Wfc;
 using NUnit.Framework;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace Tests.AplibTests
+namespace Testing.AplibTests
 {
     public class ConnectedComponentsBeliefSet : BeliefSet
     {
@@ -28,6 +26,7 @@ namespace Tests.AplibTests
     public class ConnectedComponentsTests
     {
         private const string _sceneName = "ConnectedComponentsTestScene";
+        private readonly Vector3 _centreOfCellHeightOffset = Vector3.up * 1.7f;
 
         [SetUp]
         public void SetUp()
@@ -38,7 +37,7 @@ namespace Tests.AplibTests
 
         /// <summary>
         /// This test first collects a single cell from every connected component.
-        /// It then tries to make the player - spawning in an arbitrary room - visit every one of those cells,
+        /// It then tries to make the player - spawning in an arbitrary room - visit every one of those cells
         /// in an arbitrary order. If it succeeds in visiting every cell, it has visited every connected component.
         /// </summary>
         /// <returns>An IEnumerator usable to iterate the test.</returns>
@@ -50,9 +49,8 @@ namespace Tests.AplibTests
             GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
 
             // Arrange ==> Level information
-            Vector3 centreOfCellHeightOffset = Vector3.up * 1.7f;
             Vector3[] cellsToVisit = gridPlacer.Grid.DetermineConnectedComponents()
-                .Select(cells => gridPlacer.CentreOfCell(cells.First()) + centreOfCellHeightOffset).ToArray();
+                .Select(cells => gridPlacer.CentreOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
             Vector3[] teleporterPositions = GameObject.Find("Teleporters")
                 .GetComponentsInChildren<Teleporter.Teleporter>()
                 .Select(x => x.LandingPoint).ToArray();

@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace Tests.AplibTests
+namespace Testing.AplibTests
 {
     public class MeleeEnemyBeliefSet : BeliefSet
     {
@@ -23,7 +23,7 @@ namespace Tests.AplibTests
         public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("Player"), x => x);
 
         /// <summary>
-        /// The palyer Health value.
+        /// The player health value.
         /// </summary>
         public Belief<GameObject, HealthComponent> PlayerHealth = new(GameObject.Find("Player"), x => x.GetComponent<HealthComponent>());
 
@@ -36,12 +36,8 @@ namespace Tests.AplibTests
         /// The target position that the player needs to move towards.
         /// Find the first enemy in the scene.
         /// </summary>
-        public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Melee Enemy Body"), x =>
-        {
-            if (x == null)
-                return Vector3.zero;
-            return x.transform.position;
-        });
+        public Belief<GameObject, Vector3> EnemyPosition = new(GameObject.Find("Melee Enemy Body"),
+            x => x == null ? Vector3.zero : x.transform.position);
     }
 
     /// <summary>

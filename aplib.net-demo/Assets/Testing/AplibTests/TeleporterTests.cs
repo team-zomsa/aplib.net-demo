@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace Tests.AplibTests
+namespace Testing.AplibTests
 {
     public class TeleporterBeliefSet : BeliefSet
     {

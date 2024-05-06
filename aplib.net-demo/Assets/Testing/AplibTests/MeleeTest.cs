@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace Tests.AplibTests
+namespace Testing.AplibTests
 {
     public class MeleeBeliefSet : BeliefSet
     {
@@ -35,10 +35,10 @@ namespace Tests.AplibTests
         /// The target position that the player needs to move towards.
         /// Find the first enemy in the scene.
         /// </summary>
-        public Belief<GameObject, Vector3> EnemyPosition = new
-        (
+        public Belief<GameObject, Vector3> EnemyPosition = new(
             reference: GameObject.Find("Target Dummy Body"),
-            getObservationFromReference: enemy => enemy ? enemy.transform.position : Vector3.zero);
+            getObservationFromReference: enemy => enemy ? enemy.transform.position : Vector3.zero
+        );
     }
 
     public class MeleeAplibTest

@@ -92,6 +92,11 @@ namespace Assets.Scripts.Wfc
         private Renderer _doorRenderer;
 
         /// <summary>
+        /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
+        /// </summary>
+        private readonly Vector3 _teleporterHeightOffset = Vector3.up * 0.7f;
+
+        /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
@@ -246,22 +251,21 @@ namespace Assets.Scripts.Wfc
         private void JoinConnectedComponentsWithTeleporters()
         {
             // Prepare some variables
-            Vector3 teleporterHeightOffset = Vector3.up * 0.7f; // Distance from the floor
             using IEnumerator<ConnectedComponent> connectedComponentsEnumerator = Grid.DetermineConnectedComponents().GetEnumerator();
 
             Teleporter.Teleporter previousExitTeleporter = null;
             int connectedComponentsProcessed = 0;
 
-            // Keep connecting the next connected component with the previous one, by placing a pair of teleporters.
+            // Keep connecting the next connected components with the previous one, by placing a pair of teleporters.
             while (connectedComponentsEnumerator.MoveNext())
             {
                 // Link current and previous connected component bidirectionally,
-                // if the current connected component is not the first connected component
+                // if the current connected component is not the first connected component.
                 if (connectedComponentsProcessed > 0)
                 {
                     // Place an entry teleporter, so that the previous connected component can be linked through this teleporter.
                     Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
-                    Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + teleporterHeightOffset);
+                    Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
                     previousExitTeleporter!.TargetTeleporter = entryTeleporter;
@@ -278,7 +282,7 @@ namespace Assets.Scripts.Wfc
                 // Place the exit teleporter of the current connected component at the end of the connected component.
                 // (Assuming that the connected component has at least two cells, `nextExitCell` will never equal `nextEntryCell`)
                 Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
-                Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + teleporterHeightOffset);
+                Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset);
 
                 // Update iteration progress
                 previousExitTeleporter = exitTeleporter;
@@ -287,10 +291,7 @@ namespace Assets.Scripts.Wfc
 
             // If at least one exit portal has been placed, the final exit teleporter will not be linked to
             // another connected component, for this final exit teleporter belongs to the final connected component.
-            if (connectedComponentsProcessed > 0)
-            {
-                Destroy(previousExitTeleporter!.gameObject);
-            }
+            if (connectedComponentsProcessed > 0) Destroy(previousExitTeleporter!.gameObject);
         }
 
         /// <summary>
@@ -301,7 +302,7 @@ namespace Assets.Scripts.Wfc
         /// <remarks>All teleporters are clustered under a 'Teleporter' empty gameobject.</remarks>
         private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
         {
-            // Give all teleporters a parent object for organization
+            // Give all teleporters a parent object for organization.
             GameObject teleportersParent = GameObject.Find("Teleporters") ?? new GameObject("Teleporters");
 
             return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
