@@ -122,7 +122,7 @@ public class Movement : MonoBehaviour
         LimitVelocity(isOnSlope);
 
         // Lastly, play a footstep sound when the player is grounded, at certain intervals
-        if (_isGrounded && _rigidbody.velocity.magnitude > 0.25f && _timer.Countdown <= 0)
+        if (_isGrounded && _rigidbody.velocity.magnitude > 0.25f && _timer.IsFinished())
         {
             _timer.Reset();
             _footStep.Step();

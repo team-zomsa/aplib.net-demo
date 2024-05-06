@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Timer))]
 /// <summary>
 /// Melee enemy that attacks the player when in range.
 /// It inherits from DummyEnemy to add respawn functionality.
@@ -11,36 +12,38 @@ public class MeleeEnemy : DummyEnemy
     [SerializeField] private float _hitDelay = 1f;
     private readonly float _sizeIncrease = 1.2f;
     private MeleeWeapon _meleeWeapon;
-    private Stopwatch _cooldownStopwatch;
+    private Timer _cooldownTimer;
     private bool _isSwinging = false;
 
     /// <summary>
     /// Sets the target tag for the melee weapon.
-    /// Also initializes the stopwatches.
+    /// Also initializes the timers.
     /// </summary>
     protected override void Awake()
     {
-        base.Awake();
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
+        _cooldownTimer = GetComponent<Timer>();
+        _cooldownTimer.SetExactTime(_attackCooldown);
+
         _meleeWeapon.TargetTag = _targetTag;
         _meleeWeapon.Damage = _damagePoints;
-        _cooldownStopwatch = new(_attackCooldown);
+
+        base.Awake();
     }
 
     /// <summary>
-    /// Updates the stopwatch and starts the swing if the cooldown is finished and enemies are in sight.
+    /// Updates the timer and starts the swing if the cooldown is finished and enemies are in sight.
     /// </summary>
     protected override void Update()
-    {   
+    {
         if (_isSwinging)
             return;
-            
-        base.Update();
-        _cooldownStopwatch.Update(Time.deltaTime);
 
-        if (_cooldownStopwatch.IsFinished() && _meleeWeapon.EnemiesWithinRange())
+        base.Update();
+
+        if (_cooldownTimer.IsFinished() && _meleeWeapon.EnemiesWithinRange())
         {
-            _cooldownStopwatch.Reset();
+            _cooldownTimer.Reset();
             StartSwing();
         }
     }
@@ -66,5 +69,5 @@ public class MeleeEnemy : DummyEnemy
         _meleeWeapon.UseWeapon();
         transform.localScale /= _sizeIncrease;
         _isSwinging = false;
-    }    
+    }
 }
