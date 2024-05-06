@@ -1,21 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory : MonoBehaviour
+public class Inventory : AbstractInventory
 {
-    private Queue<Item> _itemList;
+    protected Queue<Item> _itemList;
     public float inventorySize;
-    /// <summary>
-    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
-    /// </summary>
-    private RawImage _inventoryIndicator;
-    /// <summary>
-    /// The texture of the _inventoryIndicator object.
-    /// </summary>
-    public Texture emptyInventoryImage;
-    public GameObject inventoryObject;
 
     /// <summary>
     /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
@@ -32,7 +22,7 @@ public class Inventory : MonoBehaviour
     /// If there are not matching names it adds the item to the inventory.
     /// </summary>
     /// <param name="item">The item that is fed into the inventory.</param>
-    public void PickUpItem(Item item)
+    public override void PickUpItem(Item item)
     {
         bool alreadyInInventory = false;
         List<Item> _tempItemList = _itemList.ToList();
@@ -59,7 +49,7 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new item is selected.
     /// </summary>
-    public void ActivateItem()
+    public override void ActivateItem()
     {
         if (_itemList.Any())
         {
@@ -75,7 +65,7 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// Puts the first item you have in the last slot.
     /// </summary>
-    public void SwitchItem()
+    public override void SwitchItem()
     {
         if (_itemList.Any())
         {
@@ -87,5 +77,5 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
     /// </summary>
-    public void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
+    public override void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }
