@@ -884,11 +884,11 @@ MonoBehaviour:
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
   _doorPrefab: {fileID: 5163913735208331690, guid: 68173a35499684249a46fbd42c360c6c,
     type: 3}
-  _useSeed: 0
+  _useSeed: 1
   _seed: 0
   _gridWidthX: 5
   _gridWidthZ: 5
-  _amountOfRooms: 3
+  _amountOfRooms: 2
   _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
     type: 3}
 --- !u!4 &1455078763

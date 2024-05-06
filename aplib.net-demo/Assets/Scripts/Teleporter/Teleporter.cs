@@ -47,7 +47,7 @@ namespace Teleporter
         /// <summary>
         /// A simple reference to the player's transform, for performance reasons.
         /// </summary>
-        protected Transform _playerTransform;
+        protected Rigidbody _playerRigidbody;
 
         /// <summary>
         /// A reference to the coroutine running while teleporting. Stored, such that the teleporting can be cancelled.
@@ -66,8 +66,8 @@ namespace Teleporter
         /// </summary>
         private void Start()
         {
-            _playerTransform = GameObject.FindWithTag("Player").transform;
-            if (_playerTransform == null) Debug.LogError("No player was found.");
+            _playerRigidbody = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+            if (_playerRigidbody == null) Debug.LogError("No player was found.");
         }
 
         /// <summary>
@@ -106,6 +106,8 @@ namespace Teleporter
         {
             if (!other.CompareTag("Player")) return; // Only trigger for player
 
+            Debug.Log("Player exited teleporter.");
+
             _fx.SetActive(false);
             if (_waitThenTeleportCoroutine != null) // Can be null when player gets teleported to this teleporter
                 StopCoroutine(_waitThenTeleportCoroutine); // Stop coroutine prematurely when player exits during wind up time
@@ -120,16 +122,18 @@ namespace Teleporter
             yield return new WaitForSeconds(_teleportWindUpTime);
 
             // Teleport the player
-            TargetTeleporter.TeleportReceive(_playerTransform);
+            TargetTeleporter.TeleportReceive(_playerRigidbody);
         }
 
         /// <summary>
-        /// Teleport a <see cref="Transform"/> (normally the player) towards this teleporter.
+        /// Teleport a <see cref="Rigidbody"/> (normally the player) towards this teleporter.
         /// </summary>
         /// <param name="objectTransform">The transform to teleport</param>
-        public void TeleportReceive(Transform objectTransform)
+        public void TeleportReceive(Rigidbody objectRigidbody)
         {
-            objectTransform.position = LandingPoint;
+            objectRigidbody.position = LandingPoint;
+
+            Debug.Log($"Teleported player to {LandingPoint}.");
             // Prevent this action from triggering logic which are intended for when the player walks in.
             _shouldIgnoreNextPlayerEntryTrigger = true;
         }

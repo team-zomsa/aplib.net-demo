@@ -20,9 +20,9 @@ namespace Tests.AplibTests
 {
     public class ConnectedComponentsBeliefSet : BeliefSet
     {
-        public Belief<GameObject, Transform> PlayerTransform = new(
+        public Belief<GameObject, Rigidbody> PlayerRigidbody = new(
             reference: GameObject.Find("Player"),
-            x => x.transform);
+            x => x.GetComponent<Rigidbody>());
     }
 
     public class ConnectedComponentsTests
@@ -50,9 +50,9 @@ namespace Tests.AplibTests
             GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
 
             // Arrange ==> Level information
-            Vector3 centreOfCellHeightOffest = Vector3.up * 1.7f;
+            Vector3 centreOfCellHeightOffset = Vector3.up * 1.7f;
             Vector3[] cellsToVisit = gridPlacer.Grid.DetermineConnectedComponents()
-                .Select(cells => gridPlacer.CentreOfCell(cells.First()) + centreOfCellHeightOffest).ToArray();
+                .Select(cells => gridPlacer.CentreOfCell(cells.First()) + centreOfCellHeightOffset).ToArray();
             Vector3[] teleporterPositions = GameObject.Find("Teleporters")
                 .GetComponentsInChildren<Teleporter.Teleporter>()
                 .Select(x => x.LandingPoint).ToArray();
@@ -62,14 +62,14 @@ namespace Tests.AplibTests
 
             // Arrange ==> GoalStructure: Visit cell of the current connected component
             TransformPathfinderAction<ConnectedComponentsBeliefSet> approachCurrentCellAction = new(
-                objectQuery: beliefSet => beliefSet.PlayerTransform,
+                objectQuery: beliefSet => beliefSet.PlayerRigidbody,
                 location: currentCellPosition(),
-                heightOffset: .7f);
+                heightOffset: 1.4f);
 
             Action<ConnectedComponentsBeliefSet> waitForTeleportAction = new(
                 effect: _ => { Debug.Log("Waiting for teleport..."); },
                 guard: beliefSet => teleporterPositions.Any(teleporterPosition =>
-                    (teleporterPosition - ((Transform)beliefSet.PlayerTransform).position).magnitude < 0.4f));
+                    (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
 
             PrimitiveTactic<ConnectedComponentsBeliefSet> approachCurrentCellTactic = new(approachCurrentCellAction);
             PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction);
@@ -78,7 +78,7 @@ namespace Tests.AplibTests
                 approachCurrentCellTactic);
 
             Goal<ConnectedComponentsBeliefSet> approachCurrentCellGoal = new(waitForTeleportOrApproachCurrentCellTactic,
-                beliefSet => (currentCellPosition() - ((Transform)beliefSet.PlayerTransform).position).magnitude < 1.5f);
+                beliefSet => (currentCellPosition() - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 1.5f);
             PrimitiveGoalStructure<ConnectedComponentsBeliefSet> approachCurrentCellGoalStructure = new(approachCurrentCellGoal);
             RepeatGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellGoalStructure = new(approachCurrentCellGoalStructure);
 

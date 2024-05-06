@@ -42,7 +42,7 @@ public class PathfindingTests
             b =>
             {
                 GameObject player = b.Player;
-                return player.transform;
+                return player.GetComponent<Rigidbody>();
             },
             rootBeliefSet.TargetPosition,
             0.9f

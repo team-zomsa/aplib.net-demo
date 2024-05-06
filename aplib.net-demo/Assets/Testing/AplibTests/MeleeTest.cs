@@ -65,7 +65,7 @@ namespace Tests.AplibTests
                 objectQuery: beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
-                    return player.transform;
+                    return player.GetComponent<Rigidbody>();
                 },
                 location: beliefSet => beliefSet.EnemyPosition,
                 heightOffset: 0.9f
