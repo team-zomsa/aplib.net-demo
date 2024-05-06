@@ -75,7 +75,7 @@ namespace Entities.Weapons
         {
             UpdateHitZone();
             _targets = Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-                .Where(c => c.CompareTag(targetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
+                .Where(c => c.CompareTag(TargetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
             return _targets.Any();
         }
 

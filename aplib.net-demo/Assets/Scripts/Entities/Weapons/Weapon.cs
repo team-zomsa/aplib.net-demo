@@ -10,7 +10,7 @@ namespace Entities.Weapons
         /// <summary>
         /// The tag of the target that the weapon can hit.
         /// </summary>
-        public string targetTag = "Enemy";
+        public string TargetTag = "Enemy";
 
         /// <summary>
         /// Use the weapon.

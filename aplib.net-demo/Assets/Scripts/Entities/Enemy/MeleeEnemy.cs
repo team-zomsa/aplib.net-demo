@@ -23,7 +23,7 @@ public class MeleeEnemy : DummyEnemy
     {
         base.Awake();
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
-        _meleeWeapon.targetTag = _targetTag;
+        _meleeWeapon.TargetTag = _targetTag;
         _meleeWeapon.Damage = _damagePoints;
         _cooldownTimer = new(_attackCooldown);
     }
