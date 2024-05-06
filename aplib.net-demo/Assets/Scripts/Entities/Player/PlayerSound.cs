@@ -22,7 +22,7 @@ public class PlayerSound : MonoBehaviour
     /// <param name="source">The AudioClip array.</param>
     /// <returns>A random AudioClip from the array.</returns>
     private AudioClip GetRandomClip(AudioClip[] source)
-        => source[Random.Range(0, source.Length - 1)];
+        => source[Random.Range(0, source.Length)];
 
     /// <summary>
     /// Plays a random footstep sound.

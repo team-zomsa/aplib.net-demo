@@ -1,5 +1,9 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(PlayerSound))]
+[RequireComponent(typeof(Timer))]
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float _maxSpeedGround = 7;
@@ -35,15 +39,19 @@ public class Movement : MonoBehaviour
     private Transform _playerVisTransform;
 
     private PlayerSound _footStep;
+    private Timer _timer;
 
     /// <summary>
     /// Initialize the player's rigidbody and collider, and freeze the player's rotation.
     /// </summary>
     private void Start()
     {
+        // Link the components of this object to the variables
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<CapsuleCollider>();
         _footStep = GetComponent<PlayerSound>();
+        _timer = GetComponent<Timer>();
+
         _playerHeight = _controller.height;
         _playerRadius = _controller.radius;
         _gravity = Physics.gravity.y;
@@ -114,8 +122,11 @@ public class Movement : MonoBehaviour
         LimitVelocity(isOnSlope);
 
         // Lastly, play a footstep sound when the player is grounded, at certain intervals
-        if (_isGrounded && _rigidbody.velocity.magnitude > 0.1f)
+        if (_isGrounded && _rigidbody.velocity.magnitude > 0.25f && _timer.Countdown <= 0)
+        {
+            _timer.Reset();
             _footStep.Step();
+        }
     }
 
     /// <summary>

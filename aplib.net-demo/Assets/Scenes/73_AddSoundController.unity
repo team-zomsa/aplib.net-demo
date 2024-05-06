@@ -5225,6 +5225,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _footSteps.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _footSteps.Array.data[5]
+      value: 
+      objectReference: {fileID: 8300000, guid: 1206f6082abb552479cda3178bdc53c5, type: 3}
+    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _footSteps.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: d51aba4fdeb450649a49dbcdf41d3bdb, type: 3}
+    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _footSteps.Array.data[7]
+      value: 
+      objectReference: {fileID: 8300000, guid: e6bf176527a9f264fbdbe63641048c70, type: 3}
+    - target: {fileID: 4597483415818435336, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _maxTime
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 4597483415818435336, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _minTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4597483415818435336, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: Countdown
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4704915512707521697, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: _respawnPointTransform
