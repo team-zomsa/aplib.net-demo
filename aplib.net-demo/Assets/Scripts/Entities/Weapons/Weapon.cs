@@ -5,6 +5,9 @@ using UnityEngine;
 /// </summary>
 public abstract class Weapon : MonoBehaviour
 {
+    // The player sound component used to play weapon sounds.
+    [SerializeField] protected EntitySound _entitySound;
+
     /// <summary>
     /// The tag of the target that the weapon can hit.
     /// </summary>

@@ -33,7 +33,7 @@ public class MeleeWeapon : Weapon
     /// Ensure the height is at least twice the radius, because the height of the hitzone (capsule) must at least be the diameter of the spheres.
     /// (If the two spheres are at the same position, the capsule just becomes a sphere and height = 2 * radius)
     /// </summary>
-    private void Awake()
+    private void Start()
     {
         if (_height < 2 * _radius) _height = 2 * _radius;
         EnemiesWithinRange();
@@ -53,7 +53,7 @@ public class MeleeWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        if (EnemiesWithinRange()) 
+        if (EnemiesWithinRange())
         {
             foreach (Collider collider in _targets)
             {
@@ -62,6 +62,9 @@ public class MeleeWeapon : Weapon
                 enemy?.ReduceHealth(Damage);
             }
         }
+
+        // Play a random swing sound.
+        _entitySound.Swing();
     }
 
     /// <summary>

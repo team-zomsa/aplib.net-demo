@@ -34,5 +34,8 @@ public class RangedWeapon : Weapon
             HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
             enemy?.ReduceHealth(_damage);
         }
+
+        // Play a random whoosh crossbow sound.
+        _entitySound.Shoot();
     }
 }
