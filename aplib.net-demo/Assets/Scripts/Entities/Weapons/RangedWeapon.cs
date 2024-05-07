@@ -36,6 +36,6 @@ public class RangedWeapon : Weapon
         }
 
         // Play a random whoosh crossbow sound.
-        _playerSound.Shoot();
+        _entitySound.Shoot();
     }
 }

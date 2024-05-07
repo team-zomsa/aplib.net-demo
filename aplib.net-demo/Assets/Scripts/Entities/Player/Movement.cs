@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(PlayerSound))]
+[RequireComponent(typeof(EntitySound))]
 [RequireComponent(typeof(Timer))]
 public class Movement : MonoBehaviour
 {
@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour
     [SerializeField]
     private Transform _playerVisTransform;
 
-    private PlayerSound _footStep;
+    private EntitySound _footStep;
     private Timer _timer;
 
     /// <summary>
@@ -49,7 +49,7 @@ public class Movement : MonoBehaviour
         // Link the components of this object to the variables
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<CapsuleCollider>();
-        _footStep = GetComponent<PlayerSound>();
+        _footStep = GetComponent<EntitySound>();
         _timer = GetComponent<Timer>();
 
         _playerHeight = _controller.height;

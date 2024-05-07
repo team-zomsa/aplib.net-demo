@@ -6,18 +6,12 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     // The player sound component used to play weapon sounds.
-    protected PlayerSound _playerSound;
+    [SerializeField] protected EntitySound _entitySound;
 
     /// <summary>
     /// The tag of the target that the weapon can hit.
     /// </summary>
     public string TargetTag = "Enemy";
-
-    /// <summary>
-    /// Get the PlayerSound component from the root object.
-    /// </summary>
-    protected void Start()
-        => _playerSound = transform.root.GetComponent<PlayerSound>();
 
     /// <summary>
     /// Use the weapon.

@@ -1,11 +1,12 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class PlayerSound : MonoBehaviour
+public class EntitySound : MonoBehaviour
 {
     [SerializeField] private AudioClip[] _footSteps;
     [SerializeField] private AudioClip[] _knifeSwings;
     [SerializeField] private AudioClip[] _crossbowShots;
+    [SerializeField] private AudioClip[] _deathSounds;
     private AudioSource _audioSource;
 
     /// <summary>
@@ -38,4 +39,9 @@ public class PlayerSound : MonoBehaviour
     /// Plays a random crossbow shot sound.
     /// </summary>
     public void Shoot() => _audioSource.PlayOneShot(GetRandomClip(_crossbowShots));
+
+    /// <summary>
+    /// Plays a random death sound.
+    /// </summary>
+    public void Die() => _audioSource.PlayOneShot(GetRandomClip(_deathSounds));
 }
