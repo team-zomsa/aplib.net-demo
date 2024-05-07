@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(EntitySound))]
 /// <summary>
 /// Health component that can be added to any GameObject.
 /// Keeps track of the GameObject's health and whether it is dead.
@@ -42,12 +41,9 @@ public class HealthComponent : MonoBehaviour
     [SerializeField]
     private int _maxHealth = 100;
 
-    [SerializeField] private EntitySound _entitySound;
-
     private void Awake()
     {
         Health = _maxHealth;
-        _entitySound = GetComponent<EntitySound>();
     }
 
     /// <summary>
@@ -74,17 +70,12 @@ public class HealthComponent : MonoBehaviour
     /// Resets the GameObject's health to the maximum value.
     /// </summary>
     public void Reset()
-    {
-        Health = _maxHealth;
-    }
+        => Health = _maxHealth;
 
     /// <summary>
     /// Send an event to notify other components that the GameObject has died.
     /// Every other component with an "OnDeath" method will be notified.
     /// </summary>
     private void Die()
-    {
-        _entitySound.Die();
-        Death?.Invoke(this);
-    }
+        => Death?.Invoke(this);
 }

@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] private float _minTime = 0.1f;
-    [SerializeField] private float _maxTime = 0.15f;
+    [SerializeField]
+    private float _minTime = 0.1f;
+    [SerializeField]
+    private float _maxTime = 0.15f;
+
     private float _countdown = 0f;
 
     /// <summary>

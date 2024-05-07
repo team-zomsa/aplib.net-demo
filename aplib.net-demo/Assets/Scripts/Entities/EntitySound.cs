@@ -1,13 +1,24 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(HealthComponent))]
 public class EntitySound : MonoBehaviour
 {
-    [SerializeField] private AudioClip[] _footSteps;
-    [SerializeField] private AudioClip[] _knifeSwings;
-    [SerializeField] private AudioClip[] _crossbowShots;
-    [SerializeField] private AudioClip[] _deathSounds;
+    [SerializeField]
+    private AudioClip[] _footSteps;
+
+    [SerializeField]
+    private AudioClip[] _knifeSwings;
+
+    [SerializeField]
+    private AudioClip[] _crossbowShots;
+
+    [SerializeField]
+    private AudioClip[] _deathSounds;
+
     private AudioSource _audioSource;
+
+    private HealthComponent _healthComponent;
 
     /// <summary>
     /// Sets up the AudioSource component.
@@ -15,6 +26,9 @@ public class EntitySound : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _healthComponent = GetComponent<HealthComponent>();
+
+        _healthComponent.Death += OnDeath;
     }
 
     /// <summary>
@@ -43,5 +57,5 @@ public class EntitySound : MonoBehaviour
     /// <summary>
     /// Plays a random death sound.
     /// </summary>
-    public void Die() => _audioSource.PlayOneShot(GetRandomClip(_deathSounds));
+    public void OnDeath(HealthComponent _) => _audioSource.PlayOneShot(GetRandomClip(_deathSounds));
 }
