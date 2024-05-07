@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/73_AddSoundController.unity
+    guid: ac92abeb8c5cd73449e3e33690748a4f
+  - enabled: 1
     path: Assets/Scenes/MeleeWeapon.unity
     guid: 4f005e486a5e8a7ff973fc458abe5923
   - enabled: 1
