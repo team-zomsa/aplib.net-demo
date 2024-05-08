@@ -70,16 +70,12 @@ public class HealthComponent : MonoBehaviour
     /// Resets the GameObject's health to the maximum value.
     /// </summary>
     public void Reset()
-    {
-        Health = _maxHealth;
-    }
+        => Health = _maxHealth;
 
     /// <summary>
     /// Send an event to notify other components that the GameObject has died.
     /// Every other component with an "OnDeath" method will be notified.
     /// </summary>
     private void Die()
-    {
-        Death?.Invoke(this);
-    }
+        => Death?.Invoke(this);
 }

@@ -2,6 +2,7 @@ using Entities.Weapons;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Timer))]
 /// <summary>
 /// Melee enemy that attacks the player when in range.
 /// It inherits from DummyEnemy to add respawn functionality.
@@ -21,11 +22,14 @@ public class MeleeEnemy : DummyEnemy
     /// </summary>
     protected override void Awake()
     {
-        base.Awake();
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
+        _cooldownTimer = GetComponent<Timer>();
+        _cooldownTimer.SetExactTime(_attackCooldown);
+
         _meleeWeapon.TargetTag = _targetTag;
         _meleeWeapon.Damage = _damagePoints;
-        _cooldownTimer = new(_attackCooldown);
+
+        base.Awake();
     }
 
     /// <summary>
@@ -37,7 +41,6 @@ public class MeleeEnemy : DummyEnemy
             return;
 
         base.Update();
-        _cooldownTimer.Update(Time.deltaTime);
 
         if (_cooldownTimer.IsFinished() && _meleeWeapon.EnemiesWithinRange())
         {
