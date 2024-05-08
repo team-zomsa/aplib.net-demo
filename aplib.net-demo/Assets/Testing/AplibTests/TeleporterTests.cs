@@ -12,20 +12,21 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace Tests.AplibTests
+namespace Testing.AplibTests
 {
     public class TeleporterBeliefSet : BeliefSet
     {
         /// <summary>
         /// The player object in the scene.
         /// </summary>
-        public Belief<GameObject, Transform> PlayerTransform = new(
+        public Belief<GameObject, Rigidbody> PlayerRigidbody = new(
             reference: GameObject.Find("Player"),
-            x => x.transform);
+            x => x.GetComponent<Rigidbody>());
 
         public Belief<Teleporter.Teleporter, Vector3> TeleporterInLocation = new(
             reference: GameObject.Find("Teleporter 1").GetComponent<Teleporter.Teleporter>(),
             x => x.LandingPoint);
+
         public Belief<Teleporter.Teleporter, Vector3> TeleporterOutLocation = new(
             reference: GameObject.Find("Teleporter 2").GetComponent<Teleporter.Teleporter>(),
             x => x.LandingPoint);
@@ -50,17 +51,17 @@ namespace Tests.AplibTests
 
             // Arrange ==> Actions
             TransformPathfinderAction<TeleporterBeliefSet> approachTeleporterAction = new(
-                objectQuery: beliefSet => beliefSet.PlayerTransform,
+                objectQuery: beliefSet => beliefSet.PlayerRigidbody,
                 location: rootBeliefSet.TeleporterInLocation,
                 heightOffset: .7f);
 
             Action<TeleporterBeliefSet> waitForTeleportAction = new(
                 effect: _ => { Debug.Log("Waiting for teleport..."); },
-                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Transform)beliefSet.PlayerTransform).position)
+                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
                     .magnitude < 0.4f);
 
             TransformPathfinderAction<TeleporterBeliefSet> walkOutOfTeleporter = new(
-                objectQuery: beliefSet => beliefSet.PlayerTransform,
+                objectQuery: beliefSet => beliefSet.PlayerRigidbody,
                 location: beliefSet => beliefSet.TeleporterOutLocation + new Vector3(3, 0, 0),
                 heightOffset: .7f);
 
@@ -74,11 +75,11 @@ namespace Tests.AplibTests
 
             // Arrange ==> Goals
             Goal<TeleporterBeliefSet> teleportOnceGoal = new(teleportOrApproachTactic,
-                beliefSet => (rootBeliefSet.TeleporterOutLocation - ((Transform)beliefSet.PlayerTransform).position)
+                beliefSet => (rootBeliefSet.TeleporterOutLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
                     .magnitude < 0.2f);
 
             Goal<TeleporterBeliefSet> walkOutOfTeleporterGoal = new(walkOutOfTeleporterTactic,
-                beliefSet => (rootBeliefSet.TeleporterOutLocation - ((Transform)beliefSet.PlayerTransform).position)
+                beliefSet => (rootBeliefSet.TeleporterOutLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
                     .magnitude > 2f);
 
             // Arrange ==> GoalStructures

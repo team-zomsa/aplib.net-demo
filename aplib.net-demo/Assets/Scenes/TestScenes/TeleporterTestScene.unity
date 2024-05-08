@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18029143, g: 0.22572419, b: 0.30693057, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -759,16 +759,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5483589757056352761, guid: 210f971afd3a928fb8c2c5ab272b4645,
-        type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 183
-      objectReference: {fileID: 0}
-    - target: {fileID: 5483589757056352761, guid: 210f971afd3a928fb8c2c5ab272b4645,
-        type: 3}
-      propertyPath: m_IncludeLayers.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 6600059740520212426, guid: 210f971afd3a928fb8c2c5ab272b4645,
         type: 3}
       propertyPath: _respawnPointTransform
@@ -905,6 +895,16 @@ PrefabInstance:
     - target: {fileID: 6982598044720645006, guid: 1c88f3319232dace09ca6eab36996fbc,
         type: 3}
       propertyPath: targetTeleporter
+      value: 
+      objectReference: {fileID: 1990518394}
+    - target: {fileID: 6982598044720645006, guid: 1c88f3319232dace09ca6eab36996fbc,
+        type: 3}
+      propertyPath: <TargetTeleporter>k__BackingField
+      value: 
+      objectReference: {fileID: 1990518394}
+    - target: {fileID: 6982598044720645006, guid: 1c88f3319232dace09ca6eab36996fbc,
+        type: 3}
+      propertyPath: <targetTeleporter>k__BackingField
       value: 
       objectReference: {fileID: 1990518394}
     m_RemovedComponents: []
@@ -1359,6 +1359,16 @@ PrefabInstance:
     - target: {fileID: 6982598044720645006, guid: 1c88f3319232dace09ca6eab36996fbc,
         type: 3}
       propertyPath: targetTeleporter
+      value: 
+      objectReference: {fileID: 2076102580}
+    - target: {fileID: 6982598044720645006, guid: 1c88f3319232dace09ca6eab36996fbc,
+        type: 3}
+      propertyPath: <TargetTeleporter>k__BackingField
+      value: 
+      objectReference: {fileID: 2076102580}
+    - target: {fileID: 6982598044720645006, guid: 1c88f3319232dace09ca6eab36996fbc,
+        type: 3}
+      propertyPath: <targetTeleporter>k__BackingField
       value: 
       objectReference: {fileID: 2076102580}
     m_RemovedComponents: []

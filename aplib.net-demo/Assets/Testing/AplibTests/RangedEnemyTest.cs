@@ -6,14 +6,13 @@ using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity.Actions;
-using JetBrains.Annotations;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace Tests.AplibTests
+namespace Testing.AplibTests
 {
     public class RangedEnemyBeliefSet : BeliefSet
     {
@@ -72,7 +71,7 @@ namespace Tests.AplibTests
                 b =>
                 {
                     GameObject player = b.Player;
-                    return player.transform;
+                    return player.GetComponent<Rigidbody>();
                 },
                 beliefSet.TargetPosition,
                 0.9f
@@ -122,7 +121,7 @@ namespace Tests.AplibTests
                 return Vector3.Distance(player.transform.position, target) < _targetStoppingDistance;
             }
 
-            bool PlayerRespawnedPredicate(RangedEnemyBeliefSet beliefSet) 
+            bool PlayerRespawnedPredicate(RangedEnemyBeliefSet beliefSet)
             {
                 GameObject player = beliefSet.Player;
                 Vector3 respawnPosition = beliefSet.RespawnPosition;

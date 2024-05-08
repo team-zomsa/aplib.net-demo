@@ -1,3 +1,4 @@
+using Entities.Weapons;
 using System.Collections;
 using UnityEngine;
 
