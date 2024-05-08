@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(HealthComponent))]
 public class EntitySound : MonoBehaviour
 {
     [SerializeField]
@@ -18,17 +17,12 @@ public class EntitySound : MonoBehaviour
 
     private AudioSource _audioSource;
 
-    private HealthComponent _healthComponent;
-
     /// <summary>
     /// Sets up the AudioSource component.
     /// </summary>
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _healthComponent = GetComponent<HealthComponent>();
-
-        _healthComponent.Death += OnDeath;
     }
 
     /// <summary>
@@ -57,5 +51,5 @@ public class EntitySound : MonoBehaviour
     /// <summary>
     /// Plays a random death sound.
     /// </summary>
-    public void OnDeath(HealthComponent _) => _audioSource.PlayOneShot(GetRandomClip(_deathSounds));
+    public void OnDeath() => _audioSource.PlayOneShot(GetRandomClip(_deathSounds));
 }

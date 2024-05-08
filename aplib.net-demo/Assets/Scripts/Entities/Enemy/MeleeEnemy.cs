@@ -25,6 +25,7 @@ public class MeleeEnemy : DummyEnemy
     private MeleeWeapon _meleeWeapon;
     private Timer _cooldownTimer;
     private bool _isSwinging = false;
+    private EntitySound _entitySound;
 
     /// <summary>
     /// Sets the target tag for the melee weapon.
@@ -37,6 +38,8 @@ public class MeleeEnemy : DummyEnemy
 
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
         _meleeWeapon.Initialize(_damagePoints, _targetTag, _swingLength, _swingWidth);
+
+        _entitySound = GetComponent<EntitySound>();
 
         base.Awake();
     }
@@ -79,5 +82,14 @@ public class MeleeEnemy : DummyEnemy
         _meleeWeapon.UseWeapon();
         transform.localScale /= _sizeIncrease;
         _isSwinging = false;
+    }
+
+    /// <summary>
+    /// Play the death sound when the enemy dies.
+    /// </summary>
+    protected override void OnDeath(HealthComponent _healthComponent)
+    {
+        base.OnDeath(_healthComponent);
+        _entitySound.OnDeath();
     }
 }
