@@ -311,9 +311,7 @@ namespace Assets.Scripts.Wfc
             // Give all teleporters a parent object for organization.
             GameObject teleportersParent = GameObject.Find("Teleporters");
             if (teleportersParent is null)
-            {
                 teleportersParent = new GameObject("Teleporters");
-            }
 
             return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
                 .GetComponent<Teleporter.Teleporter>();
