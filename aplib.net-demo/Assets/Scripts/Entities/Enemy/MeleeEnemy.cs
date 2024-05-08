@@ -1,17 +1,26 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Timer))]
 /// <summary>
 /// Melee enemy that attacks the player when in range.
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
+[RequireComponent(typeof(Timer))]
+[RequireComponent(typeof(EntitySound))]
 public class MeleeEnemy : DummyEnemy
 {
-    [SerializeField] private float _attackCooldown = 2f;
-    [SerializeField] private float _hitDelay = 1f;
-    [SerializeField] private float _swingWidth = 1.4f;
-    [SerializeField] private float _swingLength = 4f;
+    [SerializeField]
+    private float _attackCooldown = 2f;
+
+    [SerializeField]
+    private float _hitDelay = 1f;
+
+    [SerializeField]
+    private float _swingWidth = 1.4f;
+
+    [SerializeField]
+    private float _swingLength = 4f;
+
     private readonly float _sizeIncrease = 1.2f;
     private MeleeWeapon _meleeWeapon;
     private Timer _cooldownTimer;

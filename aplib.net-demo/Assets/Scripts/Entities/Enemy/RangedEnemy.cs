@@ -1,14 +1,26 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
+/// <summary>
+/// Ranged enemy that attacks the player when in attack range.
+/// Has a separate vision range within which it will move closer to the player.
+/// </summary>
+[RequireComponent(typeof(Timer))]
+[RequireComponent(typeof(EntitySound))]
 public class RangedEnemy : DummyEnemy
 {
-    [SerializeField] private int _attackRange = 10;
-    [SerializeField] private int _visionRange = 20;
-    [SerializeField] private float _attackCooldown = 2f;
-    private bool _movingCloser = false;
-    private RangedWeapon _rangedWeapon;
+    [SerializeField]
+    private float _attackCooldown = 2f;
+
+    [SerializeField]
+    private int _attackRange = 10;
+
+    [SerializeField]
+    private int _visionRange = 20;
+
+    private bool _movingCloser;
     private Timer _attackTimer;
+    private RangedWeapon _rangedWeapon;
 
     /// <summary>
     /// Initialize the ranged weapon and pathfinding.
@@ -16,12 +28,14 @@ public class RangedEnemy : DummyEnemy
     /// </summary>
     protected override void Start()
     {
-        base.Start();
-        _rangedWeapon = GetComponentInChildren<RangedWeapon>();       
+        _rangedWeapon = GetComponentInChildren<RangedWeapon>();
         _rangedWeapon.Initialize(_damagePoints, _targetTag, transform, _attackRange);
-        _attackTimer = new Timer(_attackCooldown);
+        _attackTimer = gameObject.AddComponent<Timer>();
+        _attackTimer.SetExactTime(_attackCooldown);
         _pathFind.TagToFind = _targetTag;
         _pathFind.SetStoppingDistance(_attackRange - 1f);
+
+        base.Start();
     }
 
     /// <summary>
@@ -30,18 +44,16 @@ public class RangedEnemy : DummyEnemy
     /// </summary>
     protected override void Update()
     {
-        _attackTimer.Update(Time.deltaTime);
-
         // If the target is not within vision range, do nothing.
-        if (!_pathFind.GoalWithinRange(_visionRange)) 
+        if (!_pathFind.GoalWithinRange(_visionRange))
         {
             _pathFind.ToggleAgent(false);
             return;
         }
 
-        if (_movingCloser) 
+        if (_movingCloser)
             return;
-        
+
         // If the target is not directly visible but within vision range, move closer to the target.
         if (!_rangedWeapon.EnemiesInLineOfSight())
         {
@@ -52,7 +64,7 @@ public class RangedEnemy : DummyEnemy
             return;
         }
 
-        if (_attackTimer.IsFinished()) 
+        if (_attackTimer.IsFinished())
         {
             _rangedWeapon.UseWeapon();
             _attackTimer.Reset();
@@ -72,6 +84,7 @@ public class RangedEnemy : DummyEnemy
             _pathFind.UpdateAgent();
             yield return null;
         }
+
         _movingCloser = false;
         _pathFind.SetStoppingDistance(_attackRange - 1f);
     }

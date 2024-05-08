@@ -43,7 +43,7 @@ public class MeleeWeapon : Weapon
     /// <param name="targetTag">The tag of the target.</param>
     public void Initialize(int damage, string targetTag, float height, float radius)
     {
-        base.Initialize(damage, targetTag);
+        Initialize(damage, targetTag);
         _height = height;
         _radius = radius;
     }

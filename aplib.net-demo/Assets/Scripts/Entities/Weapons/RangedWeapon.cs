@@ -12,8 +12,12 @@ public class RangedWeapon : Weapon
     /// <summary>
     /// The point from which the weapon will be fired.
     /// </summary>
-    [SerializeField] private Transform _firePoint;
-    [SerializeField] private int _range = 50;
+    [SerializeField]
+    private Transform _firePoint;
+
+    [SerializeField]
+    private int _range = 50;
+
     private IEnumerable<RaycastHit> _orderedHits;
 
     /// <summary>
@@ -34,7 +38,7 @@ public class RangedWeapon : Weapon
     /// <param name="targetTag">The tag of the target.</param>
     public void Initialize(int damage, string targetTag, Transform firePoint, int range)
     {
-        base.Initialize(damage, targetTag);
+        Initialize(damage, targetTag);
         _firePoint = firePoint;
         _range = range;
     }

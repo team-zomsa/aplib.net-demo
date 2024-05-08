@@ -5,18 +5,23 @@ using UnityEngine;
 /// </summary>
 public abstract class Weapon : MonoBehaviour
 {
-    // The player sound component used to play weapon sounds.
-    [SerializeField] protected EntitySound _entitySound;
+    /// <summary>
+    /// The entity sound component used to play weapon sounds.
+    /// </summary>
+    [SerializeField]
+    protected EntitySound _entitySound;
 
     /// <summary>
     /// The tag of the target that the weapon can hit.
     /// </summary>
-    [SerializeField] protected string _targetTag = "Enemy";
+    [SerializeField]
+    protected string _targetTag = "Enemy";
 
     /// <summary>
     /// The amount of damage the weapon deals.
     /// </summary>
-    [SerializeField] protected int _damage = 25;
+    [SerializeField]
+    protected int _damage = 25;
 
     /// <summary>
     /// Initialize the weapon with the damage and target tag.
@@ -25,6 +30,7 @@ public abstract class Weapon : MonoBehaviour
     {
         _damage = damage;
         _targetTag = targetTag;
+        _entitySound = GetComponentInParent<EntitySound>();
     }
 
     /// <summary>
