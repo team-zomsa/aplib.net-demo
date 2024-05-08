@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1932933636118051691
+--- !u!1001 &5001777040303985213
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 3350569462782925553, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_Name
-      value: TeleportLevel
+      value: ConnectingConnectedComponents
       objectReference: {fileID: 0}
     - target: {fileID: 6254012458074700434, guid: a97359d0503e62444882482848ac8602,
         type: 3}
@@ -23,36 +23,6 @@ PrefabInstance:
       propertyPath: m_IncludeLayers.m_Bits
       value: 64
       objectReference: {fileID: 0}
-    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
-        type: 3}
-      propertyPath: _deathSounds.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
-        type: 3}
-      propertyPath: _deathSounds.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: 51936286dd44fcf4283245553f1fdbf6, type: 3}
-    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
-        type: 3}
-      propertyPath: _deathSounds.Array.data[1]
-      value: 
-      objectReference: {fileID: 8300000, guid: c00a6bf11ca79554d95a1d6bb4773661, type: 3}
-    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
-        type: 3}
-      propertyPath: _deathSounds.Array.data[2]
-      value: 
-      objectReference: {fileID: 8300000, guid: 3840a4194dc0f5b46a6980f03bfd0f57, type: 3}
-    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
-        type: 3}
-      propertyPath: _deathSounds.Array.data[3]
-      value: 
-      objectReference: {fileID: 8300000, guid: b3867eab98f7a1545848ba250d1f0193, type: 3}
-    - target: {fileID: 3363266588949181139, guid: a97359d0503e62444882482848ac8602,
-        type: 3}
-      propertyPath: _deathSounds.Array.data[4]
-      value: 
-      objectReference: {fileID: 8300000, guid: d445731bf696f414e817027de6ef2480, type: 3}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -76,17 +46,17 @@ PrefabInstance:
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
