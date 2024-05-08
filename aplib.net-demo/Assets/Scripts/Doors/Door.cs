@@ -14,8 +14,6 @@ public class Door : MonoBehaviour
     /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
     private int _doorId;
 
-    public int DoorId => _doorId;
-
     /// <summary>Gives the door a unique ID on load.</summary>
     private void Awake()
     {
@@ -31,7 +29,7 @@ public class Door : MonoBehaviour
     {
         // Delete door if it is triggered by the player and the player has the correct key.
         if (collidingObject.gameObject.CompareTag("Player") && GameObject.Find("KeyRingObject").GetComponent<KeyRing>().KeyQuery(this))
-            Destroy(transform.parent.gameObject);
+            Open();
     }
 
     /// <summary>
@@ -40,4 +38,9 @@ public class Door : MonoBehaviour
     /// <param name="key">The key that is being checked for the same ID as the door</param>
     /// <returns>True if key id is the same as door id otherwise false.</returns>
     public bool TryOpenDoor(Key key) => key.Id == _doorId;
+
+    public void Open()
+    {
+        Destroy(gameObject);
+    }
 }
