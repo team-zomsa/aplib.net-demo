@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tiles;
+﻿using Assets.Scripts.Doors;
+using Assets.Scripts.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -212,6 +213,13 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
+        /// Calculates the centre of a cell's floor in world coordinates.
+        /// </summary>
+        /// <param name="cell">The cell to calculate its centre of.</param>
+        /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
+        private Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
+
+        /// <summary>
         /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
         /// allowed directions of the room.
         /// </summary>
@@ -267,15 +275,9 @@ namespace Assets.Scripts.Wfc
         {
             GameObject player = GameObject.FindWithTag("Player");
 
-            if (player is null)
-            {
-                Debug.LogWarning("Player not found!");
-                return;
-            }
+            if (player is null) throw new UnityException("No player was found.");
 
-            Vector3 playerHeightOffset = Vector3.up * 0.7f; // Distance from the floor
-
-            Vector3 spawningPoint = CentreOfCell(playerSpawnCell) + playerHeightOffset;
+            Vector3 spawningPoint = CentreOfCell(playerSpawnCell) + _playerHeightOffset;
 
             Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
             playerRigidbody.position = spawningPoint;
@@ -284,13 +286,6 @@ namespace Assets.Scripts.Wfc
 
             respawnPoint.transform.position = spawningPoint;
         }
-
-        /// <summary>
-        /// Calculates the centre of a cell's floor in world coordinates.
-        /// </summary>
-        /// <param name="cell">The cell to calculate its centre of.</param>
-        /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
-        public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         private (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) => connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
@@ -425,29 +420,6 @@ namespace Assets.Scripts.Wfc
             return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
                 .GetComponent<Teleporter.Teleporter>();
         }
-
-        /// <summary>
-        /// Finds the first room in the grid, and places the player in the centre of that room.
-        /// </summary>
-        /// <exception cref="UnityException">If no player is found, this step fails.</exception>
-        /// <remarks>Assumes that there is at least one room.</remarks>
-        private void PlacePlayer()
-        {
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player == null) throw new UnityException("No player was found.");
-            Rigidbody rigidBody = player.GetComponent<Rigidbody>();
-
-            // Find the first room that is not empty and place the player there.
-            for (int i = 0; i < Grid.NumberOfCells; i++)
-            {
-                if (Grid[i].Tile is not Room) continue;
-
-                // Room found, set player position and break.
-                rigidBody.position = CentreOfCell(Grid[i]) + _playerHeightOffset;
-                break;
-            }
-        }
-
 
         // Here are temporary helper methods used to display the connected components in different colors.
         private static readonly Color[] _colors =

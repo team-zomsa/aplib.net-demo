@@ -1,46 +1,49 @@
 using UnityEngine;
 
-/// <summary>
-/// This class handles collisions with the player and makes sure that the parent object (the door) disappears/opens when
-/// the player is in range and the prerequisites are met (the right key).
-/// </summary>
-public class Door : MonoBehaviour
+namespace Assets.Scripts.Doors
 {
     /// <summary>
-    /// The number of doors that have been spawned in the level so far. This is used to give each door a unique ID.
+    /// This class handles collisions with the player and makes sure that the parent object (the door) disappears/opens when
+    /// the player is in range and the prerequisites are met (the right key).
     /// </summary>
-    private static int _numberOfDoors;
-
-    /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
-    private int _doorId;
-
-    /// <summary>Gives the door a unique ID on load.</summary>
-    private void Awake()
+    public class Door : MonoBehaviour
     {
-        _doorId = _numberOfDoors;
-        _numberOfDoors++;
-    }
+        /// <summary>
+        /// The number of doors that have been spawned in the level so far. This is used to give each door a unique ID.
+        /// </summary>
+        private static int _numberOfDoors;
 
-    /// <summary>
-    /// Checks if the player has the right ID, and destroys the door if true
-    /// </summary>
-    /// <param name="collidingObject">The object that collides with the collider.</param>
-    private void OnTriggerEnter(Collider collidingObject)
-    {
-        // Delete door if it is triggered by the player and the player has the correct key.
-        if (collidingObject.gameObject.CompareTag("Player") && GameObject.Find("KeyRingObject").GetComponent<KeyRing>().KeyQuery(this))
-            Open();
-    }
+        /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
+        public int DoorId;
 
-    /// <summary>
-    /// Matches the given key's ID with the door's ID, returns true if the same.
-    /// </summary>
-    /// <param name="key">The key that is being checked for the same ID as the door</param>
-    /// <returns>True if key id is the same as door id otherwise false.</returns>
-    public bool TryOpenDoor(Key key) => key.Id == _doorId;
+        /// <summary>Gives the door a unique ID on load.</summary>
+        private void Awake()
+        {
+            DoorId = _numberOfDoors;
+            _numberOfDoors++;
+        }
 
-    public void Open()
-    {
-        Destroy(gameObject);
+        /// <summary>
+        /// Checks if the player has the right ID, and destroys the door if true
+        /// </summary>
+        /// <param name="collidingObject">The object that collides with the collider.</param>
+        private void OnTriggerEnter(Collider collidingObject)
+        {
+            // Delete door if it is triggered by the player and the player has the correct key.
+            if (collidingObject.gameObject.CompareTag("Player") && GameObject.Find("KeyRingObject").GetComponent<KeyRing>().KeyQuery(this))
+                Open();
+        }
+
+        /// <summary>
+        /// Matches the given key's ID with the door's ID, returns true if the same.
+        /// </summary>
+        /// <param name="key">The key that is being checked for the same ID as the door</param>
+        /// <returns>True if key id is the same as door id otherwise false.</returns>
+        public bool TryOpenDoor(Key key) => key.Id == DoorId;
+
+        public void Open()
+        {
+            Destroy(gameObject);
+        }
     }
 }

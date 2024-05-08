@@ -14,11 +14,6 @@ namespace Assets.Scripts.Wfc
     public class Grid
     {
         /// <summary>
-        /// Gets the number of cells in the grid.
-        /// </summary>
-        public int NumberOfCells => Width * Height;
-
-        /// <summary>
         /// The width of the grid.
         /// </summary>
         public readonly int Width;
