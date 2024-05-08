@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-
 namespace Entities.Weapons
 {
     /// <summary>
