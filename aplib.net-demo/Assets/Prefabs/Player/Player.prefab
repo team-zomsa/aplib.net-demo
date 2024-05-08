@@ -644,55 +644,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &5561038515404191312
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 318694294809014407}
-  - component: {fileID: 219408333141586519}
-  m_Layer: 7
-  m_Name: MeleeWeapon
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &318694294809014407
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5561038515404191312}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.471, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2939172307889739016}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &219408333141586519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5561038515404191312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b3854aa34cbf646a86eace240d179f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _entitySound: {fileID: 3363266588949181139}
-  TargetTag: Enemy
-  Damage: 25
-  _height: 4
-  _radius: 1.4
 --- !u!1 &7098545768077989620
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,8 +674,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6027258894572874222}
-  - {fileID: 7062848186715698483}
-  - {fileID: 318694294809014407}
+  - {fileID: 330095991058781690}
   m_Father: {fileID: 7917368108203339192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7621415753094476266
@@ -758,7 +708,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6027258894572874222}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &8449038529346605
+--- !u!1001 &7390125325958094052
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -771,7 +721,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: MeleeWeapon
       objectReference: {fileID: 0}
-    - target: {fileID: 4693412011037971015, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
+    - target: {fileID: 5046753033352191610, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
       propertyPath: _entitySound
       value: 
@@ -784,7 +734,7 @@ PrefabInstance:
     - target: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.471
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
@@ -799,17 +749,17 @@ PrefabInstance:
     - target: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
         type: 3}
@@ -831,9 +781,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02ad1f515ebf4cf4a8d5b0e2660be509, type: 3}
---- !u!4 &7062848186715698483 stripped
+--- !u!4 &330095991058781690 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7069036620070996254, guid: 02ad1f515ebf4cf4a8d5b0e2660be509,
     type: 3}
-  m_PrefabInstance: {fileID: 8449038529346605}
+  m_PrefabInstance: {fileID: 7390125325958094052}
   m_PrefabAsset: {fileID: 0}
