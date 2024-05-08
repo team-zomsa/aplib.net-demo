@@ -97,6 +97,12 @@ namespace Assets.Scripts.Wfc
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * 0.7f;
 
         /// <summary>
+        /// The distance from the floor to the player localpos.
+        /// </summary>
+        private readonly Vector3 _playerHeightOffset = Vector3.up * 0.7f;
+
+
+        /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
@@ -303,7 +309,11 @@ namespace Assets.Scripts.Wfc
         private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
         {
             // Give all teleporters a parent object for organization.
-            GameObject teleportersParent = GameObject.Find("Teleporters") ?? new GameObject("Teleporters");
+            GameObject teleportersParent = GameObject.Find("Teleporters");
+            if (teleportersParent is null)
+            {
+                teleportersParent = new GameObject("Teleporters");
+            }
 
             return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
                 .GetComponent<Teleporter.Teleporter>();
@@ -323,19 +333,17 @@ namespace Assets.Scripts.Wfc
         /// <remarks>Assumes that there is at least one room.</remarks>
         private void PlacePlayer()
         {
-            Vector3 playerHeightOffset = Vector3.up * 0.7f; // Distance from the floor
-
             GameObject player = GameObject.FindWithTag("Player");
             if (player == null) throw new UnityException("No player was found.");
             Rigidbody rigidBody = player.GetComponent<Rigidbody>();
 
-            // Find the first room that is not empty and place the player there
+            // Find the first room that is not empty and place the player there.
             for (int i = 0; i < Grid.NumberOfCells; i++)
             {
                 if (Grid[i].Tile is not Room) continue;
 
-                // Room found, set player position and break
-                rigidBody.position = CentreOfCell(Grid[i]) + playerHeightOffset;
+                // Room found, set player position and break.
+                rigidBody.position = CentreOfCell(Grid[i]) + _playerHeightOffset;
                 break;
             }
         }

@@ -66,7 +66,7 @@ namespace Teleporter
         private void Start()
         {
             GameObject player = GameObject.FindWithTag("Player");
-            if (player == null) Debug.LogError("No player was found.");
+            if (player == null) throw new UnityException("No player was found.");
             _playerRigidbody = player.GetComponent<Rigidbody>();
         }
 
@@ -123,12 +123,11 @@ namespace Teleporter
         /// <summary>
         /// Teleport a <see cref="Rigidbody"/> (normally the player) towards this teleporter.
         /// </summary>
-        /// <param name="objectTransform">The transform to teleport</param>
+        /// <param name="objectRigidbody">The transform to teleport</param>
         public void TeleportReceive(Rigidbody objectRigidbody)
         {
             objectRigidbody.position = LandingPoint;
 
-            Debug.Log($"Teleported player to {LandingPoint}.");
             // Prevent this action from triggering logic which are intended for when the player walks in.
             _shouldIgnoreNextPlayerEntryTrigger = true;
         }
