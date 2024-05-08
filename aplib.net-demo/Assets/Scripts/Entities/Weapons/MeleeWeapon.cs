@@ -13,19 +13,22 @@ namespace Entities.Weapons
         /// <summary>
         /// The amount of damage the weapon deals.
         /// </summary>
-        [SerializeField] public int Damage = 25;
+        [SerializeField]
+        public int Damage = 25;
 
         /// <summary>
         /// The height of the hitzone in world units.
         /// Could also be called length, but height is what Unity uses for capsules.
         /// </summary>
-        [SerializeField] private float _height = 4;
+        [SerializeField]
+        private float _height = 4;
 
         /// <summary>
         /// The radius of the hitzone in world units.
         /// The two spheres that define the hitzone have the same radius.
         /// </summary>
-        [SerializeField] private float _radius = 1.4f;
+        [SerializeField]
+        private float _radius = 1.4f;
 
         private Vector3 _sphere1Center;
         private Vector3 _sphere2Center;
