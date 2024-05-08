@@ -217,7 +217,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="cell">The cell to calculate its centre of.</param>
         /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
-        private Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
+        public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         /// <summary>
         /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
@@ -413,9 +413,7 @@ namespace Assets.Scripts.Wfc
         private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
         {
             // Give all teleporters a parent object for organization.
-            GameObject teleportersParent = GameObject.Find("Teleporters");
-            if (teleportersParent is null)
-                teleportersParent = new GameObject("Teleporters");
+            GameObject teleportersParent = GameObject.Find("Teleporters") ?? new GameObject("Teleporters");
 
             return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
                 .GetComponent<Teleporter.Teleporter>();

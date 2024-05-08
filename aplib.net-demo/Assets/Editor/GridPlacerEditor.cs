@@ -40,7 +40,7 @@ namespace Editors
 
             gridPlacerSettings.ApplyModifiedProperties();
 
-            if (GUILayout.Button("Update Scene"))
+            if (GUILayout.Button("Generate new level"))
             {
                 GridPlacer gridPlacer = (GridPlacer)target;
                 foreach (Transform child in gridPlacer.transform) Destroy(child.gameObject);
