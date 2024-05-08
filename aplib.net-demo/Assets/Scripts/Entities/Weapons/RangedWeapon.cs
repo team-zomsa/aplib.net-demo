@@ -19,7 +19,7 @@ public class RangedWeapon : Weapon
     /// <summary>
     /// By default, assume the weapon will be fired by the player, from the camera.
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         if (_firePoint == null)
             _firePoint = Camera.main.transform;
@@ -59,6 +59,9 @@ public class RangedWeapon : Weapon
             HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
             enemy?.ReduceHealth(_damage);
         }
+
+        // Play a random whoosh crossbow sound.
+        _entitySound.Shoot();
     }
 
     /// <summary>
