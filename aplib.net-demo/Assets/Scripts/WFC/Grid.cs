@@ -168,7 +168,7 @@ namespace Assets.Scripts.Wfc
         /// <returns>All neighbouring cells, excluding diagonal neighbours.</returns>
         /// <remarks>This does not check if the tiles in the cells are connected.</remarks>
         /// <seealso cref="GetConnectedNeighbours"/>
-        private IEnumerable<Cell> Get4NeighbouringCells(Cell cell)
+        public IEnumerable<Cell> Get4NeighbouringCells(Cell cell)
         {
             ICollection<Cell> neighbours = new Collection<Cell>();
             if (cell.X > 0) neighbours.Add(this[cell.X - 1, cell.Z]);
@@ -247,7 +247,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell.</param>
         /// <param name="neighbour">The neighbouring cell.</param>
         /// <returns>The direction in which the neighbour is connected to the cell, or null if they are not connected.</returns>
-        private Direction? GetDirection(Cell cell, Cell neighbour)
+        public Direction? GetDirection(Cell cell, Cell neighbour)
         {
             if (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X &&
                 neighbour.Tile.CanConnectInDirection(West))
@@ -308,10 +308,10 @@ namespace Assets.Scripts.Wfc
         /// This method goes through all cells in this grid, to determine all connected components between doors.
         /// </summary>
         /// <returns>A collection of sets of cells, where the sets of cells represent the connected components.</returns>
-        public IEnumerable<(ISet<Cell>, ISet<Cell>)> DetermineConnectedComponentsBetweenDoors()
+        public List<(ISet<Cell>, ISet<Cell>)> DetermineConnectedComponentsBetweenDoors()
         {
             ISet<Cell> unvisitedCells = new HashSet<Cell>(_cells.Where(cell => cell.Tile is not Empty)); // Deep copy
-            IList<(ISet<Cell>, ISet<Cell>)> connectedComponents = new List<(ISet<Cell>, ISet<Cell>)>();
+            List<(ISet<Cell>, ISet<Cell>)> connectedComponents = new();
 
             while (unvisitedCells.Count > 0)
             {

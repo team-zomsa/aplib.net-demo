@@ -34,6 +34,8 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         public int Entropy => Candidates.Count;
 
+        public bool ContainsItem { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>

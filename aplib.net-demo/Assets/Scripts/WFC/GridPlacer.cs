@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Tiles;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
 using Random = System.Random;
@@ -118,7 +119,7 @@ namespace Assets.Scripts.Wfc
 
             // JoinConnectedComponentsWithTeleporters();
 
-            ColorConnectedComponents();
+            PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
         }
 
         /// <summary>
@@ -171,8 +172,6 @@ namespace Assets.Scripts.Wfc
         /// <param name="tile">The tile that needs to be placed.</param>
         private void PlaceTile(int x, int z, Tile tile)
         {
-            if (tile is Room room) PlaceDoors(x, z, room);
-
             GameObject prefab = tile switch
             {
                 Corner => _roomObjects.Corner,
@@ -201,7 +200,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="z">The z-position of the room, in the grid.</param>
         /// <param name="room">The room for which the doors need to be spawned.</param>
         // ReSharper disable once SuggestBaseTypeForParameter
-        private void PlaceDoors(int x, int z, Room room)
+        private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells)
         {
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
 
@@ -209,34 +208,36 @@ namespace Assets.Scripts.Wfc
             float doorDepthExtend = _doorRenderer.bounds.extents.z;
 
             // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
+            float doorDistanceFromRoomCenter = _tileSizeX / 2f - doorDepthExtend;
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 
-            foreach (Direction direction in room.Doors)
+            // Calculate where the door should be placed
+            Vector3 relativeDoorPosition = direction switch
             {
-                // Calculate where the door should be placed
-                Vector3 relativeDoorPosition = direction switch
-                {
-                    North => new Vector3(0, 0, doorDistanceFromRoomCenter),
-                    East => new Vector3(doorDistanceFromRoomCenter, 0, 0),
-                    South => new Vector3(0, 0, -doorDistanceFromRoomCenter),
-                    West => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
-                    _ => throw new UnityException("Invalid direction when placing door")
-                };
-                Vector3 doorPosition = roomPosition + relativeDoorPosition;
+                North => new Vector3(0, 0, doorDistanceFromRoomCenter),
+                East => new Vector3(doorDistanceFromRoomCenter, 0, 0),
+                South => new Vector3(0, 0, -doorDistanceFromRoomCenter),
+                West => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
+                _ => throw new UnityException("Invalid direction when placing door")
+            };
+            Vector3 doorPosition = roomPosition + relativeDoorPosition;
 
-                // Calculate the rotation the door should have
-                Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
-                Quaternion doorRotation = roomRotation * relativeDoorRotation;
+            // Calculate the rotation the door should have
+            Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
+            Quaternion doorRotation = roomRotation * relativeDoorRotation;
 
-                // Spawn the door and key
-                GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
-                Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
-                GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, doorPosition + relativeDoorPosition * 0.4f + Vector3.up, doorRotation, transform);
-                Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
-                keyComponent.Id = doorComponent.DoorId;
-            }
+            // Spawn the door and key
+            GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
+            Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
+
+            Cell itemCell = cells[_random.Next(cells.Count)];
+
+            itemCell.ContainsItem = true;
+
+            GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, transform);
+            Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
+            keyComponent.Id = doorComponent.DoorId;
         }
 
         /// <summary>
@@ -272,20 +273,70 @@ namespace Assets.Scripts.Wfc
         /// <returns>The center of the cell in world coordinates.</returns>
         private Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
-        /// <summary>
-        /// Colors the connected components of the grid.
-        /// </summary>
-        private void ColorConnectedComponents()
-        {
-            IEnumerable<(ISet<Cell>, ISet<Cell>)> connectedComponents = _grid.DetermineConnectedComponentsBetweenDoors();
+        private (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) => connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
 
-            // We draw all the connected components individually
-            foreach ((ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) in connectedComponents)
+        private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
+        {
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents = _grid.DetermineConnectedComponentsBetweenDoors();
+
+            (ISet<Cell> startComponent, ISet<Cell> neighbouringRooms) = FindCellComponent(startCell, connectedComponents);
+
+            connectedComponents.Remove((startComponent, neighbouringRooms));
+
+            ColorConnectedComponent(startComponent);
+
+            while (neighbouringRooms.Count > 0)
             {
-                Color color = GetUnusedColor();
-                foreach (Cell cell in connectedComponent)
-                    cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
+                Cell neighbouringCell = neighbouringRooms.First();
+
+                neighbouringRooms.Remove(neighbouringCell);
+
+                IEnumerable<Cell> neighbouringCells = _grid.Get4NeighbouringCells(neighbouringCell);
+
+                foreach (Cell cell in neighbouringCells)
+                {
+                    if (!startComponent.Contains(cell) || neighbouringCell.Tile is not Room && cell.Tile is not Room) continue;
+
+                    Direction? direction = _grid.GetDirection(neighbouringCell, cell);
+                    if (direction is null) continue;
+
+                    if (neighbouringCell.Tile is not Room room)
+                        PlaceDoorInDirection(cell.X, cell.Z, (Room)cell.Tile, direction.Value.Opposite(), startComponent.Where(c => !c.ContainsItem).ToList());
+                    else
+                        PlaceDoorInDirection(neighbouringCell.X, neighbouringCell.Z, room, direction.Value, startComponent.Where(c => !c.ContainsItem).ToList());
+
+                    (ISet<Cell> usedComponent, ISet<Cell> usedNeighbouringRooms) = FindCellComponent(cell, connectedComponents);
+
+                    if (usedComponent is null || usedNeighbouringRooms is null) continue;
+
+                    connectedComponents.Remove((usedComponent, usedNeighbouringRooms));
+
+                    ColorConnectedComponent(usedComponent);
+
+                    usedNeighbouringRooms.Remove(cell);
+
+                    startComponent.UnionWith(usedComponent);
+                    neighbouringRooms.UnionWith(usedNeighbouringRooms);
+                }
+
+                (ISet<Cell> neighbouringCellComponent, ISet<Cell> neighbouringCellRooms) = FindCellComponent(neighbouringCell, connectedComponents);
+                connectedComponents.Remove((neighbouringCellComponent, neighbouringCellRooms));
+
+                if (neighbouringCellComponent is null) continue;
+
+                ColorConnectedComponent(neighbouringCellComponent);
+
+                startComponent.UnionWith(neighbouringCellComponent);
+                neighbouringRooms.UnionWith(neighbouringCellRooms.Except(startComponent));
             }
+        }
+
+        private void ColorConnectedComponent(ISet<Cell> connectedComponent)
+        {
+            Color color = GetUnusedColor();
+            foreach (Cell cell in connectedComponent)
+                cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
         }
 
         /// <summary>
