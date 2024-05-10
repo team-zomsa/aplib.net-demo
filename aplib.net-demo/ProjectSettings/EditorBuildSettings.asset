@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/ConnectedComponentsTestScene.unity
     guid: f2c1b0e220295aff2ba085b21cf1c1c6
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/HealthPotionTestScene.unity
+    guid: 972a6684ad5bf494eb6a9e21b89a901b
   m_configObjects: {}
