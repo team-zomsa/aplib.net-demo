@@ -31,7 +31,13 @@ public class HealthComponent : MonoBehaviour
     /// <summary>
     /// The current health of the GameObject.
     /// </summary>
-    public int Health { get; private set; }
+    public int Health
+    {
+        get => _health;
+        private set => _health = Mathf.Clamp(value, 0, _maxHealth);
+    }
+
+    private int _health;
 
     /// <summary>
     /// The maximum health of the GameObject.
