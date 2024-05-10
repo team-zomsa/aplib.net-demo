@@ -127,7 +127,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="x">The x-coordinates of the room.</param>
         /// <param name="z">The z-coordinates of the room.</param>
         /// <param name="room">The room that needs to be placed.</param>
-        public void PlaceRoom(int x, int z, Room room)
+        private void PlaceRoom(int x, int z, Room room)
         {
             this[x, z].Tile = room;
             this[x, z].Candidates = new List<Tile>();
@@ -175,30 +175,6 @@ namespace Assets.Scripts.Wfc
             if (cell.X < Width - 1) neighbours.Add(this[cell.X + 1, cell.Z]);
             if (cell.Z > 0) neighbours.Add(this[cell.X, cell.Z - 1]);
             if (cell.Z < Height - 1) neighbours.Add(this[cell.X, cell.Z + 1]);
-            return neighbours;
-        }
-
-        /// <summary>
-        /// Given a cell, this method returns all directly adjacent cells, including diagonal neighbours.
-        /// When the cell is on an edge, it will return less than 8 neighbours.
-        /// </summary>
-        /// <param name="cell">The centre cell, who's neighbours need to be determined.</param>
-        /// <returns>All neighbouring cells, including diagonal neighbours.</returns>
-        /// <remarks>This does not check if the tiles in the cells are connected.</remarks>
-        /// <seealso cref="GetConnectedNeighbours"/>
-        public ICollection<Cell> Get8NeighbouringCells(Cell cell)
-        {
-            ICollection<Cell> neighbours = new Collection<Cell>();
-            for (int i = -1; i < 2; i++)
-            {
-                if (cell.X + i < 0 || cell.X + i >= Width) continue; // Not out of range
-                for (int j = -1; j < 2; j++)
-                {
-                    if (i == j && i == 0) continue; // Skip the cell itself
-                    if (cell.Z + j < 0 || cell.Z + j >= Height) continue; // Not out of range
-                    neighbours.Add(this[cell.X + i, cell.Z + j]);
-                }
-            }
             return neighbours;
         }
 
@@ -292,13 +268,9 @@ namespace Assets.Scripts.Wfc
                 bool neighbourHasDoor = neighbourRoom?.DoorInDirection(direction.Value.Opposite()) ?? false;
 
                 if (!cellHasDoor && !neighbourHasDoor)
-                {
                     connectedNeighbours.Add(neighbour);
-                }
                 else
-                {
                     neighbouringRooms.Add(neighbour);
-                }
             }
 
             return (connectedNeighbours, neighbouringRooms);

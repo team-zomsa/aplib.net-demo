@@ -407,6 +407,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6de475068fb9685f5b9e0d862a17164d, type: 3}
+--- !u!4 &465571246 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7900413343740512053, guid: 6de475068fb9685f5b9e0d862a17164d,
+    type: 3}
+  m_PrefabInstance: {fileID: 465571245}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &465571247 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4395419148430955978, guid: 6de475068fb9685f5b9e0d862a17164d,
+    type: 3}
+  m_PrefabInstance: {fileID: 465571245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &533088676
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,8 +901,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53597eb9099ea944b4b47688ff12f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerRotation: {fileID: 0}
-  PlayerCamFollow: {fileID: 0}
+  PlayerRotation: {fileID: 465571246}
+  PlayerCamFollow: {fileID: 465571247}
   CinemachineCamera: {fileID: 1120896408}
 --- !u!4 &1161813732
 Transform:

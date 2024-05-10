@@ -41,7 +41,10 @@ namespace Assets.Scripts.Doors
         /// <returns>True if key id is the same as door id otherwise false.</returns>
         public bool TryOpenDoor(Key key) => key.Id == DoorId;
 
-        public void Open()
+        /// <summary>
+        /// Opens the door by destroying the game object.
+        /// </summary>
+        private void Open()
         {
             Destroy(gameObject);
         }
