@@ -7,21 +7,48 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class Item : MonoBehaviour
 {
+    /// <summary>
+    /// Since the inventory works by comparing the name of the item,
+    /// all instances of the same item should have the same name.
+    /// </summary>
+    [SerializeField]
+    protected string _itemName;
+
+    /// <summary>
+    /// The amount of uses the item currently has.
+    /// </summary>
     public float uses;
+
+    /// <summary>
+    /// The amount of uses the item starts with.
+    /// </summary>
     public float startUses;
+
+    /// <summary>
+    /// If the item is stackable, it will add uses to the item if it is already in the inventory.
+    /// </summary>
     public bool stackable;
-    // The RawImage is the object on which the _inventoryIndicator texture is projected
+
+    /// <summary>
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
+    /// </summary>
     protected RawImage icon;
+
+    /// <summary>
+    /// The texture the _inventoryIndicator object should have in the inventory.
+    /// </summary>
     public Texture iconTexture;
+
+    protected virtual void Awake() => gameObject.name = _itemName;
 
     /// <summary>
     /// Uses the item, by default just reduces uses by 1. Implementation will differ depending on the item itself.
     /// </summary>
-    public void UseItem() => uses -= 1;
+    public virtual void UseItem() => uses -= 1;
 
     /// <summary>
     /// Resets the uses to the starting uses.
     /// </summary>
-    public void Reset()
+    public virtual void Reset()
         => uses = startUses;
 }
