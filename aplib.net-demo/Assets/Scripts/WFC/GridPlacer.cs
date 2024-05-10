@@ -178,9 +178,11 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void PlaceGrid()
         {
+            GameObject tiles = new("Tiles") { transform = { parent = transform } };
+
             for (int z = 0; z < Grid.Height; z++)
             {
-                for (int x = 0; x < Grid.Width; x++) PlaceTile(x, z, Grid[x, z].Tile);
+                for (int x = 0; x < Grid.Width; x++) PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
             }
         }
 
@@ -190,7 +192,8 @@ namespace Assets.Scripts.Wfc
         /// <param name="x">The x-coordinates of the room.</param>
         /// <param name="z">The z-coordinates of the room.</param>
         /// <param name="tile">The tile that needs to be placed.</param>
-        private void PlaceTile(int x, int z, Tile tile)
+        /// <param name="parent">The parent of the teleporter.</param>
+        private void PlaceTile(int x, int z, Tile tile, Transform parent)
         {
             GameObject prefab = tile switch
             {
@@ -208,7 +211,7 @@ namespace Assets.Scripts.Wfc
                 prefab,
                 new Vector3(x * _tileSizeX, 0, z * _tileSizeZ),
                 Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
-                transform
+                parent
             );
         }
 
@@ -226,8 +229,9 @@ namespace Assets.Scripts.Wfc
         /// <param name="x">The x-position of the room, in the grid.</param>
         /// <param name="z">The z-position of the room, in the grid.</param>
         /// <param name="room">The room for which the doors need to be spawned.</param>
+        /// <param name="parent">The parent of the teleporter.</param>
         // ReSharper disable once SuggestBaseTypeForParameter
-        private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells)
+        private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells, Transform parent)
         {
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
 
@@ -255,14 +259,14 @@ namespace Assets.Scripts.Wfc
             Quaternion doorRotation = roomRotation * relativeDoorRotation;
 
             // Spawn the door and key
-            GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, transform);
+            GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, parent);
             Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
 
             Cell itemCell = cells[_random.Next(cells.Count)];
 
             itemCell.ContainsItem = true;
 
-            GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, transform);
+            GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Id = doorComponent.DoorId;
         }
@@ -292,6 +296,8 @@ namespace Assets.Scripts.Wfc
 
         private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
         {
+            GameObject doors = new("Doors and keys") { transform = { parent = transform } };
+
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents = Grid.DetermineConnectedComponentsBetweenDoors();
 
             (ISet<Cell> startComponent, ISet<Cell> neighbouringRooms) = FindCellComponent(startCell, connectedComponents);
@@ -316,9 +322,9 @@ namespace Assets.Scripts.Wfc
                     if (direction is null) continue;
 
                     if (neighbouringCell.Tile is not Room room)
-                        PlaceDoorInDirection(cell.X, cell.Z, (Room)cell.Tile, direction.Value.Opposite(), startComponent.Where(c => !c.ContainsItem).ToList());
+                        PlaceDoorInDirection(cell.X, cell.Z, (Room)cell.Tile, direction.Value.Opposite(), startComponent.Where(c => !c.ContainsItem).ToList(), doors.transform);
                     else
-                        PlaceDoorInDirection(neighbouringCell.X, neighbouringCell.Z, room, direction.Value, startComponent.Where(c => !c.ContainsItem).ToList());
+                        PlaceDoorInDirection(neighbouringCell.X, neighbouringCell.Z, room, direction.Value, startComponent.Where(c => !c.ContainsItem).ToList(), doors.transform);
 
                     (ISet<Cell> usedComponent, ISet<Cell> usedNeighbouringRooms) = FindCellComponent(cell, connectedComponents);
 
@@ -360,6 +366,8 @@ namespace Assets.Scripts.Wfc
         /// <remarks>Assumes that every connected component has at least two cells.</remarks>
         private void JoinConnectedComponentsWithTeleporters()
         {
+            GameObject teleporters = new("Teleporters") { transform = { parent = transform } };
+
             // Prepare some variables
             using IEnumerator<ConnectedComponent> connectedComponentsEnumerator = Grid.DetermineConnectedComponents().GetEnumerator();
 
@@ -375,7 +383,7 @@ namespace Assets.Scripts.Wfc
                 {
                     // Place an entry teleporter, so that the previous connected component can be linked through this teleporter.
                     Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
-                    Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset);
+                    Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset, teleporters.transform);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
                     previousExitTeleporter!.TargetTeleporter = entryTeleporter;
@@ -392,7 +400,7 @@ namespace Assets.Scripts.Wfc
                 // Place the exit teleporter of the current connected component at the end of the connected component.
                 // (Assuming that the connected component has at least two cells, `nextExitCell` will never equal `nextEntryCell`)
                 Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
-                Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset);
+                Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset, teleporters.transform);
 
                 // Update iteration progress
                 previousExitTeleporter = exitTeleporter;
@@ -408,16 +416,10 @@ namespace Assets.Scripts.Wfc
         /// Places a teleporter at a given location.
         /// </summary>
         /// <param name="coordinates">The coordinates of the teleporter.</param>
+        /// <param name="parent">The parent of the teleporter.</param>
         /// <returns>A reference to the <see cref="Teleporter"/> component of the teleporter.</returns>
         /// <remarks>All teleporters are clustered under a 'Teleporter' empty gameobject.</remarks>
-        private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates)
-        {
-            // Give all teleporters a parent object for organization.
-            GameObject teleportersParent = GameObject.Find("Teleporters") ?? new GameObject("Teleporters");
-
-            return Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, teleportersParent.transform)
-                .GetComponent<Teleporter.Teleporter>();
-        }
+        private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates, Transform parent) => Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, parent).GetComponent<Teleporter.Teleporter>();
 
         // Here are temporary helper methods used to display the connected components in different colors.
         private static readonly Color[] _colors =
