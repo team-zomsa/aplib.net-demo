@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18029143, g: 0.22572419, b: 0.30693057, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3877,7 +3877,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 1afed9b1c772fee4fab83137a461d42b, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: abe5b3eb719ba21448772aa00e9f5b72, type: 2}
   m_BuildHeightMesh: 0
 --- !u!43 &1401840442
 Mesh:
@@ -5495,6 +5495,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 2291676733321241211, guid: a97359d0503e62444882482848ac8602, type: 3}
     - {fileID: 8745234388612432562, guid: a97359d0503e62444882482848ac8602, type: 3}
+    - {fileID: 8558997154453913574, guid: a97359d0503e62444882482848ac8602, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2939172307889739016, guid: a97359d0503e62444882482848ac8602,
         type: 3}

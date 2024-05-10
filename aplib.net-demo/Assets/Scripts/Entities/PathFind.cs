@@ -41,28 +41,19 @@ public class PathFind : MonoBehaviour
     /// Set the distance at which the agent will stop from the goal.
     /// </summary>
     /// <param name="distance"></param>
-    public void SetStoppingDistance(float distance)
-    {
-        _agent.stoppingDistance = distance;
-    }
+    public void SetStoppingDistance(float distance) => _agent.stoppingDistance = distance;
 
     /// <summary>
     /// Start/stop the agent.
     /// </summary>
     /// <param name="enabled">True to enable the agent, false to disable it.</param>
-    public void ToggleAgent(bool enabled)
-    {
-        _agent.isStopped = !enabled;
-    }
+    public void ToggleAgent(bool enabled) => _agent.enabled = enabled;
 
     /// <summary>
     /// Check if the goal is within a certain range.
     /// </summary>
     /// <param name="range">The range to check.</param>
     /// <returns>True if the goal is within the range, false otherwise.</returns>
-    public bool GoalWithinRange(float range)
-    {
-        return Vector3.Distance(transform.position, _goal.position) <= range;
-    }
+    public bool GoalWithinRange(float range) => Vector3.Distance(transform.position, _goal.position) <= range;
 }
 

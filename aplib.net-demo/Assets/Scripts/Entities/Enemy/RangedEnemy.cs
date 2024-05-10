@@ -79,7 +79,6 @@ public class RangedEnemy : DummyEnemy
     /// <summary>
     /// Coroutine to move closer until the enemy is within line of sight.
     /// </summary>
-    /// <returns></returns>
     private IEnumerator MoveCloser()
     {
         while (_pathFind.GoalWithinRange(_visionRange) && !_rangedWeapon.EnemiesInLineOfSight())
