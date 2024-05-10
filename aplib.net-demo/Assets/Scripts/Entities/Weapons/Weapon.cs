@@ -22,15 +22,15 @@ namespace Entities.Weapons
         /// <summary>
         /// The amount of damage the weapon deals.
         /// </summary>
-        [SerializeField]
-        protected int _damage = 25;
+        [field: SerializeField]
+        public int Damage { get; set; } = 25;
 
         /// <summary>
         /// Initialize the weapon with the damage and target tag.
         /// </summary>
         protected void Initialize(int damage, string targetTag)
         {
-            _damage = damage;
+            Damage = damage;
             _targetTag = targetTag;
             _entitySound = GetComponentInParent<EntitySound>();
         }

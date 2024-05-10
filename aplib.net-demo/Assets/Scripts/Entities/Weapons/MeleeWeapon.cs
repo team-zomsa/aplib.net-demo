@@ -11,12 +11,6 @@ namespace Entities.Weapons
     public class MeleeWeapon : Weapon
     {
         /// <summary>
-        /// The amount of damage the weapon deals.
-        /// </summary>
-        [SerializeField]
-        public int Damage = 25;
-
-        /// <summary>
         /// The height of the hitzone in world units.
         /// Could also be called length, but height is what Unity uses for capsules.
         /// </summary>
@@ -78,7 +72,7 @@ namespace Entities.Weapons
                 {
                     // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
                     HealthComponent enemy = collider.GetComponent<HealthComponent>();
-                    enemy?.ReduceHealth(_damage);
+                    enemy?.ReduceHealth(Damage);
                 }
             }
 

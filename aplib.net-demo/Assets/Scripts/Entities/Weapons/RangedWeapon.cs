@@ -27,7 +27,7 @@ namespace Entities.Weapons
         /// </summary>
         private void Awake()
         {
-            if (_firePoint == null)
+            if (_firePoint is null)
                 _firePoint = Camera.main.transform;
         }
 
@@ -63,7 +63,7 @@ namespace Entities.Weapons
 
                 // Check if the enemy has a Health component.
                 HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
-                enemy?.ReduceHealth(_damage);
+                enemy?.ReduceHealth(Damage);
             }
 
             // Play a random whoosh crossbow sound.

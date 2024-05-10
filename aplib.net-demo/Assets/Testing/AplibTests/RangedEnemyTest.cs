@@ -16,7 +16,7 @@ namespace Testing.AplibTests
 {
     public class RangedEnemyBeliefSet : BeliefSet
     {
-        public static readonly int FramesToRemember = 300;
+        public const int FramesToRemember = 300;
 
         /// <summary>
         /// The player object in the scene.
@@ -27,12 +27,14 @@ namespace Testing.AplibTests
         /// The target position for the player to move to.
         /// Also remembers the target position from a certain amount of frames ago.
         /// </summary>
-        public MemoryBelief<GameObject, Vector3> TargetPosition = new(GameObject.Find("Ranged Enemy Body"), x => x.transform.position, FramesToRemember);
+        public MemoryBelief<GameObject, Vector3> TargetPosition
+            = new(GameObject.Find("Ranged Enemy Body"), enemy => enemy.transform.position, FramesToRemember);
 
         /// <summary>
         /// The respawn position for the player.
         /// </summary>
-        public Belief<GameObject, Vector3> RespawnPosition = new(GameObject.Find("RespawnPoint"), x => x.transform.position);
+        public Belief<GameObject, Vector3> RespawnPosition
+            = new(GameObject.Find("RespawnPoint"), respawnPoint => respawnPoint.transform.position);
     }
 
     /// <summary>
@@ -54,52 +56,45 @@ namespace Testing.AplibTests
             SceneManager.LoadScene(_sceneName);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            Debug.Log($"Finished {nameof(RangedEnemyAplibTest)}");
-            SceneManager.UnloadSceneAsync(_sceneName);
-        }
-
         [UnityTest]
         public IEnumerator PerformRangedEnemyTest()
         {
             InputManager.Instance.enabled = false;
-            RangedEnemyBeliefSet beliefSet = new();
+            RangedEnemyBeliefSet rangedEnemyBeliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.
             TransformPathfinderAction<RangedEnemyBeliefSet> transformPathfinderAction = new(
-                b =>
+                beliefSet =>
                 {
-                    GameObject player = b.Player;
+                    GameObject player = beliefSet.Player;
                     return player.GetComponent<Rigidbody>();
                 },
-                beliefSet.TargetPosition,
+                beliefSet => beliefSet.TargetPosition,
                 0.9f
             );
 
             // Tactic: Wait and do nothing.
-            PrimitiveTactic<RangedEnemyBeliefSet> waitTactic = new(new Action<RangedEnemyBeliefSet>(b => { }));
+            PrimitiveTactic<RangedEnemyBeliefSet> waitTactic = new(new Action<RangedEnemyBeliefSet>(_ => { }));
 
             // Tactic: Move the player towards the target position.
-            PrimitiveTactic<RangedEnemyBeliefSet> moveTactic = new(transformPathfinderAction);
+            PrimitiveTactic<RangedEnemyBeliefSet> moveTowardsTarget = new(transformPathfinderAction);
 
             // Goal: Reach the target position.
-            PrimitiveGoalStructure<RangedEnemyBeliefSet> moveGoal = new(goal: new Goal<RangedEnemyBeliefSet>(moveTactic, MovePredicate));
+            PrimitiveGoalStructure<RangedEnemyBeliefSet> targetReached = new(goal: new Goal<RangedEnemyBeliefSet>(moveTowardsTarget, MovePredicate));
 
             // Goal: Wait until killed by the enemy.
-            PrimitiveGoalStructure<RangedEnemyBeliefSet> waitGoal = new(goal: new Goal<RangedEnemyBeliefSet>(waitTactic, PlayerRespawnedPredicate));
+            PrimitiveGoalStructure<RangedEnemyBeliefSet> killedByEnemy = new(goal: new Goal<RangedEnemyBeliefSet>(waitTactic, PlayerRespawnedPredicate));
 
             // Goal: Wait and check if enemy is not following player.
-            PrimitiveGoalStructure<RangedEnemyBeliefSet> waitGoal2 = new(goal: new Goal<RangedEnemyBeliefSet>(waitTactic, EnemyNotMovingPredicate));
+            PrimitiveGoalStructure<RangedEnemyBeliefSet> notFollowedByEnemy = new(goal: new Goal<RangedEnemyBeliefSet>(waitTactic, EnemyNotMovingPredicate));
 
             // Final Goal: Wait until killed by enemy, then check if out of enemy vision range.
-            SequentialGoalStructure<RangedEnemyBeliefSet> finalGoal = new SequentialGoalStructure<RangedEnemyBeliefSet>(moveGoal, waitGoal, waitGoal2);
+            SequentialGoalStructure<RangedEnemyBeliefSet> finalGoal = new SequentialGoalStructure<RangedEnemyBeliefSet>(targetReached, killedByEnemy, notFollowedByEnemy);
 
             DesireSet<RangedEnemyBeliefSet> desire = new(finalGoal);
 
             // Create a new agent with the goal.
-            BdiAgent<RangedEnemyBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent<RangedEnemyBeliefSet> agent = new(rangedEnemyBeliefSet, desire);
 
             AplibRunner testRunner = new(agent);
 
@@ -108,8 +103,7 @@ namespace Testing.AplibTests
             yield return testRunner.Test();
 
             // Assert that the player has reached the target position.
-            Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);
-            yield break;
+            Assert.AreEqual(agent.Status, CompletionStatus.Success);
 
             bool MovePredicate(RangedEnemyBeliefSet beliefSet)
             {
