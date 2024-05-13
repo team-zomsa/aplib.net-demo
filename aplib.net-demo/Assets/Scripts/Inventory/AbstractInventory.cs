@@ -22,6 +22,10 @@ public abstract class AbstractInventory : MonoBehaviour
     {
 
     }
+    public virtual void PickUpWeapon(Weapon weapon)
+    {
+
+    }
 
     public virtual void ActivateItem()
     {

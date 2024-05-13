@@ -35,8 +35,10 @@ public class MeleeWeapon : Weapon
     /// </summary>
     private void Awake()
     {
-        if (_height < 2 * _radius) _height = 2 * _radius;
-        EnemiesWithinRange();
+        if (_height < 2 * _radius)
+            _height = 2 * _radius;
+        _ = EnemiesWithinRange();
+        Debug.Log("in awake" + iconTexture);
     }
 
     /// <summary>
@@ -44,8 +46,8 @@ public class MeleeWeapon : Weapon
     /// </summary>
     private void UpdateHitZone()
     {
-        _sphere1Center = transform.position + _radius * transform.forward;
-        _sphere2Center = transform.position + (_height - _radius) * transform.forward;
+        _sphere1Center = transform.position + (_radius * transform.forward);
+        _sphere2Center = transform.position + ((_height - _radius) * transform.forward);
     }
 
     /// <summary>

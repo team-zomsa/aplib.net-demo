@@ -24,25 +24,28 @@ public class Inventory : AbstractInventory
     /// <param name="item">The item that is fed into the inventory.</param>
     public override void PickUpItem(Item item)
     {
-        bool alreadyInInventory = false;
-        List<Item> _tempItemList = _itemList.ToList();
-        for (int i = 0; i < _itemList.Count; i++)
+        if (item is not Weapon)
         {
-            if (_tempItemList[i].name == item.name)
+            bool alreadyInInventory = false;
+            List<Item> _tempItemList = _itemList.ToList();
+            for (int i = 0; i < _itemList.Count; i++)
             {
-                if (!item.stackable)
-                    return;
+                if (_tempItemList[i].name == item.name)
+                {
+                    if (!item.stackable)
+                        return;
 
-                _tempItemList[i].uses += item.startUses;
-                alreadyInInventory = true;
-                break;
+                    _tempItemList[i].uses += item.startUses;
+                    alreadyInInventory = true;
+                    break;
+                }
             }
-        }
 
-        if (!alreadyInInventory && _itemList.Count < inventorySize)
-        {
-            _itemList.Enqueue(item);
-            DisplayItem();
+            if (!alreadyInInventory && _itemList.Count < inventorySize)
+            {
+                _itemList.Enqueue(item);
+                DisplayItem();
+            }
         }
     }
 
