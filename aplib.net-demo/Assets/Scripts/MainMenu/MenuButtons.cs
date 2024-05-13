@@ -39,18 +39,9 @@ public class MenuPlayButton : MonoBehaviour
     /// </summary>
     public void SettingToggle()
     {
-        if (isOnSettings)
-        {
-            settingCanvas.SetActive(false);
-            isOnSettings = false;
-            menuCanvas.SetActive(true);
-        }
-        else
-        {
-            menuCanvas.SetActive(false);
-            isOnSettings = true;
-            settingCanvas.SetActive(true);
-        }
+        isOnSettings = !isOnSettings;
+        settingCanvas.SetActive(isOnSettings);
+        menuCanvas.SetActive(!isOnSettings);
     }
 
     /// <summary>
