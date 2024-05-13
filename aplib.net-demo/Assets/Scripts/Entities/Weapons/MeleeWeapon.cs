@@ -70,7 +70,7 @@ namespace Entities.Weapons
             {
                 foreach (Collider collider in _targets)
                 {
-                    // Check if the collider with enemy tag has a Health component. If so, deal damage to it. 
+                    // Check if the collider with enemy tag has a Health component. If so, deal damage to it.
                     HealthComponent enemy = collider.GetComponent<HealthComponent>();
                     enemy?.ReduceHealth(Damage);
                 }
