@@ -458,7 +458,7 @@ namespace Assets.Scripts.Wfc
 
                     (ConnectedComponent usedComponent, ConnectedComponent usedNeighbouringRooms) =
                         FindAndRemoveCellComponent(cell, connectedComponents);
-                    if (usedComponent == null || usedNeighbouringRooms == null) continue;
+                    if (usedComponent == null) continue;
 
                     ColorConnectedComponent(usedComponent);
                     startComponent.UnionWith(usedComponent);
