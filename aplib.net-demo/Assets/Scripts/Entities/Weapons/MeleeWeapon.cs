@@ -11,21 +11,18 @@ namespace Entities.Weapons
     public class MeleeWeapon : Weapon
     {
         /// <summary>
-        /// The amount of damage the weapon deals.
-        /// </summary>
-        [SerializeField] public int Damage = 25;
-
-        /// <summary>
         /// The height of the hitzone in world units.
         /// Could also be called length, but height is what Unity uses for capsules.
         /// </summary>
-        [SerializeField] private float _height = 4;
+        [SerializeField]
+        private float _height = 4;
 
         /// <summary>
         /// The radius of the hitzone in world units.
         /// The two spheres that define the hitzone have the same radius.
         /// </summary>
-        [SerializeField] private float _radius = 1.4f;
+        [SerializeField]
+        private float _radius = 1.4f;
 
         private Vector3 _sphere1Center;
         private Vector3 _sphere2Center;
@@ -39,6 +36,20 @@ namespace Entities.Weapons
         {
             if (_height < 2 * _radius) _height = 2 * _radius;
             EnemiesWithinRange();
+        }
+
+        /// <summary>
+        /// Initialize the weapon with the damage, height, radius and target tag.
+        /// </summary>
+        /// <param name="damage">The amount of damage the weapon will deal.</param>
+        /// <param name="height">The height of the hitzone in world units.</param>
+        /// <param name="radius">The radius of the hitzone in world units.</param>
+        /// <param name="targetTag">The tag of the target.</param>
+        public void Initialize(int damage, string targetTag, float height, float radius)
+        {
+            Initialize(damage, targetTag);
+            _height = height;
+            _radius = radius;
         }
 
         /// <summary>
@@ -78,7 +89,7 @@ namespace Entities.Weapons
         {
             UpdateHitZone();
             _targets = Physics.OverlapCapsule(_sphere1Center, _sphere2Center, _radius)
-                .Where(c => c.CompareTag(TargetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
+                .Where(c => c.CompareTag(_targetTag)).GroupBy(c => c.transform.root).Select(g => g.First());
             return _targets.Any();
         }
 
