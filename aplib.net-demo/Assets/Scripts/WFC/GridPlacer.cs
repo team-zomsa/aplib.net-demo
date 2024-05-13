@@ -13,105 +13,127 @@ using Random = System.Random;
 namespace Assets.Scripts.Wfc
 {
     /// <summary>
-    /// Represents the grid placer.
+    ///     Represents the grid placer.
     /// </summary>
     public class GridPlacer : MonoBehaviour
     {
-        /// <summary>
-        /// Represents the grid.
-        /// </summary>
-        public Grid Grid { get; private set; }
+        // Here are temporary helper methods used to display the connected components in different colors.
+        private static readonly Color[] _colors =
+        {
+            Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan, Color.black, Color.gray,
+            Color.Lerp(Color.red, Color.blue, 0.5f), Color.Lerp(Color.red, Color.yellow, 0.5f),
+            Color.Lerp(Color.yellow, Color.blue, 0.5f), Color.Lerp(Color.black, Color.red, 0.5f),
+            Color.Lerp(Color.white, Color.red, 0.5f), Color.Lerp(Color.black, Color.blue, 0.5f),
+            Color.Lerp(Color.white, Color.blue, 0.5f), Color.Lerp(Color.black, Color.green, 0.5f),
+            Color.Lerp(Color.white, Color.green, 0.5f), Color.Lerp(Color.black, Color.yellow, 0.5f),
+            Color.Lerp(Color.white, Color.yellow, 0.5f), Color.Lerp(Color.black, Color.magenta, 0.5f),
+            Color.Lerp(Color.white, Color.magenta, 0.5f), Color.Lerp(Color.black, Color.cyan, 0.5f),
+            Color.Lerp(Color.white, Color.cyan, 0.5f), Color.Lerp(Color.red, Color.blue, 0.25f),
+            Color.Lerp(Color.red, Color.yellow, 0.25f), Color.Lerp(Color.yellow, Color.blue, 0.25f),
+            Color.Lerp(Color.black, Color.red, 0.25f), Color.Lerp(Color.white, Color.red, 0.25f),
+            Color.Lerp(Color.black, Color.blue, 0.25f), Color.Lerp(Color.white, Color.blue, 0.25f),
+            Color.Lerp(Color.black, Color.green, 0.25f), Color.Lerp(Color.white, Color.green, 0.25f),
+            Color.Lerp(Color.black, Color.yellow, 0.25f), Color.Lerp(Color.white, Color.yellow, 0.25f),
+            Color.Lerp(Color.black, Color.magenta, 0.25f), Color.Lerp(Color.white, Color.magenta, 0.25f),
+            Color.Lerp(Color.black, Color.cyan, 0.25f), Color.Lerp(Color.white, Color.cyan, 0.25f)
+        };
+
+        private static int _colorIndex = -1;
 
         /// <summary>
-        /// The size of the tiles in the x-direction.
+        ///     The size of the tiles in the x-direction.
         /// </summary>
         [SerializeField]
         private int _tileSizeX = 16;
 
         /// <summary>
-        /// The size of the tiles in the z-direction.
+        ///     The size of the tiles in the z-direction.
         /// </summary>
         [SerializeField]
         private int _tileSizeZ = 16;
 
         /// <summary>
-        /// Represents the room objects.
+        ///     Represents the room objects.
         /// </summary>
         [SerializeField]
         private RoomObjects _roomObjects;
 
         /// <summary>
-        /// Represents the door object.
+        ///     Represents the door object.
         /// </summary>
         [SerializeField]
         private GameObject _doorPrefab;
 
         /// <summary>
-        /// Represents the key object.
+        ///     Represents the key object.
         /// </summary>
         [SerializeField]
         private GameObject _keyPrefab;
 
         /// <summary>
-        /// A boolean that indicates whether a seed is used.
+        ///     A boolean that indicates whether a seed is used.
         /// </summary>
         [SerializeField]
         private bool _useSeed;
 
         /// <summary>
-        /// The seed used for the random number generator.
+        ///     The seed used for the random number generator.
         /// </summary>
         [SerializeField]
         private int _seed;
 
         /// <summary>
-        /// The width of the grid in the x-direction.
+        ///     The width of the grid in the x-direction.
         /// </summary>
         [SerializeField]
         private int _gridWidthX = 10;
 
         /// <summary>
-        /// The width of the grid in the z-direction.
+        ///     The width of the grid in the z-direction.
         /// </summary>
         [SerializeField]
         private int _gridWidthZ = 10;
 
         /// <summary>
-        /// The amount of rooms that need to be placed.
+        ///     The amount of rooms that need to be placed.
         /// </summary>
         [SerializeField]
         private int _amountOfRooms = 5;
 
         /// <summary>
-        /// The teleporter prefab, used to link connected components.
+        ///     The teleporter prefab, used to link connected components.
         /// </summary>
         [SerializeField]
         private GameObject _teleporterPrefab;
 
         /// <summary>
-        /// The random number generator.
+        ///     The distance from the floor to the player localpos.
         /// </summary>
-        private Random _random = new();
+        private readonly Vector3 _playerHeightOffset = Vector3.up * 0.7f;
 
         /// <summary>
-        /// The `Renderer` component for the door prefab.
+        ///     The height of the offset of where we place the teleporter, with respect to the cell's floor.
+        /// </summary>
+        private readonly Vector3 _teleporterHeightOffset = Vector3.up * 0.7f;
+
+        /// <summary>
+        ///     The `Renderer` component for the door prefab.
         /// </summary>
         /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
         private Renderer _doorRenderer;
 
         /// <summary>
-        /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
+        ///     The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
-        private readonly Vector3 _teleporterHeightOffset = Vector3.up * 0.7f;
+        private Random _random = new();
 
         /// <summary>
-        /// The distance from the floor to the player localpos.
+        ///     Represents the grid.
         /// </summary>
-        private readonly Vector3 _playerHeightOffset = Vector3.up * 0.7f;
-
+        public Grid Grid { get; private set; }
 
         /// <summary>
-        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
+        ///     This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
@@ -120,10 +142,10 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Makes the scene.
+        ///     Makes the scene.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
-        public void MakeScene()
+        private void MakeScene()
         {
             if (_amountOfRooms > _gridWidthX * _gridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
@@ -144,19 +166,16 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Waits before making the scene.
+        ///     Waits before making the scene.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
-        public void WaitBeforeMakeScene(float waitTime = 0.01f)
-        {
-            StartCoroutine(Wait(waitTime));
-        }
+        public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(Wait(waitTime));
 
         /// <summary>
-        /// Waits for a certain amount of time.
+        ///     Waits for a certain amount of time.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
-        /// <returns>An <see cref="IEnumerator"/> that can be used to wait for a certain amount of time.</returns>
+        /// <returns>An <see cref="IEnumerator" /> that can be used to wait for a certain amount of time.</returns>
         private IEnumerator Wait(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
@@ -165,7 +184,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Makes the grid.
+        ///     Makes the grid.
         /// </summary>
         private void MakeGrid()
         {
@@ -196,11 +215,11 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Places the grid in the world.
+        ///     Places the grid in the world.
         /// </summary>
         private void PlaceGrid()
         {
-            GameObject tiles = new("Tiles") { transform = { parent = transform } };
+            GameObject tiles = CreateGameObject("Tiles", transform);
 
             for (int z = 0; z < Grid.Height; z++)
             {
@@ -209,7 +228,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Places a tile at the specified coordinates in the world.
+        ///     Places a tile at the specified coordinates in the world.
         /// </summary>
         /// <param name="x">The x-coordinates of the room.</param>
         /// <param name="z">The z-coordinates of the room.</param>
@@ -238,22 +257,25 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Calculates the centre of a cell's floor in world coordinates.
+        ///     Calculates the centre of a cell's floor in world coordinates.
         /// </summary>
         /// <param name="cell">The cell to calculate its centre of.</param>
         /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
         public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         /// <summary>
-        /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
-        /// allowed directions of the room.
+        ///     Place the doors for the given room in the world. Which doors need to be spawned is determined from the
+        ///     allowed directions of the room.
         /// </summary>
         /// <param name="x">The x-position of the room, in the grid.</param>
         /// <param name="z">The z-position of the room, in the grid.</param>
         /// <param name="room">The room for which the doors need to be spawned.</param>
+        /// <param name="direction">The direction in which the door should be placed.</param>
+        /// <param name="cells">The cells that are part of the room.</param>
         /// <param name="parent">The parent of the teleporter.</param>
         // ReSharper disable once SuggestBaseTypeForParameter
-        private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells, Transform parent)
+        private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells,
+            Transform parent)
         {
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
 
@@ -261,7 +283,7 @@ namespace Assets.Scripts.Wfc
             float doorDepthExtend = _doorRenderer.bounds.extents.z;
 
             // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = _tileSizeX / 2f - doorDepthExtend;
+            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 
@@ -288,20 +310,21 @@ namespace Assets.Scripts.Wfc
 
             itemCell.ContainsItem = true;
 
-            GameObject instantiatedKeyPrefab = Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
+            GameObject instantiatedKeyPrefab =
+                Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Id = doorComponent.DoorId;
         }
 
         /// <summary>
-        /// Sets the player spawn point to a random room.
+        ///     Sets the player spawn point to a random room.
         /// </summary>
         /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
         private void SetRandomPLayerSpawn(Cell playerSpawnCell)
         {
             GameObject player = GameObject.FindWithTag("Player");
 
-            if (player is null) throw new UnityException("No player was found.");
+            if (player == null) throw new UnityException("No player was found.");
 
             Vector3 spawningPoint = CentreOfCell(playerSpawnCell) + _playerHeightOffset;
 
@@ -313,108 +336,52 @@ namespace Assets.Scripts.Wfc
             respawnPoint.transform.position = spawningPoint;
         }
 
-        private (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) => connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
+        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
+            connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
+
+        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindAndRemoveCellComponent(
+            Cell cell,
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
+        {
+            (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) =
+                connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
+
+            connectedComponents.Remove((connectedComponent, neighbouringRooms));
+
+            return (connectedComponent, neighbouringRooms);
+        }
 
         private (int x, int z) GetCellCoordinates(Vector3 position) =>
             ((int)(position.x / _tileSizeX), (int)(position.z / _tileSizeZ));
 
-        private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
+        private Cell GetCellAtPosition(Vector3 position)
         {
-            GameObject doors = new("Doors and keys") { transform = { parent = transform } };
-
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents = Grid.DetermineConnectedComponentsBetweenDoors();
-
-            GameObject teleporters = GameObject.Find("Teleporters");
-
-            if (teleporters is null) throw new UnityException("No teleporters were found.");
-
-            List<Teleporter.Teleporter> teleporterList = new();
-
-            foreach (Transform child in teleporters.transform)
-            {
-                Teleporter.Teleporter teleporter = child.gameObject.GetComponent<Teleporter.Teleporter>();
-
-                if (teleporterList.Contains(teleporter.TargetTeleporter)) continue;
-
-                teleporterList.Add(teleporter);
-            }
-
-            foreach (Teleporter.Teleporter teleporter in teleporterList)
-            {
-                if (teleporter.TargetTeleporter is null) continue;
-
-                (int teleporterX, int teleporterZ) = GetCellCoordinates(teleporter.transform.position);
-
-                Cell teleporterCell = Grid[teleporterX, teleporterZ];
-
-                (ISet<Cell> component, ISet<Cell> ns) = FindCellComponent(teleporterCell, connectedComponents);
-
-                (int targetX, int targetZ) = GetCellCoordinates(teleporter.TargetTeleporter.transform.position);
-
-                Cell targetCell = Grid[targetX, targetZ];
-
-                (ISet<Cell> targetComponent, ISet<Cell> targetNs) = FindCellComponent(targetCell, connectedComponents);
-
-                component.UnionWith(targetComponent);
-                ns.UnionWith(targetNs);
-
-                connectedComponents.Remove((targetComponent, targetNs));
-            }
-
-            (ISet<Cell> startComponent, ISet<Cell> neighbouringRooms) = FindCellComponent(startCell, connectedComponents);
-
-            connectedComponents.Remove((startComponent, neighbouringRooms));
-
-            ColorConnectedComponent(startComponent);
-
-            while (neighbouringRooms.Count > 0)
-            {
-                Cell neighbouringCell = neighbouringRooms.First();
-
-                neighbouringRooms.Remove(neighbouringCell);
-
-                IEnumerable<Cell> neighbouringCells = Grid.Get4NeighbouringCells(neighbouringCell);
-
-                foreach (Cell cell in neighbouringCells)
-                {
-                    if (!startComponent.Contains(cell) || neighbouringCell.Tile is not Room && cell.Tile is not Room) continue;
-
-                    Direction? direction = Grid.GetDirection(neighbouringCell, cell);
-                    if (direction is null) continue;
-
-                    if (neighbouringCell.Tile is not Room room)
-                        PlaceDoorInDirection(cell.X, cell.Z, (Room)cell.Tile, direction.Value.Opposite(), startComponent.Where(c => !c.ContainsItem).ToList(), doors.transform);
-                    else
-                        PlaceDoorInDirection(neighbouringCell.X, neighbouringCell.Z, room, direction.Value, startComponent.Where(c => !c.ContainsItem).ToList(), doors.transform);
-
-                    (ISet<Cell> usedComponent, ISet<Cell> usedNeighbouringRooms) = FindCellComponent(cell, connectedComponents);
-
-                    if (usedComponent is null || usedNeighbouringRooms is null) continue;
-
-                    connectedComponents.Remove((usedComponent, usedNeighbouringRooms));
-
-                    ColorConnectedComponent(usedComponent);
-
-                    usedNeighbouringRooms.Remove(cell);
-
-                    startComponent.UnionWith(usedComponent);
-                    neighbouringRooms.UnionWith(usedNeighbouringRooms);
-                }
-
-                (ISet<Cell> neighbouringCellComponent, ISet<Cell> neighbouringCellRooms) = FindCellComponent(neighbouringCell, connectedComponents);
-                connectedComponents.Remove((neighbouringCellComponent, neighbouringCellRooms));
-
-                if (neighbouringCellComponent is null) continue;
-
-                ColorConnectedComponent(neighbouringCellComponent);
-
-                startComponent.UnionWith(neighbouringCellComponent);
-                neighbouringRooms.UnionWith(neighbouringCellRooms.Except(startComponent));
-            }
+            (int x, int z) = GetCellCoordinates(position);
+            return Grid[x, z];
         }
 
-        private void ColorConnectedComponent(ISet<Cell> connectedComponent)
+        private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
+        {
+            GameObject doors = CreateGameObject("Doors and keys", transform);
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents =
+                Grid.DetermineConnectedComponentsBetweenDoors();
+
+            GameObject teleporters = GameObject.Find("Teleporters");
+            if (teleporters is null) throw new UnityException("No teleporters were found.");
+
+            List<Teleporter.Teleporter> teleporterList = GetUniqueTeleporters(teleporters);
+
+            MergeTeleporterConnectedComponents(teleporterList, connectedComponents);
+
+            (ConnectedComponent startComponent, ConnectedComponent neighbouringRooms) =
+                FindAndRemoveCellComponent(startCell, connectedComponents);
+            ColorConnectedComponent(startComponent);
+
+            ProcessNeighbouringRooms(startComponent, neighbouringRooms, connectedComponents, doors);
+        }
+
+        private static void ColorConnectedComponent(ISet<Cell> connectedComponent)
         {
             if (connectedComponent is null) return;
 
@@ -423,17 +390,103 @@ namespace Assets.Scripts.Wfc
                 cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
         }
 
+        private static GameObject CreateGameObject(string objectName, Transform parent) =>
+            new(objectName) { transform = { parent = parent } };
+
+        private List<Teleporter.Teleporter> GetUniqueTeleporters(GameObject teleporters)
+        {
+            List<Teleporter.Teleporter> teleporterList = new();
+            foreach (Transform child in teleporters.transform)
+            {
+                Teleporter.Teleporter teleporter = child.gameObject.GetComponent<Teleporter.Teleporter>();
+                if (teleporterList.Contains(teleporter.TargetTeleporter)) continue;
+                teleporterList.Add(teleporter);
+            }
+
+            return teleporterList;
+        }
+
+        private void MergeTeleporterConnectedComponents(List<Teleporter.Teleporter> teleporterList,
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
+        {
+            foreach (Teleporter.Teleporter teleporter in teleporterList)
+            {
+                if (teleporter.TargetTeleporter == null) continue;
+
+                Cell teleporterCell = GetCellAtPosition(teleporter.transform.position);
+                (ConnectedComponent component, ConnectedComponent ns) =
+                    FindCellComponent(teleporterCell, connectedComponents);
+
+                Cell targetCell = GetCellAtPosition(teleporter.TargetTeleporter.transform.position);
+                (ConnectedComponent targetComponent, ConnectedComponent targetNs) =
+                    FindAndRemoveCellComponent(targetCell, connectedComponents);
+
+                component.UnionWith(targetComponent);
+                ns.UnionWith(targetNs);
+            }
+        }
+
+        private static bool IsRoomConnectionValid(Cell cell1, Cell cell2) => cell1.Tile is Room || cell2.Tile is Room;
+
+        private List<Cell> GetAvailableCells(ISet<Cell> component) => component.Where(c => !c.ContainsItem).ToList();
+
+        private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ISet<Cell> startComponent, Transform parent)
+        {
+            if (cell1.Tile is Room room)
+                PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, GetAvailableCells(startComponent), parent);
+            else if (cell2.Tile is Room room2)
+                PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), GetAvailableCells(startComponent),
+                    parent);
+        }
+
+        private void ProcessNeighbouringRooms(ISet<Cell> startComponent, ISet<Cell> neighbouringRooms,
+            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents, GameObject doors)
+        {
+            while (neighbouringRooms.Count > 0)
+            {
+                Cell neighbouringCell = neighbouringRooms.First();
+                neighbouringRooms.Remove(neighbouringCell);
+
+                foreach (Cell cell in Grid.Get4NeighbouringCells(neighbouringCell))
+                {
+                    if (!startComponent.Contains(cell) || !IsRoomConnectionValid(neighbouringCell, cell)) continue;
+
+                    Direction? direction = Grid.GetDirection(neighbouringCell, cell);
+                    if (direction == null) continue;
+
+                    PlaceDoor(neighbouringCell, cell, direction.Value, startComponent, doors.transform);
+
+                    (ConnectedComponent usedComponent, ConnectedComponent usedNeighbouringRooms) =
+                        FindAndRemoveCellComponent(cell, connectedComponents);
+                    if (usedComponent == null || usedNeighbouringRooms == null) continue;
+
+                    ColorConnectedComponent(usedComponent);
+                    startComponent.UnionWith(usedComponent);
+                    neighbouringRooms.UnionWith(usedNeighbouringRooms);
+                }
+
+                (ConnectedComponent neighbouringCellComponent, ConnectedComponent neighbouringCellRooms) =
+                    FindAndRemoveCellComponent(neighbouringCell, connectedComponents);
+                if (neighbouringCellComponent == null) continue;
+
+                ColorConnectedComponent(neighbouringCellComponent);
+                startComponent.UnionWith(neighbouringCellComponent);
+                neighbouringRooms.UnionWith(neighbouringCellRooms.Except(startComponent));
+            }
+        }
+
         /// <summary>
-        /// Linearly connect all connected components, such that every connected component has two bidirectional teleporters.
-        /// The last teleporter is connected to itself, to indicate that it should not teleport the player anywhere.
+        ///     Linearly connect all connected components, such that every connected component has two bidirectional teleporters.
+        ///     The last teleporter is connected to itself, to indicate that it should not teleport the player anywhere.
         /// </summary>
         /// <remarks>Assumes that every connected component has at least two cells.</remarks>
         private void JoinConnectedComponentsWithTeleporters()
         {
-            GameObject teleporters = new("Teleporters") { transform = { parent = transform } };
+            GameObject teleporters = CreateGameObject("Teleporters", transform);
 
             // Prepare some variables
-            using IEnumerator<ConnectedComponent> connectedComponentsEnumerator = Grid.DetermineConnectedComponents().GetEnumerator();
+            using IEnumerator<ConnectedComponent> connectedComponentsEnumerator =
+                Grid.DetermineConnectedComponents().GetEnumerator();
 
             Teleporter.Teleporter previousExitTeleporter = null;
             int connectedComponentsProcessed = 0;
@@ -448,7 +501,8 @@ namespace Assets.Scripts.Wfc
                     // Place an entry teleporter, so that the previous connected component can be linked through this teleporter.
                     Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
                     nextEntryCell.ContainsItem = true; // No item can be placed in this cell anymore.
-                    Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset, teleporters.transform);
+                    Teleporter.Teleporter entryTeleporter =
+                        PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset, teleporters.transform);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
                     previousExitTeleporter!.TargetTeleporter = entryTeleporter;
@@ -466,7 +520,8 @@ namespace Assets.Scripts.Wfc
                 // (Assuming that the connected component has at least two cells, `nextExitCell` will never equal `nextEntryCell`)
                 Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
                 nextExitCell.ContainsItem = true; // No item can be placed in this cell anymore.
-                Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset, teleporters.transform);
+                Teleporter.Teleporter exitTeleporter =
+                    PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset, teleporters.transform);
 
                 // Update iteration progress
                 previousExitTeleporter = exitTeleporter;
@@ -479,58 +534,16 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Places a teleporter at a given location.
+        ///     Places a teleporter at a given location.
         /// </summary>
         /// <param name="coordinates">The coordinates of the teleporter.</param>
         /// <param name="parent">The parent of the teleporter.</param>
-        /// <returns>A reference to the <see cref="Teleporter"/> component of the teleporter.</returns>
+        /// <returns>A reference to the <see cref="Teleporter" /> component of the teleporter.</returns>
         /// <remarks>All teleporters are clustered under a 'Teleporter' empty gameobject.</remarks>
-        private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates, Transform parent) => Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, parent).GetComponent<Teleporter.Teleporter>();
+        private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates, Transform parent) =>
+            Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, parent)
+                .GetComponent<Teleporter.Teleporter>();
 
-        // Here are temporary helper methods used to display the connected components in different colors.
-        private static readonly Color[] _colors =
-        {
-            Color.red,
-            Color.blue,
-            Color.green,
-            Color.yellow,
-            Color.magenta,
-            Color.cyan,
-            Color.black,
-            Color.gray,
-            Color.Lerp(Color.red, Color.blue, 0.5f),
-            Color.Lerp(Color.red, Color.yellow, 0.5f),
-            Color.Lerp(Color.yellow, Color.blue, 0.5f),
-            Color.Lerp(Color.black, Color.red, 0.5f),
-            Color.Lerp(Color.white, Color.red, 0.5f),
-            Color.Lerp(Color.black, Color.blue, 0.5f),
-            Color.Lerp(Color.white, Color.blue, 0.5f),
-            Color.Lerp(Color.black, Color.green, 0.5f),
-            Color.Lerp(Color.white, Color.green, 0.5f),
-            Color.Lerp(Color.black, Color.yellow, 0.5f),
-            Color.Lerp(Color.white, Color.yellow, 0.5f),
-            Color.Lerp(Color.black, Color.magenta, 0.5f),
-            Color.Lerp(Color.white, Color.magenta, 0.5f),
-            Color.Lerp(Color.black, Color.cyan, 0.5f),
-            Color.Lerp(Color.white, Color.cyan, 0.5f),
-            Color.Lerp(Color.red, Color.blue, 0.25f),
-            Color.Lerp(Color.red, Color.yellow, 0.25f),
-            Color.Lerp(Color.yellow, Color.blue, 0.25f),
-            Color.Lerp(Color.black, Color.red, 0.25f),
-            Color.Lerp(Color.white, Color.red, 0.25f),
-            Color.Lerp(Color.black, Color.blue, 0.25f),
-            Color.Lerp(Color.white, Color.blue, 0.25f),
-            Color.Lerp(Color.black, Color.green, 0.25f),
-            Color.Lerp(Color.white, Color.green, 0.25f),
-            Color.Lerp(Color.black, Color.yellow, 0.25f),
-            Color.Lerp(Color.white, Color.yellow, 0.25f),
-            Color.Lerp(Color.black, Color.magenta, 0.25f),
-            Color.Lerp(Color.white, Color.magenta, 0.25f),
-            Color.Lerp(Color.black, Color.cyan, 0.25f),
-            Color.Lerp(Color.white, Color.cyan, 0.25f),
-        };
-
-        private static int _colorIndex = -1;
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }
 }
