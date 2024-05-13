@@ -29,13 +29,13 @@ public class Door : MonoBehaviour
     {
         // Delete door if it is triggered by the player.
         if (collidingObject.gameObject.CompareTag("Player"))
-            Destroy(transform.parent.gameObject);
+            Open();
 
         //Once the keys and doors are given matching id's, we can use this
         /*
           if (collidingObject.gameObject.CompareTag("Player") && collidingObject.GetComponent<KeyRing>().KeyQuery(this))
             {
-              Destroy(transform.parent.gameObject);
+              Open();
             }
         */
     }
@@ -46,4 +46,9 @@ public class Door : MonoBehaviour
     /// <param name="key">The key that is being checked for the same ID as the door</param>
     /// <returns></returns>
     public bool TryOpenDoor(Key key) => key.Id == _doorId;
+
+    public void Open()
+    {
+        Destroy(gameObject);
+    }
 }
