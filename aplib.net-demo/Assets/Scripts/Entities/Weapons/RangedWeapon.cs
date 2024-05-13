@@ -53,6 +53,9 @@ namespace Entities.Weapons
         /// </summary>
         public override void UseWeapon()
         {
+            // Play a random whoosh crossbow sound.
+            _entitySound.Shoot();
+
             if (!EnemiesInLineOfSight())
                 return;
 
@@ -66,9 +69,6 @@ namespace Entities.Weapons
                 HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
                 enemy?.ReduceHealth(Damage);
             }
-
-            // Play a random whoosh crossbow sound.
-            _entitySound.Shoot();
         }
 
         /// <summary>
