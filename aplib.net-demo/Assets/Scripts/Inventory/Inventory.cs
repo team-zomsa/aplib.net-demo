@@ -5,59 +5,74 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    private Queue<Item> _itemList;
     public float inventorySize;
-    /// <summary>
-    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
-    /// </summary>
-    private RawImage _inventoryIndicator;
+
     /// <summary>
     /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
+
     public GameObject inventoryObject;
 
+    private AmmoPouch _ammoPouch;
+
     /// <summary>
-    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
+    /// </summary>
+    private RawImage _inventoryIndicator;
+
+    private Queue<Item> _itemList;
+
+    /// <summary>
+    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the
+    /// icons.
     /// </summary>
     private void Start()
     {
+        _ammoPouch = GetComponent<AmmoPouch>();
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
     }
 
     /// <summary>
-    /// Converts queue to list to check if there are any items with matching names. 
-    /// If there are it checks if they are stackable and adds uses. If they are not it does nothing. 
+    /// Converts queue to list to check if there are any items with matching names.
+    /// If there are it checks if they are stackable and adds uses. If they are not it does nothing.
     /// If there are not matching names it adds the item to the inventory.
     /// </summary>
     /// <param name="item">The item that is fed into the inventory.</param>
     public void PickUpItem(Item item)
     {
-        bool alreadyInInventory = false;
-        List<Item> _tempItemList = _itemList.ToList();
-        for (int i = 0; i < _itemList.Count; i++)
+        if (item is AmmunitionItem)
         {
-            if (_tempItemList[i].name == item.name)
-            {
-                if (!item.stackable)
-                    return;
-
-                _tempItemList[i].uses += item.startUses;
-                alreadyInInventory = true;
-                break;
-            }
+            _ammoPouch.AddAmmo(1);
+            return;
         }
 
-        if (!alreadyInInventory && _itemList.Count < inventorySize)
+        if (!item.stackable)
         {
+            // If the the item is non stackable, we cannot store it in the inventory system.
+            Debug.Log("Object is non stackable.");
+            return;
+        }
+
+        Item existingItem = _itemList.FirstOrDefault(i => i.name == item.name);
+        bool alreadyInInventory = existingItem is not null;
+
+        if (alreadyInInventory)
+        {
+            existingItem.uses += item.uses;
+        }
+        else if (_itemList.Count < inventorySize)
+        {
+            Debug.Log("Added to queue");
             _itemList.Enqueue(item);
             DisplayItem();
         }
     }
 
     /// <summary>
-    /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new item is selected.
+    /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new
+    /// item is selected.
     /// </summary>
     public void ActivateItem()
     {
@@ -66,7 +81,9 @@ public class Inventory : MonoBehaviour
             _itemList.Peek().UseItem();
 
             if (_itemList.Peek().uses == 0)
+            {
                 _ = _itemList.Dequeue();
+            }
         }
 
         DisplayItem();
@@ -87,5 +104,6 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
     /// </summary>
-    public void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
+    public void DisplayItem() => _inventoryIndicator.texture =
+        _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }
