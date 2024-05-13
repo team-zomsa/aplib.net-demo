@@ -27,7 +27,8 @@ namespace Entities.Weapons
         /// </summary>
         private void Awake()
         {
-            if (_firePoint is null)
+            // This needs to be '==' and not 'is', because the check for None (transform) only works with '=='.
+            if (_firePoint == null)
                 _firePoint = Camera.main.transform;
         }
 
