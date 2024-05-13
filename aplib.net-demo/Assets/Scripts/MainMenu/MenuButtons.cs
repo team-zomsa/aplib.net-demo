@@ -3,8 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class MenuPlayButton : MonoBehaviour
 {
+    /// <summary>
+    /// Reference to the menu canvas.
+    /// </summary>
     public GameObject menuCanvas;
+
+    /// <summary>
+    /// Reference to the settings canvas.
+    /// </summary>
     public GameObject settingCanvas;
+
+    /// <summary>
+    /// To ensure the settings and menu UI aren't on on the same time.
+    /// </summary>
     public bool isOnSettings = false;
 
     private void Start()
