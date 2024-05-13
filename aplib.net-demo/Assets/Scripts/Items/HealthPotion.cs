@@ -25,7 +25,7 @@ namespace Assets.Scripts.Items
         public override void UseItem()
         {
             base.UseItem();
-            _playerHealth.ReduceHealth(-_healAmount);
+            _playerHealth.IncreaseHealth(_healAmount);
         }
     }
 }

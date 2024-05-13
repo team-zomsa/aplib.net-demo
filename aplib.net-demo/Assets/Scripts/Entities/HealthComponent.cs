@@ -71,6 +71,14 @@ public class HealthComponent : MonoBehaviour
             Die();
     }
 
+    /// <summary>
+    /// Increase the GameObject's health by the specified amount.
+    /// </summary>
+    /// <param name="amount">The amount of health to be added.</param>
+    public void IncreaseHealth(int amount)
+    {
+        ReduceHealth(-amount);
+    }
 
     /// <summary>
     /// Resets the GameObject's health to the maximum value.
