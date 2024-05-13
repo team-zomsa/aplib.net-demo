@@ -27,10 +27,11 @@ public class MenuPlayButton : MonoBehaviour
 
     /// <summary>
     /// When the play button in the main menu is clicked, it wil teleport the player to the game.
-    /// Right now it is the melee weapon scene to prove concept. THIS NEEDS TO BE CHANGED.
+    /// Right now it is the melee weapon scene to prove concept.
     /// </summary>
     public void PlayGame()
     {
+        // TODO:: Load main game scene
         SceneManager.LoadScene("MeleeWeapon");
     }
 
