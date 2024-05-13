@@ -7,7 +7,6 @@ using UnityEngine;
 /// Has a separate vision range within which it will move closer to the player.
 /// </summary>
 [RequireComponent(typeof(Timer))]
-[RequireComponent(typeof(EntitySound))]
 public class RangedEnemy : DummyEnemy
 {
     [SerializeField]
@@ -22,7 +21,6 @@ public class RangedEnemy : DummyEnemy
     private bool _movingCloser;
     private Timer _attackTimer;
     private RangedWeapon _rangedWeapon;
-    private EntitySound _entitySound;
 
     /// <summary>
     /// Initialize the ranged weapon and pathfinding.
@@ -36,7 +34,6 @@ public class RangedEnemy : DummyEnemy
         _attackTimer.SetExactTime(_attackCooldown);
         _pathFind.TagToFind = _targetTag;
         _pathFind.SetStoppingDistance(_attackRange - 1f);
-        _entitySound = GetComponent<EntitySound>();
 
         base.Start();
     }
@@ -89,14 +86,5 @@ public class RangedEnemy : DummyEnemy
 
         _movingCloser = false;
         _pathFind.SetStoppingDistance(_attackRange - 1f);
-    }
-
-    /// <summary>
-    /// Play the death sound when the enemy dies.
-    /// </summary>
-    protected override void OnDeath(HealthComponent healthComponent)
-    {
-        base.OnDeath(healthComponent);
-        _entitySound.OnDeath();
     }
 }
