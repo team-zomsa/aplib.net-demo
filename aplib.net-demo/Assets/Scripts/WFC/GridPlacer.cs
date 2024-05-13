@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Doors;
 using Assets.Scripts.Tiles;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -140,6 +141,27 @@ namespace Assets.Scripts.Wfc
             JoinConnectedComponentsWithTeleporters();
 
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
+        }
+
+        /// <summary>
+        /// Waits before making the scene.
+        /// </summary>
+        /// <param name="waitTime">The time to wait before making the scene.</param>
+        public void WaitBeforeMakeScene(float waitTime = 0.01f)
+        {
+            StartCoroutine(Wait(waitTime));
+        }
+
+        /// <summary>
+        /// Waits for a certain amount of time.
+        /// </summary>
+        /// <param name="waitTime">The time to wait before making the scene.</param>
+        /// <returns>An <see cref="IEnumerator"/> that can be used to wait for a certain amount of time.</returns>
+        private IEnumerator Wait(float waitTime)
+        {
+            yield return new WaitForSeconds(waitTime);
+
+            MakeScene();
         }
 
         /// <summary>
@@ -304,8 +326,8 @@ namespace Assets.Scripts.Wfc
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents = Grid.DetermineConnectedComponentsBetweenDoors();
 
             GameObject teleporters = GameObject.Find("Teleporters");
-            Debug.Log(teleporters);
-            Debug.Log(teleporters.transform.childCount);
+
+            if (teleporters is null) throw new UnityException("No teleporters were found.");
 
             List<Teleporter.Teleporter> teleporterList = new();
 
@@ -317,8 +339,6 @@ namespace Assets.Scripts.Wfc
 
                 teleporterList.Add(teleporter);
             }
-
-            Debug.Log(teleporterList.Count);
 
             foreach (Teleporter.Teleporter teleporter in teleporterList)
             {
@@ -336,11 +356,10 @@ namespace Assets.Scripts.Wfc
 
                 (ISet<Cell> targetComponent, ISet<Cell> targetNs) = FindCellComponent(targetCell, connectedComponents);
 
-                if (component is null || ns is null || targetComponent is null || targetNs is null) continue;
-
-                connectedComponents.Remove((targetComponent, targetNs));
                 component.UnionWith(targetComponent);
                 ns.UnionWith(targetNs);
+
+                connectedComponents.Remove((targetComponent, targetNs));
             }
 
             (ISet<Cell> startComponent, ISet<Cell> neighbouringRooms) = FindCellComponent(startCell, connectedComponents);
@@ -428,6 +447,7 @@ namespace Assets.Scripts.Wfc
                 {
                     // Place an entry teleporter, so that the previous connected component can be linked through this teleporter.
                     Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
+                    nextEntryCell.ContainsItem = true; // No item can be placed in this cell anymore.
                     Teleporter.Teleporter entryTeleporter = PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset, teleporters.transform);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
@@ -445,6 +465,7 @@ namespace Assets.Scripts.Wfc
                 // Place the exit teleporter of the current connected component at the end of the connected component.
                 // (Assuming that the connected component has at least two cells, `nextExitCell` will never equal `nextEntryCell`)
                 Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
+                nextExitCell.ContainsItem = true; // No item can be placed in this cell anymore.
                 Teleporter.Teleporter exitTeleporter = PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset, teleporters.transform);
 
                 // Update iteration progress

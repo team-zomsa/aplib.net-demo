@@ -40,13 +40,12 @@ namespace Editors
 
             gridPlacerSettings.ApplyModifiedProperties();
 
-            if (GUILayout.Button("Generate new level"))
-            {
-                GridPlacer gridPlacer = (GridPlacer)target;
-                foreach (Transform child in gridPlacer.transform) Destroy(child.gameObject);
+            if (!GUILayout.Button("Generate new level")) return;
 
-                gridPlacer.MakeScene();
-            }
+            GridPlacer gridPlacer = (GridPlacer)target;
+            foreach (Transform child in gridPlacer.transform) Destroy(child.gameObject);
+
+            gridPlacer.WaitBeforeMakeScene();
         }
     }
 }
