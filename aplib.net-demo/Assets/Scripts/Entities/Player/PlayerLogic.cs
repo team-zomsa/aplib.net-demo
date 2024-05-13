@@ -10,7 +10,7 @@ public class PlayerLogic : MonoBehaviour
 {
     private HealthComponent _healthComponent;
     private ResetRigidbody _resetRigidbody;
-    
+
     /// <summary>
     /// Get the health and resetRb component and subscribe to events.
     /// </summary>

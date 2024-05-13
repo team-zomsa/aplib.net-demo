@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Sound Effect class for Entities (Player + Enemies).
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(HealthComponent))]
 public class EntitySound : MonoBehaviour
