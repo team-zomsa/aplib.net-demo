@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/73_AddSoundController.unity
+    guid: ac92abeb8c5cd73449e3e33690748a4f
+  - enabled: 1
     path: Assets/Scenes/MeleeWeapon.unity
     guid: 4f005e486a5e8a7ff973fc458abe5923
   - enabled: 1
@@ -23,4 +26,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/RangedWeaponTestScene.unity
     guid: 254572ebc9a5e314a9d4e02ac8f4d358
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/TeleporterTestScene.unity
+    guid: c91ffe079b1f59e5da4e4e8bfd0969fe
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/MeleeEnemyTestScene.unity
+    guid: 63bec7787fcda254e83347bfef124142
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/ConnectedComponentsTestScene.unity
+    guid: f2c1b0e220295aff2ba085b21cf1c1c6
   m_configObjects: {}

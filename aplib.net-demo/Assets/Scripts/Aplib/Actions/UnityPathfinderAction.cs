@@ -12,7 +12,7 @@ namespace Aplib.Integrations.Unity.Actions
         protected static readonly Func<TBeliefSet, bool> _alwaysTrue = _ => true;
 
         public UnityPathfinderAction(
-            Func<TBeliefSet, Transform> objectQuery,
+            Func<TBeliefSet, Rigidbody> objectQuery,
             Action<TBeliefSet, Vector3> effect,
             Vector3 location,
             float heightOffset = 0f,
@@ -29,7 +29,7 @@ namespace Aplib.Integrations.Unity.Actions
         }
 
         public UnityPathfinderAction(
-            Func<TBeliefSet, Transform> objectQuery,
+            Func<TBeliefSet, Rigidbody> objectQuery,
             Func<TBeliefSet, Vector3> location,
             Action<TBeliefSet, Vector3> effect,
             float heightOffset = 0f,
@@ -45,17 +45,17 @@ namespace Aplib.Integrations.Unity.Actions
 
         protected static Func<TBeliefSet, Vector3> ConstantLocation(Vector3 location) => _ => location;
 
-        private static Action<TBeliefSet> PathfindingAction(Func<TBeliefSet, Transform> objectQuery,
+        private static Action<TBeliefSet> PathfindingAction(Func<TBeliefSet, Rigidbody> objectQuery,
             Func<TBeliefSet, Vector3> locationQuery,
             Action<TBeliefSet, Vector3> effect,
             float speed = 7f,
             float heightOffset = 0f) => beliefSet =>
         {
-            Transform transform = objectQuery(beliefSet);
+            Rigidbody rigidbody = objectQuery(beliefSet);
             Vector3 target = locationQuery(beliefSet);
 
             NavMeshPath path = new();
-            NavMesh.CalculatePath(transform.position,
+            NavMesh.CalculatePath(rigidbody.position,
                 target,
                 NavMesh.AllAreas,
                 path
@@ -69,8 +69,8 @@ namespace Aplib.Integrations.Unity.Actions
             // Move Towards
             Vector3 targetPosition = path.corners[1] + (Vector3.up * heightOffset);
             Vector3 newPosition =
-                Vector3.MoveTowards(transform.position, targetPosition, maxDistanceDelta: Time.deltaTime * speed);
-            Debug.DrawLine(targetPosition, transform.position, Color.blue);
+                Vector3.MoveTowards(rigidbody.position, targetPosition, maxDistanceDelta: Time.deltaTime * speed);
+            Debug.DrawLine(targetPosition, rigidbody.position, Color.blue);
 
             // Call the effect with the new position and direction
             effect(beliefSet, newPosition);

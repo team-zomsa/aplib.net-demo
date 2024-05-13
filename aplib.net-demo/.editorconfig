@@ -230,6 +230,11 @@ dotnet_naming_style.begins_with_i.required_suffix =
 dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
+#### Rules for Resharper ####
+
+resharper_place_attribute_on_same_line = never
+resharper_indent_nested_for_stmt = true
+
 [*.{cs,vb}]
 # Use underscores for private fields
 dotnet_naming_symbols.private_fields.applicable_kinds           = field
