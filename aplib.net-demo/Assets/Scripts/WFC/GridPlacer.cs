@@ -294,11 +294,54 @@ namespace Assets.Scripts.Wfc
         private (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) => connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
 
+        private (int x, int z) GetCellCoordinates(Vector3 position) =>
+            ((int)(position.x / _tileSizeX), (int)(position.z / _tileSizeZ));
+
         private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
         {
             GameObject doors = new("Doors and keys") { transform = { parent = transform } };
 
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents = Grid.DetermineConnectedComponentsBetweenDoors();
+
+            GameObject teleporters = GameObject.Find("Teleporters");
+            Debug.Log(teleporters);
+            Debug.Log(teleporters.transform.childCount);
+
+            List<Teleporter.Teleporter> teleporterList = new();
+
+            foreach (Transform child in teleporters.transform)
+            {
+                Teleporter.Teleporter teleporter = child.gameObject.GetComponent<Teleporter.Teleporter>();
+
+                if (teleporterList.Contains(teleporter.TargetTeleporter)) continue;
+
+                teleporterList.Add(teleporter);
+            }
+
+            Debug.Log(teleporterList.Count);
+
+            foreach (Teleporter.Teleporter teleporter in teleporterList)
+            {
+                if (teleporter.TargetTeleporter is null) continue;
+
+                (int teleporterX, int teleporterZ) = GetCellCoordinates(teleporter.transform.position);
+
+                Cell teleporterCell = Grid[teleporterX, teleporterZ];
+
+                (ISet<Cell> component, ISet<Cell> ns) = FindCellComponent(teleporterCell, connectedComponents);
+
+                (int targetX, int targetZ) = GetCellCoordinates(teleporter.TargetTeleporter.transform.position);
+
+                Cell targetCell = Grid[targetX, targetZ];
+
+                (ISet<Cell> targetComponent, ISet<Cell> targetNs) = FindCellComponent(targetCell, connectedComponents);
+
+                if (component is null || ns is null || targetComponent is null || targetNs is null) continue;
+
+                connectedComponents.Remove((targetComponent, targetNs));
+                component.UnionWith(targetComponent);
+                ns.UnionWith(targetNs);
+            }
 
             (ISet<Cell> startComponent, ISet<Cell> neighbouringRooms) = FindCellComponent(startCell, connectedComponents);
 
@@ -354,6 +397,8 @@ namespace Assets.Scripts.Wfc
 
         private void ColorConnectedComponent(ISet<Cell> connectedComponent)
         {
+            if (connectedComponent is null) return;
+
             Color color = GetUnusedColor();
             foreach (Cell cell in connectedComponent)
                 cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
