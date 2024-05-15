@@ -141,6 +141,24 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
+        /// Waits for the specified time and then makes the scene.
+        /// </summary>
+        /// <param name="waitTime">The time to wait before making the scene.</param>
+        public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
+
+        /// <summary>
+        /// Waits for a certain amount of time.
+        /// </summary>
+        /// <param name="waitTime">The time to wait before making the scene.</param>
+        /// <returns>An <see cref="IEnumerator" /> that can be used to wait for a certain amount of time.</returns>
+        private IEnumerator WaitThenMakeScene(float waitTime)
+        {
+            yield return new WaitForSeconds(waitTime);
+
+            MakeScene();
+        }
+
+        /// <summary>
         /// Makes the scene.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
@@ -162,24 +180,6 @@ namespace Assets.Scripts.Wfc
             JoinConnectedComponentsWithTeleporters();
 
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
-        }
-
-        /// <summary>
-        /// Waits for the specified time and then makes the scene.
-        /// </summary>
-        /// <param name="waitTime">The time to wait before making the scene.</param>
-        public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
-
-        /// <summary>
-        /// Waits for a certain amount of time.
-        /// </summary>
-        /// <param name="waitTime">The time to wait before making the scene.</param>
-        /// <returns>An <see cref="IEnumerator" /> that can be used to wait for a certain amount of time.</returns>
-        private IEnumerator WaitThenMakeScene(float waitTime)
-        {
-            yield return new WaitForSeconds(waitTime);
-
-            MakeScene();
         }
 
         /// <summary>
