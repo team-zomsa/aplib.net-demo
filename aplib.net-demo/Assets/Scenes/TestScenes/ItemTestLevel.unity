@@ -497,6 +497,7 @@ MonoBehaviour:
   _mouseLock: {fileID: 1233798691}
   _playerTransform: {fileID: 145027184}
   _inventory: {fileID: 1906849248}
+  _weaponInventory: {fileID: 1146472144}
 --- !u!4 &245569154
 Transform:
   m_ObjectHideFlags: 0
@@ -1939,7 +1940,7 @@ MonoBehaviour:
   emptyInventoryImage: {fileID: 2800000, guid: 8d003bcfe1c8c044893bf31bdf72fba7, type: 3}
   inventoryObject: {fileID: 1146472142}
   _meleeWeapon: {fileID: 1239109084}
-  _rangedWeapon: {fileID: 0}
+  _rangedWeapon: {fileID: 2009383170}
 --- !u!114 &1146472145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2328,7 +2329,7 @@ MonoBehaviour:
   uses: 0
   startUses: 0
   stackable: 0
-  iconTexture: {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
+  iconTexture: {fileID: 2800000, guid: 5f88986e85f1087469383a468c04e584, type: 3}
   TargetTag: Enemy
   Damage: 25
   _height: 4
@@ -4081,8 +4082,7 @@ MonoBehaviour:
   uses: 0
   startUses: 0
   stackable: 0
-  icon: {fileID: 0}
-  iconTexture: {fileID: 2800000, guid: b31ffa1c3278e6b4b81cd4c9e21dd0ff, type: 3}
+  iconTexture: {fileID: 2800000, guid: 36079ad4b7de4f845b368f5aef76499b, type: 3}
   TargetTag: Enemy
   _damage: 50
   _range: 50
