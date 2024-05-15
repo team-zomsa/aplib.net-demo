@@ -42,10 +42,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 91225418248312668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5467cb17908d4641b2f429c9c6875c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c4b9d599f768aa48a6b33a42965724d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 30
+  _entitySound: {fileID: 0}
+  _targetTag: Enemy
+  _damage: 50
+  _firePoint: {fileID: 0}
   _range: 50
 --- !u!1 &263138273581502346
 GameObject:
