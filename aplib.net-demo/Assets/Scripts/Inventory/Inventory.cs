@@ -6,31 +6,30 @@ using UnityEngine.UI;
 [RequireComponent(typeof(AmmoPouch))]
 public class Inventory : MonoBehaviour
 {
-
     /// <summary>
     /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
 
     /// <summary>
-    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
-    /// </summary>
-    private RawImage _inventoryIndicator;
-
-    /// <summary>
     /// The canvas object that holds the inventory.
     /// </summary>
     public GameObject inventoryObject;
 
-    private Queue<Item> _itemList;
-
-    [SerializeField]
-    private float _inventorySize = 4;
+    [SerializeField] private float _inventorySize = 4;
 
     private AmmoPouch _ammoPouch;
 
     /// <summary>
-    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
+    /// </summary>
+    private RawImage _inventoryIndicator;
+
+    private Queue<Item> _itemList;
+
+    /// <summary>
+    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the
+    /// icons.
     /// </summary>
     private void Start()
     {
@@ -65,7 +64,7 @@ public class Inventory : MonoBehaviour
 
         if (alreadyInInventory)
         {
-            existingItem.uses += item.startUses;
+            existingItem.uses += item.usesAddedPerPickup;
         }
         else if (_itemList.Count < _inventorySize)
         {
@@ -93,7 +92,9 @@ public class Inventory : MonoBehaviour
             _itemList.Peek().UseItem();
 
             if (_itemList.Peek().uses <= 0)
+            {
                 _ = _itemList.Dequeue();
+            }
         }
 
         DisplayItem();
