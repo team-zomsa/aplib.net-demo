@@ -6,6 +6,9 @@ using UnityEngine.Serialization;
 /// </summary>
 public class AmmoPouch : MonoBehaviour
 {
+    /// <summary>
+    /// The maximum amount of ammunition that can be stored in the ammo pouch.
+    /// </summary>
     [FormerlySerializedAs("MaxAmmoCount")] [SerializeField]
     public int maxAmmoCount;
 
@@ -19,11 +22,9 @@ public class AmmoPouch : MonoBehaviour
     /// <param name="ammo">The amount of ammunition to add.</param>
     public void AddAmmo(int ammo)
     {
-        Debug.Log("Add ammunition to pouch!");
         _currentAmmoCount += ammo;
         if (_currentAmmoCount > maxAmmoCount)
         {
-            Debug.Log($"Too much ammo! ({_currentAmmoCount})");
             _currentAmmoCount = maxAmmoCount;
         }
     }
@@ -35,10 +36,7 @@ public class AmmoPouch : MonoBehaviour
     /// <returns>True if there is enough ammunition to use, false otherwise.</returns>
     public bool TryUseAmmo()
     {
-        if (_currentAmmoCount == 0)
-        {
-            return false;
-        }
+        if (_currentAmmoCount == 0) return false;
 
         _currentAmmoCount--;
         return true;

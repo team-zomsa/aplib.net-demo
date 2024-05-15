@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AmmoPouch))]
 public class Inventory : MonoBehaviour
 {
     public float inventorySize;
@@ -42,7 +43,7 @@ public class Inventory : MonoBehaviour
     /// <param name="item">The item that is fed into the inventory.</param>
     public void PickUpItem(Item item)
     {
-        if (item is AmmunitionItem)
+        if (item is AmmoItem)
         {
             _ammoPouch.AddAmmo(1);
             return;
@@ -51,7 +52,6 @@ public class Inventory : MonoBehaviour
         if (!item.stackable)
         {
             // If the the item is non stackable, we cannot store it in the inventory system.
-            Debug.Log("Object is non stackable.");
             return;
         }
 
@@ -60,11 +60,10 @@ public class Inventory : MonoBehaviour
 
         if (alreadyInInventory)
         {
-            existingItem.uses += item.uses;
+            existingItem.uses += item.startUses;
         }
         else if (_itemList.Count < inventorySize)
         {
-            Debug.Log("Added to queue");
             _itemList.Enqueue(item);
             DisplayItem();
         }
@@ -80,10 +79,9 @@ public class Inventory : MonoBehaviour
         {
             _itemList.Peek().UseItem();
 
-            if (_itemList.Peek().uses == 0)
-            {
+            if (_itemList.Peek().uses <= 0)
                 _ = _itemList.Dequeue();
-            }
+
         }
 
         DisplayItem();
