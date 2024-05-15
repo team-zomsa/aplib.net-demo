@@ -6,15 +6,23 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     private Queue<Item> _itemList;
-    public float inventorySize;
+
+    [SerializeField]
+    private float _inventorySize = 4;
+
     /// <summary>
     /// The RawImage is the object on which the _inventoryIndicator texture is projected.
     /// </summary>
     private RawImage _inventoryIndicator;
+
     /// <summary>
     /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
+
+    /// <summary>
+    /// The canvas object that holds the inventory.
+    /// </summary>
     public GameObject inventoryObject;
 
     /// <summary>
@@ -24,6 +32,7 @@ public class Inventory : MonoBehaviour
     {
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
+        DisplayItem();
     }
 
     /// <summary>
@@ -43,15 +52,23 @@ public class Inventory : MonoBehaviour
                 if (!item.stackable)
                     return;
 
-                _tempItemList[i].uses += item.startUses;
+                _tempItemList[i].uses += item.usesAddedPerPickup;
                 alreadyInInventory = true;
                 break;
             }
         }
 
-        if (!alreadyInInventory && _itemList.Count < inventorySize)
+        if (!alreadyInInventory && _itemList.Count < _inventorySize)
         {
-            _itemList.Enqueue(item);
+            item.Reset();
+
+            // Make a copy of the item to add to the inventory, so that the 'real world' item can be destroyed.
+            item.transform.SetParent(transform);
+            Item itemCopy = Instantiate(item);
+            itemCopy.gameObject.SetActive(false);
+            itemCopy.name = item.name;
+            _itemList.Enqueue(itemCopy);
+
             DisplayItem();
         }
     }
@@ -65,7 +82,7 @@ public class Inventory : MonoBehaviour
         {
             _itemList.Peek().UseItem();
 
-            if (_itemList.Peek().uses == 0)
+            if (_itemList.Peek().uses <= 0)
                 _ = _itemList.Dequeue();
         }
 
