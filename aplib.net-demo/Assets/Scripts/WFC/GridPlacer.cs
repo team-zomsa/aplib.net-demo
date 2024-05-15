@@ -21,9 +21,8 @@ namespace Assets.Scripts.Wfc
         private static readonly Color[] _colors =
         {
             Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan, Color.black, Color.gray,
-            Color.Lerp(Color.red, Color.blue, 0.5f), Color.Lerp(Color.red, Color.yellow, 0.5f),
-            Color.Lerp(Color.yellow, Color.blue, 0.5f), Color.Lerp(Color.black, Color.red, 0.5f),
-            Color.Lerp(Color.white, Color.red, 0.5f), Color.Lerp(Color.black, Color.blue, 0.5f),
+            Color.Lerp(Color.red, Color.blue, 0.5f), Color.Lerp(Color.red, Color.yellow, 0.5f), Color.Lerp(Color.yellow, Color.blue, 0.5f),
+            Color.Lerp(Color.black, Color.red, 0.5f), Color.Lerp(Color.white, Color.red, 0.5f), Color.Lerp(Color.black, Color.blue, 0.5f),
             Color.Lerp(Color.white, Color.blue, 0.5f), Color.Lerp(Color.black, Color.green, 0.5f),
             Color.Lerp(Color.white, Color.green, 0.5f), Color.Lerp(Color.black, Color.yellow, 0.5f),
             Color.Lerp(Color.white, Color.yellow, 0.5f), Color.Lerp(Color.black, Color.magenta, 0.5f),
@@ -283,7 +282,7 @@ namespace Assets.Scripts.Wfc
             float doorDepthExtend = _doorRenderer.bounds.extents.z;
 
             // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
+            float doorDistanceFromRoomCenter = _tileSizeX / 2f - doorDepthExtend;
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 
@@ -296,6 +295,7 @@ namespace Assets.Scripts.Wfc
                 West => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
                 _ => throw new UnityException("Invalid direction when placing door")
             };
+
             Vector3 doorPosition = roomPosition + relativeDoorPosition;
 
             // Calculate the rotation the door should have
@@ -312,6 +312,7 @@ namespace Assets.Scripts.Wfc
 
             GameObject instantiatedKeyPrefab =
                 Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
+
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Id = doorComponent.DoorId;
         }
@@ -336,10 +337,22 @@ namespace Assets.Scripts.Wfc
             respawnPoint.transform.position = spawningPoint;
         }
 
+        /// <summary>
+        ///     Finds the connected component that contains the given cell.
+        /// </summary>
+        /// <param name="cell">The cell to find the connected component for.</param>
+        /// <param name="connectedComponents">The list of connected components to search through.</param>
+        /// <returns>The connected component that contains the given cell.</returns>
         private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
             connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
 
+        /// <summary>
+        ///     Finds and removes a connected component from the list of connected components.
+        /// </summary>
+        /// <param name="cell">The cell for which the connected component is to be found.</param>
+        /// <param name="connectedComponents">The list of connected components to search through.</param>
+        /// <returns>A tuple containing the connected component and its neighbouring rooms that contains the given cell.</returns>
         private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindAndRemoveCellComponent(
             Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
@@ -352,15 +365,30 @@ namespace Assets.Scripts.Wfc
             return (connectedComponent, neighbouringRooms);
         }
 
+        /// <summary>
+        ///     Gets the cell coordinates of a given position.
+        /// </summary>
+        /// <param name="position">The position to get the cell coordinates for.</param>
+        /// <returns>The cell coordinates of the given position.</returns>
         private (int x, int z) GetCellCoordinates(Vector3 position) =>
             ((int)(position.x / _tileSizeX), (int)(position.z / _tileSizeZ));
 
+        /// <summary>
+        ///     Gets the cell at a given position.
+        /// </summary>
+        /// <param name="position">The position to get the cell for.</param>
+        /// <returns>The cell at the given position.</returns>
         private Cell GetCellAtPosition(Vector3 position)
         {
             (int x, int z) = GetCellCoordinates(position);
             return Grid[x, z];
         }
 
+        /// <summary>
+        ///     Places doors between connected components.
+        /// </summary>
+        /// <param name="startCell">The cell to start the search from.</param>
+        /// <exception cref="UnityException">No teleporters were found.</exception>
         private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
         {
             GameObject doors = CreateGameObject("Doors and keys", transform);
@@ -376,11 +404,16 @@ namespace Assets.Scripts.Wfc
 
             (ConnectedComponent startComponent, ConnectedComponent neighbouringRooms) =
                 FindAndRemoveCellComponent(startCell, connectedComponents);
+
             ColorConnectedComponent(startComponent);
 
             ProcessNeighbouringRooms(startComponent, neighbouringRooms, connectedComponents, doors);
         }
 
+        /// <summary>
+        ///     Colors a connected component in a unique color.
+        /// </summary>
+        /// <param name="connectedComponent">The connected component to color.</param>
         private static void ColorConnectedComponent(ISet<Cell> connectedComponent)
         {
             if (connectedComponent is null) return;
@@ -390,9 +423,20 @@ namespace Assets.Scripts.Wfc
                 cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
         }
 
+        /// <summary>
+        ///     Creates a new game object with a given name and parent.
+        /// </summary>
+        /// <param name="objectName">The name of the game object.</param>
+        /// <param name="parent">The parent of the game object.</param>
+        /// <returns>The newly created game object.</returns>
         private static GameObject CreateGameObject(string objectName, Transform parent) =>
             new(objectName) { transform = { parent = parent } };
 
+        /// <summary>
+        ///     Gets the unique teleporters from a given game object.
+        /// </summary>
+        /// <param name="teleporters">The game object to get the teleporters from.</param>
+        /// <returns>A list of unique teleporters.</returns>
         private List<Teleporter.Teleporter> GetUniqueTeleporters(GameObject teleporters)
         {
             List<Teleporter.Teleporter> teleporterList = new();
@@ -406,6 +450,11 @@ namespace Assets.Scripts.Wfc
             return teleporterList;
         }
 
+        /// <summary>
+        ///     Merges teleporter connected components.
+        /// </summary>
+        /// <param name="teleporterList">The list of teleporters to merge.</param>
+        /// <param name="connectedComponents">The list of connected components to merge.</param>
         private void MergeTeleporterConnectedComponents(List<Teleporter.Teleporter> teleporterList,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
         {
@@ -426,10 +475,29 @@ namespace Assets.Scripts.Wfc
             }
         }
 
+        /// <summary>
+        ///     Checks whether a connection between two cells is valid.
+        /// </summary>
+        /// <param name="cell1">The first cell to check.</param>
+        /// <param name="cell2">The second cell to check.</param>
+        /// <returns>True if the connection is valid, otherwise false.</returns>
         private static bool IsRoomConnectionValid(Cell cell1, Cell cell2) => cell1.Tile is Room || cell2.Tile is Room;
 
+        /// <summary>
+        ///     Gets the available cells in a given component.
+        /// </summary>
+        /// <param name="component">The component to get the available cells for.</param>
+        /// <returns>A list of available cells.</returns>
         private List<Cell> GetAvailableCells(ISet<Cell> component) => component.Where(c => !c.ContainsItem).ToList();
 
+        /// <summary>
+        ///     Places a door between two cells in a given direction.
+        /// </summary>
+        /// <param name="cell1">The first cell to place the door in.</param>
+        /// <param name="cell2">The second cell to place the door in.</param>
+        /// <param name="direction">The direction in which the door should be placed.</param>
+        /// <param name="startComponent">The component to start the search from.</param>
+        /// <param name="parent">The parent of the door.</param>
         private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ISet<Cell> startComponent, Transform parent)
         {
             if (cell1.Tile is Room room)
@@ -439,6 +507,13 @@ namespace Assets.Scripts.Wfc
                     parent);
         }
 
+        /// <summary>
+        ///     Processes neighbouring rooms.
+        /// </summary>
+        /// <param name="startComponent">The component to start the search from.</param>
+        /// <param name="neighbouringRooms">The neighbouring rooms to process.</param>
+        /// <param name="connectedComponents">The list of connected components to process.</param>
+        /// <param name="doors">The parent of the doors.</param>
         private void ProcessNeighbouringRooms(ISet<Cell> startComponent, ISet<Cell> neighbouringRooms,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents, GameObject doors)
         {
@@ -458,6 +533,7 @@ namespace Assets.Scripts.Wfc
 
                     (ConnectedComponent usedComponent, ConnectedComponent usedNeighbouringRooms) =
                         FindAndRemoveCellComponent(cell, connectedComponents);
+
                     if (usedComponent == null) continue;
 
                     ColorConnectedComponent(usedComponent);
@@ -467,6 +543,7 @@ namespace Assets.Scripts.Wfc
 
                 (ConnectedComponent neighbouringCellComponent, ConnectedComponent neighbouringCellRooms) =
                     FindAndRemoveCellComponent(neighbouringCell, connectedComponents);
+
                 if (neighbouringCellComponent == null) continue;
 
                 ColorConnectedComponent(neighbouringCellComponent);
@@ -544,6 +621,10 @@ namespace Assets.Scripts.Wfc
             Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, parent)
                 .GetComponent<Teleporter.Teleporter>();
 
+        /// <summary>
+        ///     Gets the next teleporter in the list of teleporters.
+        /// </summary>
+        /// <returns>The next teleporter in the list of teleporters.</returns>
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }
 }
