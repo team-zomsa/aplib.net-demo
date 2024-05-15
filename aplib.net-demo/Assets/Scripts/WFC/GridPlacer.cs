@@ -165,7 +165,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Waits before making the scene.
+        /// Waits for the specified time and then makes the scene.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
         public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(Wait(waitTime));
