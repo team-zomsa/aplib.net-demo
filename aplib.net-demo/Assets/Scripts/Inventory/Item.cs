@@ -20,9 +20,9 @@ public abstract class Item : MonoBehaviour
     public float uses;
 
     /// <summary>
-    /// The amount of uses the item starts with.
+    /// The amount of uses that get added to the item when it is picked up.
     /// </summary>
-    public float startUses;
+    public float usesAddedPerPickup;
 
     /// <summary>
     /// If the item is stackable, it will add uses to the item if it is already in the inventory.
@@ -50,5 +50,5 @@ public abstract class Item : MonoBehaviour
     /// Resets the uses to the starting uses.
     /// </summary>
     public virtual void Reset()
-        => uses = startUses;
+        => uses = usesAddedPerPickup;
 }

@@ -52,7 +52,7 @@ public class Inventory : MonoBehaviour
                 if (!item.stackable)
                     return;
 
-                _tempItemList[i].uses++;
+                _tempItemList[i].uses += item.usesAddedPerPickup;
                 alreadyInInventory = true;
                 break;
             }
