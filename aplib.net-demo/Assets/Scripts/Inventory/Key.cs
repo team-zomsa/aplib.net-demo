@@ -9,6 +9,6 @@ public class Key : Item
     {
         stackable = false;
         uses = 1;
-        startUses = 1;
+        usesAddedPerPickup = 1;
     }
 }
