@@ -6,33 +6,38 @@ using UnityEngine.UI;
 [RequireComponent(typeof(AmmoPouch))]
 public class Inventory : MonoBehaviour
 {
-    public float inventorySize;
 
     /// <summary>
     /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
 
-    public GameObject inventoryObject;
-
-    private AmmoPouch _ammoPouch;
-
     /// <summary>
     /// The RawImage is the object on which the _inventoryIndicator texture is projected.
     /// </summary>
     private RawImage _inventoryIndicator;
 
+    /// <summary>
+    /// The canvas object that holds the inventory.
+    /// </summary>
+    public GameObject inventoryObject;
+
     private Queue<Item> _itemList;
 
+    [SerializeField]
+    private float _inventorySize = 4;
+
+    private AmmoPouch _ammoPouch;
+
     /// <summary>
-    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the
-    /// icons.
+    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
     /// </summary>
     private void Start()
     {
         _ammoPouch = GetComponent<AmmoPouch>();
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
+        DisplayItem();
     }
 
     /// <summary>
@@ -62,9 +67,17 @@ public class Inventory : MonoBehaviour
         {
             existingItem.uses += item.startUses;
         }
-        else if (_itemList.Count < inventorySize)
+        else if (_itemList.Count < _inventorySize)
         {
-            _itemList.Enqueue(item);
+            item.Reset();
+
+            // Make a copy of the item to add to the inventory, so that the 'real world' item can be destroyed.
+            item.transform.SetParent(transform);
+            Item itemCopy = Instantiate(item);
+            itemCopy.gameObject.SetActive(false);
+            itemCopy.name = item.name;
+            _itemList.Enqueue(itemCopy);
+
             DisplayItem();
         }
     }
@@ -81,7 +94,6 @@ public class Inventory : MonoBehaviour
 
             if (_itemList.Peek().uses <= 0)
                 _ = _itemList.Dequeue();
-
         }
 
         DisplayItem();

@@ -25,8 +25,8 @@ namespace Assets.Scripts.Items
 
             Item item = gameObject.GetComponent<Item>();
 
-            inventory.PickUpItem(item);
             Destroy(gameObject);
+            inventory.PickUpItem(item);
         }
     }
 }
