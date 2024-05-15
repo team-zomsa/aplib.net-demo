@@ -26,7 +26,6 @@ namespace Assets.Scripts.Items
         {
             base.UseItem();
             _playerHealth.IncreaseHealth(_healAmount);
-            Debug.Log("current uses: " + uses);
         }
     }
 }
