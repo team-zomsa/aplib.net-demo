@@ -5,13 +5,10 @@ using Aplib.Core.Desire;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
-using Assets.Scripts;
-using Cinemachine;
 using Entities.Weapons;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -85,7 +82,6 @@ namespace Testing.AplibTests
             {
                 RangedWeapon crossbow = beliefSet.Rangedweapon;
                 crossbow.UseWeapon();
-                Debug.Log("Shooting enemy");
             });
 
             // Action: rotate player
@@ -94,8 +90,7 @@ namespace Testing.AplibTests
                 GameObject playerRotation = beliefSet.PlayerRotation;
                 Vector3 enemyPosition = beliefSet.EnemyPosition;
 
-                // TODO:: change ranged weapon viewpoint to player rotation instead of camera
-                // Test will not work for now
+                // Weapon viewpoint should be set to player rotation in editor
                 playerRotation.transform.LookAt(enemyPosition);
             });
 
@@ -129,15 +124,13 @@ namespace Testing.AplibTests
             bool EnemyKilledPredicate(RangeedWeaponTestBeliefSet beliefSet)
             {
                 // The player has killed the enemy
-                // TODO:: Fix shooting, returns true for now
-                // bool enemyDead = beliefSet.IsEnemyDead;
-                // return enemyDead;
-                return true;
+                bool enemyDead = beliefSet.IsEnemyDead;
+                return enemyDead;
             }
 
             bool IsEnemyInFrontPredicate(RangeedWeaponTestBeliefSet beliefSet)
             {
-                // The player has killed the enemy
+                // The enemy is in front of the player
                 bool enemyInFront = beliefSet.IsEnemyInFront;
                 return enemyInFront;
             }
