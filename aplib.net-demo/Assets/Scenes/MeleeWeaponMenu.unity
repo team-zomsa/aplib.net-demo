@@ -1455,17 +1455,17 @@ PrefabInstance:
     - target: {fileID: 7747302554834401989, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.1080685
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7747302554834401989, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.1421885
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7747302554834401989, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 724.6157
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7747302554834401989, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
@@ -1512,6 +1512,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6afe0fbb1debb1449835d0968e789934, type: 3}
+--- !u!114 &482443569 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1036647114414517619, guid: 6afe0fbb1debb1449835d0968e789934,
+    type: 3}
+  m_PrefabInstance: {fileID: 482443568}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b98af11f29651428432a585b7006d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &492361184
 Mesh:
   m_ObjectHideFlags: 0
@@ -1841,7 +1853,6 @@ GameObject:
   - component: {fileID: 630626823}
   - component: {fileID: 630626822}
   - component: {fileID: 630626821}
-  - component: {fileID: 630626820}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1849,18 +1860,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &630626820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630626819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 050f3baec8542fa4ea6c967dc6e56d43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &630626821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2545,6 +2544,51 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &972198657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 972198659}
+  - component: {fileID: 972198658}
+  m_Layer: 0
+  m_Name: MouseLock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &972198658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972198657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050f3baec8542fa4ea6c967dc6e56d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanvasManager: {fileID: 482443569}
+--- !u!4 &972198659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972198657}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &996726064
 GameObject:
   m_ObjectHideFlags: 0
@@ -3042,7 +3086,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a86e216828156b1448d8de6705d13e7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mouseLock: {fileID: 630626820}
+  _mouseLock: {fileID: 972198658}
   _playerTransform: {fileID: 677805700131717165}
   _inventory: {fileID: 0}
 --- !u!4 &1105410511
@@ -5007,7 +5051,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 630626824}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -5482,6 +5526,7 @@ SceneRoots:
   - {fileID: 222766277}
   - {fileID: 199930809}
   - {fileID: 552369203}
+  - {fileID: 972198659}
   - {fileID: 1491426797}
   - {fileID: 1105410511}
   - {fileID: 504593807}

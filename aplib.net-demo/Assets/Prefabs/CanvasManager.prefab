@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 8315883102174879305}
   - component: {fileID: 7084838678367223057}
   m_Layer: 5
-  m_Name: QuitToMenu
+  m_Name: Quit To Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -393,7 +393,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1036647114414517619}
-        m_TargetAssemblyTypeName: MenuPlayButton, Scripts
+        m_TargetAssemblyTypeName: CanvasManager, Scripts
         m_MethodName: ToMenu
         m_Mode: 1
         m_Arguments:
@@ -770,7 +770,7 @@ Canvas:
   m_GameObject: {fileID: 1224580673708126762}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -1055,6 +1055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1089514751452942915}
   - component: {fileID: 5693800945082533554}
+  - component: {fileID: 4663323374250093666}
   m_Layer: 5
   m_Name: Master Volume
   m_TagString: Untagged
@@ -1129,13 +1130,37 @@ MonoBehaviour:
   m_FillRect: {fileID: 5542232159846349713}
   m_HandleRect: {fileID: 1526500251675296066}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0
+  m_MinValue: 1
+  m_MaxValue: 100
+  m_WholeNumbers: 1
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4663323374250093666}
+        m_TargetAssemblyTypeName: VolumeSlider, Scripts
+        m_MethodName: VolumeValue
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4663323374250093666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788426827489747249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55908cd006ba6ae478cafb9d310a3b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1865210603788573230
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,8 +1345,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00015258999, y: -0.0018773079}
-  m_SizeDelta: {x: 1868.3, y: 1109.9}
+  m_AnchoredPosition: {x: 0.002231598, y: -0.0059757}
+  m_SizeDelta: {x: 1996.5, y: 1038.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1816210538189584983
 CanvasRenderer:
@@ -2246,6 +2271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4895619000720479089}
   - component: {fileID: 3922443466767798103}
+  - component: {fileID: 3735220959309964884}
   m_Layer: 5
   m_Name: Master Volume
   m_TagString: Untagged
@@ -2320,13 +2346,37 @@ MonoBehaviour:
   m_FillRect: {fileID: 199658374724309399}
   m_HandleRect: {fileID: 9089503250737050354}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0
+  m_MinValue: 1
+  m_MaxValue: 100
+  m_WholeNumbers: 1
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3735220959309964884}
+        m_TargetAssemblyTypeName: VolumeSlider, Scripts
+        m_MethodName: VolumeValue
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3735220959309964884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3976835193138050729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55908cd006ba6ae478cafb9d310a3b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4097664960065022113
 GameObject:
   m_ObjectHideFlags: 0
@@ -2562,8 +2612,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00018310547, y: -0.0018920898}
-  m_SizeDelta: {x: 1868.3, y: 1109.9}
+  m_AnchoredPosition: {x: 0.002231598, y: -0.0054493}
+  m_SizeDelta: {x: 1996.5, y: 1038.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2649856671540152760
 CanvasRenderer:
@@ -4660,7 +4710,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit Game
+  m_text: Quit To Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5023,7 +5073,7 @@ Canvas:
   m_GameObject: {fileID: 7724998468614145768}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -6164,7 +6214,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Back
+  m_text: Resume
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6283,7 +6333,7 @@ Canvas:
   m_GameObject: {fileID: 8904745976946252126}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

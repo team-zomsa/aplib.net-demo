@@ -3,19 +3,20 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This class houses all the settings and menu UI buttons/methods.
+/// It is called CanvasManager as it manages all the UI canvi.
 /// </summary>
-public class MenuPlayButton : MonoBehaviour
+public class CanvasManager : MonoBehaviour
 {
     /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
     public GameObject menuCanvas;
     /// <summary>
-    /// Reference to the menu settings canvas.
+    /// Reference to the settings canvas of the menu.
     /// </summary>
     public GameObject settingMenuCanvas;
     /// <summary>
-    /// Reference to the game settings canvas.
+    /// Reference to the settings canvas of the game.
     /// </summary>
     public GameObject settingGameCanvas;
 
@@ -27,6 +28,11 @@ public class MenuPlayButton : MonoBehaviour
     /// To ensure the game settings and menu UI aren't on on the same time.
     /// </summary>
     public bool isOnGameSettings = false;
+
+    /// <summary>
+    /// This bool communicates with the mouse lock script to enable and disable the curser.
+    /// </summary>
+    public bool IsCursurNeeded => isOnGameSettings;
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -41,11 +47,12 @@ public class MenuPlayButton : MonoBehaviour
     /// </summary>
     string _sceneNameGame = "MeleeWeaponMenu"; // TODO:: Load main game screen
 
+    // Looks at which canvas is needed by checking the current scene.
     private void Start()
     {
         _currentSceneName = SceneManager.GetActiveScene().name;
 
-        if (_currentSceneName == _sceneNameStartingMenu)
+        if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
             menuCanvas.SetActive(true);
             settingMenuCanvas.SetActive(false);
@@ -53,7 +60,7 @@ public class MenuPlayButton : MonoBehaviour
             isOnMenuSettings = false;
             isOnGameSettings = false;
         }
-        else if (_currentSceneName == _sceneNameGame)
+        else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
             menuCanvas.SetActive(false);
             settingMenuCanvas.SetActive(false);
@@ -61,7 +68,7 @@ public class MenuPlayButton : MonoBehaviour
             isOnMenuSettings = false;
             isOnGameSettings = false;
         }
-        else // TODO:: Remove when game is done
+        else // TODO:: Remove when game is done. This is for future ease.
         {
             Debug.Log("Scene names are wrong. Check MenuButtons script");
         }
@@ -98,8 +105,8 @@ public class MenuPlayButton : MonoBehaviour
         {
             isOnGameSettings = !isOnGameSettings;
             settingGameCanvas.SetActive(isOnGameSettings);
-            if (isOnGameSettings) { Time.timeScale = 0; }
-            else { Time.timeScale = 1; }
+            if (isOnGameSettings) { Time.timeScale = 0; InputManager.Instance.DisablePlayerInput(); }
+            else { Time.timeScale = 1; InputManager.Instance.EnablePlayerInput(); }
         }
     }
 
