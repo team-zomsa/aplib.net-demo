@@ -17,12 +17,12 @@ public abstract class Item : MonoBehaviour
     /// <summary>
     /// The amount of uses the item currently has.
     /// </summary>
-    public float uses;
+    public int uses;
 
     /// <summary>
     /// The amount of uses that get added to the item when it is picked up.
     /// </summary>
-    public float usesAddedPerPickup;
+    public int usesAddedPerPickup = 1;
 
     /// <summary>
     /// If the item is stackable, it will add uses to the item if it is already in the inventory.

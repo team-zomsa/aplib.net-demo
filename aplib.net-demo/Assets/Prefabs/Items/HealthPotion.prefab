@@ -70,8 +70,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d466f0b9721ea48a4ceb4188e2e3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemName: 
   uses: 0
-  startUses: 1
+  usesAddedPerPickup: 1
   stackable: 1
   iconTexture: {fileID: 2800000, guid: 73b6bf480eb082746a37aee24353716f, type: 3}
   _healAmount: 50
