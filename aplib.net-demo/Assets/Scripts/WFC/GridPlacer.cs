@@ -272,7 +272,6 @@ namespace Assets.Scripts.Wfc
         /// <param name="direction">The direction in which the door should be placed.</param>
         /// <param name="cells">The cells that are part of the room.</param>
         /// <param name="parent">The parent of the teleporter.</param>
-        // ReSharper disable once SuggestBaseTypeForParameter
         private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells,
             Transform parent)
         {
