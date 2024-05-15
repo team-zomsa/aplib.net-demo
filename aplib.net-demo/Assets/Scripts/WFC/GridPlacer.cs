@@ -168,14 +168,14 @@ namespace Assets.Scripts.Wfc
         /// Waits for the specified time and then makes the scene.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
-        public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(Wait(waitTime));
+        public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
 
         /// <summary>
         /// Waits for a certain amount of time.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
         /// <returns>An <see cref="IEnumerator" /> that can be used to wait for a certain amount of time.</returns>
-        private IEnumerator Wait(float waitTime)
+        private IEnumerator WaitThenMakeScene(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
 
