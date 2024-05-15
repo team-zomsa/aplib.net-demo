@@ -21,13 +21,6 @@ namespace Testing.AplibTests
         /// </summary>
         public Belief<GameObject, GameObject> PlayerRotation = new(GameObject.Find("PlayerRotation"), x => x);
 
-        public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player"), x => x);
-
-        /// <summary>
-        /// The camera object in the scene.
-        /// </summary>
-        public Belief<GameObject, GameObject> Camera = new(GameObject.Find("Main Camera"), x => x);
-
         /// <summary>
         /// The crossbow weapon the player is holding.
         /// </summary>
@@ -44,21 +37,26 @@ namespace Testing.AplibTests
         /// </summary>
         public Belief<GameObject, bool> IsEnemyDead = new(GameObject.Find("Target Dummy Body"), x => x == null);
 
+        /// <summary>
+        /// Bool that returns true if enemy is in front of player.
+        /// </summary>
         public Belief<GameObject, bool> IsEnemyInFront = new(
             reference: GameObject.Find("PlayerRotation"),
             getObservationFromReference: x =>
             {
                 if (!Physics.Raycast(x.transform.position, x.transform.forward, out RaycastHit hit, 100))
-                {
-                    Debug.Log("No hit");
                     return false;
-                }
-
+                
                 return hit.collider.gameObject.name == "Target Dummy Body";
             }
         );
     }
 
+    /// <summary>
+    /// Tests the ranged weapon.
+    /// Simply rotates towards the enemy and shoots.
+    /// Then checks if the enemy is dead.
+    /// </summary>
     public class RangedWeaponTest
     {
         [SetUp]
@@ -121,19 +119,9 @@ namespace Testing.AplibTests
             Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);
             yield break;
 
-            bool EnemyKilledPredicate(RangeedWeaponTestBeliefSet beliefSet)
-            {
-                // The player has killed the enemy
-                bool enemyDead = beliefSet.IsEnemyDead;
-                return enemyDead;
-            }
+            bool EnemyKilledPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyDead;  
 
-            bool IsEnemyInFrontPredicate(RangeedWeaponTestBeliefSet beliefSet)
-            {
-                // The enemy is in front of the player
-                bool enemyInFront = beliefSet.IsEnemyInFront;
-                return enemyInFront;
-            }
+            bool IsEnemyInFrontPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyInFront;  
         }
     }
 }
