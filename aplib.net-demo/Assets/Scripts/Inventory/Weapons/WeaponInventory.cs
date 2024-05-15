@@ -4,20 +4,25 @@ using UnityEngine.UI;
 
 public class WeaponInventory : AbstractInventory
 {
-    protected Queue<Weapon> weaponList;
+    public Queue<Weapon> weaponList;
 
     public Weapon _meleeWeapon;
     public Weapon _rangedWeapon;
     public void Start()
     {
+
+        //todo different button for weapon and item switch
+        //todo weapon visuals
+        //todo indicator location
         _inventoryIndicator = GetComponent<RawImage>();
 
         weaponList = new Queue<Weapon>();
         //once we get another way to acquire weapons, this can be removed
 
         PickUpWeapon(_meleeWeapon);
+        PickUpWeapon(_rangedWeapon);
         // UnityEngine.Debug.Log(weaponList.Peek().iconTexture);
-        UnityEngine.Debug.Log(weaponList.Peek());
+        // UnityEngine.Debug.Log(weaponList.Peek());
         DisplayItem();
     }
     public override void PickUpWeapon(Weapon weapon)

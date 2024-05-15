@@ -15,7 +15,7 @@ public class RangedWeapon : Weapon
     /// <summary>
     /// Shoots a ray from the players's position in the direction it is facing.
     /// Look for an entity with an Enemy tag within range and deal damage to it.
-    /// Crossbow can hit mutiple enemies IF they are on the same line.
+    /// Crossbow can hit mutiple enemies if they are on the same line.
     /// </summary>
     public override void UseWeapon()
     {
