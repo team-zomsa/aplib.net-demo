@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/HealthPotionTestScene.unity
     guid: 972a6684ad5bf494eb6a9e21b89a901b
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 39d55d83a13e70e47b43feab82859aca
+  - enabled: 1
+    path: Assets/Scenes/MeleeWeaponMenu.unity
+    guid: 22a1997cb389c1c409c565f4909814fc
   m_configObjects: {}
