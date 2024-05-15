@@ -13,7 +13,7 @@ using Random = System.Random;
 namespace Assets.Scripts.Wfc
 {
     /// <summary>
-    ///     Represents the grid placer.
+    /// Represents the grid placer.
     /// </summary>
     public class GridPlacer : MonoBehaviour
     {
@@ -40,99 +40,99 @@ namespace Assets.Scripts.Wfc
         private static int _colorIndex = -1;
 
         /// <summary>
-        ///     The size of the tiles in the x-direction.
+        /// The size of the tiles in the x-direction.
         /// </summary>
         [SerializeField]
         private int _tileSizeX = 16;
 
         /// <summary>
-        ///     The size of the tiles in the z-direction.
+        /// The size of the tiles in the z-direction.
         /// </summary>
         [SerializeField]
         private int _tileSizeZ = 16;
 
         /// <summary>
-        ///     Represents the room objects.
+        /// Represents the room objects.
         /// </summary>
         [SerializeField]
         private RoomObjects _roomObjects;
 
         /// <summary>
-        ///     Represents the door object.
+        /// Represents the door object.
         /// </summary>
         [SerializeField]
         private GameObject _doorPrefab;
 
         /// <summary>
-        ///     Represents the key object.
+        /// Represents the key object.
         /// </summary>
         [SerializeField]
         private GameObject _keyPrefab;
 
         /// <summary>
-        ///     A boolean that indicates whether a seed is used.
+        /// A boolean that indicates whether a seed is used.
         /// </summary>
         [SerializeField]
         private bool _useSeed;
 
         /// <summary>
-        ///     The seed used for the random number generator.
+        /// The seed used for the random number generator.
         /// </summary>
         [SerializeField]
         private int _seed;
 
         /// <summary>
-        ///     The width of the grid in the x-direction.
+        /// The width of the grid in the x-direction.
         /// </summary>
         [SerializeField]
         private int _gridWidthX = 10;
 
         /// <summary>
-        ///     The width of the grid in the z-direction.
+        /// The width of the grid in the z-direction.
         /// </summary>
         [SerializeField]
         private int _gridWidthZ = 10;
 
         /// <summary>
-        ///     The amount of rooms that need to be placed.
+        /// The amount of rooms that need to be placed.
         /// </summary>
         [SerializeField]
         private int _amountOfRooms = 5;
 
         /// <summary>
-        ///     The teleporter prefab, used to link connected components.
+        /// The teleporter prefab, used to link connected components.
         /// </summary>
         [SerializeField]
         private GameObject _teleporterPrefab;
 
         /// <summary>
-        ///     The distance from the floor to the player localpos.
+        /// The distance from the floor to the player localpos.
         /// </summary>
         private readonly Vector3 _playerHeightOffset = Vector3.up * 0.7f;
 
         /// <summary>
-        ///     The height of the offset of where we place the teleporter, with respect to the cell's floor.
+        /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * 0.7f;
 
         /// <summary>
-        ///     The `Renderer` component for the door prefab.
+        /// The `Renderer` component for the door prefab.
         /// </summary>
         /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
         private Renderer _doorRenderer;
 
         /// <summary>
-        ///     The height of the offset of where we place the teleporter, with respect to the cell's floor.
+        /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private Random _random = new();
 
         /// <summary>
-        ///     Represents the grid.
+        /// Represents the grid.
         /// </summary>
         public Grid Grid { get; private set; }
 
         /// <summary>
-        ///     This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
+        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Awake()
         {
@@ -141,7 +141,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Makes the scene.
+        /// Makes the scene.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
         private void MakeScene()
@@ -165,13 +165,13 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Waits before making the scene.
+        /// Waits before making the scene.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
         public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(Wait(waitTime));
 
         /// <summary>
-        ///     Waits for a certain amount of time.
+        /// Waits for a certain amount of time.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
         /// <returns>An <see cref="IEnumerator" /> that can be used to wait for a certain amount of time.</returns>
@@ -183,7 +183,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Makes the grid.
+        /// Makes the grid.
         /// </summary>
         private void MakeGrid()
         {
@@ -214,7 +214,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Places the grid in the world.
+        /// Places the grid in the world.
         /// </summary>
         private void PlaceGrid()
         {
@@ -227,7 +227,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Places a tile at the specified coordinates in the world.
+        /// Places a tile at the specified coordinates in the world.
         /// </summary>
         /// <param name="x">The x-coordinates of the room.</param>
         /// <param name="z">The z-coordinates of the room.</param>
@@ -256,15 +256,15 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Calculates the centre of a cell's floor in world coordinates.
+        /// Calculates the centre of a cell's floor in world coordinates.
         /// </summary>
         /// <param name="cell">The cell to calculate its centre of.</param>
         /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
         public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         /// <summary>
-        ///     Place the doors for the given room in the world. Which doors need to be spawned is determined from the
-        ///     allowed directions of the room.
+        /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
+        /// allowed directions of the room.
         /// </summary>
         /// <param name="x">The x-position of the room, in the grid.</param>
         /// <param name="z">The z-position of the room, in the grid.</param>
@@ -318,7 +318,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Sets the player spawn point to a random room.
+        /// Sets the player spawn point to a random room.
         /// </summary>
         /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
         private void SetRandomPLayerSpawn(Cell playerSpawnCell)
@@ -338,7 +338,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Finds the connected component that contains the given cell.
+        /// Finds the connected component that contains the given cell.
         /// </summary>
         /// <param name="cell">The cell to find the connected component for.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
@@ -348,7 +348,7 @@ namespace Assets.Scripts.Wfc
             connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
 
         /// <summary>
-        ///     Finds and removes a connected component from the list of connected components.
+        /// Finds and removes a connected component from the list of connected components.
         /// </summary>
         /// <param name="cell">The cell for which the connected component is to be found.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
@@ -366,7 +366,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Gets the cell coordinates of a given position.
+        /// Gets the cell coordinates of a given position.
         /// </summary>
         /// <param name="position">The position to get the cell coordinates for.</param>
         /// <returns>The cell coordinates of the given position.</returns>
@@ -374,7 +374,7 @@ namespace Assets.Scripts.Wfc
             ((int)(position.x / _tileSizeX), (int)(position.z / _tileSizeZ));
 
         /// <summary>
-        ///     Gets the cell at a given position.
+        /// Gets the cell at a given position.
         /// </summary>
         /// <param name="position">The position to get the cell for.</param>
         /// <returns>The cell at the given position.</returns>
@@ -385,7 +385,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Places doors between connected components.
+        /// Places doors between connected components.
         /// </summary>
         /// <param name="startCell">The cell to start the search from.</param>
         /// <exception cref="UnityException">No teleporters were found.</exception>
@@ -411,7 +411,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Colors a connected component in a unique color.
+        /// Colors a connected component in a unique color.
         /// </summary>
         /// <param name="connectedComponent">The connected component to color.</param>
         private static void ColorConnectedComponent(ISet<Cell> connectedComponent)
@@ -424,7 +424,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Creates a new game object with a given name and parent.
+        /// Creates a new game object with a given name and parent.
         /// </summary>
         /// <param name="objectName">The name of the game object.</param>
         /// <param name="parent">The parent of the game object.</param>
@@ -433,7 +433,7 @@ namespace Assets.Scripts.Wfc
             new(objectName) { transform = { parent = parent } };
 
         /// <summary>
-        ///     Gets the unique teleporters from a given game object.
+        /// Gets the unique teleporters from a given game object.
         /// </summary>
         /// <param name="teleporters">The game object to get the teleporters from.</param>
         /// <returns>A list of unique teleporters.</returns>
@@ -451,7 +451,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Merges teleporter connected components.
+        /// Merges teleporter connected components.
         /// </summary>
         /// <param name="teleporterList">The list of teleporters to merge.</param>
         /// <param name="connectedComponents">The list of connected components to merge.</param>
@@ -476,7 +476,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Checks whether a connection between two cells is valid.
+        /// Checks whether a connection between two cells is valid.
         /// </summary>
         /// <param name="cell1">The first cell to check.</param>
         /// <param name="cell2">The second cell to check.</param>
@@ -484,14 +484,14 @@ namespace Assets.Scripts.Wfc
         private static bool IsRoomConnectionValid(Cell cell1, Cell cell2) => cell1.Tile is Room || cell2.Tile is Room;
 
         /// <summary>
-        ///     Gets the available cells in a given component.
+        /// Gets the available cells in a given component.
         /// </summary>
         /// <param name="component">The component to get the available cells for.</param>
         /// <returns>A list of available cells.</returns>
         private List<Cell> GetAvailableCells(ISet<Cell> component) => component.Where(c => !c.ContainsItem).ToList();
 
         /// <summary>
-        ///     Places a door between two cells in a given direction.
+        /// Places a door between two cells in a given direction.
         /// </summary>
         /// <param name="cell1">The first cell to place the door in.</param>
         /// <param name="cell2">The second cell to place the door in.</param>
@@ -508,7 +508,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Processes neighbouring rooms.
+        /// Processes neighbouring rooms.
         /// </summary>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="neighbouringRooms">The neighbouring rooms to process.</param>
@@ -553,8 +553,8 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Linearly connect all connected components, such that every connected component has two bidirectional teleporters.
-        ///     The last teleporter is connected to itself, to indicate that it should not teleport the player anywhere.
+        /// Linearly connect all connected components, such that every connected component has two bidirectional teleporters.
+        /// The last teleporter is connected to itself, to indicate that it should not teleport the player anywhere.
         /// </summary>
         /// <remarks>Assumes that every connected component has at least two cells.</remarks>
         private void JoinConnectedComponentsWithTeleporters()
@@ -611,7 +611,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        ///     Places a teleporter at a given location.
+        /// Places a teleporter at a given location.
         /// </summary>
         /// <param name="coordinates">The coordinates of the teleporter.</param>
         /// <param name="parent">The parent of the teleporter.</param>
@@ -622,7 +622,7 @@ namespace Assets.Scripts.Wfc
                 .GetComponent<Teleporter.Teleporter>();
 
         /// <summary>
-        ///     Gets the next teleporter in the list of teleporters.
+        /// Gets the next teleporter in the list of teleporters.
         /// </summary>
         /// <returns>The next teleporter in the list of teleporters.</returns>
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
