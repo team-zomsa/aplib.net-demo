@@ -106,20 +106,20 @@ namespace Assets.Scripts.Wfc
         private GameObject _teleporterPrefab;
 
         /// <summary>
-        /// The distance from the floor to the player localpos.
-        /// </summary>
-        private readonly Vector3 _playerHeightOffset = Vector3.up * 0.7f;
-
-        /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
-        private readonly Vector3 _teleporterHeightOffset = Vector3.up * 0.7f;
+        private readonly Vector3 _teleporterHeightOffset = Vector3.up * .7f;
 
         /// <summary>
         /// The `Renderer` component for the door prefab.
         /// </summary>
         /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
         private Renderer _doorRenderer;
+
+        /// <summary>
+        /// The distance from the floor to the player localpos.
+        /// </summary>
+        private Vector3 _playerHeightOffset;
 
         /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
@@ -137,6 +137,16 @@ namespace Assets.Scripts.Wfc
         public void Awake()
         {
             _doorRenderer = _doorPrefab.GetComponent<Renderer>();
+
+            GameObject player = GameObject.FindWithTag("Player");
+
+            if (player == null) throw new UnityException("No player was found.");
+
+            float playerHeight = player.GetComponent<CapsuleCollider>().height;
+            Vector3 playerHeightOffset = new(0, playerHeight, 0);
+
+            _playerHeightOffset = playerHeightOffset;
+
             MakeScene();
         }
 
