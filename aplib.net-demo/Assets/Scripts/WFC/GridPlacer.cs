@@ -159,6 +159,12 @@ namespace Assets.Scripts.Wfc
         public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
 
         /// <summary>
+        /// Gets the next unused color in the list of colors.
+        /// </summary>
+        /// <returns>The next color in the list of colors.</returns>
+        private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
+
+        /// <summary>
         /// Waits for a certain amount of time.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
@@ -631,11 +637,5 @@ namespace Assets.Scripts.Wfc
         private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates, Transform parent) =>
             Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, parent)
                 .GetComponent<Teleporter.Teleporter>();
-
-        /// <summary>
-        /// Gets the next unused color in the list of colors.
-        /// </summary>
-        /// <returns>The next color in the list of colors.</returns>
-        private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }
 }
