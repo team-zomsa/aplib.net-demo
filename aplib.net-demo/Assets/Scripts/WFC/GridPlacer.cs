@@ -13,7 +13,8 @@ using Random = System.Random;
 namespace Assets.Scripts.Wfc
 {
     /// <summary>
-    /// Represents the grid placer.
+    /// Represents the grid placer. This class is responsible for placing the grid in the world. It also places the keys
+    /// and doors between the rooms, and the teleporters between the connected components.
     /// </summary>
     public class GridPlacer : MonoBehaviour
     {
@@ -21,8 +22,9 @@ namespace Assets.Scripts.Wfc
         private static readonly Color[] _colors =
         {
             Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan, Color.black, Color.gray,
-            Color.Lerp(Color.red, Color.blue, 0.5f), Color.Lerp(Color.red, Color.yellow, 0.5f), Color.Lerp(Color.yellow, Color.blue, 0.5f),
-            Color.Lerp(Color.black, Color.red, 0.5f), Color.Lerp(Color.white, Color.red, 0.5f), Color.Lerp(Color.black, Color.blue, 0.5f),
+            Color.Lerp(Color.red, Color.blue, 0.5f), Color.Lerp(Color.red, Color.yellow, 0.5f),
+            Color.Lerp(Color.yellow, Color.blue, 0.5f), Color.Lerp(Color.black, Color.red, 0.5f),
+            Color.Lerp(Color.white, Color.red, 0.5f), Color.Lerp(Color.black, Color.blue, 0.5f),
             Color.Lerp(Color.white, Color.blue, 0.5f), Color.Lerp(Color.black, Color.green, 0.5f),
             Color.Lerp(Color.white, Color.green, 0.5f), Color.Lerp(Color.black, Color.yellow, 0.5f),
             Color.Lerp(Color.white, Color.yellow, 0.5f), Color.Lerp(Color.black, Color.magenta, 0.5f),
@@ -291,7 +293,7 @@ namespace Assets.Scripts.Wfc
             float doorDepthExtend = _doorRenderer.bounds.extents.z;
 
             // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = _tileSizeX / 2f - doorDepthExtend;
+            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 

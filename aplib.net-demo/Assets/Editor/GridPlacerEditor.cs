@@ -8,7 +8,7 @@ namespace Editors
     public class GridPlacerEditor : Editor
     {
         /// <summary>
-        ///     <inheritdoc />
+        /// <inheritdoc />
         /// </summary>
         public override void OnInspectorGUI()
         {
