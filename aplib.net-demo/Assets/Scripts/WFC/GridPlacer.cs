@@ -505,7 +505,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="component">The component to get the available cells for.</param>
         /// <returns>A list of available cells.</returns>
-        private List<Cell> GetAvailableCells(ISet<Cell> component) => component.Where(c => !c.ContainsItem).ToList();
+        private static List<Cell> GetEmptyCells(ISet<Cell> component) => component.Where(c => !c.ContainsItem).ToList();
 
         /// <summary>
         /// Places a door between two cells in a given direction.
@@ -518,14 +518,15 @@ namespace Assets.Scripts.Wfc
         private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ISet<Cell> startComponent, Transform parent)
         {
             if (cell1.Tile is Room room)
-                PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, GetAvailableCells(startComponent), parent);
+                PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, GetEmptyCells(startComponent), parent);
             else if (cell2.Tile is Room room2)
-                PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), GetAvailableCells(startComponent),
+                PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), GetEmptyCells(startComponent),
                     parent);
         }
 
         /// <summary>
-        /// Processes the neighbouring rooms of a given component. It will place doors between the rooms and connect the components.
+        /// Processes the neighbouring rooms of a given component. It will place doors between the rooms and connect the
+        /// components.
         /// </summary>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="neighbouringRooms">The neighbouring rooms to process.</param>
