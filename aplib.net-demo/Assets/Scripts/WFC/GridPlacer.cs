@@ -525,7 +525,7 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Processes neighbouring rooms.
+        /// Processes the neighbouring rooms of a given component. It will place doors between the rooms and connect the components.
         /// </summary>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="neighbouringRooms">The neighbouring rooms to process.</param>
