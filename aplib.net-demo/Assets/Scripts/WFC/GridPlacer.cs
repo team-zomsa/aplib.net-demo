@@ -418,7 +418,7 @@ namespace Assets.Scripts.Wfc
 
             List<Teleporter.Teleporter> teleporterList = GetAllEntryTeleporters(teleporters);
 
-            MergeTeleporterConnectedComponents(teleporterList, connectedComponents);
+            MergeConnectedComponentsJoinedByTeleporterPair(teleporterList, connectedComponents);
 
             (ConnectedComponent startComponent, ConnectedComponent neighbouringRooms) =
                 FindAndRemoveCellConnectedComponent(startCell, connectedComponents);
@@ -473,7 +473,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="teleporterList">The list of teleporters to merge.</param>
         /// <param name="connectedComponents">The list of connected components to merge.</param>
-        private void MergeTeleporterConnectedComponents(List<Teleporter.Teleporter> teleporterList,
+        private void MergeConnectedComponentsJoinedByTeleporterPair(List<Teleporter.Teleporter> teleporterList,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
         {
             foreach (Teleporter.Teleporter teleporter in teleporterList)
