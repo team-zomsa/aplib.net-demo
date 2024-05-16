@@ -284,7 +284,7 @@ namespace Assets.Scripts.Wfc
         /// <returns>A collection of sets of cells, where the sets of cells represent the connected components.</returns>
         public List<(ISet<Cell>, ISet<Cell>)> DetermineConnectedComponentsBetweenDoors()
         {
-            ISet<Cell> unvisitedCells = new HashSet<Cell>(_cells.Where(cell => cell.Tile is not Empty)); // Deep copy
+            ISet<Cell> unvisitedCells = new HashSet<Cell>(_cells.Where(cell => cell.Tile is not Empty));
             List<(ISet<Cell>, ISet<Cell>)> connectedComponents = new();
 
             while (unvisitedCells.Count > 0)
