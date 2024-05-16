@@ -187,7 +187,7 @@ namespace Assets.Scripts.Wfc
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            SetRandomPLayerSpawn(randomPlayerSpawn);
+            SetRandomPlayerSpawn(randomPlayerSpawn);
 
             JoinConnectedComponentsWithTeleporters();
 
@@ -332,7 +332,7 @@ namespace Assets.Scripts.Wfc
         /// Sets the player spawn point to a random room.
         /// </summary>
         /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
-        private void SetRandomPLayerSpawn(Cell playerSpawnCell)
+        private void SetRandomPlayerSpawn(Cell playerSpawnCell)
         {
             GameObject player = GameObject.FindWithTag("Player");
 
