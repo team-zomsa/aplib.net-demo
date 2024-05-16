@@ -409,7 +409,7 @@ namespace Assets.Scripts.Wfc
             GameObject teleporters = GameObject.Find("Teleporters");
             if (teleporters is null) throw new UnityException("No teleporters were found.");
 
-            List<Teleporter.Teleporter> teleporterList = GetUniqueTeleporters(teleporters);
+            List<Teleporter.Teleporter> teleporterList = GetAllEntryTeleporters(teleporters);
 
             MergeTeleporterConnectedComponents(teleporterList, connectedComponents);
 
@@ -448,7 +448,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="teleporters">The game object to get the teleporters from.</param>
         /// <returns>A list of unique teleporters.</returns>
-        private List<Teleporter.Teleporter> GetUniqueTeleporters(GameObject teleporters)
+        private static List<Teleporter.Teleporter> GetAllEntryTeleporters(GameObject teleporters)
         {
             List<Teleporter.Teleporter> teleporterList = new();
             foreach (Transform child in teleporters.transform)
