@@ -120,7 +120,7 @@ namespace Assets.Scripts.Wfc
             if (x >= Width || z >= Height)
                 throw new IndexOutOfRangeException("Coordinates specified are out of range.");
 
-            return z * Width + x;
+            return (z * Width) + x;
         }
 
         /// <summary>
@@ -186,18 +186,18 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The first cell.</param>
         /// <param name="neighbour">The second cell.</param>
         /// <returns>True if the two cells are connected, otherwise false.</returns>
-        private static bool IsConnected(Cell cell, Cell neighbour) => cell.Tile.CanConnectInDirection(East) &&
-                                                                      neighbour.X > cell.X &&
-                                                                      neighbour.Tile.CanConnectInDirection(West)
-                                                                      || cell.Tile.CanConnectInDirection(West) &&
-                                                                      neighbour.X < cell.X &&
-                                                                      neighbour.Tile.CanConnectInDirection(East)
-                                                                      || cell.Tile.CanConnectInDirection(North) &&
-                                                                      neighbour.Z > cell.Z &&
-                                                                      neighbour.Tile.CanConnectInDirection(South)
-                                                                      || cell.Tile.CanConnectInDirection(South) &&
-                                                                      neighbour.Z < cell.Z &&
-                                                                      neighbour.Tile.CanConnectInDirection(North);
+        private static bool IsConnected(Cell cell, Cell neighbour) => (cell.Tile.CanConnectInDirection(East) &&
+                                                                       neighbour.X > cell.X &&
+                                                                       neighbour.Tile.CanConnectInDirection(West))
+                                                                      || (cell.Tile.CanConnectInDirection(West) &&
+                                                                          neighbour.X < cell.X &&
+                                                                          neighbour.Tile.CanConnectInDirection(East))
+                                                                      || (cell.Tile.CanConnectInDirection(North) &&
+                                                                          neighbour.Z > cell.Z &&
+                                                                          neighbour.Tile.CanConnectInDirection(South))
+                                                                      || (cell.Tile.CanConnectInDirection(South) &&
+                                                                          neighbour.Z < cell.Z &&
+                                                                          neighbour.Tile.CanConnectInDirection(North));
 
         /// <summary>
         /// Given a cell, this method determines all directly adjacent neighbours which are connected by their
@@ -358,8 +358,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="connectedComponent">The <see cref="ISet{Cell}" /> in which the connected component is stored.</param>
         /// <param name="cell">The cell to start searching from.</param>
         /// <remarks>The connected component is stored in <paramref name="connectedComponent" />.</remarks>
-        private void DetermineSingleConnectedComponent(in ISet<Cell> searchSpace, in ISet<Cell> connectedComponent,
-            Cell cell)
+        private void DetermineSingleConnectedComponent(in ISet<Cell> searchSpace, in ISet<Cell> connectedComponent, Cell cell)
         {
             connectedComponent.Add(cell);
             searchSpace.Remove(cell);
@@ -386,21 +385,21 @@ namespace Assets.Scripts.Wfc
 
             foreach (Cell neighbour in neighbours)
                 neighbour.Candidates.RemoveAll(tile =>
-                    !cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && tile.CanConnectInDirection(West)
-                    || cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X &&
-                    !tile.CanConnectInDirection(West)
-                    || !cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X &&
-                    tile.CanConnectInDirection(East)
-                    || cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X &&
-                    !tile.CanConnectInDirection(East)
-                    || !cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z &&
-                    tile.CanConnectInDirection(South)
-                    || cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z &&
-                    !tile.CanConnectInDirection(South)
-                    || !cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z &&
-                    tile.CanConnectInDirection(North)
-                    || cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z &&
-                    !tile.CanConnectInDirection(North));
+                    (!cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X && tile.CanConnectInDirection(West))
+                    || (cell.Tile.CanConnectInDirection(East) && neighbour.X > cell.X &&
+                        !tile.CanConnectInDirection(West))
+                    || (!cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X &&
+                        tile.CanConnectInDirection(East))
+                    || (cell.Tile.CanConnectInDirection(West) && neighbour.X < cell.X &&
+                        !tile.CanConnectInDirection(East))
+                    || (!cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z &&
+                        tile.CanConnectInDirection(South))
+                    || (cell.Tile.CanConnectInDirection(North) && neighbour.Z > cell.Z &&
+                        !tile.CanConnectInDirection(South))
+                    || (!cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z &&
+                        tile.CanConnectInDirection(North))
+                    || (cell.Tile.CanConnectInDirection(South) && neighbour.Z < cell.Z &&
+                        !tile.CanConnectInDirection(North)));
         }
 
         /// <summary>
