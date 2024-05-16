@@ -354,7 +354,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to find the connected component for.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>The connected component that contains the given cell.</returns>
-        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
+        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellConnectedComponent(Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
             connectedComponents.Find(cc => cc.connectedComponent.Contains(cell));
 
@@ -475,7 +475,7 @@ namespace Assets.Scripts.Wfc
 
                 Cell teleporterCell = GetCellAtPosition(teleporter.transform.position);
                 (ConnectedComponent component, ConnectedComponent ns) =
-                    FindCellComponent(teleporterCell, connectedComponents);
+                    FindCellConnectedComponent(teleporterCell, connectedComponents);
 
                 Cell targetCell = GetCellAtPosition(teleporter.TargetTeleporter.transform.position);
                 (ConnectedComponent targetComponent, ConnectedComponent targetNs) =
