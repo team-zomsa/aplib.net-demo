@@ -288,7 +288,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="z">The z-position of the room, in the grid.</param>
         /// <param name="room">The room for which the doors need to be spawned.</param>
         /// <param name="direction">The direction in which the door should be placed.</param>
-        /// <param name="cells">The cells that are part of the room.</param>
+        /// <param name="cells">The cells where a key can spawn.</param>
         /// <param name="parent">The parent of the teleporter.</param>
         private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells,
             Transform parent)
