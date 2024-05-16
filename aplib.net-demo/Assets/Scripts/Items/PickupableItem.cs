@@ -7,6 +7,7 @@ namespace Assets.Scripts.Items
     /// Attach this class to make object pickupable.
     /// </summary>
     [RequireComponent(typeof(Item))]
+    [RequireComponent(typeof(Collider))]
     public class PickupableItem : MonoBehaviour
     {
         private void OnTriggerEnter(Collider other)
