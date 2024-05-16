@@ -402,7 +402,8 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Places doors between connected components.
+        /// Places doors between connected components. Connected components are components of cells that are connected and
+        /// disconnected by rooms.
         /// </summary>
         /// <param name="startCell">The cell to start the search from.</param>
         /// <exception cref="UnityException">No teleporters were found.</exception>
