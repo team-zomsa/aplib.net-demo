@@ -633,9 +633,9 @@ namespace Assets.Scripts.Wfc
                 .GetComponent<Teleporter.Teleporter>();
 
         /// <summary>
-        /// Gets the next teleporter in the list of teleporters.
+        /// Gets the next unused color in the list of colors.
         /// </summary>
-        /// <returns>The next teleporter in the list of teleporters.</returns>
+        /// <returns>The next color in the list of colors.</returns>
         private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
     }
 }
