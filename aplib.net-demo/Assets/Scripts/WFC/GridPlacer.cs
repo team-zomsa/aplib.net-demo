@@ -494,14 +494,6 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Checks whether a connection between two cells is valid.
-        /// </summary>
-        /// <param name="cell1">The first cell to check.</param>
-        /// <param name="cell2">The second cell to check.</param>
-        /// <returns>True if the connection is valid, otherwise false.</returns>
-        private static bool IsRoomConnectionValid(Cell cell1, Cell cell2) => cell1.Tile is Room || cell2.Tile is Room;
-
-        /// <summary>
         /// Gets the available cells in a given component.
         /// </summary>
         /// <param name="component">The component to get the available cells for.</param>
@@ -543,7 +535,7 @@ namespace Assets.Scripts.Wfc
 
                 foreach (Cell cell in Grid.Get4NeighbouringCells(neighbouringCell))
                 {
-                    if (!startComponent.Contains(cell) || !IsRoomConnectionValid(neighbouringCell, cell)) continue;
+                    if (!startComponent.Contains(cell)) continue;
 
                     Direction? direction = Grid.GetDirection(neighbouringCell, cell);
                     if (direction == null) continue;
