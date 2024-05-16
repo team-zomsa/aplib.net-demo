@@ -356,7 +356,7 @@ namespace Assets.Scripts.Wfc
         /// <returns>The connected component that contains the given cell.</returns>
         private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellComponent(Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
-            connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
+            connectedComponents.Find(cc => cc.connectedComponent.Contains(cell));
 
         /// <summary>
         /// Finds and removes a connected component from the list of connected components.
