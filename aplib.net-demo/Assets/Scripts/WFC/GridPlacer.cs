@@ -364,7 +364,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell for which the connected component is to be found.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>A tuple containing the connected component and its neighbouring rooms that contains the given cell.</returns>
-        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindAndRemoveCellComponent(
+        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindAndRemoveCellConnectedComponent(
             Cell cell,
             List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
         {
@@ -414,7 +414,7 @@ namespace Assets.Scripts.Wfc
             MergeTeleporterConnectedComponents(teleporterList, connectedComponents);
 
             (ConnectedComponent startComponent, ConnectedComponent neighbouringRooms) =
-                FindAndRemoveCellComponent(startCell, connectedComponents);
+                FindAndRemoveCellConnectedComponent(startCell, connectedComponents);
 
             ColorConnectedComponent(startComponent);
 
@@ -479,7 +479,7 @@ namespace Assets.Scripts.Wfc
 
                 Cell targetCell = GetCellAtPosition(teleporter.TargetTeleporter.transform.position);
                 (ConnectedComponent targetComponent, ConnectedComponent targetNs) =
-                    FindAndRemoveCellComponent(targetCell, connectedComponents);
+                    FindAndRemoveCellConnectedComponent(targetCell, connectedComponents);
 
                 component.UnionWith(targetComponent);
                 ns.UnionWith(targetNs);
@@ -543,7 +543,7 @@ namespace Assets.Scripts.Wfc
                     PlaceDoor(neighbouringCell, cell, direction.Value, startComponent, doors.transform);
 
                     (ConnectedComponent usedComponent, ConnectedComponent usedNeighbouringRooms) =
-                        FindAndRemoveCellComponent(cell, connectedComponents);
+                        FindAndRemoveCellConnectedComponent(cell, connectedComponents);
 
                     if (usedComponent == null) continue;
 
@@ -553,7 +553,7 @@ namespace Assets.Scripts.Wfc
                 }
 
                 (ConnectedComponent neighbouringCellComponent, ConnectedComponent neighbouringCellRooms) =
-                    FindAndRemoveCellComponent(neighbouringCell, connectedComponents);
+                    FindAndRemoveCellConnectedComponent(neighbouringCell, connectedComponents);
 
                 if (neighbouringCellComponent == null) continue;
 
