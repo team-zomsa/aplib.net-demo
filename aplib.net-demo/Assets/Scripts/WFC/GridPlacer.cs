@@ -354,8 +354,8 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to find the connected component for.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>The connected component that contains the given cell.</returns>
-        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellConnectedComponent(Cell cell,
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
+        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellConnectedComponent(
+            Cell cell, List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
             connectedComponents.Find(cc => cc.connectedComponent.Contains(cell));
 
         /// <summary>
@@ -364,12 +364,12 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell for which the connected component is to be found.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>A tuple containing the connected component and its neighbouring rooms that contains the given cell.</returns>
-        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindAndRemoveCellConnectedComponent(
-            Cell cell,
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
+        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)
+            FindAndRemoveCellConnectedComponent(Cell cell,
+                List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
         {
             (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) =
-                connectedComponents.Find(cc => cc.connectedComponent.Any(c => cell == c));
+                FindCellConnectedComponent(cell, connectedComponents);
 
             connectedComponents.Remove((connectedComponent, neighbouringRooms));
 
