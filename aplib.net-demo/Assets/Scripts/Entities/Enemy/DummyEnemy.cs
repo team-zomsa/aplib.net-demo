@@ -11,7 +11,7 @@ public class DummyEnemy : AbstractEnemy
     /// </summary>
     [SerializeField] private Area _spawnArea;
     [SerializeField] private bool _respawn = true;
-    [SerializeField] private bool _canMove = false;
+    [SerializeField] private bool _canMove = true;
     private Bounds _spawnBounds;
 
     /// <summary>
