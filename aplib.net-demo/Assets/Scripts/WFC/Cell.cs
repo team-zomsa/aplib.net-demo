@@ -37,7 +37,7 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// Gets or sets a value indicating whether this cell contains an item.
         /// </summary>
-        public bool CannotHoldAnItem { get; set; }
+        public bool CannotAddItem { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.

@@ -325,7 +325,7 @@ namespace Assets.Scripts.Wfc
 
             Cell itemCell = cells[_random.Next(cells.Count)];
 
-            itemCell.CannotHoldAnItem = true;
+            itemCell.CannotAddItem = true;
 
             GameObject instantiatedKeyPrefab =
                 Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
@@ -498,7 +498,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="component">The component to get the available cells for.</param>
         /// <returns>A list of available cells.</returns>
-        private static List<Cell> GetEmptyCells(ISet<Cell> component) => component.Where(c => !c.CannotHoldAnItem).ToList();
+        private static List<Cell> GetEmptyCells(ISet<Cell> component) => component.Where(c => !c.CannotAddItem).ToList();
 
         /// <summary>
         /// Places a door between two cells in a given direction.
@@ -588,7 +588,7 @@ namespace Assets.Scripts.Wfc
                 {
                     // Place an entry teleporter, so that the previous connected component can be linked through this teleporter.
                     Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
-                    nextEntryCell.CannotHoldAnItem = true;
+                    nextEntryCell.CannotAddItem = true;
                     Teleporter.Teleporter entryTeleporter =
                         PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset, teleporters.transform);
 
@@ -607,7 +607,7 @@ namespace Assets.Scripts.Wfc
                 // Place the exit teleporter of the current connected component at the end of the connected component.
                 // (Assuming that the connected component has at least two cells, `nextExitCell` will never equal `nextEntryCell`)
                 Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
-                nextExitCell.CannotHoldAnItem = true; // No item can be placed in this cell anymore.
+                nextExitCell.CannotAddItem = true; // No item can be placed in this cell anymore.
                 Teleporter.Teleporter exitTeleporter =
                     PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset, teleporters.transform);
 
