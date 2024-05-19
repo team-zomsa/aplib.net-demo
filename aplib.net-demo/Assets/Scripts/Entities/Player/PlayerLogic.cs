@@ -1,3 +1,4 @@
+using Entities;
 using UnityEngine;
 
 /// <summary>
@@ -5,11 +6,13 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(Movement))]
-[RequireComponent(typeof(ResetRigidbody))]
+[RequireComponent(typeof(RespawnableComponent))]
 public class PlayerLogic : MonoBehaviour
 {
+    [SerializeField] public bool respawnOnDeath = true;
     private HealthComponent _healthComponent;
-    private ResetRigidbody _resetRigidbody;
+    private RespawnableComponent _respawnableComponent;
+
 
     /// <summary>
     /// Get the health and resetRb component and subscribe to events.
@@ -17,14 +20,21 @@ public class PlayerLogic : MonoBehaviour
     private void Awake()
     {
         _healthComponent = GetComponent<HealthComponent>();
-        _resetRigidbody = GetComponent<ResetRigidbody>();
+        _respawnableComponent = GetComponent<RespawnableComponent>();
         _healthComponent.Death += OnDeath;
+        _respawnableComponent.RespawnEvent += OnSelfRespawn;
         _healthComponent.Hurt += OnHurt;
     }
 
     private void OnHurt(HealthComponent healthComponent, int amount)
     {
         Debug.Log("Player took damage: " + amount);
+    }
+
+    private void OnSelfRespawn (RespawnableComponent respawnableComponent)
+    {
+        Debug.Log("Player respawned!");
+        _healthComponent.Reset();
     }
 
     /// <summary>
@@ -34,8 +44,7 @@ public class PlayerLogic : MonoBehaviour
     private void OnDeath(HealthComponent healthComponent)
     {
         Debug.Log("Player died!");
-        _resetRigidbody.ResetObject();
-        _healthComponent.Reset();
+        if (respawnOnDeath) _respawnableComponent.Respawn();
     }
 
     private void OnDestroy()

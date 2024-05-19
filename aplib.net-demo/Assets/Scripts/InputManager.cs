@@ -1,3 +1,4 @@
+using Entities;
 using Entities.Weapons;
 using JetBrains.Annotations;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private MouseLock _mouseLock;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Inventory _inventory;
-    private ResetRigidbody _playerRespawn;
+    private RespawnableComponent _playerRespawn;
     private Movement _playerMovement;
     // TODO: Change when inventory is added
     // Doing it this way for now, change when inventory is implemented.
@@ -37,7 +38,7 @@ public class InputManager : MonoBehaviour
         _playerActions = _input.Player;
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
-        _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
+        _playerRespawn = _playerTransform.GetComponent<RespawnableComponent>();
         List<Weapon> playerWeapons = new(_playerTransform.GetComponentsInChildren<Weapon>());
 
         if (playerWeapons.Count > 0)
@@ -46,7 +47,7 @@ public class InputManager : MonoBehaviour
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
-        _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
+        _playerActions.Respawn.performed += _ => _playerRespawn.Respawn();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
         _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         if (_activeWeapon)
