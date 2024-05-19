@@ -44,7 +44,7 @@ public class InputManager : MonoBehaviour
         _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
         _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
-        _playerActions.SwitchItem.performed += _ => _weaponInventory.SwitchItem();
+        _playerActions.SwitchWeapon.performed += _ => _weaponInventory.SwitchItem();
         _playerActions.Fire.performed += _ => _weaponInventory.ActivateItem();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();

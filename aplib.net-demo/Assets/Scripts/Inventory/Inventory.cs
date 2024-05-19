@@ -14,6 +14,8 @@ public class Inventory : AbstractInventory
     {
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
+
+        DisplayItem();
     }
 
     /// <summary>

@@ -12,8 +12,6 @@ public class WeaponInventory : AbstractInventory
     public Weapon _rangedWeapon;
     public void Start()
     {
-
-        //todo different button for weapon and item switch
         //todo indicator location
         _inventoryIndicator = GetComponent<RawImage>();
 
