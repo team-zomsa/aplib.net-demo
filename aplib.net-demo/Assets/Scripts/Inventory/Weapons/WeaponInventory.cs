@@ -12,7 +12,6 @@ public class WeaponInventory : AbstractInventory
     public Weapon _rangedWeapon;
     public void Start()
     {
-        //todo indicator location
         _inventoryIndicator = GetComponent<RawImage>();
 
         weaponList = new Queue<Weapon>();
@@ -20,8 +19,6 @@ public class WeaponInventory : AbstractInventory
 
         PickUpWeapon(_meleeWeapon);
         PickUpWeapon(_rangedWeapon);
-        // UnityEngine.Debug.Log(weaponList.Peek().iconTexture);
-        // UnityEngine.Debug.Log(weaponList.Peek());
         DisplayItem();
     }
     /// <summary>
@@ -48,7 +45,6 @@ public class WeaponInventory : AbstractInventory
         if (!alreadyInInventory)
         {
             weaponList.Enqueue(weapon);
-            UnityEngine.Debug.Log("weapon should be added");
             DisplayItem();
         }
     }/// <summary>
@@ -80,8 +76,6 @@ public class WeaponInventory : AbstractInventory
     /// </summary>
     public override void DisplayItem()
     {
-        UnityEngine.Debug.Log("first item in inv is" + weaponList.Peek()) ;
-
         _inventoryIndicator.texture
         = weaponList.Count
         == 0
@@ -95,23 +89,12 @@ public class WeaponInventory : AbstractInventory
 
             if (firstWeapon)
             {
-                UnityEngine.Debug.Log("setting to active " + weapon);
-                UnityEngine.Debug.Log("weapon was" +weapon.gameObject.activeSelf);
                 weapon.gameObject.SetActive(true);
-                UnityEngine.Debug.Log("weapon is now" + weapon.gameObject.activeSelf);
-               // mesh.enabled = true;
                 firstWeapon = false;
             }
             else if (firstWeapon == false)
             {
-                UnityEngine.Debug.Log("setting to inactive " + weapon);
-
-                UnityEngine.Debug.Log("weapon was" + weapon.gameObject.activeSelf);
-
-
-                weapon.gameObject.SetActive(false); UnityEngine.Debug.Log(weapon.gameObject.activeSelf);
-                UnityEngine.Debug.Log("weapon is now" + weapon.gameObject.activeSelf);
-               // mesh.enabled = false;
+                weapon.gameObject.SetActive(false); 
             }
         }
         

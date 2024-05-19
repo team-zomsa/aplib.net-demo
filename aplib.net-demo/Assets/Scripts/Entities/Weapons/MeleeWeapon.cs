@@ -38,7 +38,6 @@ public class MeleeWeapon : Weapon
         if (_height < 2 * _radius)
             _height = 2 * _radius;
         _ = EnemiesWithinRange();
-        Debug.Log("in awake" + iconTexture);
     }
 
     /// <summary>
@@ -55,7 +54,6 @@ public class MeleeWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
-        Debug.Log("using melee weapon");
         if (EnemiesWithinRange())
         {
             foreach (Collider collider in _targets)
