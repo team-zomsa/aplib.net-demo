@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
@@ -25,8 +24,8 @@ namespace Assets.Scripts.Items
 
             Item item = gameObject.GetComponent<Item>();
 
-            inventory.PickUpItem(item);
             Destroy(gameObject);
+            inventory.PickUpItem(item);
         }
     }
 }

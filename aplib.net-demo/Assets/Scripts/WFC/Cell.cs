@@ -35,6 +35,11 @@ namespace Assets.Scripts.Wfc
         public int Entropy => Candidates.Count;
 
         /// <summary>
+        /// Gets or sets a value indicating whether this cell contains an item.
+        /// </summary>
+        public bool CannotAddItem { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
         /// <param name="posX">The X coordinate of this cell, within its grid.</param>
@@ -45,7 +50,7 @@ namespace Assets.Scripts.Wfc
             Z = posZ;
 
             Tile = new Empty();
-            Candidates = new List<Tile>()
+            Candidates = new List<Tile>
             {
                 new Corner(North),
                 new Corner(East),
@@ -64,21 +69,6 @@ namespace Assets.Scripts.Wfc
                 new TSection(South),
                 new TSection(West),
             };
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Cell"/> class.
-        /// </summary>
-        /// <param name="tiles">The possible tiles that can be placed in this cell.</param>
-        /// <param name="posX">The X coordinate of this cell, within its grid.</param>
-        /// <param name="posZ">The Z coordinate of this cell, within its grid.</param>
-        public Cell(int posX, int posZ, List<Tile> tiles)
-        {
-            X = posX;
-            Z = posZ;
-
-            Tile = new Empty();
-            Candidates = tiles;
         }
     }
 }

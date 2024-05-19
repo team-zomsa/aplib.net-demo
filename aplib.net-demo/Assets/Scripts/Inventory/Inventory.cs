@@ -2,57 +2,87 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AmmoPouch))]
 public class Inventory : AbstractInventory
 {
-    protected Queue<Item> _itemList;
-    public float inventorySize;
+    /// <summary>
+    /// The texture of the _inventoryIndicator object.
+    /// </summary>
+    public Texture emptyInventoryImage;
 
     /// <summary>
-    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the icons.
+    /// The canvas object that holds the inventory.
+    /// </summary>
+    public GameObject inventoryObject;
+
+    [SerializeField] private float _inventorySize = 4;
+
+    private AmmoPouch _ammoPouch;
+
+    /// <summary>
+    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
+    /// </summary>
+    private RawImage _inventoryIndicator;
+
+    private Queue<Item> _itemList;
+
+    /// <summary>
+    /// Creates the inventory queue and sets default size, resets the items, and fetches the rawimage component to display the
+    /// icons.
     /// </summary>
     private void Start()
     {
+        _ammoPouch = GetComponent<AmmoPouch>();
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
-
         DisplayItem();
     }
 
     /// <summary>
-    /// Converts queue to list to check if there are any items with matching names. 
-    /// If there are it checks if they are stackable and adds uses. If they are not it does nothing. 
+    /// Converts queue to list to check if there are any items with matching names.
+    /// If there are it checks if they are stackable and adds uses. If they are not it does nothing.
     /// If there are not matching names it adds the item to the inventory.
     /// </summary>
     /// <param name="item">The item that is fed into the inventory.</param>
     public override void PickUpItem(Item item)
     {
-        if (item is not Weapon)
+        if (item is AmmoItem)
         {
-            bool alreadyInInventory = false;
-            List<Item> _tempItemList = _itemList.ToList();
-            for (int i = 0; i < _itemList.Count; i++)
-            {
-                if (_tempItemList[i].name == item.name)
-                {
-                    if (!item.stackable)
-                        return;
+            _ammoPouch.AddAmmo(1);
+            return;
+        }
 
-                    _tempItemList[i].uses += item.startUses;
-                    alreadyInInventory = true;
-                    break;
-                }
-            }
+        if (!item.stackable)
+        {
+            // If the the item is non stackable, we cannot store it in the inventory system.
+            return;
+        }
 
-            if (!alreadyInInventory && _itemList.Count < inventorySize)
-            {
-                _itemList.Enqueue(item);
-                DisplayItem();
-            }
+        Item existingItem = _itemList.FirstOrDefault(i => i.name == item.name);
+        bool alreadyInInventory = existingItem is not null;
+
+        if (alreadyInInventory)
+        {
+            existingItem.uses += item.usesAddedPerPickup;
+        }
+        else if (_itemList.Count < _inventorySize)
+        {
+            item.Reset();
+
+            // Make a copy of the item to add to the inventory, so that the 'real world' item can be destroyed.
+            item.transform.SetParent(transform);
+            Item itemCopy = Instantiate(item);
+            itemCopy.gameObject.SetActive(false);
+            itemCopy.name = item.name;
+            _itemList.Enqueue(itemCopy);
+
+            DisplayItem();
         }
     }
 
     /// <summary>
-    /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new item is selected.
+    /// Activates the item in the first inventory slot. If the item is depleted, it is removed from the inventory and a new
+    /// item is selected.
     /// </summary>
     public override void ActivateItem()
     {
@@ -60,8 +90,10 @@ public class Inventory : AbstractInventory
         {
             _itemList.Peek().UseItem();
 
-            if (_itemList.Peek().uses == 0)
+            if (_itemList.Peek().uses <= 0)
+            {
                 _ = _itemList.Dequeue();
+            }
         }
 
         DisplayItem();
@@ -82,5 +114,6 @@ public class Inventory : AbstractInventory
     /// <summary>
     /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
     /// </summary>
-    public override void DisplayItem() => _inventoryIndicator.texture = _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
+    public void DisplayItem() => _inventoryIndicator.texture =
+        _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }

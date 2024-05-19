@@ -31,7 +31,13 @@ public class HealthComponent : MonoBehaviour
     /// <summary>
     /// The current health of the GameObject.
     /// </summary>
-    public int Health { get; private set; }
+    public int Health
+    {
+        get => _health;
+        private set => _health = Mathf.Clamp(value, 0, _maxHealth);
+    }
+
+    private int _health;
 
     /// <summary>
     /// The maximum health of the GameObject.
@@ -65,21 +71,25 @@ public class HealthComponent : MonoBehaviour
             Die();
     }
 
+    /// <summary>
+    /// Increase the GameObject's health by the specified amount.
+    /// </summary>
+    /// <param name="amount">The amount of health to be added.</param>
+    public void IncreaseHealth(int amount)
+    {
+        ReduceHealth(-amount);
+    }
 
     /// <summary>
     /// Resets the GameObject's health to the maximum value.
     /// </summary>
     public void Reset()
-    {
-        Health = _maxHealth;
-    }
+        => Health = _maxHealth;
 
     /// <summary>
     /// Send an event to notify other components that the GameObject has died.
     /// Every other component with an "OnDeath" method will be notified.
     /// </summary>
     private void Die()
-    {
-        Death?.Invoke(this);
-    }
+        => Death?.Invoke(this);
 }

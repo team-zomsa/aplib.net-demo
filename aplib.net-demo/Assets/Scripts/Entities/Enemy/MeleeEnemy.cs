@@ -1,3 +1,4 @@
+using Entities.Weapons;
 using System.Collections;
 using UnityEngine;
 
@@ -5,10 +6,21 @@ using UnityEngine;
 /// Melee enemy that attacks the player when in range.
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
+[RequireComponent(typeof(Timer))]
 public class MeleeEnemy : DummyEnemy
 {
-    [SerializeField] private float _attackCooldown = 2f;
-    [SerializeField] private float _hitDelay = 1f;
+    [SerializeField]
+    private float _attackCooldown = 2f;
+
+    [SerializeField]
+    private float _hitDelay = 1f;
+
+    [SerializeField]
+    private float _swingWidth = 1.4f;
+
+    [SerializeField]
+    private float _swingLength = 4f;
+
     private readonly float _sizeIncrease = 1.2f;
     private MeleeWeapon _meleeWeapon;
     private Timer _cooldownTimer;
@@ -20,11 +32,13 @@ public class MeleeEnemy : DummyEnemy
     /// </summary>
     protected override void Awake()
     {
-        base.Awake();
+        _cooldownTimer = GetComponent<Timer>();
+        _cooldownTimer.SetExactTime(_attackCooldown);
+
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
-        _meleeWeapon.TargetTag = _targetTag;
-        _meleeWeapon.Damage = _damagePoints;
-        _cooldownTimer = new(_attackCooldown);
+        _meleeWeapon.Initialize(_damagePoints, _targetTag, _swingLength, _swingWidth);
+
+        base.Awake();
     }
 
     /// <summary>
@@ -36,7 +50,6 @@ public class MeleeEnemy : DummyEnemy
             return;
 
         base.Update();
-        _cooldownTimer.Update(Time.deltaTime);
 
         if (_cooldownTimer.IsFinished() && _meleeWeapon.EnemiesWithinRange())
         {
