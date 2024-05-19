@@ -20,6 +20,11 @@ public abstract class Item : MonoBehaviour
     public int uses;
 
     /// <summary>
+    /// The amount of uses the item starts with.
+    /// </summary>
+    public int startUses;
+
+    /// <summary>
     /// The amount of uses that get added to the item when it is picked up.
     /// </summary>
     public int usesAddedPerPickup = 1;

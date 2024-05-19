@@ -1,28 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AmmoPouch))]
 public class Inventory : AbstractInventory
 {
-    /// <summary>
-    /// The texture of the _inventoryIndicator object.
-    /// </summary>
-    public Texture emptyInventoryImage;
 
-    /// <summary>
-    /// The canvas object that holds the inventory.
-    /// </summary>
-    public GameObject inventoryObject;
 
     [SerializeField] private float _inventorySize = 4;
 
     private AmmoPouch _ammoPouch;
 
-    /// <summary>
-    /// The RawImage is the object on which the _inventoryIndicator texture is projected.
-    /// </summary>
-    private RawImage _inventoryIndicator;
 
     private Queue<Item> _itemList;
 
@@ -110,10 +99,4 @@ public class Inventory : AbstractInventory
             DisplayItem();
         }
     }
-
-    /// <summary>
-    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
-    /// </summary>
-    public void DisplayItem() => _inventoryIndicator.texture =
-        _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
 }

@@ -1,3 +1,4 @@
+using Entities.Weapons;
 using UnityEngine;
 using UnityEngine.UI;
 

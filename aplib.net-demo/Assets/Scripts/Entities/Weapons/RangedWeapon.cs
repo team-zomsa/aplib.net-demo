@@ -25,7 +25,7 @@ namespace Entities.Weapons
         /// <summary>
         /// By default, assume the weapon will be fired by the player, from the camera.
         /// </summary>
-        private void Awake()
+        protected override void Awake()
         {
             // This needs to be '==' and not 'is', because the check for None (transform) only works with '=='.
             if (_firePoint == null)
