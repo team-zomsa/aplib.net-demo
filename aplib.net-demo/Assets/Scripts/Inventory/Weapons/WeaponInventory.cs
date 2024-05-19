@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class WeaponInventory : AbstractInventory
@@ -12,7 +14,6 @@ public class WeaponInventory : AbstractInventory
     {
 
         //todo different button for weapon and item switch
-        //todo weapon visuals
         //todo indicator location
         _inventoryIndicator = GetComponent<RawImage>();
 
@@ -25,6 +26,10 @@ public class WeaponInventory : AbstractInventory
         // UnityEngine.Debug.Log(weaponList.Peek());
         DisplayItem();
     }
+    /// <summary>
+    /// Picks up a weapon and puts it in the inventory.
+    /// </summary>
+    /// <param name="weapon"></param>
     public override void PickUpWeapon(Weapon weapon)
     {
         bool alreadyInInventory = false;
@@ -48,7 +53,9 @@ public class WeaponInventory : AbstractInventory
             UnityEngine.Debug.Log("weapon should be added");
             DisplayItem();
         }
-    }
+    }/// <summary>
+    /// Uses the equipped weapon.
+    /// </summary>
     public override void ActivateItem()
     {
         if (weaponList.Any())
@@ -71,12 +78,44 @@ public class WeaponInventory : AbstractInventory
     }
 
     /// <summary>
-    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image.
+    /// Fetches the _inventoryIndicator of the first item in the queue and makes it the texture of the displayed image. Also displays the model of the currently equipped weapon.
     /// </summary>
-    public override void DisplayItem() =>
+    public override void DisplayItem()
+    {
+        UnityEngine.Debug.Log("first item in inv is" + weaponList.Peek()) ;
+
         _inventoryIndicator.texture
         = weaponList.Count
         == 0
         ? emptyInventoryImage
         : weaponList.Peek().iconTexture;
+        bool firstWeapon = true;
+
+        foreach (Weapon weapon in weaponList.ToList<Weapon>())
+        {
+            MeshRenderer mesh = weapon.gameObject.GetComponentInChildren<MeshRenderer>();
+
+            if (firstWeapon)
+            {
+                UnityEngine.Debug.Log("setting to active " + weapon);
+                UnityEngine.Debug.Log("weapon was" +weapon.gameObject.activeSelf);
+                weapon.gameObject.SetActive(true);
+                UnityEngine.Debug.Log("weapon is now" + weapon.gameObject.activeSelf);
+               // mesh.enabled = true;
+                firstWeapon = false;
+            }
+            else if (firstWeapon == false)
+            {
+                UnityEngine.Debug.Log("setting to inactive " + weapon);
+
+                UnityEngine.Debug.Log("weapon was" + weapon.gameObject.activeSelf);
+
+
+                weapon.gameObject.SetActive(false); UnityEngine.Debug.Log(weapon.gameObject.activeSelf);
+                UnityEngine.Debug.Log("weapon is now" + weapon.gameObject.activeSelf);
+               // mesh.enabled = false;
+            }
+        }
+        
+    }
 }

@@ -19,6 +19,7 @@ public class RangedWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
+        Debug.Log("using ranged weapon");
         RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, _range);
 
         // Grabs all objects that collide with this line by order of closest to the player till the furthest the range will let it be.

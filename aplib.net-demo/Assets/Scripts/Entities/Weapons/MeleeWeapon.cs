@@ -55,6 +55,7 @@ public class MeleeWeapon : Weapon
     /// </summary>
     public override void UseWeapon()
     {
+        Debug.Log("using melee weapon");
         if (EnemiesWithinRange())
         {
             foreach (Collider collider in _targets)
