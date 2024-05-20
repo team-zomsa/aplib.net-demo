@@ -97,7 +97,7 @@ MonoBehaviour:
   uses: 0
   usesAddedPerPickup: 1
   stackable: 1
-  iconTexture: {fileID: 2800000, guid: 8409c850287cb9643a341c77b22cb443, type: 3}
+  iconTexture: {fileID: 2800000, guid: 8776ae5840f8fa34a9cbccde118a7447, type: 3}
   _rageEffect: {fileID: 3304836780114962783, guid: 3d4710cf4b8c52043810ead0a07ac077,
     type: 3}
   _damageIncreasePercentage: 100
