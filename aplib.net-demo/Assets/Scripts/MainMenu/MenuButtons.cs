@@ -11,10 +11,12 @@ public class CanvasManager : MonoBehaviour
     /// Reference to the menu canvas.
     /// </summary>
     public GameObject menuCanvas;
+
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
     public GameObject settingMenuCanvas;
+
     /// <summary>
     /// Reference to the settings canvas of the game.
     /// </summary>
@@ -24,6 +26,7 @@ public class CanvasManager : MonoBehaviour
     /// To ensure the menu settings and menu UI aren't on on the same time.
     /// </summary>
     public bool isOnMenuSettings = false;
+
     /// <summary>
     /// To ensure the game settings and menu UI aren't on on the same time.
     /// </summary>
@@ -37,15 +40,17 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// This string keeps track of what scene we are in.
     /// </summary>
-    string _currentSceneName = "";
+    private string _currentSceneName = "";
+
     /// <summary>
     /// Name of the start screen
     /// </summary>
-    string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
+    private string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
+
     /// <summary>
     /// Name of the game scene
     /// </summary>
-    string _sceneNameGame = "MeleeWeaponMenu"; // TODO:: Load main game screen
+    private string _sceneNameGame = "MeleeWeaponMenu"; // TODO:: Load main game screen
 
     // Looks at which canvas is needed by checking the current scene.
     private void Start()
