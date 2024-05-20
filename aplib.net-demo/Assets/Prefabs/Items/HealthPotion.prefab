@@ -74,7 +74,7 @@ MonoBehaviour:
   uses: 0
   usesAddedPerPickup: 1
   stackable: 1
-  iconTexture: {fileID: 2800000, guid: 73b6bf480eb082746a37aee24353716f, type: 3}
+  iconTexture: {fileID: 2800000, guid: a47062fc1b073e54594598823129c80a, type: 3}
   _healAmount: 50
 --- !u!114 &4103969277828004525
 MonoBehaviour:

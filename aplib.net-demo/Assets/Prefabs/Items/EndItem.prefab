@@ -50,8 +50,8 @@ MonoBehaviour:
   _itemName: The Eternal Elixir
   uses: 1
   usesAddedPerPickup: 1
-  stackable: 0
-  iconTexture: {fileID: 0}
+  stackable: 1
+  iconTexture: {fileID: 2800000, guid: beff03253e7d2f345ab60f81c77e39ee, type: 3}
 --- !u!114 &2921050188545365259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +80,7 @@ CapsuleCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.07
