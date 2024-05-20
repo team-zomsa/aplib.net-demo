@@ -1,6 +1,6 @@
 using Entities.Weapons;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace Assets.Scripts.Items
 {
@@ -17,7 +17,7 @@ namespace Assets.Scripts.Items
         private int _damageIncreasePercentage = 50;
 
         private int _damageIncrease;
-        
+
         [SerializeField]
         private float _duration = 3; // In seconds
 
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Items
             _playerWeapon.Damage += _damageIncrease;
 
             // Add player visual effect as child of player
-            GameObject rageEffect = Instantiate(_rageEffect, _player.transform.position, Quaternion.identity);
+            GameObject rageEffect = Instantiate(_rageEffect, _player.transform);
 
             yield return new WaitForSeconds(_duration);
 
