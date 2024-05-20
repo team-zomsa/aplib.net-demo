@@ -271,6 +271,8 @@ MonoBehaviour:
   settingGameCanvas: {fileID: 8904745976946252126}
   isOnMenuSettings: 0
   isOnGameSettings: 0
+  _sceneNameStartingMenu: Settings
+  _sceneNameGame: MeleeWeaponMenu
 --- !u!1 &318484137144363610
 GameObject:
   m_ObjectHideFlags: 0
@@ -3234,6 +3236,7 @@ GameObject:
   - component: {fileID: 1084889098590926534}
   - component: {fileID: 1887661580046257510}
   - component: {fileID: 6042534411841469235}
+  - component: {fileID: 5757495414069219726}
   m_Layer: 5
   m_Name: Render Quality
   m_TagString: Untagged
@@ -3360,8 +3363,32 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5757495414069219726}
+        m_TargetAssemblyTypeName: RenderQuality, Scripts
+        m_MethodName: RenderState
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
+--- !u!114 &5757495414069219726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299084859602858004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02af24b9f3a027e40b3a9c2f0e0406c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6377681560861709532
 GameObject:
   m_ObjectHideFlags: 0
@@ -3374,6 +3401,7 @@ GameObject:
   - component: {fileID: 7971058265239946297}
   - component: {fileID: 3120747878838349252}
   - component: {fileID: 6245317868509476131}
+  - component: {fileID: 2763176066215166093}
   m_Layer: 5
   m_Name: Render Quality
   m_TagString: Untagged
@@ -3500,8 +3528,32 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2763176066215166093}
+        m_TargetAssemblyTypeName: RenderQuality, Scripts
+        m_MethodName: RenderState
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
+--- !u!114 &2763176066215166093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6377681560861709532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02af24b9f3a027e40b3a9c2f0e0406c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6758138041159210469
 GameObject:
   m_ObjectHideFlags: 0

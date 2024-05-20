@@ -5,7 +5,7 @@ public class MouseLock : MonoBehaviour
     private bool _showMouse = false;
 
     /// <summary>
-    /// Managed all the UI canvases.
+    /// Manages all the UI canvases.
     /// </summary>
     public CanvasManager CanvasManager;
 
@@ -19,12 +19,9 @@ public class MouseLock : MonoBehaviour
     }
 
     /// <summary>
-    /// Shows the mouse and unlocks it. Usefull on websites.
+    /// Shows the mouse and unlocks it. Useful on websites.
     /// </summary>
-    public void OnShowMousePressed()
-    {
-        EnableMouseCurser();
-    }
+    public void OnShowMousePressed() => EnableMouseCursor();
 
     /// <summary>
     /// On left mouse click, go back into the game and lock the cursor.
@@ -33,18 +30,18 @@ public class MouseLock : MonoBehaviour
     {
         if (CanvasManager.IsCursurNeeded) // if curser is needed, enable curser
         {
-            EnableMouseCurser();
+            EnableMouseCursor();
         }
         else if (_showMouse && !CanvasManager.IsCursurNeeded) // if curser is showing and is not needed, disable
         {
-            DisableMouseCurser();
+            DisableMouseCursor();
         }
     }
 
     /// <summary>
     /// Enables curser.
     /// </summary>
-    void EnableMouseCurser()
+    private void EnableMouseCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -54,7 +51,7 @@ public class MouseLock : MonoBehaviour
     /// <summary>
     /// Disables curser.
     /// </summary>
-    void DisableMouseCurser()
+    private void DisableMouseCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

@@ -9,12 +9,12 @@ public class VolumeSlider : MonoBehaviour
     /// <summary>
     /// Used to set the volume bar to the correct repesentation.
     /// </summary>
-    Slider _volSlider;
+    private Slider _volSlider;
 
     /// <summary>
     /// Used to call and store volume value.
     /// </summary>
-    float _volumeValue;
+    private float _volumeValue;
 
     /// <summary>
     /// Takes the value from the volume slider and sends it to the sound manager.
