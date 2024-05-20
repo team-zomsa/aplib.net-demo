@@ -313,7 +313,7 @@ namespace Assets.Scripts.Wfc
                 _ => throw new UnityException("Invalid direction when placing door")
             };
 
-            Vector3 doorPosition = roomPosition + relativeDoorPosition;
+            Vector3 doorPosition = roomPosition + relativeDoorPosition + 0.5f * Vector3.up;
 
             // Calculate the rotation the door should have
             Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
@@ -331,7 +331,7 @@ namespace Assets.Scripts.Wfc
                 Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
 
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
-            keyComponent.Id = doorComponent.DoorId;
+            keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
         }
 
         /// <summary>

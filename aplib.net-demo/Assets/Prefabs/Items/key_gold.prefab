@@ -98,8 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0453dcf5a20daaf4894d626e7ab8d506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemName: Key
   uses: 0
-  startUses: 0
+  usesAddedPerPickup: 1
   stackable: 0
   iconTexture: {fileID: 0}
   Id: 0
