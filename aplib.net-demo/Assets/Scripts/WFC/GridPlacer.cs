@@ -313,7 +313,7 @@ namespace Assets.Scripts.Wfc
                 _ => throw new UnityException("Invalid direction when placing door")
             };
 
-            Vector3 doorPosition = roomPosition + relativeDoorPosition + 0.5f * Vector3.up;
+            Vector3 doorPosition = roomPosition + relativeDoorPosition;
 
             // Calculate the rotation the door should have
             Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);

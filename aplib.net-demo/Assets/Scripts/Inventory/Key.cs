@@ -5,7 +5,7 @@ public class Key : Item
     /// <summary>
     /// The key ID, to check which door it can open.
     /// </summary>
-    public int Id;
+    public int Id { get; private set; }
 
     /// <summary>
     /// Set the key id and color.
