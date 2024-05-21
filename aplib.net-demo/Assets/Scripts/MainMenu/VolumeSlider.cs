@@ -23,11 +23,11 @@ public class VolumeSlider : MonoBehaviour
     public void VolumeValue(float newValue)
     {
         _volumeValue = newValue;
-        // To Do:: Send newValue that is from 1 to 100 to the Sound manager
+        // ToDo:: Send newValue that is from 1 to 100 to the Sound manager
     }
 
     /// <summary>
-    /// When the application is closed, it saved the master volume variable to the key "MasterVolume"
+    /// When the application is closed, it saved the master volume variable to the key "MasterVolume".
     /// </summary>
     private void OnDisable()
     {
@@ -36,7 +36,7 @@ public class VolumeSlider : MonoBehaviour
 
     /// <summary>
     /// When the slider is enabled it retrieves the volume value from last session 
-    /// and sets the volume bar at that % and the volume to that noice level.
+    /// and sets the volume bar at that % and the volume to that noise level.
     /// </summary>
     private void OnEnable()
     {

@@ -26,7 +26,7 @@ public class RenderQuality : MonoBehaviour
     public void RenderState(int newValue)
     {
         _renderState = newValue;
-        // To Do:: do something with the retrieved value.
+        // ToDo:: do something with the retrieved value.
         // 0 == low, 1 == medium & 2 == high.
     }
 
