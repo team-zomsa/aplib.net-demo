@@ -1567,7 +1567,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53597eb9099ea944b4b47688ff12f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerVisTransform: {fileID: 918876158}
+  PlayerRotation: {fileID: 947922665}
+  PlayerCamFollow: {fileID: 806680274}
+  CinemachineCamera: {fileID: 2145329471}
 --- !u!4 &800452531
 Transform:
   m_ObjectHideFlags: 0
@@ -2093,7 +2095,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea6676c278c51f44aecf76adb1d4961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 7
+  _maxSpeedGround: 7
+  _maxSpeedAir: 7
   _acceleration: 300
   _normalGravityScale: 1.7
   _fallingGravityScale: 2.5

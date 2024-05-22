@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TestScenes/FirstTestScene.unity
     guid: 0159818066d429f41b9c1794261beda0
   - enabled: 1
+    path: Assets/Scenes/TestScenes/RangedWeaponTestScene.unity
+    guid: 254572ebc9a5e314a9d4e02ac8f4d358
+  - enabled: 1
     path: Assets/Scenes/TestScenes/TeleporterTestScene.unity
     guid: c91ffe079b1f59e5da4e4e8bfd0969fe
   - enabled: 1
