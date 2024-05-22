@@ -1,10 +1,10 @@
-using Aplib;
 using Aplib.Core;
 using Aplib.Core.Belief;
 using Aplib.Core.Desire;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
+using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
 using NUnit.Framework;
 using System.Collections;
@@ -55,10 +55,7 @@ namespace Testing.AplibTests
                 location: rootBeliefSet.TeleporterInLocation,
                 heightOffset: .7f);
 
-            Action<TeleporterBeliefSet> waitForTeleportAction = new(
-                effect: _ => { Debug.Log("Waiting for teleport..."); },
-                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
-                    .magnitude < 0.4f);
+            Action<TeleporterBeliefSet> waitForTeleportAction = new(_ => { Debug.Log("Waiting for teleport..."); });
 
             TransformPathfinderAction<TeleporterBeliefSet> walkOutOfTeleporter = new(
                 objectQuery: beliefSet => beliefSet.PlayerRigidbody,
@@ -67,7 +64,9 @@ namespace Testing.AplibTests
 
             // Arrange ==> Tactics
             PrimitiveTactic<TeleporterBeliefSet> approachTeleporterTactic = new(approachTeleporterAction);
-            PrimitiveTactic<TeleporterBeliefSet> waitForTeleportTactic = new(waitForTeleportAction);
+            PrimitiveTactic<TeleporterBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
+                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
+                    .magnitude < 0.4f);
             PrimitiveTactic<TeleporterBeliefSet> walkOutOfTeleporterTactic = new(walkOutOfTeleporter);
             FirstOfTactic<TeleporterBeliefSet> teleportOrApproachTactic = new(new Metadata("Teleport or approach teleporter"),
                 waitForTeleportTactic,

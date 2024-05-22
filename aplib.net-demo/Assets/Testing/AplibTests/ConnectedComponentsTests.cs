@@ -1,10 +1,10 @@
-using Aplib;
 using Aplib.Core;
 using Aplib.Core.Belief;
 using Aplib.Core.Desire;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
+using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Wfc;
 using NUnit.Framework;
@@ -66,14 +66,13 @@ namespace Testing.AplibTests
                 currentCellPosition(),
                 1.4f);
 
-            Action<ConnectedComponentsBeliefSet> waitForTeleportAction = new(
-                _ => { Debug.Log("Waiting for teleport..."); },
-                beliefSet => teleporterPositions.Any(teleporterPosition =>
-                    (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
+            Action<ConnectedComponentsBeliefSet> waitForTeleportAction = new(_ => { Debug.Log("Waiting for teleport..."); });
 
             PrimitiveTactic<ConnectedComponentsBeliefSet> approachCurrentCellTactic = new(approachCurrentCellAction);
-            PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction);
-            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(null,
+            PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
+                guard: beliefSet => teleporterPositions.Any(teleporterPosition =>
+                    (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
+            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(metadata: null,
                 waitForTeleportTactic,
                 approachCurrentCellTactic);
 
