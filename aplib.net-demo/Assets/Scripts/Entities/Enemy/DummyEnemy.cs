@@ -27,7 +27,7 @@ public class DummyEnemy : AbstractEnemy
             _spawnBounds = _spawnArea.Bounds;
     }
 
-    protected override void Update() 
+    protected override void Update()
     {
         if (_canMove)
             base.Update();

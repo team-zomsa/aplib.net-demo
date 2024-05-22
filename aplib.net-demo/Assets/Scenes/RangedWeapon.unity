@@ -2208,6 +2208,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Target Dummy
       objectReference: {fileID: 0}
+    - target: {fileID: 8121639023972197058, guid: f467669cc78c8714383ff9fa4bce38ef,
+        type: 3}
+      propertyPath: _respawn
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
