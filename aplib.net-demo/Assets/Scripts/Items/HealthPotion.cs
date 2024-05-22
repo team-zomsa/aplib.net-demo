@@ -9,6 +9,9 @@ namespace Assets.Scripts.Items
     public class HealthPotion : Item
     {
         [SerializeField]
+        private GameObject _playerEffect;
+
+        [SerializeField]
         private int _healAmount = 50;
 
         private HealthComponent _playerHealth;
@@ -26,6 +29,7 @@ namespace Assets.Scripts.Items
         {
             base.UseItem();
             _playerHealth.IncreaseHealth(_healAmount);
+            Instantiate(_playerEffect, _playerHealth.transform);
         }
     }
 }
