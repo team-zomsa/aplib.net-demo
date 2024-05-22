@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 413480}
   - component: {fileID: 3338382}
   - component: {fileID: 2311228}
+  - component: {fileID: 5110850175473961303}
+  - component: {fileID: 6409961272102491702}
+  - component: {fileID: 7006872941668042291}
   m_Layer: 0
   m_Name: pPlane3
   m_TagString: Untagged
@@ -61,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0275cd71d48a28e4ca8d99d740827a3f, type: 2}
+  - {fileID: 2100000, guid: 861bbfa06e52d4245b343883ae1c253a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,6 +86,57 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5110850175473961303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0453dcf5a20daaf4894d626e7ab8d506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemName: Key
+  uses: 0
+  usesAddedPerPickup: 1
+  stackable: 0
+  iconTexture: {fileID: 0}
+  Id: 0
+--- !u!114 &6409961272102491702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e249eec9953e46df907465007ed6228d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &7006872941668042291
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144718}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.15263, y: 6.3028283, z: 2.402361}
+  m_Center: {x: 0.31444496, y: 3.138778, z: -0.1601255}
 --- !u!1 &155280
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,9 +161,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155280}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.56557554, z: 0, w: 0.82469654}
-  m_LocalPosition: {x: 14.7, y: 0.27977, z: 83.4}
-  m_LocalScale: {x: 1.8018788, y: 1.8018793, z: 1.8018793}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 413480}

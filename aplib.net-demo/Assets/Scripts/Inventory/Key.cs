@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Key : Item
 {
     /// <summary>
@@ -6,10 +8,15 @@ public class Key : Item
     public int Id { get; private set; }
 
     /// <summary>
-    /// Initializes a key with a given ID.
+    /// Set the key id and color.
     /// </summary>
-    /// <param name="id">The ID the key is given.</param>
-    public Key(int id) => Id = id;
+    /// <param name="id">The key id, which should match to the door id.</param>
+    /// <param name="color">The color of the key, which should match to the door color.</param>
+    public void Initialize(int id, Color color)
+    {
+        Id = id;
+        GetComponent<Renderer>().material.color = color;
+    }
 
     private void Start()
     {
