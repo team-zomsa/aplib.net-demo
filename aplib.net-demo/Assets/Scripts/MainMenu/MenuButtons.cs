@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuPlayButton : MonoBehaviour
+/// <summary>
+/// This class houses all the settings and menu UI buttons/methods.
+/// It is called CanvasManager as it manages all the UI canvases.
+/// </summary>
+public class CanvasManager : MonoBehaviour
 {
     /// <summary>
     /// Reference to the menu canvas.
@@ -9,40 +13,116 @@ public class MenuPlayButton : MonoBehaviour
     public GameObject menuCanvas;
 
     /// <summary>
-    /// Reference to the settings canvas.
+    /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject settingCanvas;
+    public GameObject settingMenuCanvas;
 
     /// <summary>
-    /// To ensure the settings and menu UI aren't on on the same time.
+    /// Reference to the settings canvas of the game.
     /// </summary>
-    public bool isOnSettings = false;
+    public GameObject settingGameCanvas;
 
+    /// <summary>
+    /// To ensure the menu settings and menu UI aren't on on the same time.
+    /// </summary>
+    public bool isOnMenuSettings = false;
+
+    /// <summary>
+    /// To ensure the game settings and menu UI aren't on on the same time.
+    /// </summary>
+    public bool isOnGameSettings = false;
+
+    /// <summary>
+    /// This bool communicates with the mouse lock script to enable and disable the cursor.
+    /// </summary>
+    public bool IsCursorNeeded => isOnGameSettings;
+
+    /// <summary>
+    /// This string keeps track of what scene we are in.
+    /// </summary>
+    private string _currentSceneName = "";
+
+    /// <summary>
+    /// Name of the start screen.
+    /// </summary>
+    [SerializeField]
+    private string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
+
+    /// <summary>
+    /// Name of the game scene
+    /// </summary>
+    [SerializeField]
+    private string _sceneNameGame = "MeleeWeaponMenu"; // TODO:: Load main game screen
+
+    // Looks at which canvas is needed by checking the current scene.
     private void Start()
     {
-        menuCanvas.SetActive(true);
-        isOnSettings = false;
-        settingCanvas.SetActive(false);
+        _currentSceneName = SceneManager.GetActiveScene().name;
+
+        if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
+        {
+            menuCanvas.SetActive(true);
+            settingMenuCanvas.SetActive(false);
+            settingGameCanvas.SetActive(false);
+            isOnMenuSettings = false;
+            isOnGameSettings = false;
+        }
+        else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
+        {
+            menuCanvas.SetActive(false);
+            settingMenuCanvas.SetActive(false);
+            settingGameCanvas.SetActive(false);
+            isOnMenuSettings = false;
+            isOnGameSettings = false;
+        }
+        else // TODO:: Remove when game is done. This is for future ease.
+        {
+            Debug.Log("Scene names are wrong. Check MenuButtons script");
+        }
     }
 
     /// <summary>
     /// When the play button in the main menu is clicked, it wil teleport the player to the game.
-    /// Right now it is the melee weapon scene to prove concept.
     /// </summary>
     public void PlayGame()
     {
-        // TODO:: Load main game scene
-        SceneManager.LoadScene("MeleeWeapon");
+        SceneManager.LoadScene(_sceneNameGame);
     }
 
     /// <summary>
-    /// This button toggles the menu canvas off and the setting canvas on.
+    /// When the Quit To Menu button in the game setting is clicked, it will take you back to the menu.
     /// </summary>
-    public void SettingToggle()
+    public void ToMenu()
     {
-        isOnSettings = !isOnSettings;
-        settingCanvas.SetActive(isOnSettings);
-        menuCanvas.SetActive(!isOnSettings);
+        SceneManager.LoadScene(_sceneNameStartingMenu);
+    }
+
+    /// <summary>
+    /// This button toggles the menu canvas off and the setting canvas on or game settings on and off.
+    /// </summary>
+    public void ToggleSettings()
+    {
+        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back
+        {
+            isOnMenuSettings = !isOnMenuSettings;
+            settingMenuCanvas.SetActive(isOnMenuSettings);
+            menuCanvas.SetActive(!isOnMenuSettings);
+        }
+        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back
+        {
+            isOnGameSettings = !isOnGameSettings;
+            settingGameCanvas.SetActive(isOnGameSettings);
+            if (isOnGameSettings)
+            {
+                Time.timeScale = 0;
+                InputManager.Instance.DisablePlayerInput();
+            }
+            else
+            {
+                Time.timeScale = 1;
+                InputManager.Instance.EnablePlayerInput();
+            }
+        }
     }
 
     /// <summary>
@@ -52,5 +132,13 @@ public class MenuPlayButton : MonoBehaviour
     public void QuitApplication()
     {
         Application.Quit();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) // Toggle settings
+        {
+            ToggleSettings();
+        }
     }
 }
