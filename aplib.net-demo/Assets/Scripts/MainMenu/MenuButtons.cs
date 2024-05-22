@@ -35,7 +35,7 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// This bool communicates with the mouse lock script to enable and disable the cursor.
     /// </summary>
-    public bool IsCursurNeeded => isOnGameSettings;
+    public bool IsCursorNeeded => isOnGameSettings;
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -112,8 +112,16 @@ public class CanvasManager : MonoBehaviour
         {
             isOnGameSettings = !isOnGameSettings;
             settingGameCanvas.SetActive(isOnGameSettings);
-            if (isOnGameSettings) { Time.timeScale = 0; InputManager.Instance.DisablePlayerInput(); }
-            else { Time.timeScale = 1; InputManager.Instance.EnablePlayerInput(); }
+            if (isOnGameSettings)
+            {
+                Time.timeScale = 0;
+                InputManager.Instance.DisablePlayerInput();
+            }
+            else
+            {
+                Time.timeScale = 1;
+                InputManager.Instance.EnablePlayerInput();
+            }
         }
     }
 

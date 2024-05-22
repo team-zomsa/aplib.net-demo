@@ -7,7 +7,8 @@ public class MouseLock : MonoBehaviour
     /// <summary>
     /// Manages all the UI canvases.
     /// </summary>
-    public CanvasManager CanvasManager;
+    [SerializeField]
+    private CanvasManager _canvasManager;
 
     /// <summary>
     /// Locks the cursor and hides it when the game starts.
@@ -28,11 +29,11 @@ public class MouseLock : MonoBehaviour
     /// </summary>
     public void OnLeftMousePressed()
     {
-        if (CanvasManager.IsCursurNeeded) // if cursor is needed, enable cursor
+        if (_canvasManager.IsCursorNeeded) // if cursor is needed, enable cursor
         {
             EnableMouseCursor();
         }
-        else if (_showMouse && !CanvasManager.IsCursurNeeded) // if cursor is showing and is not needed, disable
+        else if (_showMouse && !_canvasManager.IsCursorNeeded) // if cursor is showing and is not needed, disable
         {
             DisableMouseCursor();
         }
