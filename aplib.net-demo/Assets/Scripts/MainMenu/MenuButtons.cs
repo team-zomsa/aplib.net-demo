@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This class houses all the settings and menu UI buttons/methods.
-/// It is called CanvasManager as it manages all the UI canvi.
+/// It is called CanvasManager as it manages all the UI canvases.
 /// </summary>
 public class CanvasManager : MonoBehaviour
 {
