@@ -52,7 +52,7 @@ public class CanvasManager : MonoBehaviour
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private string _sceneNameGame = "MeleeWeaponMenu"; // TODO:: Load main game screen
+    private string _sceneNameGame = "GameSettings"; // TODO:: Load main game screen
 
     // Looks at which canvas is needed by checking the current scene.
     private void Start()
