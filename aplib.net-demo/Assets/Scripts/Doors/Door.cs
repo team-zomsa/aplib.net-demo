@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Scripts.Doors
@@ -16,11 +17,31 @@ namespace Assets.Scripts.Doors
         /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
         public int DoorId;
 
-        /// <summary>Gives the door a unique ID on load.</summary>
+        /// <summary>
+        /// The color of the door, which is used to determine which key is needed to open it.
+        /// </summary>
+        public Color Color { get; private set; }
+
+        [SerializeField] private float _minSaturation = 0.5f;
+
+        [SerializeField] private float _maxSaturation = 1f;
+
+        [SerializeField] private float _minValue = 0.4f;
+
+        [SerializeField] private float _maxValue = 1f;
+
+        /// <summary>
+        /// Gives the door a unique ID on load.
+        /// Randomize the color based on the ID.
+        /// Also sets the color of the door.
+        /// </summary>
         private void Awake()
         {
             DoorId = _numberOfDoors;
             _numberOfDoors++;
+            Color = Random.ColorHSV(0f, 1f, _minSaturation, _maxSaturation, _minValue, _maxValue);
+            GetComponent<Renderer>().material.color = Color;
+            SetDoorText(DoorId.ToString());
         }
 
         /// <summary>
@@ -47,6 +68,14 @@ namespace Assets.Scripts.Doors
         private void Open()
         {
             Destroy(gameObject);
+        }
+
+        private void SetDoorText(string doorText)
+        {
+            foreach (TMP_Text textMesh in GetComponentsInChildren<TMP_Text>())
+            {
+                textMesh.text = doorText;
+            }
         }
     }
 }
