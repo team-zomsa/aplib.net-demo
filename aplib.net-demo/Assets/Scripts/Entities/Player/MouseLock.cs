@@ -6,12 +6,13 @@ public class MouseLock : MonoBehaviour
 
     /// <summary>
     /// Locks the cursor and hides it when the game starts.
+    /// Should be start to ensure the canvas manager is loaded.
     /// </summary>
-    private void Awake()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        
+
         // Compatability for when no CanvasManager is present.
         if (CanvasManager.Instance != null)
             CanvasManager.Instance.GameSettingsToggled += OnGameSettingsToggled;

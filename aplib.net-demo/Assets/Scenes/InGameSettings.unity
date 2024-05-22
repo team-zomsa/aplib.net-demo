@@ -1607,16 +1607,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasManager
       objectReference: {fileID: 0}
-    - target: {fileID: 331041035814348626, guid: 6afe0fbb1debb1449835d0968e789934,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnToggleSettings
-      objectReference: {fileID: 0}
-    - target: {fileID: 331041035814348626, guid: 6afe0fbb1debb1449835d0968e789934,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CanvasManager, Scripts
-      objectReference: {fileID: 0}
     - target: {fileID: 1526500251675296066, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -5097,7 +5087,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
