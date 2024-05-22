@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class CanvasManager : MonoBehaviour
 {
+    /// <summary>
+    /// Event that is fired when the game settings are toggled.
+    /// </summary>
+    public event Action<bool> GameSettingsToggled;
+
     /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
@@ -22,20 +28,17 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public GameObject settingGameCanvas;
 
+    public static CanvasManager Instance { get; private set; }
+
     /// <summary>
     /// To ensure the menu settings and menu UI aren't on on the same time.
     /// </summary>
-    public bool isOnMenuSettings = false;
+    private bool _isOnMenuSettings = false;
 
     /// <summary>
     /// To ensure the game settings and menu UI aren't on on the same time.
     /// </summary>
-    public bool isOnGameSettings = false;
-
-    /// <summary>
-    /// This bool communicates with the mouse lock script to enable and disable the cursor.
-    /// </summary>
-    public bool IsCursorNeeded => isOnGameSettings;
+    private bool _isOnGameSettings = false;
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -54,6 +57,14 @@ public class CanvasManager : MonoBehaviour
     [SerializeField]
     private string _sceneNameGame = "GameSettings"; // TODO:: Load main game screen
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+            Instance = this;
+    }
+
     // Looks at which canvas is needed by checking the current scene.
     private void Start()
     {
@@ -64,16 +75,16 @@ public class CanvasManager : MonoBehaviour
             menuCanvas.SetActive(true);
             settingMenuCanvas.SetActive(false);
             settingGameCanvas.SetActive(false);
-            isOnMenuSettings = false;
-            isOnGameSettings = false;
+            _isOnMenuSettings = false;
+            _isOnGameSettings = false;
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
             menuCanvas.SetActive(false);
             settingMenuCanvas.SetActive(false);
             settingGameCanvas.SetActive(false);
-            isOnMenuSettings = false;
-            isOnGameSettings = false;
+            _isOnMenuSettings = false;
+            _isOnGameSettings = false;
         }
         else // TODO:: Remove when game is done. This is for future ease.
         {
@@ -100,19 +111,19 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// This button toggles the menu canvas off and the setting canvas on or game settings on and off.
     /// </summary>
-    public void ToggleSettings()
+    public void OnToggleSettings()
     {
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back
         {
-            isOnMenuSettings = !isOnMenuSettings;
-            settingMenuCanvas.SetActive(isOnMenuSettings);
-            menuCanvas.SetActive(!isOnMenuSettings);
+            _isOnMenuSettings = !_isOnMenuSettings;
+            settingMenuCanvas.SetActive(_isOnMenuSettings);
+            menuCanvas.SetActive(!_isOnMenuSettings);
         }
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back
         {
-            isOnGameSettings = !isOnGameSettings;
-            settingGameCanvas.SetActive(isOnGameSettings);
-            if (isOnGameSettings)
+            _isOnGameSettings = !_isOnGameSettings;
+            settingGameCanvas.SetActive(_isOnGameSettings);
+            if (_isOnGameSettings)
             {
                 Time.timeScale = 0;
                 InputManager.Instance.DisablePlayerInput();
@@ -122,6 +133,7 @@ public class CanvasManager : MonoBehaviour
                 Time.timeScale = 1;
                 InputManager.Instance.EnablePlayerInput();
             }
+            GameSettingsToggled?.Invoke(_isOnGameSettings);
         }
     }
 
@@ -132,13 +144,5 @@ public class CanvasManager : MonoBehaviour
     public void QuitApplication()
     {
         Application.Quit();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape)) // Toggle settings
-        {
-            ToggleSettings();
-        }
     }
 }

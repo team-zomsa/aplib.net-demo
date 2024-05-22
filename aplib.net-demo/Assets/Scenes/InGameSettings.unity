@@ -1607,6 +1607,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasManager
       objectReference: {fileID: 0}
+    - target: {fileID: 331041035814348626, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnToggleSettings
+      objectReference: {fileID: 0}
+    - target: {fileID: 331041035814348626, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: CanvasManager, Scripts
+      objectReference: {fileID: 0}
     - target: {fileID: 1526500251675296066, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1677,18 +1687,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6afe0fbb1debb1449835d0968e789934, type: 3}
---- !u!114 &482443569 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1036647114414517619, guid: 6afe0fbb1debb1449835d0968e789934,
-    type: 3}
-  m_PrefabInstance: {fileID: 482443568}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50b98af11f29651428432a585b7006d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &492361184
 Mesh:
   m_ObjectHideFlags: 0
@@ -2738,7 +2736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050f3baec8542fa4ea6c967dc6e56d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasManager: {fileID: 482443569}
 --- !u!4 &972198659
 Transform:
   m_ObjectHideFlags: 0
@@ -5560,13 +5557,13 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 482443568}
   - {fileID: 1456176068}
   - {fileID: 630626825}
   - {fileID: 1201448350}
   - {fileID: 222766277}
   - {fileID: 199930809}
   - {fileID: 552369203}
+  - {fileID: 482443568}
   - {fileID: 972198659}
   - {fileID: 1491426797}
   - {fileID: 1105410511}

@@ -419,6 +419,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1036647114414517619, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: _sceneNameGame
+      value: InGameSettings
+      objectReference: {fileID: 0}
     - target: {fileID: 1526500251675296066, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_AnchorMax.y
