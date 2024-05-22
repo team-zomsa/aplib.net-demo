@@ -11,6 +11,7 @@ public class DummyEnemy : AbstractEnemy
     /// </summary>
     [SerializeField] private Area _spawnArea;
     [SerializeField] private bool _respawn = true;
+    [SerializeField] private bool _canMove = true;
     private Bounds _spawnBounds;
 
     /// <summary>
@@ -24,6 +25,12 @@ public class DummyEnemy : AbstractEnemy
             Debug.LogError("No spawn area found for enemy " + name);
         else
             _spawnBounds = _spawnArea.Bounds;
+    }
+
+    protected override void Update()
+    {
+        if (_canMove)
+            base.Update();
     }
 
     protected override void OnDeath(HealthComponent healthComponent)

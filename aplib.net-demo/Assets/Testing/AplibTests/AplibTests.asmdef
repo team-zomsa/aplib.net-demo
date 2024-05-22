@@ -7,7 +7,8 @@
         "Aplib.Integrations.Unity",
         "Scripts",
         "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework"
+        "Unity.InputSystem.TestFramework",
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
