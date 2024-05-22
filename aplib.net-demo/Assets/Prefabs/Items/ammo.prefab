@@ -47,8 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2d5c368dbaa984d8e08de152df608c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemName: AmmoItem
   uses: 0
-  startUses: 0
+  usesAddedPerPickup: 1
   stackable: 1
   iconTexture: {fileID: 0}
 --- !u!114 &8493416388406199735

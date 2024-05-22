@@ -46,7 +46,7 @@ namespace Testing.AplibTests
             {
                 if (!Physics.Raycast(x.transform.position, x.transform.forward, out RaycastHit hit, 100))
                     return false;
-                
+
                 return hit.collider.gameObject.name == "Target Dummy Body";
             }
         );
@@ -119,9 +119,9 @@ namespace Testing.AplibTests
             Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);
             yield break;
 
-            bool EnemyKilledPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyDead;  
+            bool EnemyKilledPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyDead;
 
-            bool IsEnemyInFrontPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyInFront;  
+            bool IsEnemyInFrontPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyInFront;
         }
     }
 }
