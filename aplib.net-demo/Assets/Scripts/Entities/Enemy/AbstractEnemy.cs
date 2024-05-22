@@ -7,6 +7,9 @@ using UnityEngine;
 [RequireComponent(typeof(HealthComponent))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
+    /// <summary>
+    /// The amount of damage the enemy deals to the player.
+    /// </summary>
     [SerializeField] protected int _damagePoints = 25;
     [SerializeField] protected string _targetTag = "Player";
     protected HealthComponent _healthComponent;
