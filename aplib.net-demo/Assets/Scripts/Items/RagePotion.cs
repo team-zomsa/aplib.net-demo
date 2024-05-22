@@ -38,7 +38,6 @@ namespace Assets.Scripts.Items
         public override void UseItem()
         {
             // Set object to active
-            gameObject.SetActive(true);
             base.UseItem();
             StartCoroutine(ActivateRage());
         }
@@ -53,7 +52,6 @@ namespace Assets.Scripts.Items
             yield return new WaitForSeconds(_duration);
 
             _playerWeapon.Damage -= _damageIncrease;
-            gameObject.SetActive(false);
 
             // Remove player visual effect
             Destroy(rageEffect);

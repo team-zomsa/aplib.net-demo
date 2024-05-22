@@ -74,7 +74,8 @@ public class Inventory : MonoBehaviour
             // Make a copy of the item to add to the inventory, so that the 'real world' item can be destroyed.
             item.transform.SetParent(transform);
             Item itemCopy = Instantiate(item);
-            itemCopy.gameObject.SetActive(false);
+            itemCopy.gameObject.GetComponent<Collider>().enabled = false;
+            itemCopy.transform.GetChild(0).gameObject.SetActive(false);
             itemCopy.name = item.name;
             _itemList.Enqueue(itemCopy);
 
