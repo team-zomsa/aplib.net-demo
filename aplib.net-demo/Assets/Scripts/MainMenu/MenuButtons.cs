@@ -33,7 +33,7 @@ public class CanvasManager : MonoBehaviour
     public bool isOnGameSettings = false;
 
     /// <summary>
-    /// This bool communicates with the mouse lock script to enable and disable the curser.
+    /// This bool communicates with the mouse lock script to enable and disable the cursor.
     /// </summary>
     public bool IsCursurNeeded => isOnGameSettings;
 

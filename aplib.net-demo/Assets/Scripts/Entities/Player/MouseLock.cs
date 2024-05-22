@@ -28,18 +28,18 @@ public class MouseLock : MonoBehaviour
     /// </summary>
     public void OnLeftMousePressed()
     {
-        if (CanvasManager.IsCursurNeeded) // if curser is needed, enable curser
+        if (CanvasManager.IsCursurNeeded) // if cursor is needed, enable cursor
         {
             EnableMouseCursor();
         }
-        else if (_showMouse && !CanvasManager.IsCursurNeeded) // if curser is showing and is not needed, disable
+        else if (_showMouse && !CanvasManager.IsCursurNeeded) // if cursor is showing and is not needed, disable
         {
             DisableMouseCursor();
         }
     }
 
     /// <summary>
-    /// Enables curser.
+    /// Enables cursor.
     /// </summary>
     private void EnableMouseCursor()
     {
@@ -49,7 +49,7 @@ public class MouseLock : MonoBehaviour
     }
 
     /// <summary>
-    /// Disables curser.
+    /// Disables cursor.
     /// </summary>
     private void DisableMouseCursor()
     {
