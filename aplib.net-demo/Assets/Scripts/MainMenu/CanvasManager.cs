@@ -31,6 +31,11 @@ public class CanvasManager : MonoBehaviour
     public static CanvasManager Instance { get; private set; }
 
     /// <summary>
+    /// Reference to the death canvas.
+    /// </summary>
+    public GameObject deathCanvas;
+
+    /// <summary>
     /// To ensure the menu settings and menu UI aren't on on the same time.
     /// </summary>
     private bool _isOnMenuSettings = false;
@@ -39,6 +44,8 @@ public class CanvasManager : MonoBehaviour
     /// To ensure the game settings and menu UI aren't on on the same time.
     /// </summary>
     private bool _isOnGameSettings = false;
+
+    public bool IsPlayerDead = false;
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -90,6 +97,8 @@ public class CanvasManager : MonoBehaviour
         {
             Debug.Log("Scene names are wrong. Check MenuButtons script");
         }
+
+        deathCanvas.SetActive(false);
     }
 
     /// <summary>
@@ -113,13 +122,13 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleSettings()
     {
-        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back
+        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
         {
             _isOnMenuSettings = !_isOnMenuSettings;
             settingMenuCanvas.SetActive(_isOnMenuSettings);
             menuCanvas.SetActive(!_isOnMenuSettings);
         }
-        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back
+        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
         {
             _isOnGameSettings = !_isOnGameSettings;
             settingGameCanvas.SetActive(_isOnGameSettings);
