@@ -18,29 +18,6 @@ namespace Assets.Scripts.Wfc
     /// </summary>
     public class GridPlacer : MonoBehaviour
     {
-        // Here are temporary helper methods used to display the connected components in different colors.
-        private static readonly Color[] _colors =
-        {
-            Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan, Color.black, Color.gray,
-            Color.Lerp(Color.red, Color.blue, 0.5f), Color.Lerp(Color.red, Color.yellow, 0.5f),
-            Color.Lerp(Color.yellow, Color.blue, 0.5f), Color.Lerp(Color.black, Color.red, 0.5f),
-            Color.Lerp(Color.white, Color.red, 0.5f), Color.Lerp(Color.black, Color.blue, 0.5f),
-            Color.Lerp(Color.white, Color.blue, 0.5f), Color.Lerp(Color.black, Color.green, 0.5f),
-            Color.Lerp(Color.white, Color.green, 0.5f), Color.Lerp(Color.black, Color.yellow, 0.5f),
-            Color.Lerp(Color.white, Color.yellow, 0.5f), Color.Lerp(Color.black, Color.magenta, 0.5f),
-            Color.Lerp(Color.white, Color.magenta, 0.5f), Color.Lerp(Color.black, Color.cyan, 0.5f),
-            Color.Lerp(Color.white, Color.cyan, 0.5f), Color.Lerp(Color.red, Color.blue, 0.25f),
-            Color.Lerp(Color.red, Color.yellow, 0.25f), Color.Lerp(Color.yellow, Color.blue, 0.25f),
-            Color.Lerp(Color.black, Color.red, 0.25f), Color.Lerp(Color.white, Color.red, 0.25f),
-            Color.Lerp(Color.black, Color.blue, 0.25f), Color.Lerp(Color.white, Color.blue, 0.25f),
-            Color.Lerp(Color.black, Color.green, 0.25f), Color.Lerp(Color.white, Color.green, 0.25f),
-            Color.Lerp(Color.black, Color.yellow, 0.25f), Color.Lerp(Color.white, Color.yellow, 0.25f),
-            Color.Lerp(Color.black, Color.magenta, 0.25f), Color.Lerp(Color.white, Color.magenta, 0.25f),
-            Color.Lerp(Color.black, Color.cyan, 0.25f), Color.Lerp(Color.white, Color.cyan, 0.25f)
-        };
-
-        private static int _colorIndex = -1;
-
         /// <summary>
         /// The size of the tiles in the x-direction.
         /// </summary>
@@ -157,12 +134,6 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
         public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
-
-        /// <summary>
-        /// Gets the next unused color in the list of colors.
-        /// </summary>
-        /// <returns>The next color in the list of colors.</returns>
-        private static Color GetUnusedColor() => _colors[_colorIndex = (_colorIndex + 1) % _colors.Length];
 
         /// <summary>
         /// Waits for a certain amount of time.
@@ -423,22 +394,7 @@ namespace Assets.Scripts.Wfc
             (ConnectedComponent startComponent, ConnectedComponent neighbouringRooms) =
                 FindAndRemoveCellConnectedComponent(startCell, connectedComponents);
 
-            ColorConnectedComponent(startComponent);
-
             ProcessNeighbouringRooms(startComponent, neighbouringRooms, connectedComponents, doors);
-        }
-
-        /// <summary>
-        /// Colors a connected component in a unique color.
-        /// </summary>
-        /// <param name="connectedComponent">The connected component to color.</param>
-        private static void ColorConnectedComponent(ISet<Cell> connectedComponent)
-        {
-            if (connectedComponent is null) return;
-
-            Color color = GetUnusedColor();
-            foreach (Cell cell in connectedComponent)
-                cell.Tile.GameObject.GetComponent<MeshRenderer>().material.color = color;
         }
 
         /// <summary>
@@ -547,7 +503,6 @@ namespace Assets.Scripts.Wfc
 
                     if (usedComponent == null) continue;
 
-                    ColorConnectedComponent(usedComponent);
                     startComponent.UnionWith(usedComponent);
                     neighbouringRooms.UnionWith(usedNeighbouringRooms);
                 }
@@ -557,7 +512,6 @@ namespace Assets.Scripts.Wfc
 
                 if (neighbouringCellComponent == null) continue;
 
-                ColorConnectedComponent(neighbouringCellComponent);
                 startComponent.UnionWith(neighbouringCellComponent);
                 neighbouringRooms.UnionWith(neighbouringCellRooms.Except(startComponent));
             }
