@@ -269,10 +269,8 @@ MonoBehaviour:
   menuCanvas: {fileID: 1224580673708126762}
   settingMenuCanvas: {fileID: 7724998468614145768}
   settingGameCanvas: {fileID: 8904745976946252126}
-  isOnMenuSettings: 0
-  isOnGameSettings: 0
   _sceneNameStartingMenu: Settings
-  _sceneNameGame: MeleeWeaponMenu
+  _sceneNameGame: InGameSettings
 --- !u!1 &318484137144363610
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,8 +526,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1036647114414517619}
-        m_TargetAssemblyTypeName: MenuPlayButton, Scripts
-        m_MethodName: ToggleSettings
+        m_TargetAssemblyTypeName: CanvasManager, Scripts
+        m_MethodName: OnToggleSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1621,8 +1619,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1036647114414517619}
-        m_TargetAssemblyTypeName: MenuPlayButton, Scripts
-        m_MethodName: ToggleSettings
+        m_TargetAssemblyTypeName: CanvasManager, Scripts
+        m_MethodName: OnToggleSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5512,8 +5510,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1036647114414517619}
-        m_TargetAssemblyTypeName: MenuPlayButton, Scripts
-        m_MethodName: ToggleSettings
+        m_TargetAssemblyTypeName: CanvasManager, Scripts
+        m_MethodName: OnToggleSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

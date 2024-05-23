@@ -2,21 +2,20 @@ using UnityEngine;
 
 public class MouseLock : MonoBehaviour
 {
-    private bool _showMouse = false;
-
-    /// <summary>
-    /// Manages all the UI canvases.
-    /// </summary>
-    [SerializeField]
-    private CanvasManager _canvasManager;
+    private bool _isOnMenu = false;
 
     /// <summary>
     /// Locks the cursor and hides it when the game starts.
+    /// Should be start to ensure the canvas manager is loaded.
     /// </summary>
-    private void Awake()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Compatability for when no CanvasManager is present.
+        if (CanvasManager.Instance != null)
+            CanvasManager.Instance.GameSettingsToggled += OnGameSettingsToggled;
     }
 
     /// <summary>
@@ -25,18 +24,25 @@ public class MouseLock : MonoBehaviour
     public void OnShowMousePressed() => EnableMouseCursor();
 
     /// <summary>
+    /// Enables or disables the cursor based on the game settings visibility.
+    /// </summary>
+    /// <param name="isOnGameSettings"></param>
+    public void OnGameSettingsToggled(bool isOnGameSettings)
+    {
+        _isOnMenu = isOnGameSettings;
+        if (isOnGameSettings)
+            EnableMouseCursor();
+        else
+            DisableMouseCursor();
+    }
+
+    /// <summary>
     /// On left mouse click, go back into the game and lock the cursor.
     /// </summary>
     public void OnLeftMousePressed()
     {
-        if (_canvasManager.IsCursorNeeded) // if cursor is needed, enable cursor
-        {
-            EnableMouseCursor();
-        }
-        else if (_showMouse && !_canvasManager.IsCursorNeeded) // if cursor is showing and is not needed, disable
-        {
-            DisableMouseCursor();
-        }
+        if (_isOnMenu) return;
+        DisableMouseCursor();
     }
 
     /// <summary>
@@ -46,7 +52,6 @@ public class MouseLock : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        _showMouse = true;
     }
 
     /// <summary>
@@ -56,6 +61,5 @@ public class MouseLock : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        _showMouse = false;
     }
 }
