@@ -60,18 +60,44 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Run SonarScanner
+      # - name: Run SonarScanner
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   run: |
+      #     .\.sonar\scanner\dotnet-sonarscanner \
+      #       -Dsonar.projectKey=aplib.net-demo \
+      #       -Dsonar.organization=team-zomsa \
+      #       -Dsonar.host.url=https://sonarcloud.io \
+      #       -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+      #       -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
+      #       -Dsonar.scanner.skipDynamicAnalysis=true \
+      #       -Dsonar.qualitygate.wait=true
+
+            - name: Prepare SonarCloud analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: >
+          .\.sonar\scanner\dotnet-sonarscanner begin
+          /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          /d:sonar.host.url="https://sonarcloud.io"
+          /d:sonar.cs.vscoveragexml.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov
+      # - name: Build the project
+      #   shell: powershell
+      #   run: |
+      #     dotnet build --no-incremental
+      # - name: Test the project
+      #   shell: powershell
+      #   run: | 
+      #     dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+      - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner \
-            -Dsonar.projectKey=aplib.net-demo \
-            -Dsonar.organization=team-zomsa \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
-            -Dsonar.scanner.skipDynamicAnalysis=true \
-            -Dsonar.qualitygate.wait=true
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
 
         #asdf
