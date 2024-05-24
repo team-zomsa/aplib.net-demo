@@ -73,7 +73,7 @@ jobs:
       #       -Dsonar.scanner.skipDynamicAnalysis=true \
       #       -Dsonar.qualitygate.wait=true
 
-            - name: Prepare SonarCloud analysis
+      - name: Prepare SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
