@@ -84,6 +84,9 @@ namespace Assets.Scripts.Wfc
         [SerializeField]
         private GameObject _teleporterPrefab;
 
+        [SerializeField]
+        private GameObject _endItemPrefab;
+
         /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
@@ -331,8 +334,8 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to find the connected component for.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>The connected component that contains the given cell.</returns>
-        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) FindCellConnectedComponent(
-            Cell cell, List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents) =>
+        private static (ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms) FindCellConnectedComponent(
+            Cell cell, List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents) =>
             connectedComponents.Find(cc => cc.connectedComponent.Contains(cell));
 
         /// <summary>
@@ -341,11 +344,11 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell for which the connected component is to be found.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>A tuple containing the connected component and its neighbouring rooms that contains the given cell.</returns>
-        private static (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)
+        private static (ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)
             FindAndRemoveCellConnectedComponent(Cell cell,
-                List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
+                List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents)
         {
-            (ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms) =
+            (ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms) =
                 FindCellConnectedComponent(cell, connectedComponents);
 
             connectedComponents.Remove((connectedComponent, neighbouringRooms));
@@ -381,7 +384,7 @@ namespace Assets.Scripts.Wfc
         private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
         {
             GameObject doors = CreateGameObject("Doors and keys", transform);
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents =
+            List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents =
                 Grid.DetermineConnectedComponentsBetweenDoors();
 
             GameObject teleporters = GameObject.Find("Teleporters");
@@ -430,7 +433,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="teleporterList">The list of teleporters to merge.</param>
         /// <param name="connectedComponents">The list of connected components to merge.</param>
         private void MergeConnectedComponentsJoinedByTeleporterPair(List<Teleporter.Teleporter> teleporterList,
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents)
+            List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents)
         {
             foreach (Teleporter.Teleporter teleporter in teleporterList)
             {
@@ -454,7 +457,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="component">The component to get the available cells for.</param>
         /// <returns>A list of available cells.</returns>
-        private static List<Cell> GetEmptyCells(ISet<Cell> component) => component.Where(c => !c.CannotAddItem).ToList();
+        private static List<Cell> GetEmptyCells(ConnectedComponent component) => component.Where(c => !c.CannotAddItem).ToList();
 
         /// <summary>
         /// Places a door between two cells in a given direction.
@@ -464,7 +467,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="direction">The direction in which the door should be placed.</param>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="parent">The parent of the door.</param>
-        private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ISet<Cell> startComponent, Transform parent)
+        private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ConnectedComponent startComponent, Transform parent)
         {
             if (cell1.Tile is Room room)
                 PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, GetEmptyCells(startComponent), parent);
@@ -481,8 +484,8 @@ namespace Assets.Scripts.Wfc
         /// <param name="neighbouringRooms">The neighbouring rooms to process.</param>
         /// <param name="connectedComponents">The list of connected components to process.</param>
         /// <param name="doors">The parent of the doors.</param>
-        private void ProcessNeighbouringRooms(ISet<Cell> startComponent, ISet<Cell> neighbouringRooms,
-            List<(ISet<Cell> connectedComponent, ISet<Cell> neighbouringRooms)> connectedComponents, GameObject doors)
+        private void ProcessNeighbouringRooms(ConnectedComponent startComponent, ConnectedComponent neighbouringRooms,
+            List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents, GameObject doors)
         {
             while (neighbouringRooms.Count > 0)
             {
