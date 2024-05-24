@@ -64,7 +64,18 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner \
+            -Dsonar.projectKey=aplib.net-demo \
+            -Dsonar.organization=team-zomsa \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
+            -Dsonar.scanner.skipDynamicAnalysis=true \
+            -Dsonar.qualitygate.wait=true
+
+
+        #asdf
+          # .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
       
         #example for some reason:
           # ./sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
