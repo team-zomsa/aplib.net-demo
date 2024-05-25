@@ -885,6 +885,9 @@ MonoBehaviour:
   _gridWidthX: 5
   _gridWidthZ: 5
   _amountOfRooms: 2
+  _amountOfHealthPotions: 3
+  _amountOfRagePotions: 3
+  _amountOfAmmunition: 5
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
@@ -921,6 +924,12 @@ MonoBehaviour:
   _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
     type: 3}
   _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
+    type: 3}
+  _healthPotionPrefab: {fileID: 3783921441781814114, guid: 5924d3f50fb1bb146897ba52aa3d7a49,
+    type: 3}
+  _ragePotionPrefab: {fileID: 7560215300223784918, guid: 59f68fe0a7bd5554baaf1d43a0849f57,
+    type: 3}
+  _ammunitionPrefab: {fileID: 1402688592469580382, guid: 18fad5aa543620b449decf03a229c586,
     type: 3}
 --- !u!1 &1684352347
 GameObject:
