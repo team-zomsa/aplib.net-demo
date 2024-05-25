@@ -25,6 +25,7 @@ namespace Editors
             SerializedProperty gridWidthZ = gridPlacerSettings.FindProperty("_gridWidthZ");
             SerializedProperty amountOfRooms = gridPlacerSettings.FindProperty("_amountOfRooms");
             SerializedProperty teleporterPrefab = gridPlacerSettings.FindProperty("_teleporterPrefab");
+            SerializedProperty endItemPrefab = gridPlacerSettings.FindProperty("_endItemPrefab");
 
             roomObjects.objectReferenceValue = EditorGUILayout.ObjectField("Room objects",
                 roomObjects.objectReferenceValue, typeof(RoomObjects), false);
@@ -34,6 +35,8 @@ namespace Editors
                 typeof(GameObject), false);
             teleporterPrefab.objectReferenceValue = EditorGUILayout.ObjectField("Teleporter Prefab",
                 teleporterPrefab.objectReferenceValue, typeof(GameObject), false);
+            endItemPrefab.objectReferenceValue = EditorGUILayout.ObjectField("End Item Prefab",
+                endItemPrefab.objectReferenceValue, typeof(GameObject), false);
             useSeed.boolValue = EditorGUILayout.Toggle("Use seed", useSeed.boolValue);
             if (useSeed.boolValue) seed.intValue = EditorGUILayout.IntField("Seed", seed.intValue);
             tileSizeX.intValue = EditorGUILayout.IntField("Tile size X", tileSizeX.intValue);

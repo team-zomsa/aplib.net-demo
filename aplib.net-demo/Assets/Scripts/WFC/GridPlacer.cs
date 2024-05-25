@@ -334,8 +334,11 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to find the connected component for.</param>
         /// <param name="connectedComponents">The list of connected components to search through.</param>
         /// <returns>The connected component that contains the given cell.</returns>
-        private static (ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms) FindCellConnectedComponent(
-            Cell cell, List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents) =>
+        private static (ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)
+            FindCellConnectedComponent(
+                Cell cell,
+                List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)>
+                    connectedComponents) =>
             connectedComponents.Find(cc => cc.connectedComponent.Contains(cell));
 
         /// <summary>
@@ -457,7 +460,8 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="component">The component to get the available cells for.</param>
         /// <returns>A list of available cells.</returns>
-        private static List<Cell> GetEmptyCells(ConnectedComponent component) => component.Where(c => !c.CannotAddItem).ToList();
+        private static List<Cell> GetEmptyCells(ConnectedComponent component) =>
+            component.Where(c => !c.CannotAddItem).ToList();
 
         /// <summary>
         /// Places a door between two cells in a given direction.
@@ -467,7 +471,8 @@ namespace Assets.Scripts.Wfc
         /// <param name="direction">The direction in which the door should be placed.</param>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="parent">The parent of the door.</param>
-        private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ConnectedComponent startComponent, Transform parent)
+        private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ConnectedComponent startComponent,
+            Transform parent)
         {
             if (cell1.Tile is Room room)
                 PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, GetEmptyCells(startComponent), parent);
@@ -485,8 +490,11 @@ namespace Assets.Scripts.Wfc
         /// <param name="connectedComponents">The list of connected components to process.</param>
         /// <param name="doors">The parent of the doors.</param>
         private void ProcessNeighbouringRooms(ConnectedComponent startComponent, ConnectedComponent neighbouringRooms,
-            List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents, GameObject doors)
+            List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents,
+            GameObject doors)
         {
+            ConnectedComponent lastComponent = startComponent;
+
             while (neighbouringRooms.Count > 0)
             {
                 Cell neighbouringCell = neighbouringRooms.First();
@@ -515,9 +523,23 @@ namespace Assets.Scripts.Wfc
 
                 if (neighbouringCellComponent == null) continue;
 
+                lastComponent = neighbouringCellComponent;
+
                 startComponent.UnionWith(neighbouringCellComponent);
                 neighbouringRooms.UnionWith(neighbouringCellRooms.Except(startComponent));
             }
+
+            PlaceEndItem(lastComponent);
+        }
+
+        /// <summary>
+        /// Spawn the end item in the given connected component.
+        /// </summary>
+        /// <param name="component">The connected component to spawn the end item in.</param>
+        private void PlaceEndItem(ConnectedComponent component)
+        {
+            Cell randomCell = component.ElementAt(_random.Next(component.Count));
+            Instantiate(_endItemPrefab, CentreOfCell(randomCell) + Vector3.up, Quaternion.identity);
         }
 
         /// <summary>
