@@ -8,7 +8,7 @@ jobs:
   unity-test:
     name: Test with Unity Test Runner
     permissions: write-all
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -32,83 +32,103 @@ jobs:
         with:
           name: Coverage results
           path: ${{ steps.unity-test-step.outputs.coveragePath }}
-      - name: Install dotnet
-        uses: actions/setup-dotnet@v4
+      
+      
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@2.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          dotnet-version: 5.0
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v3
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      # - name: Run SonarScanner
+          args: >
+            -Dsonar.organization=team-zomsa
+            -Dsonar.projectKey=aplib.net-demo
+            -Dsonar.cs.vscoveragexml.reportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/TestCoverageResults_0000.xml
+            
+          #
+            # -Dsonar.sources=lib/
+            # -Dsonar.test.exclusions=tests/**
+            # -Dsonar.tests=tests/
+            # -Dsonar.verbose=true
+      
+      
+      
+      # - name: Install dotnet
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: 5.0
+      # - name: Set up JDK 17
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     java-version: 17
+      #     distribution: 'zulu' # Alternative distribution options are available.
+      # - name: Cache SonarCloud packages
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~\sonar\cache
+      #     key: ${{ runner.os }}-sonar
+      #     restore-keys: ${{ runner.os }}-sonar
+      # - name: Cache SonarCloud scanner
+      #   id: cache-sonar-scanner
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: .\.sonar\scanner
+      #     key: ${{ runner.os }}-sonar-scanner
+      #     restore-keys: ${{ runner.os }}-sonar-scanner
+      # - name: Install SonarCloud scanner
+      #   if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      #   shell: powershell
+      #   run: |
+      #     New-Item -Path .\.sonar\scanner -ItemType Directory
+      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      # # - name: Run SonarScanner
+      # #   env:
+      # #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # #   run: |
+      # #     .\.sonar\scanner\dotnet-sonarscanner \
+      # #       -Dsonar.projectKey=aplib.net-demo \
+      # #       -Dsonar.organization=team-zomsa \
+      # #       -Dsonar.host.url=https://sonarcloud.io \
+      # #       -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+      # #       -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
+      # #       -Dsonar.scanner.skipDynamicAnalysis=true \
+      # #       -Dsonar.qualitygate.wait=true
+
+      # - name: Prepare SonarCloud analysis
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: >
+      #     .\.sonar\scanner\dotnet-sonarscanner begin
+      #     /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
+      #     /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      #     /d:sonar.host.url="https://sonarcloud.io"
+      #     /d:sonar.cs.vscoveragexml.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov
+      # # - name: Build the project
+      # #   shell: powershell
+      # #   run: |
+      # #     dotnet build --no-incremental
+      # # - name: Test the project
+      # #   shell: powershell
+      # #   run: | 
+      # #     dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+      # - name: Run SonarCloud analysis
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   run: |
-      #     .\.sonar\scanner\dotnet-sonarscanner \
-      #       -Dsonar.projectKey=aplib.net-demo \
-      #       -Dsonar.organization=team-zomsa \
-      #       -Dsonar.host.url=https://sonarcloud.io \
-      #       -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-      #       -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
-      #       -Dsonar.scanner.skipDynamicAnalysis=true \
-      #       -Dsonar.qualitygate.wait=true
-
-      - name: Prepare SonarCloud analysis
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: >
-          .\.sonar\scanner\dotnet-sonarscanner begin
-          /k:"team-zomsa_aplib.net-demo" /o:"team-zomsa"
-          /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          /d:sonar.host.url="https://sonarcloud.io"
-          /d:sonar.cs.vscoveragexml.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov
-      # - name: Build the project
       #   shell: powershell
       #   run: |
-      #     dotnet build --no-incremental
-      # - name: Test the project
-      #   shell: powershell
-      #   run: | 
-      #     dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
-      - name: Run SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      #     .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
 
-        #asdf
-          # .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      #   #asdf
+      #     # .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
       
-        #example for some reason:
-          # ./sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
-          #   -Dsonar.projectKey=<your_project_key> \
-          #   -Dsonar.organization=<your_organization> \
-          #   -Dsonar.host.url=https://sonarcloud.io \
-          #   -Dsonar.login=$SONAR_TOKEN \
-          #   -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
-          #   -Dsonar.scanner.skipDynamicAnalysis=true \
-          #   -Dsonar.qualitygate.wait=true
+      #   #example for some reason:
+      #     # ./sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
+      #     #   -Dsonar.projectKey=<your_project_key> \
+      #     #   -Dsonar.organization=<your_organization> \
+      #     #   -Dsonar.host.url=https://sonarcloud.io \
+      #     #   -Dsonar.login=$SONAR_TOKEN \
+      #     #   -Dsonar.coverageReportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/opencov \
+      #     #   -Dsonar.scanner.skipDynamicAnalysis=true \
+      #     #   -Dsonar.qualitygate.wait=true
