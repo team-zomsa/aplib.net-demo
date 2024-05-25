@@ -428,5 +428,11 @@ namespace Assets.Scripts.Wfc
             List<Cell> filledCells = _cells.FindAll(cell => cell.Tile is not Empty);
             return filledCells[_random.Next(filledCells.Count)];
         }
+
+        /// <summary>
+        /// Gets all cells that are not empty and do not contain items.
+        /// </summary>
+        /// <returns>Returns all cells that are not empty and do not contain items.</returns>
+        public List<Cell> GetAllCellsNotContainingItems() => _cells.FindAll(cell => cell.Tile is not Empty && !cell.CannotAddItem);
     }
 }
