@@ -19,7 +19,7 @@ namespace Testing.AplibTests
     public class ConnectedComponentsBeliefSet : BeliefSet
     {
         public Belief<GameObject, Rigidbody> PlayerRigidbody = new(
-            reference: GameObject.Find("Player"),
+            GameObject.Find("Player"),
             x => x.GetComponent<Rigidbody>());
     }
 
@@ -47,41 +47,49 @@ namespace Testing.AplibTests
             // Arrange
             ConnectedComponentsBeliefSet rootBeliefSet = new();
             GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
+            GameObjectPlacer gameObjectPlacer = GameObject.Find("Grid").GetComponent<GameObjectPlacer>();
 
             // Arrange ==> Level information
             Vector3[] cellsToVisit = gridPlacer.Grid.DetermineConnectedComponents()
-                .Select(cells => gridPlacer.CentreOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
+                .Select(cells => gameObjectPlacer.CentreOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
             Vector3[] teleporterPositions = GameObject.Find("Teleporters")
                 .GetComponentsInChildren<Teleporter.Teleporter>()
                 .Select(x => x.LandingPoint).ToArray();
 
             int currentCellToVisitIndex = 0;
-            Vector3 currentCellPosition() => cellsToVisit[currentCellToVisitIndex];
+
+            Vector3 currentCellPosition()
+            {
+                return cellsToVisit[currentCellToVisitIndex];
+            }
 
             // Arrange ==> GoalStructure: Visit cell of the current connected component
             TransformPathfinderAction<ConnectedComponentsBeliefSet> approachCurrentCellAction = new(
-                objectQuery: beliefSet => beliefSet.PlayerRigidbody,
-                location: currentCellPosition(),
-                heightOffset: 1.4f);
+                beliefSet => beliefSet.PlayerRigidbody,
+                currentCellPosition(),
+                1.4f);
 
             Action<ConnectedComponentsBeliefSet> waitForTeleportAction = new(
-                effect: _ => { Debug.Log("Waiting for teleport..."); },
-                guard: beliefSet => teleporterPositions.Any(teleporterPosition =>
+                _ => { Debug.Log("Waiting for teleport..."); },
+                beliefSet => teleporterPositions.Any(teleporterPosition =>
                     (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
 
             PrimitiveTactic<ConnectedComponentsBeliefSet> approachCurrentCellTactic = new(approachCurrentCellAction);
             PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction);
-            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(metadata: null,
+            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(null,
                 waitForTeleportTactic,
                 approachCurrentCellTactic);
 
             Goal<ConnectedComponentsBeliefSet> approachCurrentCellGoal = new(waitForTeleportOrApproachCurrentCellTactic,
-                beliefSet => (currentCellPosition() - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 1.5f);
-            PrimitiveGoalStructure<ConnectedComponentsBeliefSet> approachCurrentCellGoalStructure = new(approachCurrentCellGoal);
-            RepeatGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellGoalStructure = new(approachCurrentCellGoalStructure);
+                beliefSet => (currentCellPosition() - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude <
+                             1.5f);
+            PrimitiveGoalStructure<ConnectedComponentsBeliefSet> approachCurrentCellGoalStructure =
+                new(approachCurrentCellGoal);
+            RepeatGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellGoalStructure =
+                new(approachCurrentCellGoalStructure);
 
             // Arrange ==> GoalStructure: Target the next cell until every cell has been targeted
-            Action<ConnectedComponentsBeliefSet> targetNextCellAction = new(effect: _ =>
+            Action<ConnectedComponentsBeliefSet> targetNextCellAction = new(_ =>
             {
                 Debug.Log($"Reached cell at {currentCellPosition()}");
                 currentCellToVisitIndex++;
@@ -90,7 +98,8 @@ namespace Testing.AplibTests
             PrimitiveTactic<ConnectedComponentsBeliefSet> targetNextCellTactic = new(targetNextCellAction);
             Goal<ConnectedComponentsBeliefSet> visitedEveryCellGoal = new(targetNextCellTactic,
                 _ => currentCellToVisitIndex >= cellsToVisit.Length);
-            PrimitiveGoalStructure<ConnectedComponentsBeliefSet> visitedEveryCellGoalStructure = new(visitedEveryCellGoal);
+            PrimitiveGoalStructure<ConnectedComponentsBeliefSet> visitedEveryCellGoalStructure =
+                new(visitedEveryCellGoal);
 
             // Arrange ==> GoalStructure: Visit every connected component
             SequentialGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellAndVisitEveryCellGoalStructure =

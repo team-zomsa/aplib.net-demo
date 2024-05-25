@@ -860,6 +860,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1455078763}
   - component: {fileID: 1455078762}
+  - component: {fileID: 1455078764}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -879,19 +880,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tileSizeX: 16
-  _tileSizeZ: 16
-  _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
-  _doorPrefab: {fileID: 5163913735208331690, guid: 68173a35499684249a46fbd42c360c6c,
-    type: 3}
-  _keyPrefab: {fileID: 0}
   _useSeed: 1
   _seed: 0
   _gridWidthX: 5
   _gridWidthZ: 5
   _amountOfRooms: 2
-  _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
-    type: 3}
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
@@ -907,6 +900,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 531689215}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1455078764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455078761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8366bd27287d4220a09e6d3e8d715bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tileSizeX: 16
+  _tileSizeZ: 16
+  _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
+  _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
+    type: 3}
+  _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
+  _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
+    type: 3}
+  _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
+    type: 3}
 --- !u!1 &1684352347
 GameObject:
   m_ObjectHideFlags: 0

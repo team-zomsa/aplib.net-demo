@@ -1,12 +1,10 @@
-﻿using Assets.Scripts.Doors;
-using Assets.Scripts.Tiles;
+﻿using Assets.Scripts.Tiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using static Assets.Scripts.Tiles.Direction;
 using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
 using Random = System.Random;
 
@@ -16,38 +14,9 @@ namespace Assets.Scripts.Wfc
     /// Represents the grid placer. This class is responsible for placing the grid in the world. It also places the keys
     /// and doors between the rooms, and the teleporters between the connected components.
     /// </summary>
+    [RequireComponent(typeof(GameObjectPlacer))]
     public class GridPlacer : MonoBehaviour
     {
-        /// <summary>
-        /// The size of the tiles in the x-direction.
-        /// </summary>
-        [SerializeField]
-        private int _tileSizeX = 16;
-
-        /// <summary>
-        /// The size of the tiles in the z-direction.
-        /// </summary>
-        [SerializeField]
-        private int _tileSizeZ = 16;
-
-        /// <summary>
-        /// Represents the room objects.
-        /// </summary>
-        [SerializeField]
-        private RoomObjects _roomObjects;
-
-        /// <summary>
-        /// Represents the door object.
-        /// </summary>
-        [SerializeField]
-        private GameObject _doorPrefab;
-
-        /// <summary>
-        /// Represents the key object.
-        /// </summary>
-        [SerializeField]
-        private GameObject _keyPrefab;
-
         /// <summary>
         /// A boolean that indicates whether a seed is used.
         /// </summary>
@@ -79,24 +48,14 @@ namespace Assets.Scripts.Wfc
         private int _amountOfRooms = 5;
 
         /// <summary>
-        /// The teleporter prefab, used to link connected components.
-        /// </summary>
-        [SerializeField]
-        private GameObject _teleporterPrefab;
-
-        [SerializeField]
-        private GameObject _endItemPrefab;
-
-        /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * .7f;
 
         /// <summary>
-        /// The `Renderer` component for the door prefab.
+        /// Represents the game object placer.
         /// </summary>
-        /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
-        private Renderer _doorRenderer;
+        private GameObjectPlacer _gameObjectPlacer;
 
         /// <summary>
         /// The distance from the floor to the player localpos.
@@ -118,7 +77,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         public void Awake()
         {
-            _doorRenderer = _doorPrefab.GetComponent<Renderer>();
+            _gameObjectPlacer = GetComponent<GameObjectPlacer>();
 
             GameObject player = GameObject.FindWithTag("Player");
 
@@ -214,98 +173,9 @@ namespace Assets.Scripts.Wfc
 
             for (int z = 0; z < Grid.Height; z++)
             {
-                for (int x = 0; x < Grid.Width; x++) PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
+                for (int x = 0; x < Grid.Width; x++)
+                    _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
             }
-        }
-
-        /// <summary>
-        /// Places a tile at the specified coordinates in the world.
-        /// </summary>
-        /// <param name="x">The x-coordinates of the room.</param>
-        /// <param name="z">The z-coordinates of the room.</param>
-        /// <param name="tile">The tile that needs to be placed.</param>
-        /// <param name="parent">The parent of the teleporter.</param>
-        private void PlaceTile(int x, int z, Tile tile, Transform parent)
-        {
-            GameObject prefab = tile switch
-            {
-                Corner => _roomObjects.Corner,
-                Crossing => _roomObjects.Crossing,
-                DeadEnd => _roomObjects.DeadEnd,
-                Room => _roomObjects.Room,
-                Straight => _roomObjects.Straight,
-                TSection => _roomObjects.TSection,
-                _ => _roomObjects.Empty
-            };
-
-            tile.GameObject = Instantiate
-            (
-                prefab,
-                new Vector3(x * _tileSizeX, 0, z * _tileSizeZ),
-                Quaternion.Euler(0, tile.Facing.RotationDegrees(), 0),
-                parent
-            );
-        }
-
-        /// <summary>
-        /// Calculates the centre of a cell's floor in world coordinates.
-        /// </summary>
-        /// <param name="cell">The cell to calculate its centre of.</param>
-        /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
-        public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
-
-        /// <summary>
-        /// Place the doors for the given room in the world. Which doors need to be spawned is determined from the
-        /// allowed directions of the room.
-        /// </summary>
-        /// <param name="x">The x-position of the room, in the grid.</param>
-        /// <param name="z">The z-position of the room, in the grid.</param>
-        /// <param name="room">The room for which the doors need to be spawned.</param>
-        /// <param name="direction">The direction in which the door should be placed.</param>
-        /// <param name="cells">The cells where a key can spawn.</param>
-        /// <param name="parent">The parent of the teleporter.</param>
-        private void PlaceDoorInDirection(int x, int z, Room room, Direction direction, List<Cell> cells,
-            Transform parent)
-        {
-            Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
-
-            // Get (half of) the depth of the door model
-            float doorDepthExtend = _doorRenderer.bounds.extents.z;
-
-            // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - doorDepthExtend;
-
-            Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
-
-            // Calculate where the door should be placed
-            Vector3 relativeDoorPosition = direction switch
-            {
-                North => new Vector3(0, 0, doorDistanceFromRoomCenter),
-                East => new Vector3(doorDistanceFromRoomCenter, 0, 0),
-                South => new Vector3(0, 0, -doorDistanceFromRoomCenter),
-                West => new Vector3(-doorDistanceFromRoomCenter, 0, 0),
-                _ => throw new UnityException("Invalid direction when placing door")
-            };
-
-            Vector3 doorPosition = roomPosition + relativeDoorPosition;
-
-            // Calculate the rotation the door should have
-            Quaternion relativeDoorRotation = Quaternion.Euler(0, direction.RotationDegrees(), 0);
-            Quaternion doorRotation = roomRotation * relativeDoorRotation;
-
-            // Spawn the door and key
-            GameObject instantiatedDoorPrefab = Instantiate(_doorPrefab, doorPosition, doorRotation, parent);
-            Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
-
-            Cell itemCell = cells[_random.Next(cells.Count)];
-
-            itemCell.CannotAddItem = true;
-
-            GameObject instantiatedKeyPrefab =
-                Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
-
-            Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
-            keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
         }
 
         /// <summary>
@@ -318,7 +188,7 @@ namespace Assets.Scripts.Wfc
 
             if (player == null) throw new UnityException("No player was found.");
 
-            Vector3 spawningPoint = CentreOfCell(playerSpawnCell) + _playerHeightOffset;
+            Vector3 spawningPoint = _gameObjectPlacer.CentreOfCell(playerSpawnCell) + _playerHeightOffset;
 
             Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
             playerRigidbody.position = spawningPoint;
@@ -359,13 +229,6 @@ namespace Assets.Scripts.Wfc
             return (connectedComponent, neighbouringRooms);
         }
 
-        /// <summary>
-        /// Gets the cell coordinates of a given position.
-        /// </summary>
-        /// <param name="position">The position to get the cell coordinates for.</param>
-        /// <returns>The cell coordinates of the given position.</returns>
-        private (int x, int z) GetCellCoordinates(Vector3 position) =>
-            ((int)(position.x / _tileSizeX), (int)(position.z / _tileSizeZ));
 
         /// <summary>
         /// Gets the cell at a given position.
@@ -374,7 +237,7 @@ namespace Assets.Scripts.Wfc
         /// <returns>The cell at the given position.</returns>
         private Cell GetCellAtPosition(Vector3 position)
         {
-            (int x, int z) = GetCellCoordinates(position);
+            (int x, int z) = _gameObjectPlacer.GetCellCoordinates(position);
             return Grid[x, z];
         }
 
@@ -474,11 +337,13 @@ namespace Assets.Scripts.Wfc
         private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ConnectedComponent startComponent,
             Transform parent)
         {
+            List<Cell> emptyCells = GetEmptyCells(startComponent);
+            Cell itemCell = emptyCells[_random.Next(emptyCells.Count)];
+
             if (cell1.Tile is Room room)
-                PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, GetEmptyCells(startComponent), parent);
+                _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, itemCell, parent);
             else if (cell2.Tile is Room room2)
-                PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), GetEmptyCells(startComponent),
-                    parent);
+                _gameObjectPlacer.PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), itemCell, parent);
         }
 
         /// <summary>
@@ -529,17 +394,12 @@ namespace Assets.Scripts.Wfc
                 neighbouringRooms.UnionWith(neighbouringCellRooms.Except(startComponent));
             }
 
-            PlaceEndItem(lastComponent);
-        }
+            List<Cell> lastComponentCells = GetEmptyCells(lastComponent);
 
-        /// <summary>
-        /// Spawn the end item in the given connected component.
-        /// </summary>
-        /// <param name="component">The connected component to spawn the end item in.</param>
-        private void PlaceEndItem(ConnectedComponent component)
-        {
-            Cell randomCell = component.ElementAt(_random.Next(component.Count));
-            Instantiate(_endItemPrefab, CentreOfCell(randomCell) + Vector3.up, Quaternion.identity);
+            if (lastComponentCells.Count == 0) lastComponentCells = lastComponent.ToList();
+
+            Cell randomCell = lastComponentCells[_random.Next(lastComponentCells.Count)];
+            _gameObjectPlacer.PlaceEndItem(randomCell, transform);
         }
 
         /// <summary>
@@ -569,7 +429,9 @@ namespace Assets.Scripts.Wfc
                     Cell nextEntryCell = connectedComponentsEnumerator.Current!.First();
                     nextEntryCell.CannotAddItem = true;
                     Teleporter.Teleporter entryTeleporter =
-                        PlaceTeleporter(CentreOfCell(nextEntryCell) + _teleporterHeightOffset, teleporters.transform);
+                        _gameObjectPlacer.PlaceTeleporter(
+                            _gameObjectPlacer.CentreOfCell(nextEntryCell) + _teleporterHeightOffset,
+                            teleporters.transform);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
                     previousExitTeleporter!.TargetTeleporter = entryTeleporter;
@@ -588,7 +450,9 @@ namespace Assets.Scripts.Wfc
                 Cell nextExitCell = connectedComponentsEnumerator.Current!.Last();
                 nextExitCell.CannotAddItem = true; // No item can be placed in this cell anymore.
                 Teleporter.Teleporter exitTeleporter =
-                    PlaceTeleporter(CentreOfCell(nextExitCell) + _teleporterHeightOffset, teleporters.transform);
+                    _gameObjectPlacer.PlaceTeleporter(
+                        _gameObjectPlacer.CentreOfCell(nextExitCell) + _teleporterHeightOffset,
+                        teleporters.transform);
 
                 // Update iteration progress
                 previousExitTeleporter = exitTeleporter;
@@ -599,16 +463,5 @@ namespace Assets.Scripts.Wfc
             // another connected component, for this final exit teleporter belongs to the final connected component.
             if (connectedComponentsProcessed > 0) Destroy(previousExitTeleporter!.gameObject);
         }
-
-        /// <summary>
-        /// Places a teleporter at a given location.
-        /// </summary>
-        /// <param name="coordinates">The coordinates of the teleporter.</param>
-        /// <param name="parent">The parent of the teleporter.</param>
-        /// <returns>A reference to the <see cref="Teleporter" /> component of the teleporter.</returns>
-        /// <remarks>All teleporters are clustered under a 'Teleporter' empty gameobject.</remarks>
-        private Teleporter.Teleporter PlaceTeleporter(Vector3 coordinates, Transform parent) =>
-            Instantiate(_teleporterPrefab, coordinates, Quaternion.identity, parent)
-                .GetComponent<Teleporter.Teleporter>();
     }
 }
