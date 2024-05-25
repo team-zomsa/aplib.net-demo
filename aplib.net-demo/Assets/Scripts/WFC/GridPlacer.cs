@@ -48,6 +48,24 @@ namespace Assets.Scripts.Wfc
         private int _amountOfRooms = 5;
 
         /// <summary>
+        /// The amount of health potions that need to be placed.
+        /// </summary>
+        [SerializeField]
+        private int _amountOfHealthPotions = 5;
+
+        /// <summary>
+        /// The amount of rage potions that need to be placed.
+        /// </summary>
+        [SerializeField]
+        private int _amountOfRagePotions = 5;
+
+        /// <summary>
+        /// The amount of ammunition that need to be placed.
+        /// </summary>
+        [SerializeField]
+        private int _amountOfAmmunition = 5;
+
+        /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * .7f;
@@ -132,6 +150,8 @@ namespace Assets.Scripts.Wfc
             JoinConnectedComponentsWithTeleporters();
 
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
+
+            SpawnItems();
         }
 
         /// <summary>
@@ -463,6 +483,46 @@ namespace Assets.Scripts.Wfc
             // If at least one exit portal has been placed, the final exit teleporter will not be linked to
             // another connected component, for this final exit teleporter belongs to the final connected component.
             if (connectedComponentsProcessed > 0) Destroy(previousExitTeleporter!.gameObject);
+        }
+
+        /// <summary>
+        /// Spawns the items in the grid.
+        /// </summary>
+        private void SpawnItems()
+        {
+            List<Cell> cells = Grid.GetAllCellsNotContainingItems();
+
+            if (_amountOfHealthPotions + _amountOfRagePotions + _amountOfAmmunition > cells.Count)
+                throw new UnityException("Not enough empty cells to place all items.");
+
+            GameObject items = CreateGameObject("Items", transform);
+            GameObject healthPotions = CreateGameObject("HealthPotions", items.transform);
+            GameObject ragePotions = CreateGameObject("RagePotions", items.transform);
+            GameObject ammunition = CreateGameObject("Ammunition", items.transform);
+
+            for (int i = 0; i < _amountOfHealthPotions; i++)
+            {
+                Cell cell = cells[_random.Next(cells.Count)];
+                _gameObjectPlacer.PlaceHealthPotion(cell, healthPotions.transform);
+                cell.CannotAddItem = true;
+                cells.Remove(cell);
+            }
+
+            for (int i = 0; i < _amountOfRagePotions; i++)
+            {
+                Cell cell = cells[_random.Next(cells.Count)];
+                _gameObjectPlacer.PlaceRagePotion(cell, ragePotions.transform);
+                cell.CannotAddItem = true;
+                cells.Remove(cell);
+            }
+
+            for (int i = 0; i < _amountOfAmmunition; i++)
+            {
+                Cell cell = cells[_random.Next(cells.Count)];
+                _gameObjectPlacer.PlaceAmmunition(cell, ammunition.transform);
+                cell.CannotAddItem = true;
+                cells.Remove(cell);
+            }
         }
     }
 }
