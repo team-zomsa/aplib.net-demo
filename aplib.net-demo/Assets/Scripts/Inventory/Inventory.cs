@@ -55,10 +55,8 @@ public class Inventory : MonoBehaviour
         }
 
         if (!item.stackable)
-        {
             // If the the item is non stackable, we cannot store it in the inventory system.
             return;
-        }
 
         Item existingItem = _itemList.FirstOrDefault(i => i.name == item.name);
         bool alreadyInInventory = existingItem is not null;
@@ -75,7 +73,11 @@ public class Inventory : MonoBehaviour
             item.transform.SetParent(transform);
             Item itemCopy = Instantiate(item);
             itemCopy.gameObject.GetComponent<Collider>().enabled = false;
-            itemCopy.transform.Find("Visual").gameObject.SetActive(false);
+
+            Transform itemCopyTransform = itemCopy.transform.Find("Visual");
+
+            if (itemCopyTransform != null) itemCopyTransform.gameObject.SetActive(false);
+
             itemCopy.name = item.name;
             _itemList.Enqueue(itemCopy);
 
@@ -93,10 +95,7 @@ public class Inventory : MonoBehaviour
         {
             _itemList.Peek().UseItem();
 
-            if (_itemList.Peek().uses <= 0)
-            {
-                _ = _itemList.Dequeue();
-            }
+            if (_itemList.Peek().uses <= 0) _ = _itemList.Dequeue();
         }
 
         DisplayItem();
@@ -107,11 +106,10 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void SwitchItem()
     {
-        if (_itemList.Any())
-        {
-            _itemList.Enqueue(_itemList.Dequeue());
-            DisplayItem();
-        }
+        if (!_itemList.Any()) return;
+
+        _itemList.Enqueue(_itemList.Dequeue());
+        DisplayItem();
     }
 
     /// <summary>
