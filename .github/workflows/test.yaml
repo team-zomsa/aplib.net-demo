@@ -41,7 +41,7 @@ jobs:
         with:
           args: >
             -Dsonar.organization=team-zomsa
-            -Dsonar.projectKey=aplib.net-demo
+            -Dsonar.projectKey=team-zomsa_aplib.net-demo
             -Dsonar.cs.vscoveragexml.reportPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/TestCoverageResults_0000.xml
             
           #
