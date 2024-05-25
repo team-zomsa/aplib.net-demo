@@ -78,6 +78,7 @@ namespace Assets.Scripts.Wfc
         public void Awake()
         {
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
+            _gameObjectPlacer.Initialize();
 
             GameObject player = GameObject.FindWithTag("Player");
 
