@@ -11,13 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - uses: actions/cache@v4
         with:
           path: ./aplib.net-demo/Library
           key: Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
           restore-keys: |
             Library-${{ hashFiles('aplib.net-demo/Assets/**', 'aplib.net-demo/Packages/**', 'aplib.net-demo/ProjectSettings/**') }}
-          fetch-depth: 1
       - uses: game-ci/unity-test-runner@v4
         id: unity-test-step
         env:
