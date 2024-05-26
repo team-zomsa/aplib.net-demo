@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
 
 jobs:
   unity-test:
@@ -13,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - uses: actions/cache@v4
         with:
           path: ./aplib.net-demo/Library
@@ -34,6 +35,15 @@ jobs:
         with:
           name: Coverage results
           path: ${{ steps.unity-test-step.outputs.coveragePath }}
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v2.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=team-zomsa
+            -Dsonar.projectKey=team-zomsa_aplib.net-demo
+            -Dsonar.cs.opencover.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml,${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/EditMode/TestCoverageResults_0001.xml,${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0001.xml
 
   build:
     name: Build for ${{ matrix.targetPlatform }}, ${{ matrix.unity-version }}
