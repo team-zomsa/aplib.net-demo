@@ -51,7 +51,7 @@ namespace Testing.AplibTests
 
             // Arrange ==> Level information
             Vector3[] cellsToVisit = gridPlacer.Grid.DetermineConnectedComponents()
-                .Select(cells => gameObjectPlacer.CentreOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
+                .Select(cells => gameObjectPlacer.CenterOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
             Vector3[] teleporterPositions = GameObject.Find("Teleporters")
                 .GetComponentsInChildren<Teleporter.Teleporter>()
                 .Select(x => x.LandingPoint).ToArray();

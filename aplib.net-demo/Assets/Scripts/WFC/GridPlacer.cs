@@ -209,7 +209,7 @@ namespace Assets.Scripts.Wfc
 
             if (player == null) throw new UnityException("No player was found.");
 
-            Vector3 spawningPoint = _gameObjectPlacer.CentreOfCell(playerSpawnCell) + _playerHeightOffset;
+            Vector3 spawningPoint = _gameObjectPlacer.CenterOfCell(playerSpawnCell) + _playerHeightOffset;
 
             Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
             playerRigidbody.position = spawningPoint;
@@ -451,7 +451,7 @@ namespace Assets.Scripts.Wfc
                     nextEntryCell.CannotAddItem = true;
                     Teleporter.Teleporter entryTeleporter =
                         _gameObjectPlacer.PlaceTeleporter(
-                            _gameObjectPlacer.CentreOfCell(nextEntryCell) + _teleporterHeightOffset,
+                            _gameObjectPlacer.CenterOfCell(nextEntryCell) + _teleporterHeightOffset,
                             teleporters.transform);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
@@ -472,7 +472,7 @@ namespace Assets.Scripts.Wfc
                 nextExitCell.CannotAddItem = true; // No item can be placed in this cell anymore.
                 Teleporter.Teleporter exitTeleporter =
                     _gameObjectPlacer.PlaceTeleporter(
-                        _gameObjectPlacer.CentreOfCell(nextExitCell) + _teleporterHeightOffset,
+                        _gameObjectPlacer.CenterOfCell(nextExitCell) + _teleporterHeightOffset,
                         teleporters.transform);
 
                 // Update iteration progress

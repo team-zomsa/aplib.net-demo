@@ -99,11 +99,11 @@ namespace Assets.Scripts.Wfc
             ((int)(position.x / _tileSizeX), (int)(position.z / _tileSizeZ));
 
         /// <summary>
-        /// Calculates the centre of a cell's floor in world coordinates.
+        /// Calculates the center of a cell's floor in world coordinates.
         /// </summary>
-        /// <param name="cell">The cell to calculate its centre of.</param>
-        /// <returns>The real-world coordinates of the centre of the cell's floor.</returns>
-        public Vector3 CentreOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
+        /// <param name="cell">The cell to calculate its center of.</param>
+        /// <returns>The real-world coordinates of the center of the cell's floor.</returns>
+        public Vector3 CenterOfCell(Cell cell) => new(cell.X * _tileSizeX, 0, cell.Z * _tileSizeZ);
 
         /// <summary>
         /// Places a teleporter at a given location.
@@ -122,7 +122,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to spawn the end item in.</param>
         /// <param name="parent">The parent of the end item.</param>
         public void PlaceEndItem(Cell cell, Transform parent) =>
-            Instantiate(_endItemPrefab, CentreOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+            Instantiate(_endItemPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
         /// Spawn an health potion in the given cell.
@@ -130,7 +130,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to spawn the health potion in.</param>
         /// <param name="parent">The parent of the health potion.</param>
         public void PlaceHealthPotion(Cell cell, Transform parent) =>
-            Instantiate(_healthPotionPrefab, CentreOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+            Instantiate(_healthPotionPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
         /// Spawn a rage potion in the given cell.
@@ -138,7 +138,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to spawn the rage potion in.</param>
         /// <param name="parent">The parent of the rage potion.</param>
         public void PlaceRagePotion(Cell cell, Transform parent) =>
-            Instantiate(_ragePotionPrefab, CentreOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+            Instantiate(_ragePotionPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
         /// Spawn an ammunition in the given cell.
@@ -146,7 +146,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to spawn the ammunition in.</param>
         /// <param name="parent">The parent of the ammunition.</param>
         public void PlaceAmmunition(Cell cell, Transform parent) =>
-            Instantiate(_ammunitionPrefab, CentreOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+            Instantiate(_ammunitionPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
         /// Places a tile at the specified coordinates in the world.
@@ -220,7 +220,7 @@ namespace Assets.Scripts.Wfc
             cell.CannotAddItem = true;
 
             GameObject instantiatedKeyPrefab =
-                Instantiate(_keyPrefab, CentreOfCell(cell) + _floorOffset, doorRotation, parent);
+                Instantiate(_keyPrefab, CenterOfCell(cell) + _floorOffset, doorRotation, parent);
 
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
