@@ -77,7 +77,7 @@ namespace Assets.Scripts.Wfc
         /// The depth of the door prefab.
         /// </summary>
         /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
-        private float _doorDepthExtend;
+        private float _doorDepthExtent;
 
         /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
@@ -87,7 +87,7 @@ namespace Assets.Scripts.Wfc
             if (!_doorPrefab.TryGetComponent(out Renderer doorRenderer))
                 throw new UnityException("Door prefab does not have a renderer component.");
 
-            _doorDepthExtend = doorRenderer.bounds.extents.z;
+            _doorDepthExtent = doorRenderer.bounds.extents.z;
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Assets.Scripts.Wfc
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
 
             // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - _doorDepthExtend;
+            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - _doorDepthExtent;
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 
