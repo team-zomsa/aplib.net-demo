@@ -58,10 +58,7 @@ namespace Testing.AplibTests
 
             int currentCellToVisitIndex = 0;
 
-            Vector3 currentCellPosition()
-            {
-                return cellsToVisit[currentCellToVisitIndex];
-            }
+            Vector3 currentCellPosition() => cellsToVisit[currentCellToVisitIndex];
 
             // Arrange ==> GoalStructure: Visit cell of the current connected component
             TransformPathfinderAction<ConnectedComponentsBeliefSet> approachCurrentCellAction = new(
