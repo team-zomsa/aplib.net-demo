@@ -44,6 +44,4 @@ jobs:
           args: >
             -Dsonar.organization=team-zomsa
             -Dsonar.projectKey=team-zomsa_aplib.net-demo
-            -Dsonar.cs.opencover.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/EditMode/TestCoverageResults_0000.xml,${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0000.xml,${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/EditMode/TestCoverageResults_0001.xml,${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/PlayMode/TestCoverageResults_0001.xml
-          #a
-            # -Dsonar.cs.opencover.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/**/TestCoverageResults_*.xml
+            -Dsonar.cs.opencover.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/**/TestCoverageResults_*.xml
