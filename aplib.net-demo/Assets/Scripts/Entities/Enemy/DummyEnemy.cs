@@ -12,6 +12,7 @@ public class DummyEnemy : AbstractEnemy
     /// The spawn area for the enemy.
     /// </summary>
     [SerializeField] private bool _respawn = true;
+    [SerializeField] private bool _canMove = true;
     private RespawnableComponent _respawnableComponent;
 
     /// <summary>
@@ -22,6 +23,12 @@ public class DummyEnemy : AbstractEnemy
     {
         _respawnableComponent = GetComponent<RespawnableComponent>();
         _respawnableComponent.RespawnEvent += OnRespawn;
+    }
+
+    protected override void Update()
+    {
+        if (_canMove)
+            base.Update();
     }
 
     protected override void OnDeath(HealthComponent healthComponent)

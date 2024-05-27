@@ -1,6 +1,5 @@
 using Entities;
 using Entities.Weapons;
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,10 +9,11 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Inventory _inventory;
     private RespawnableComponent _playerRespawn;
+    private CanvasManager _canvasManager;
     private Movement _playerMovement;
     // TODO: Change when inventory is added
     // Doing it this way for now, change when inventory is implemented.
-    [CanBeNull] private Weapon _activeWeapon;
+    private Weapon _activeWeapon;
 
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
@@ -54,6 +54,8 @@ public class InputManager : MonoBehaviour
             _playerActions.Fire.performed += _ => _activeWeapon!.UseWeapon();
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
+        if (CanvasManager.Instance)
+            _uiActions.OpenSettings.performed += _ => CanvasManager.Instance.OnToggleSettings();
     }
 
     /// <summary>
@@ -66,7 +68,23 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Update() => _playerMovement.ReceiveHorizontalInput(_horizontalInput);
 
+    /// <summary>
+    /// Disable player input.
+    /// </summary>
+    public void DisablePlayerInput() => _input.Player.Disable();
+
+    /// <summary>
+    /// Enable player input.
+    /// </summary>
+    public void EnablePlayerInput() => _input.Player.Enable();
+
+    /// <summary>
+    /// Enable all input.
+    /// </summary>
     private void OnEnable() => _input?.Enable();
 
+    /// <summary>
+    /// Disable all input.
+    /// </summary>
     private void OnDisable() => _input?.Disable();
 }

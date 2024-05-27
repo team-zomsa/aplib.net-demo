@@ -331,7 +331,7 @@ namespace Assets.Scripts.Wfc
                 Instantiate(_keyPrefab, CentreOfCell(itemCell) + Vector3.up, doorRotation, parent);
 
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
-            keyComponent.Id = doorComponent.DoorId;
+            keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
         }
 
         /// <summary>

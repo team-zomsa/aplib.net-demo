@@ -1079,9 +1079,9 @@ MonoBehaviour:
   _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
   _useSeed: 0
   _seed: 0
-  _gridWidthX: 10
-  _gridWidthZ: 10
-  _amountOfRooms: 5
+  _gridWidthX: 4
+  _gridWidthZ: 4
+  _amountOfRooms: 3
   _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
     type: 3}
 --- !u!4 &1455078763
