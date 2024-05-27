@@ -9,26 +9,23 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Key))]
 public class BeforeDestroyKey : MonoBehaviour
 {
-    private GameObject _door;
-
-    private Key _key;
+    private OffMeshLink _offMeshLink;
 
     public void Awake()
     {
-        _key = gameObject.GetComponent<Key>();
+        Key key = gameObject.GetComponent<Key>();
 
-        if (!_key) throw new UnityException("Key not found!");
+        if (!key) throw new UnityException("Key not found!");
 
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Door");
-        _door = gameObjects.FirstOrDefault(go => go.GetComponent<Door>().TryOpenDoor(_key));
+        GameObject door = gameObjects.FirstOrDefault(go => go.GetComponent<Door>().TryOpenDoor(key));
 
-        if (!_door) throw new UnityException("Door not found!");
+        if (!door) throw new UnityException("Door not found!");
+
+        _offMeshLink = door.GetComponent<OffMeshLink>();
+
+        if (!_offMeshLink) throw new UnityException("OffMeshLink not found!");
     }
 
-    private void OnDestroy()
-    {
-        OffMeshLink offMeshLink = _door.GetComponent<OffMeshLink>();
-        offMeshLink.activated = true;
-        Debug.Log("Door activated");
-    }
+    private void OnDestroy() => _offMeshLink.activated = true;
 }

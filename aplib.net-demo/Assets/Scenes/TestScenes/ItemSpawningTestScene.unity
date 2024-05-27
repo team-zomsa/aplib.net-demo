@@ -911,7 +911,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.33333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -1140,12 +1140,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _useSeed: 0
   _seed: 0
-  _gridWidthX: 10
-  _gridWidthZ: 10
-  _amountOfRooms: 5
-  _amountOfHealthPotions: 5
-  _amountOfRagePotions: 5
-  _amountOfAmmunition: 5
+  _gridWidthX: 5
+  _gridWidthZ: 5
+  _amountOfRooms: 3
+  _amountOfHealthPotions: 3
+  _amountOfRagePotions: 3
+  _amountOfAmmunition: 3
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0

@@ -17,15 +17,10 @@ namespace Testing.AplibTests
     public class ItemSpawningBeliefSet : BeliefSet
     {
         /// <summary>
-        /// The end item in the scene.
-        /// </summary>
-        public Belief<GameObject, bool> EndItemExists =
-            new(GameObject.Find("The Eternal Elixir"), x => x != null && x.activeSelf && x.activeInHierarchy);
-
-        /// <summary>
         /// The inventory in the scene.
         /// </summary>
-        public Belief<GameObject, Inventory> InventoryObject = new(GameObject.Find("InventoryObject"), x => x.GetComponent<Inventory>());
+        public Belief<GameObject, Inventory> InventoryObject =
+            new(GameObject.Find("InventoryObject"), x => x.GetComponent<Inventory>());
 
         public Belief<GameObject, Rigidbody> PlayerRigidBody = new(
             GameObject.Find("Player"),
@@ -49,15 +44,15 @@ namespace Testing.AplibTests
             // Find the first key that is reachable.
             foreach (GameObject key in x)
             {
-                if (!NavMesh.CalculatePath(playerPosition,
-                        key.transform.position,
-                        NavMesh.AllAreas,
-                        path
-                    )) continue;
+                if (key == null) continue;
+
+                NavMesh.CalculatePath(playerPosition,
+                    key.transform.position,
+                    NavMesh.AllAreas,
+                    path
+                );
 
                 if (path.status == NavMeshPathStatus.PathComplete) return key.transform.position;
-
-                Debug.LogWarning("No complete path to key. Trying next key.");
             }
 
             // If no key is reachable, return Vector3.zero.
@@ -97,7 +92,6 @@ namespace Testing.AplibTests
             ItemSpawningBeliefSet beliefSet = new();
 
             GameObject[] keys = GameObject.FindGameObjectsWithTag("Key");
-            Debug.LogWarning(keys.Length);
             foreach (GameObject key in keys) key.AddComponent<BeforeDestroyKey>();
 
             // Create an intent for the agent that moves the agent towards the target position.
@@ -124,7 +118,8 @@ namespace Testing.AplibTests
 
             RepeatGoalStructure<ItemSpawningBeliefSet> moveToKeyGoalStructure = new(moveToKeyGoal);
 
-            SequentialGoalStructure<ItemSpawningBeliefSet> moveAndPickupSequence = new(moveToKeyGoalStructure, moveGoal);
+            SequentialGoalStructure<ItemSpawningBeliefSet>
+                moveAndPickupSequence = new(moveToKeyGoalStructure, moveGoal);
 
             // Arrange ==> DesireSet
             DesireSet<ItemSpawningBeliefSet> desire = new(moveAndPickupSequence);
@@ -152,11 +147,13 @@ namespace Testing.AplibTests
                 NavMeshPath path = new();
                 Vector3 target = beliefSet.TargetPosition;
 
-                return NavMesh.CalculatePath(playerRigidbody.position,
+                NavMesh.CalculatePath(playerRigidbody.position,
                     target,
                     NavMesh.AllAreas,
                     path
                 );
+
+                return path.status == NavMeshPathStatus.PathComplete;
             }
         }
     }
