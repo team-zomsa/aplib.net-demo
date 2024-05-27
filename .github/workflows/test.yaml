@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch Main Branch
+        run: git fetch origin main:main
       - uses: actions/cache@v4
         with:
           path: ./aplib.net-demo/Library
@@ -32,3 +36,12 @@ jobs:
         with:
           name: Coverage results
           path: ${{ steps.unity-test-step.outputs.coveragePath }}
+      - name: Collect Code Coverage with SonarCloud
+        uses: sonarsource/sonarcloud-github-action@v2.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=team-zomsa
+            -Dsonar.projectKey=team-zomsa_aplib.net-demo
+            -Dsonar.cs.opencover.reportsPaths=${{ steps.unity-test-step.outputs.coveragePath }}/aplib.net-demo-opencov/**/TestCoverageResults_*.xml
