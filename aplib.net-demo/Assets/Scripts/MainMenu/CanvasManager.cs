@@ -11,7 +11,7 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Event that is fired when the game settings are toggled.
     /// </summary>
-    public event Action<bool> GameSettingsToggled;
+    public event Action<bool> UseMouseInSettingsEvent;
 
     /// <summary>
     /// Reference to the menu canvas.
@@ -28,12 +28,12 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public GameObject settingGameCanvas;
 
-    public static CanvasManager Instance { get; private set; }
-
     /// <summary>
-    /// Reference to the death canvas.
+    /// Reference to the gameover canvas.
     /// </summary>
-    public GameObject deathCanvas;
+    public GameObject gameOverCanvas;
+
+    public static CanvasManager Instance { get; private set; }
 
     /// <summary>
     /// To ensure the menu settings and menu UI aren't on on the same time.
@@ -44,8 +44,6 @@ public class CanvasManager : MonoBehaviour
     /// To ensure the game settings and menu UI aren't on on the same time.
     /// </summary>
     private bool _isOnGameSettings = false;
-
-    public bool IsPlayerDead = false;
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -62,7 +60,12 @@ public class CanvasManager : MonoBehaviour
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private string _sceneNameGame = "GameSettings"; // TODO:: Load main game screen
+    private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
+
+    /// <summary>
+    /// Get the player health component to sub to death.
+    /// </summary>
+    private HealthComponent _playerHealth;
 
     private void Awake()
     {
@@ -80,25 +83,48 @@ public class CanvasManager : MonoBehaviour
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
             menuCanvas.SetActive(true);
-            settingMenuCanvas.SetActive(false);
-            settingGameCanvas.SetActive(false);
-            _isOnMenuSettings = false;
-            _isOnGameSettings = false;
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
+            _playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
+            _playerHealth.Death += OnPlayerDeath;
+
             menuCanvas.SetActive(false);
-            settingMenuCanvas.SetActive(false);
-            settingGameCanvas.SetActive(false);
-            _isOnMenuSettings = false;
-            _isOnGameSettings = false;
         }
         else // TODO:: Remove when game is done. This is for future ease.
         {
             Debug.Log("Scene names are wrong. Check MenuButtons script");
         }
 
-        deathCanvas.SetActive(false);
+        settingMenuCanvas.SetActive(false);
+        settingGameCanvas.SetActive(false);
+        gameOverCanvas.SetActive(false);
+        _isOnMenuSettings = false;
+        _isOnGameSettings = false;
+    }
+
+    /// <summary>
+    /// When the player dies, the gameover ui is shown.
+    /// </summary>
+    /// <param name="_playerHealth"></param>
+    public void OnPlayerDeath(HealthComponent _playerHealth)
+    {
+        // Mouse visible.
+        UseMouseInSettingsEvent?.Invoke(true);
+
+        // Pause game.
+        Time.timeScale = 0;
+        InputManager.Instance.DisablePlayerInput();
+
+        // Set all off.
+        menuCanvas.SetActive(false);
+        settingMenuCanvas.SetActive(false);
+        settingGameCanvas.SetActive(false);
+        _isOnMenuSettings = false;
+        _isOnGameSettings = false;
+
+        // On death ui.
+        gameOverCanvas.SetActive(true);
     }
 
     /// <summary>
@@ -142,7 +168,7 @@ public class CanvasManager : MonoBehaviour
                 Time.timeScale = 1;
                 InputManager.Instance.EnablePlayerInput();
             }
-            GameSettingsToggled?.Invoke(_isOnGameSettings);
+            UseMouseInSettingsEvent?.Invoke(_isOnGameSettings);
         }
     }
 

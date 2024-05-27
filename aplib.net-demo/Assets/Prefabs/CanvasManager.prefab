@@ -404,6 +404,7 @@ MonoBehaviour:
   menuCanvas: {fileID: 1224580673708126762}
   settingMenuCanvas: {fileID: 7724998468614145768}
   settingGameCanvas: {fileID: 8904745976946252126}
+  gameOverCanvas: {fileID: 2831620230159322021}
   _sceneNameStartingMenu: Settings
   _sceneNameGame: InGameSettings
 --- !u!1 &318484137144363610
