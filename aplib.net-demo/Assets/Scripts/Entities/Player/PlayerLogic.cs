@@ -33,7 +33,6 @@ public class PlayerLogic : MonoBehaviour
 
     private void OnSelfRespawn (RespawnableComponent respawnableComponent)
     {
-        Debug.Log("Player respawned!");
         _healthComponent.Reset();
     }
 
@@ -43,7 +42,6 @@ public class PlayerLogic : MonoBehaviour
     /// <param name="healthComponent">The health component of the player.</param>.
     private void OnDeath(HealthComponent healthComponent)
     {
-        Debug.Log("Player died!");
         if (respawnOnDeath) _respawnableComponent.Respawn();
     }
 

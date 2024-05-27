@@ -35,7 +35,7 @@ public class DummyEnemy : AbstractEnemy
     /// <summary>
     /// Resets its health.
     /// </summary>
-    private void OnRespawn(RespawnableComponent respawnableComponent)
+    private void OnRespawn(RespawnableComponent _)
     {
         _healthComponent.Reset();
     }

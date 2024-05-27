@@ -1,6 +1,6 @@
-using JetBrains.Annotations;
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Entities
@@ -10,10 +10,9 @@ namespace Entities
     /// </summary>
     public class RespawnableComponent : MonoBehaviour
     {
-        [SerializeField] public Area _spawnArea;
+        [SerializeField]
+        public Area spawnArea;
         private Bounds _spawnBounds;
-
-        [CanBeNull]
         private Rigidbody _rigidbodyToRespawn;
 
         /// <summary>
@@ -28,14 +27,14 @@ namespace Entities
         private void Awake()
         {
             _rigidbodyToRespawn = transform.GetComponent<Rigidbody>();
-            if (_spawnArea is null)
+            if (spawnArea is null)
             {
                 Debug.LogWarning($"No spawn area found for {name}. Defaulting to spawn position.");
                 _spawnBounds = new Bounds(transform.position, Vector3.zero);
             }
             else
             {
-                _spawnBounds = _spawnArea.Bounds;
+                _spawnBounds = spawnArea.Bounds;
             }
         }
 
