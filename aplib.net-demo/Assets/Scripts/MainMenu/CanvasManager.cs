@@ -29,19 +29,19 @@ public class CanvasManager : MonoBehaviour
     public GameObject SettingGameCanvas;
 
     /// <summary>
-    /// Reference to the gameover canvas.
+    /// Reference to the game over canvas.
     /// </summary>
     public GameObject GameOverCanvas;
 
     public static CanvasManager Instance { get; private set; }
 
     /// <summary>
-    /// To ensure the menu settings and menu UI aren't on on the same time.
+    /// To ensure the menu settings and menu UI aren't on at the same time.
     /// </summary>
     private bool _isOnMenuSettings = false;
 
     /// <summary>
-    /// To ensure the game settings and menu UI aren't on on the same time.
+    /// To ensure the game settings and menu UI aren't on at the same time.
     /// </summary>
     private bool _isOnGameSettings = false;
 
@@ -83,8 +83,8 @@ public class CanvasManager : MonoBehaviour
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
-            HealthComponent _playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
-            _playerHealth.Death += OnPlayerDeath;
+            HealthComponent playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
+            playerHealth.Death += OnPlayerDeath;
 
             SetAllCanvasesToInactive();
         }
@@ -108,9 +108,9 @@ public class CanvasManager : MonoBehaviour
     }
 
     /// <summary>
-    /// When the player dies, the gameover ui is shown.
+    /// When the player dies, the game over ui is shown.
     /// </summary>
-    /// <param name="_playerHealth"></param>
+    /// <param name="_playerHealth">Player health component</param>
     public void OnPlayerDeath(HealthComponent _playerHealth)
     {
         // Mouse visible.

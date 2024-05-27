@@ -401,10 +401,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b98af11f29651428432a585b7006d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuCanvas: {fileID: 1224580673708126762}
-  settingMenuCanvas: {fileID: 7724998468614145768}
-  settingGameCanvas: {fileID: 8904745976946252126}
-  gameOverCanvas: {fileID: 2831620230159322021}
+  MenuCanvas: {fileID: 1224580673708126762}
+  SettingMenuCanvas: {fileID: 7724998468614145768}
+  SettingGameCanvas: {fileID: 8904745976946252126}
+  GameOverCanvas: {fileID: 2831620230159322021}
   _sceneNameStartingMenu: Settings
   _sceneNameGame: InGameSettings
 --- !u!1 &318484137144363610
