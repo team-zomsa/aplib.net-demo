@@ -1,15 +1,17 @@
+using System;
 using UnityEngine;
 
 /// <summary>
-/// The spawn area for the enemy. 
+/// The spawn area for the enemy.
 /// The size is defined by the local scale of the transform.
 /// </summary>
 public class Area : MonoBehaviour
 {
     /// <summary>
     /// The bounds of the area.
-    /// </summary> 
-    [HideInInspector] private Bounds _bounds;
+    /// </summary>
+    [HideInInspector]
+    private Bounds _bounds;
     public Bounds Bounds => _bounds;
 
     /// <summary>
