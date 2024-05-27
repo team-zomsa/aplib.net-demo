@@ -16,22 +16,22 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
-    public GameObject menuCanvas;
+    public GameObject MenuCanvas;
 
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject settingMenuCanvas;
+    public GameObject SettingMenuCanvas;
 
     /// <summary>
     /// Reference to the settings canvas of the game.
     /// </summary>
-    public GameObject settingGameCanvas;
+    public GameObject SettingGameCanvas;
 
     /// <summary>
     /// Reference to the gameover canvas.
     /// </summary>
-    public GameObject gameOverCanvas;
+    public GameObject GameOverCanvas;
 
     public static CanvasManager Instance { get; private set; }
 
@@ -79,7 +79,7 @@ public class CanvasManager : MonoBehaviour
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
             SetAllToFalse();
-            menuCanvas.SetActive(true);
+            MenuCanvas.SetActive(true);
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
@@ -99,10 +99,10 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     private void SetAllToFalse()
     {
-        menuCanvas.SetActive(false);
-        settingMenuCanvas.SetActive(false);
-        settingGameCanvas.SetActive(false);
-        gameOverCanvas.SetActive(false);
+        MenuCanvas.SetActive(false);
+        SettingMenuCanvas.SetActive(false);
+        SettingGameCanvas.SetActive(false);
+        GameOverCanvas.SetActive(false);
         _isOnMenuSettings = false;
         _isOnGameSettings = false;
     }
@@ -124,7 +124,7 @@ public class CanvasManager : MonoBehaviour
         SetAllToFalse();
 
         // On death ui.
-        gameOverCanvas.SetActive(true);
+        GameOverCanvas.SetActive(true);
     }
 
     /// <summary>
@@ -151,13 +151,13 @@ public class CanvasManager : MonoBehaviour
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
         {
             _isOnMenuSettings = !_isOnMenuSettings;
-            settingMenuCanvas.SetActive(_isOnMenuSettings);
-            menuCanvas.SetActive(!_isOnMenuSettings);
+            SettingMenuCanvas.SetActive(_isOnMenuSettings);
+            MenuCanvas.SetActive(!_isOnMenuSettings);
         }
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
         {
             _isOnGameSettings = !_isOnGameSettings;
-            settingGameCanvas.SetActive(_isOnGameSettings);
+            SettingGameCanvas.SetActive(_isOnGameSettings);
             if (_isOnGameSettings)
             {
                 Time.timeScale = 0;
