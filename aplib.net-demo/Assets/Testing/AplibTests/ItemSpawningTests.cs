@@ -5,6 +5,7 @@ using Aplib.Core.Desire;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity.Actions;
+using Assets.Scripts.Items;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;

@@ -3,29 +3,32 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-/// <summary>
-/// Attach this class to make object pickupable.
-/// </summary>
-[RequireComponent(typeof(Key))]
-public class BeforeDestroyKey : MonoBehaviour
+namespace Assets.Scripts.Items
 {
-    private OffMeshLink _offMeshLink;
-
-    public void Awake()
+    /// <summary>
+    /// Attach this class to make object pickupable.
+    /// </summary>
+    [RequireComponent(typeof(Key))]
+    public class BeforeDestroyKey : MonoBehaviour
     {
-        Key key = gameObject.GetComponent<Key>();
+        private OffMeshLink _offMeshLink;
 
-        if (!key) throw new UnityException("Key not found!");
+        public void Awake()
+        {
+            Key key = gameObject.GetComponent<Key>();
 
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Door");
-        GameObject door = gameObjects.FirstOrDefault(go => go.GetComponent<Door>().TryOpenDoor(key));
+            if (!key) throw new UnityException("Key not found!");
 
-        if (!door) throw new UnityException("Door not found!");
+            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Door");
+            GameObject door = gameObjects.FirstOrDefault(go => go.GetComponent<Door>().TryOpenDoor(key));
 
-        _offMeshLink = door.GetComponent<OffMeshLink>();
+            if (!door) throw new UnityException("Door not found!");
 
-        if (!_offMeshLink) throw new UnityException("OffMeshLink not found!");
+            _offMeshLink = door.GetComponent<OffMeshLink>();
+
+            if (!_offMeshLink) throw new UnityException("OffMeshLink not found!");
+        }
+
+        private void OnDestroy() => _offMeshLink.activated = true;
     }
-
-    private void OnDestroy() => _offMeshLink.activated = true;
 }
