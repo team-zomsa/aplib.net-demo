@@ -5,7 +5,7 @@ namespace Entities.Weapons
     /// <summary>
     /// Abstract weapons class as a base for all weapons.
     /// </summary>
-    public abstract class Weapon : MonoBehaviour
+    public abstract class Weapon : MonoBehaviour, IEquipment
     {
         /// <summary>
         /// The entity sound component used to play weapon sounds.
@@ -34,6 +34,8 @@ namespace Entities.Weapons
             _targetTag = targetTag;
             _entitySound = GetComponentInParent<EntitySound>();
         }
+
+        public void UseEquipment() => UseWeapon();
 
         /// <summary>
         /// Use the weapon.
