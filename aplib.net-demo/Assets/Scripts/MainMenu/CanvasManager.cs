@@ -11,7 +11,7 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Event that is fired when the game settings are toggled.
     /// </summary>
-    public event Action<bool> UseMouseInSettingsEvent;
+    public event Action<bool> MenuOpenedEvent;
 
     /// <summary>
     /// Reference to the menu canvas.
@@ -110,7 +110,7 @@ public class CanvasManager : MonoBehaviour
     public void OnPlayerDeath(HealthComponent _playerHealth)
     {
         // Mouse visible.
-        UseMouseInSettingsEvent?.Invoke(true);
+        MenuOpenedEvent?.Invoke(true);
 
         // Pause game.
         Time.timeScale = 0;
@@ -168,7 +168,7 @@ public class CanvasManager : MonoBehaviour
                 Time.timeScale = 1;
                 InputManager.Instance.EnablePlayerInput();
             }
-            UseMouseInSettingsEvent?.Invoke(_isOnGameSettings);
+            MenuOpenedEvent?.Invoke(_isOnGameSettings);
         }
     }
 

@@ -15,7 +15,7 @@ public class MouseLock : MonoBehaviour
 
         // Compatability for when no CanvasManager is present.
         if (CanvasManager.Instance != null)
-            CanvasManager.Instance.UseMouseInSettingsEvent += OnGameSettingsToggled;
+            CanvasManager.Instance.MenuOpenedEvent += OnGameSettingsToggled;
     }
 
     /// <summary>
