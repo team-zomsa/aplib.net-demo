@@ -20,10 +20,10 @@ namespace Testing.AplibTests
         /// <summary>
         /// The inventory in the scene.
         /// </summary>
-        public Belief<GameObject, Inventory> InventoryObject =
+        public readonly Belief<GameObject, Inventory> InventoryObject =
             new(GameObject.Find("InventoryObject"), x => x.GetComponent<Inventory>());
 
-        public Belief<GameObject, Rigidbody> PlayerRigidBody = new(
+        public readonly Belief<GameObject, Rigidbody> PlayerRigidBody = new(
             GameObject.Find("Player"),
             x => x.GetComponent<Rigidbody>());
 
@@ -31,40 +31,41 @@ namespace Testing.AplibTests
         /// The target position that the player needs to move towards.
         /// Find the end item in the scene.
         /// </summary>
-        public Belief<GameObject[], Vector3> TargetKeyPosition = new(GameObject.FindGameObjectsWithTag("Key"), x =>
-        {
-            // If there are no keys, return Vector3.zero.
-            if (x.Length == 0) return Vector3.zero;
-
-            GameObject player = GameObject.Find("Player");
-            Rigidbody playerRigidBody = player.GetComponent<Rigidbody>();
-            Vector3 playerPosition = playerRigidBody.position;
-
-            NavMeshPath path = new();
-
-            // Find the first key that is reachable.
-            foreach (GameObject key in x)
+        public readonly Belief<GameObject[], Vector3> TargetKeyPosition = new(GameObject.FindGameObjectsWithTag("Key"),
+            x =>
             {
-                if (key == null) continue;
+                // If there are no keys, return Vector3.zero.
+                if (x.Length == 0) return Vector3.zero;
 
-                NavMesh.CalculatePath(playerPosition,
-                    key.transform.position,
-                    NavMesh.AllAreas,
-                    path
-                );
+                GameObject player = GameObject.Find("Player");
+                Rigidbody playerRigidBody = player.GetComponent<Rigidbody>();
+                Vector3 playerPosition = playerRigidBody.position;
 
-                if (path.status == NavMeshPathStatus.PathComplete) return key.transform.position;
-            }
+                NavMeshPath path = new();
 
-            // If no key is reachable, return Vector3.zero.
-            return Vector3.zero;
-        });
+                // Find the first key that is reachable.
+                foreach (GameObject key in x)
+                {
+                    if (key == null) continue;
+
+                    NavMesh.CalculatePath(playerPosition,
+                        key.transform.position,
+                        NavMesh.AllAreas,
+                        path
+                    );
+
+                    if (path.status == NavMeshPathStatus.PathComplete) return key.transform.position;
+                }
+
+                // If no key is reachable, return Vector3.zero.
+                return Vector3.zero;
+            });
 
         /// <summary>
         /// The target position that the player needs to move towards.
         /// Find the end item in the scene.
         /// </summary>
-        public Belief<GameObject, Vector3> TargetPosition =
+        public readonly Belief<GameObject, Vector3> TargetPosition =
             new(GameObject.Find("The Eternal Elixir"), x => x == null ? Vector3.zero : x.transform.position);
     }
 
