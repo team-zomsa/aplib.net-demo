@@ -78,7 +78,7 @@ public class CanvasManager : MonoBehaviour
 
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
-            SetAllToFalse();
+            SetAllCanvasesToInactive();
             MenuCanvas.SetActive(true);
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
@@ -86,7 +86,7 @@ public class CanvasManager : MonoBehaviour
             HealthComponent _playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
             _playerHealth.Death += OnPlayerDeath;
 
-            SetAllToFalse();
+            SetAllCanvasesToInactive();
         }
         else // TODO:: Remove when game is done. This is for future ease.
         {
@@ -97,7 +97,7 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Sets all UI canvases to false.
     /// </summary>
-    private void SetAllToFalse()
+    private void SetAllCanvasesToInactive()
     {
         MenuCanvas.SetActive(false);
         SettingMenuCanvas.SetActive(false);
@@ -121,7 +121,7 @@ public class CanvasManager : MonoBehaviour
         InputManager.Instance.DisablePlayerInput();
 
         // Set all off.
-        SetAllToFalse();
+        SetAllCanvasesToInactive();
 
         // On death ui.
         GameOverCanvas.SetActive(true);
