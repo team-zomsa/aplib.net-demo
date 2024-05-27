@@ -1,7 +1,10 @@
 using Assets.Scripts.Doors;
 using Assets.Scripts.Tiles;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
+using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
 {
@@ -27,6 +30,12 @@ namespace Assets.Scripts.Wfc
         private RoomObjects _roomObjects;
 
         /// <summary>
+        /// Represents the spawnable items.
+        /// </summary>
+        [SerializeField]
+        private SpawnAbleItems _spawnAbleItems;
+
+        /// <summary>
         /// Represents the door object.
         /// </summary>
         [SerializeField]
@@ -49,24 +58,6 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         [SerializeField]
         private GameObject _endItemPrefab;
-
-        /// <summary>
-        /// The health potion prefab.
-        /// </summary>
-        [SerializeField]
-        private GameObject _healthPotionPrefab;
-
-        /// <summary>
-        /// The rage potion prefab.
-        /// </summary>
-        [SerializeField]
-        private GameObject _ragePotionPrefab;
-
-        /// <summary>
-        /// The ammunition prefab.
-        /// </summary>
-        [SerializeField]
-        private GameObject _ammunitionPrefab;
 
         /// <summary>
         /// The offset of the floor.
@@ -125,28 +116,54 @@ namespace Assets.Scripts.Wfc
             Instantiate(_endItemPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
-        /// Spawn an health potion in the given cell.
+        /// Creates a new game object with a given name and parent.
         /// </summary>
-        /// <param name="cell">The cell to spawn the health potion in.</param>
-        /// <param name="parent">The parent of the health potion.</param>
-        public void PlaceHealthPotion(Cell cell, Transform parent) =>
-            Instantiate(_healthPotionPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+        /// <param name="objectName">The name of the game object.</param>
+        /// <param name="parent">The parent of the game object.</param>
+        /// <returns>The newly created game object.</returns>
+        private static GameObject CreateGameObject(string objectName, Transform parent) =>
+            new(objectName) { transform = { parent = parent } };
 
         /// <summary>
-        /// Spawn a rage potion in the given cell.
+        /// Spawn an item in the given cell.
         /// </summary>
-        /// <param name="cell">The cell to spawn the rage potion in.</param>
-        /// <param name="parent">The parent of the rage potion.</param>
-        public void PlaceRagePotion(Cell cell, Transform parent) =>
-            Instantiate(_ragePotionPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+        /// <param name="prefab">The item prefab to spawn.</param>
+        /// <param name="cell">The cell to spawn the item in.</param>
+        /// <param name="parent">The parent of the item.</param>
+        private void PlaceItem(GameObject prefab, Cell cell, Transform parent) =>
+            Instantiate(prefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
-        /// Spawn an ammunition in the given cell.
+        /// Spawns all items in the world.
         /// </summary>
-        /// <param name="cell">The cell to spawn the ammunition in.</param>
-        /// <param name="parent">The parent of the ammunition.</param>
-        public void PlaceAmmunition(Cell cell, Transform parent) =>
-            Instantiate(_ammunitionPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+        /// <param name="cells">The cells to spawn the items in.</param>
+        /// <param name="random">The random number generator to use.</param>
+        /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
+        public void SpawnItems(List<Cell> cells, Random random)
+        {
+            if (_spawnAbleItems.SpawnableItemsCount.Aggregate((x, y) => x + y) > cells.Count)
+                throw new UnityException("Not enough empty cells to place all items.");
+
+            if (_spawnAbleItems.SpawnableItems.Count != _spawnAbleItems.SpawnableItemsCount.Count)
+                throw new UnityException("The number of spawnable items and their counts do not match.");
+
+            GameObject items = CreateGameObject("Items", transform);
+
+            for (int i = 0; i < _spawnAbleItems.SpawnableItems.Count; i++)
+            {
+                GameObject spawnableItem = _spawnAbleItems.SpawnableItems[i];
+
+                GameObject itemParent = CreateGameObject(spawnableItem.name, items.transform);
+
+                for (int j = 0; j < _spawnAbleItems.SpawnableItemsCount[i]; j++)
+                {
+                    Cell cell = cells[random.Next(cells.Count)];
+                    PlaceItem(spawnableItem, cell, itemParent.transform);
+                    cell.CannotAddItem = true;
+                    cells.Remove(cell);
+                }
+            }
+        }
 
         /// <summary>
         /// Places a tile at the specified coordinates in the world.

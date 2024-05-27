@@ -19,20 +19,12 @@ namespace Editors
             SerializedProperty gridWidthX = gridPlacerSettings.FindProperty("_gridWidthX");
             SerializedProperty gridWidthZ = gridPlacerSettings.FindProperty("_gridWidthZ");
             SerializedProperty amountOfRooms = gridPlacerSettings.FindProperty("_amountOfRooms");
-            SerializedProperty amountOfHealthPotions = gridPlacerSettings.FindProperty("_amountOfHealthPotions");
-            SerializedProperty amountOfRagePotions = gridPlacerSettings.FindProperty("_amountOfRagePotions");
-            SerializedProperty amountOfAmmunition = gridPlacerSettings.FindProperty("_amountOfAmmunition");
 
             useSeed.boolValue = EditorGUILayout.Toggle("Use seed", useSeed.boolValue);
             if (useSeed.boolValue) seed.intValue = EditorGUILayout.IntField("Seed", seed.intValue);
             gridWidthX.intValue = EditorGUILayout.IntField("Grid Width X", gridWidthX.intValue);
             gridWidthZ.intValue = EditorGUILayout.IntField("Grid Width Z", gridWidthZ.intValue);
             amountOfRooms.intValue = EditorGUILayout.IntField("Amount of Rooms", amountOfRooms.intValue);
-            amountOfHealthPotions.intValue =
-                EditorGUILayout.IntField("Amount of health potions", amountOfHealthPotions.intValue);
-            amountOfRagePotions.intValue =
-                EditorGUILayout.IntField("Amount of rage potions", amountOfRagePotions.intValue);
-            amountOfAmmunition.intValue = EditorGUILayout.IntField("Amount of ammunition", amountOfAmmunition.intValue);
 
             gridPlacerSettings.ApplyModifiedProperties();
 

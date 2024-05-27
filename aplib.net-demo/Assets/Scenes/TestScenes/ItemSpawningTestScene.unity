@@ -1150,6 +1150,7 @@ MonoBehaviour:
   _tileSizeX: 16
   _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
+  _spawnAbleItems: {fileID: 11400000, guid: 1941be279db86d24f914f5f13da6905c, type: 2}
   _doorPrefab: {fileID: 5163913735208331690, guid: 68173a35499684249a46fbd42c360c6c,
     type: 3}
   _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
