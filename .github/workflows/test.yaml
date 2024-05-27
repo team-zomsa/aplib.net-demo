@@ -36,7 +36,7 @@ jobs:
         with:
           name: Coverage results
           path: ${{ steps.unity-test-step.outputs.coveragePath }}
-      - name: SonarCloud Scan
+      - name: Collect Code Coverage with SonarCloud
         uses: sonarsource/sonarcloud-github-action@v2.2.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
