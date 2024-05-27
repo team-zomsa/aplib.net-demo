@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Entities
@@ -10,24 +9,17 @@ namespace Entities
     /// </summary>
     public class RespawnableComponent : MonoBehaviour
     {
-        [SerializeField]
         public Area spawnArea;
-        private Bounds _spawnBounds;
         private Rigidbody _rigidbodyToRespawn;
-
-        /// <summary>
-        /// Event that is triggered when an entity respawn occurs.
-        /// </summary>
-        /// <param>The RespawnableComponent instance that triggered the respawn.</param>
-        public event Action<RespawnableComponent> RespawnEvent;
+        private Bounds _spawnBounds;
 
         /// <summary>
         /// Store the initial position.
         /// </summary>
-        private void Awake()
+        private void Start()
         {
             _rigidbodyToRespawn = transform.GetComponent<Rigidbody>();
-            if (spawnArea is null)
+            if (spawnArea == null)
             {
                 Debug.LogWarning($"No spawn area found for {name}. Defaulting to spawn position.");
                 _spawnBounds = new Bounds(transform.position, Vector3.zero);
@@ -37,6 +29,12 @@ namespace Entities
                 _spawnBounds = spawnArea.Bounds;
             }
         }
+
+        /// <summary>
+        /// Event that is triggered when an entity respawn occurs.
+        /// </summary>
+        /// <param>The RespawnableComponent instance that triggered the respawn.</param>
+        public event Action<RespawnableComponent> RespawnEvent;
 
         /// <summary>
         /// Reset the position and velocity of the Rigidbody

@@ -216,7 +216,11 @@ namespace Assets.Scripts.Wfc
 
             GameObject respawnPoint = GameObject.FindWithTag("Respawn");
 
+            if (respawnPoint == null) return;
+
             respawnPoint.transform.position = spawningPoint;
+            Area area = respawnPoint.GetComponent<Area>();
+            area.Bounds = new Bounds(spawningPoint, area.Bounds.extents);
         }
 
         /// <summary>
