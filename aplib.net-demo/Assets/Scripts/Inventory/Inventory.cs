@@ -74,9 +74,7 @@ public class Inventory : MonoBehaviour
             Item itemCopy = Instantiate(item);
             itemCopy.gameObject.GetComponent<Collider>().enabled = false;
 
-            Transform itemCopyTransform = itemCopy.transform.Find("Visual");
-
-            if (itemCopyTransform != null) itemCopyTransform.gameObject.SetActive(false);
+            itemCopy.transform.Find("Visual")?.gameObject.SetActive(false);
 
             itemCopy.name = item.name;
             _itemList.Enqueue(itemCopy);
