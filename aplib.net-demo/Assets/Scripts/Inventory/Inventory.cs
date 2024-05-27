@@ -117,4 +117,11 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void DisplayItem() => _inventoryIndicator.texture =
         _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
+
+    /// <summary>
+    /// Checks if the inventory contains an item with the given name.
+    /// </summary>
+    /// <param name="queryName">The name of the item to check for.</param>
+    /// <returns>True if the item is in the inventory, otherwise false.</returns>
+    public bool ContainsItem(string queryName) => _itemList.Any(i => i.name == queryName);
 }
