@@ -110,8 +110,7 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// When the player dies, the game over ui is shown.
     /// </summary>
-    /// <param name="_playerHealth">Player health component</param>
-    public void OnPlayerDeath(HealthComponent _playerHealth)
+    public void OnPlayerDeath(HealthComponent _)
     {
         // Mouse visible.
         MenuOpenedEvent?.Invoke(true);
