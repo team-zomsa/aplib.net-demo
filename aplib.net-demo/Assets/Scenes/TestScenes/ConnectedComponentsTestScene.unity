@@ -374,10 +374,54 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.33333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
+--- !u!1 &576218772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 576218774}
+  - component: {fileID: 576218773}
+  m_Layer: 0
+  m_Name: Spawn Area
+  m_TagString: Respawn
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &576218773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576218772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae00a4f201e1f04fb8326947466f4d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &576218774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576218772}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.73, z: -0.5}
+  m_LocalScale: {x: 4.91674, y: 1.5099, z: 4.91382}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &701474661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,9 +1106,6 @@ MonoBehaviour:
   _gridWidthX: 5
   _gridWidthZ: 5
   _amountOfRooms: 2
-  _amountOfHealthPotions: 3
-  _amountOfRagePotions: 3
-  _amountOfAmmunition: 5
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
@@ -1095,18 +1136,13 @@ MonoBehaviour:
   _tileSizeX: 16
   _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
+  _spawnAbleItems: {fileID: 11400000, guid: 1941be279db86d24f914f5f13da6905c, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
     type: 3}
   _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
   _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
     type: 3}
   _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
-    type: 3}
-  _healthPotionPrefab: {fileID: 3783921441781814114, guid: 5924d3f50fb1bb146897ba52aa3d7a49,
-    type: 3}
-  _ragePotionPrefab: {fileID: 7560215300223784918, guid: 59f68fe0a7bd5554baaf1d43a0849f57,
-    type: 3}
-  _ammunitionPrefab: {fileID: 1402688592469580382, guid: 18fad5aa543620b449decf03a229c586,
     type: 3}
 --- !u!1 &1684352347
 GameObject:
@@ -1233,6 +1269,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3291438562320870195, guid: 6de475068fb9685f5b9e0d862a17164d,
+        type: 3}
+      propertyPath: spawnArea
+      value: 
+      objectReference: {fileID: 576218773}
     - target: {fileID: 7716492017067657420, guid: 6de475068fb9685f5b9e0d862a17164d,
         type: 3}
       propertyPath: m_Name
@@ -1527,3 +1568,4 @@ SceneRoots:
   - {fileID: 531689215}
   - {fileID: 1768937749}
   - {fileID: 2082780000}
+  - {fileID: 576218774}
