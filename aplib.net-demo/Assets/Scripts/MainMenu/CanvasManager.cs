@@ -62,10 +62,6 @@ public class CanvasManager : MonoBehaviour
     [SerializeField]
     private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
 
-    /// <summary>
-    /// Get the player health component to sub to death.
-    /// </summary>
-    private HealthComponent _playerHealth;
 
     private void Awake()
     {
@@ -82,20 +78,28 @@ public class CanvasManager : MonoBehaviour
 
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
+            SetAllToFalse();
             menuCanvas.SetActive(true);
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
-            _playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
+            HealthComponent _playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
             _playerHealth.Death += OnPlayerDeath;
 
-            menuCanvas.SetActive(false);
+            SetAllToFalse();
         }
         else // TODO:: Remove when game is done. This is for future ease.
         {
             Debug.Log("Scene names are wrong. Check MenuButtons script");
         }
+    }
 
+    /// <summary>
+    /// Sets all UI canvases to false.
+    /// </summary>
+    private void SetAllToFalse()
+    {
+        menuCanvas.SetActive(false);
         settingMenuCanvas.SetActive(false);
         settingGameCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
@@ -117,11 +121,7 @@ public class CanvasManager : MonoBehaviour
         InputManager.Instance.DisablePlayerInput();
 
         // Set all off.
-        menuCanvas.SetActive(false);
-        settingMenuCanvas.SetActive(false);
-        settingGameCanvas.SetActive(false);
-        _isOnMenuSettings = false;
-        _isOnGameSettings = false;
+        SetAllToFalse();
 
         // On death ui.
         gameOverCanvas.SetActive(true);
