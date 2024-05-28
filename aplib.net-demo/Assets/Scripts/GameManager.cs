@@ -30,15 +30,15 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0;
-        InputManager.Instance.DisablePlayerInput();
+        if (InputManager.Instance) InputManager.Instance.DisablePlayerInput();
     }
 
     /// <summary>
-    /// Pause the game and enable player input.
+    /// Unpause the game and enable player input.
     /// </summary>
     public void Resume()
     {
         Time.timeScale = 1;
-        InputManager.Instance.EnablePlayerInput();
+        if (InputManager.Instance) InputManager.Instance.EnablePlayerInput();
     }
 }
