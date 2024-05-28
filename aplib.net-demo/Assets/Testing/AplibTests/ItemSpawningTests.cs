@@ -81,9 +81,7 @@ namespace Testing.AplibTests
         }
 
         /// <summary>
-        /// This test first collects a single cell from every connected component.
-        /// It then tries to make the player - spawning in an arbitrary room - visit every one of those cells
-        /// in an arbitrary order. If it succeeds in visiting every cell, it has visited every connected component.
+        /// The player will walk up to the end item and pick it up.
         /// </summary>
         /// <returns>An IEnumerator usable to iterate the test.</returns>
         [UnityTest]
