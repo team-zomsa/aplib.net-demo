@@ -27,4 +27,26 @@ public class GameLoopTests
 
         yield break;
     }
+
+    /// <summary>
+    /// A test that checks if the game is paused after the pause method is called.
+    /// </summary>
+    [UnityTest]
+    public IEnumerator WhenGameManagerPauseCalledThenGameIsPaused()
+    {
+        // Arrange
+        GameObject gameObject = new();
+        gameObject.AddComponent<GameManager>();
+        Time.timeScale = 1f;
+
+        yield return null;
+
+        // Act
+        GameManager.Instance.Pause();
+
+        // Assert
+        Assert.AreEqual(0f, Time.timeScale);
+
+        yield break;
+    }
 }
