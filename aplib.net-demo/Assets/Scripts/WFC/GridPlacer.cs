@@ -192,6 +192,7 @@ namespace Assets.Scripts.Wfc
             PlaceGrid();
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
+            Debug.Log(randomPlayerSpawn.Tile);
 
             SetPlayerSpawn(randomPlayerSpawn);
 
