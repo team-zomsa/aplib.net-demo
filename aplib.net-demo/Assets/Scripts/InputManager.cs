@@ -32,7 +32,10 @@ public class InputManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        else Instance = this;
+        else 
+        {
+            Instance = this;
+        }
 
         _input = new PlayerInput();
         _playerActions = _input.Player;
