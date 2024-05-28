@@ -1136,7 +1136,7 @@ MonoBehaviour:
   _tileSizeX: 16
   _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
-  _spawnAbleItems: {fileID: 11400000, guid: 1941be279db86d24f914f5f13da6905c, type: 2}
+  _spawnableItems: {fileID: 11400000, guid: 6b18b4a3f56fec9449b715947352debf, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
     type: 3}
   _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
@@ -1272,6 +1272,11 @@ PrefabInstance:
     - target: {fileID: 3291438562320870195, guid: 6de475068fb9685f5b9e0d862a17164d,
         type: 3}
       propertyPath: spawnArea
+      value: 
+      objectReference: {fileID: 576218773}
+    - target: {fileID: 3291438562320870195, guid: 6de475068fb9685f5b9e0d862a17164d,
+        type: 3}
+      propertyPath: _spawnArea
       value: 
       objectReference: {fileID: 576218773}
     - target: {fileID: 7716492017067657420, guid: 6de475068fb9685f5b9e0d862a17164d,

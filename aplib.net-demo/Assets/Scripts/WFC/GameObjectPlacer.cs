@@ -146,10 +146,8 @@ namespace Assets.Scripts.Wfc
 
             GameObject items = CreateGameObject("Items", transform);
 
-            for (int i = 0; i < _spawnableItems.Items.Count; i++)
+            foreach (SpawnableItem spawnableItem in _spawnableItems.Items)
             {
-                SpawnAbleItems.SpawnableItem spawnableItem = _spawnableItems.Items[i];
-
                 GameObject itemParent = CreateGameObject(spawnableItem.Item.name, items.transform);
 
                 for (int j = 0; j < spawnableItem.Count; j++)
@@ -207,7 +205,7 @@ namespace Assets.Scripts.Wfc
             Vector3 roomPosition = new(x * _tileSizeX, 0, z * _tileSizeZ);
 
             // Calculate the distance from the room center to where a door should be placed
-            float doorDistanceFromRoomCenter = (_tileSizeX / 2f) - _doorDepthExtent;
+            float doorDistanceFromRoomCenter = _tileSizeX / 2f - _doorDepthExtent;
 
             Quaternion roomRotation = Quaternion.Euler(0, room.Facing.RotationDegrees(), 0);
 

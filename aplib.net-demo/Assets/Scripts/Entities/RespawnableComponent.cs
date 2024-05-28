@@ -11,7 +11,9 @@ namespace Entities
     {
         [SerializeField]
         private Area _spawnArea;
+
         private Rigidbody _rigidbodyToRespawn;
+
         private Bounds _spawnBounds;
 
         /// <summary>
@@ -20,14 +22,14 @@ namespace Entities
         private void Start()
         {
             _rigidbodyToRespawn = transform.GetComponent<Rigidbody>();
-            if (spawnArea == null)
+            if (_spawnArea == null)
             {
                 Debug.LogWarning($"No spawn area found for {name}. Defaulting to spawn position.");
                 _spawnBounds = new Bounds(transform.position, Vector3.zero);
             }
             else
             {
-                _spawnBounds = spawnArea.Bounds;
+                _spawnBounds = _spawnArea.Bounds;
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,12 +12,13 @@ namespace Assets.Scripts.Wfc
     {
         [field: SerializeField]
         public List<SpawnableItem> Items { get; set; }
+    }
 
-        [Serializable]
-        public class SpawnableItem
-        {
-            public GameObject Item;
-            public int Count;
-        }
+    [Serializable]
+    public class SpawnableItem
+    {
+        public GameObject Item;
+
+        public int Count;
     }
 }

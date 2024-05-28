@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b6127cdc9197ae42b9b7c028ac59472, type: 3}
   m_Name: ItemSpawnTestScene
   m_EditorClassIdentifier: 
-  SpawnableItemsCount: 030000000300000003000000
-  SpawnableItems:
-  - {fileID: 3783921441781814114, guid: 5924d3f50fb1bb146897ba52aa3d7a49, type: 3}
-  - {fileID: 7560215300223784918, guid: 59f68fe0a7bd5554baaf1d43a0849f57, type: 3}
-  - {fileID: 1402688592469580382, guid: 18fad5aa543620b449decf03a229c586, type: 3}
+  <Items>k__BackingField:
+  - Item: {fileID: 1402688592469580382, guid: 18fad5aa543620b449decf03a229c586, type: 3}
+    Count: 2
+  - Item: {fileID: 3783921441781814114, guid: 5924d3f50fb1bb146897ba52aa3d7a49, type: 3}
+    Count: 2
+  - Item: {fileID: 7560215300223784918, guid: 59f68fe0a7bd5554baaf1d43a0849f57, type: 3}
+    Count: 2
