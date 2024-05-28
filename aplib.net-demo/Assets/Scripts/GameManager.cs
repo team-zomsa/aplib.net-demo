@@ -24,12 +24,18 @@ public class GameManager : MonoBehaviour
 
     private void Start() => Resume();
 
+    /// <summary>
+    /// Pause the game and disable player input.
+    /// </summary>
     public void Pause()
     {
         Time.timeScale = 0;
         InputManager.Instance.DisablePlayerInput();
     }
 
+    /// <summary>
+    /// Pause the game and enable player input.
+    /// </summary>
     public void Resume()
     {
         Time.timeScale = 1;
