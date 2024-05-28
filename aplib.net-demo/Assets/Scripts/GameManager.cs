@@ -20,7 +20,19 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         else
             _instance = this;
+    }
 
-        DontDestroyOnLoad(gameObject);
+    private void Start() => Resume();
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        InputManager.Instance.DisablePlayerInput();
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        InputManager.Instance.EnablePlayerInput();
     }
 }
