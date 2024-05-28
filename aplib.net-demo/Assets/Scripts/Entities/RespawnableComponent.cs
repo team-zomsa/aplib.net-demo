@@ -9,7 +9,8 @@ namespace Entities
     /// </summary>
     public class RespawnableComponent : MonoBehaviour
     {
-        public Area spawnArea;
+        [SerializeField]
+        private Area _spawnArea;
         private Rigidbody _rigidbodyToRespawn;
         private Bounds _spawnBounds;
 

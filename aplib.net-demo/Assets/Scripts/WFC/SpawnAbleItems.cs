@@ -6,17 +6,17 @@ namespace Assets.Scripts.Wfc
     /// <summary>
     /// Represents the spawnable items.
     /// </summary>
-    [CreateAssetMenu(fileName = "SpawnAbleItems", menuName = "ScriptableObjects/SpawnAbleItems", order = 1)]
-    public class SpawnAbleItems : ScriptableObject
+    [CreateAssetMenu(fileName = "SpawnableItems", menuName = "ScriptableObjects/SpawnableItems", order = 1)]
+    public class SpawnableItems : ScriptableObject
     {
-        /// <summary>
-        /// Represents the spawnable items count.
-        /// </summary>
-        public List<int> SpawnableItemsCount = new();
+        [field: SerializeField]
+        public List<SpawnableItem> Items { get; set; }
 
-        /// <summary>
-        /// Represents the spawnable items.
-        /// </summary>
-        public List<GameObject> SpawnableItems = new();
+        [Serializable]
+        public class SpawnableItem
+        {
+            public GameObject Item;
+            public int Count;
+        }
     }
 }

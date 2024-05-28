@@ -33,7 +33,7 @@ namespace Assets.Scripts.Wfc
         /// Represents the spawnable items.
         /// </summary>
         [SerializeField]
-        private SpawnAbleItems _spawnAbleItems;
+        private SpawnableItems _spawnableItems;
 
         /// <summary>
         /// Represents the door object.
@@ -141,24 +141,21 @@ namespace Assets.Scripts.Wfc
         /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
         public void SpawnItems(List<Cell> cells, Random random)
         {
-            if (_spawnAbleItems.SpawnableItemsCount.Aggregate((x, y) => x + y) > cells.Count)
+            if (_spawnableItems.Items.Select(x => x.Count).Aggregate((x, y) => x + y) > cells.Count)
                 throw new UnityException("Not enough empty cells to place all items.");
-
-            if (_spawnAbleItems.SpawnableItems.Count != _spawnAbleItems.SpawnableItemsCount.Count)
-                throw new UnityException("The number of spawnable items and their counts do not match.");
 
             GameObject items = CreateGameObject("Items", transform);
 
-            for (int i = 0; i < _spawnAbleItems.SpawnableItems.Count; i++)
+            for (int i = 0; i < _spawnableItems.Items.Count; i++)
             {
-                GameObject spawnableItem = _spawnAbleItems.SpawnableItems[i];
+                SpawnAbleItems.SpawnableItem spawnableItem = _spawnableItems.Items[i];
 
-                GameObject itemParent = CreateGameObject(spawnableItem.name, items.transform);
+                GameObject itemParent = CreateGameObject(spawnableItem.Item.name, items.transform);
 
-                for (int j = 0; j < _spawnAbleItems.SpawnableItemsCount[i]; j++)
+                for (int j = 0; j < spawnableItem.Count; j++)
                 {
                     Cell cell = cells[random.Next(cells.Count)];
-                    PlaceItem(spawnableItem, cell, itemParent.transform);
+                    PlaceItem(spawnableItem.Item, cell, itemParent.transform);
                     cell.CannotAddItem = true;
                     cells.Remove(cell);
                 }
