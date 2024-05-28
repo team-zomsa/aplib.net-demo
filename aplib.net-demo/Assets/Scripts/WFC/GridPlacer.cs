@@ -192,6 +192,8 @@ namespace Assets.Scripts.Wfc
             PlaceGrid();
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
+
+            // Cell found, change it to the start model. Might need "old" model to function
             Debug.Log(randomPlayerSpawn.Tile);
 
             SetPlayerSpawn(randomPlayerSpawn);
