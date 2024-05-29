@@ -1889,7 +1889,7 @@ MonoBehaviour:
   GameOverCanvas: {fileID: 110503855823897790}
   WinScreenCanvas: {fileID: 2834902491686029789}
   _sceneNameStartingMenu: Settings
-  _sceneNameGame: InGameSettings
+  _sceneNameGame: GridSystem
 --- !u!1 &2733420268660679136
 GameObject:
   m_ObjectHideFlags: 0
