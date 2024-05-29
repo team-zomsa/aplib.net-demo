@@ -46,7 +46,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to spawn the item in.</param>
         /// <param name="parent">The parent of the item.</param>
         public void PlacePrefab(GameObject prefab, Cell cell, Transform parent) =>
-            Instantiate(prefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+            Instantiate(prefab, CenterOfCell(cell) + _floorOffset + Vector3.one, Quaternion.identity, parent);
 
         /// <summary>
         /// Spawn an item in the given cell.

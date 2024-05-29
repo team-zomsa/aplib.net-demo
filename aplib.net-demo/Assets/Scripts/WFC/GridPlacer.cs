@@ -53,6 +53,11 @@ namespace Assets.Scripts.Wfc
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * .7f;
 
         /// <summary>
+        /// Represents the enemy spawner.
+        /// </summary>
+        private EnemySpawner _enemySpawner;
+
+        /// <summary>
         /// Represents the game object placer.
         /// </summary>
         private GameObjectPlacer _gameObjectPlacer;
@@ -82,6 +87,11 @@ namespace Assets.Scripts.Wfc
 
             if (!TryGetComponent(out _spawningExtensions))
                 throw new UnityException("SpawningExtensions not found.");
+
+            if (!TryGetComponent(out _enemySpawner))
+                throw new UnityException("EnemySpawner not found.");
+
+            _enemySpawner.Initialize();
 
             MakeScene();
         }
@@ -139,6 +149,8 @@ namespace Assets.Scripts.Wfc
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
 
             SpawnItems();
+
+            SpawnEnemies();
         }
 
         /// <summary>
@@ -452,5 +464,7 @@ namespace Assets.Scripts.Wfc
 
             _gameObjectPlacer.SpawnItems(cells, _random);
         }
+
+        private void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
     }
 }

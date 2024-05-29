@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private SpawningExtensions _spawningExtensions;
 
-    public void Awake()
+    public void Initialize()
     {
         if (!TryGetComponent(out _spawningExtensions))
             throw new UnityException("SpawningExtensions not found.");
@@ -34,11 +34,11 @@ public class EnemySpawner : MonoBehaviour
         if (_spawnableEnemies.Enemies.Select(x => x.Count).Aggregate((x, y) => x + y) > cells.Count)
             throw new UnityException("Not enough empty cells to place all enemies.");
 
-        GameObject items = SpawningExtensions.CreateGameObject("Enemies", transform);
+        GameObject enemies = SpawningExtensions.CreateGameObject("Enemies", transform);
 
         foreach (SpawnableEnemy spawnableEnemy in _spawnableEnemies.Enemies)
         {
-            GameObject enemyParent = SpawningExtensions.CreateGameObject(spawnableEnemy.Enemy.name, items.transform);
+            GameObject enemyParent = SpawningExtensions.CreateGameObject(spawnableEnemy.Enemy.name, enemies.transform);
 
             for (int j = 0; j < spawnableEnemy.Count; j++)
             {

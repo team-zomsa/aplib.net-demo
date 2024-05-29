@@ -48,11 +48,6 @@ namespace Assets.Scripts.Wfc
         private GameObject _endItemPrefab;
 
         /// <summary>
-        /// The offset of the floor.
-        /// </summary>
-        private readonly Vector3 _floorOffset = Vector3.up;
-
-        /// <summary>
         /// The depth of the door prefab.
         /// </summary>
         /// <remarks>Getting a reference to the component is expensive, so we only want to do it once.</remarks>
