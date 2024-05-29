@@ -32,7 +32,7 @@ public class InputManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        else 
+        else
         {
             Instance = this;
         }

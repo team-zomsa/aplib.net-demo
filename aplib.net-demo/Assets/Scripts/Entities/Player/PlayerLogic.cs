@@ -31,7 +31,7 @@ public class PlayerLogic : MonoBehaviour
         Debug.Log("Player took damage: " + amount);
     }
 
-    private void OnSelfRespawn (RespawnableComponent respawnableComponent)
+    private void OnSelfRespawn(RespawnableComponent respawnableComponent)
     {
         _healthComponent.Reset();
     }
