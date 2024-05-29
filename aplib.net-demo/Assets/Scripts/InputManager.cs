@@ -43,6 +43,16 @@ public class InputManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
+        // Get the equipment inventory if it is not set.
+        if (!_equipmentInventory)
+        {
+            _equipmentInventory = _playerTransform.gameObject.GetComponentInChildren<EquipmentInventory>();
+            if (!_equipmentInventory)
+            {
+                Debug.LogError("Equipment Inventory not found.");
+            }
+        }
+
         _input = new PlayerInput();
         _playerActions = _input.Player;
         _uiActions = _input.UI;
