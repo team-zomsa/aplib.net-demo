@@ -6123,11 +6123,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2898029916248388371, guid: 0d39e275f015ce94e8e7399feb29eca9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 260152938559246752, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_Name
@@ -6144,16 +6139,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5542232159846349713, guid: 6afe0fbb1debb1449835d0968e789934,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4602042225512801222, guid: 0d39e275f015ce94e8e7399feb29eca9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4844903647834177699, guid: 0d39e275f015ce94e8e7399feb29eca9,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6209,6 +6194,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9089503250737050354, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2898029916248388371, guid: 0d39e275f015ce94e8e7399feb29eca9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602042225512801222, guid: 0d39e275f015ce94e8e7399feb29eca9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844903647834177699, guid: 0d39e275f015ce94e8e7399feb29eca9,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6286,6 +6286,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: PointsManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8932902105420249314, guid: 6d43b113bae8c83478faa2f6ca734529,
+        type: 3}
+      propertyPath: _pointsList
+      value: 
+      objectReference: {fileID: 11400000, guid: acbfd2f3613ad6d46865e0d9b232b82e,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

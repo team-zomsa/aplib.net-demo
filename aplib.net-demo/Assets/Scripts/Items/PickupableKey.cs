@@ -24,6 +24,7 @@ namespace Assets.Scripts.Items
                 return;
 
             Key item = gameObject.GetComponent<Key>();
+            PointsManager.Instance.AddPoints(item);
 
             _keyRing.StoreKey(item);
 

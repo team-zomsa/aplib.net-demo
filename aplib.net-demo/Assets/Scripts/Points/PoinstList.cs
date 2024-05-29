@@ -6,13 +6,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PointsList", menuName = "ScriptableObjects/PointsList", order = 1)]
 public class PoinstList : ScriptableObject
 {
-    public int EnemyPointsAmount = 10;
+    public readonly int EnemyPoints = 10;
 
-    public int PotionPointsAmount = 5;
+    public readonly int PotionPoints = 5;
 
-    public int ElixirPointsAmount = 25;
+    public readonly int EndItemPoints = 25;
 
-    public int KeyPointsAmount = 15;
+    public readonly int KeyPoints = 15;
 
-    public int DoorPointsAmount = 15;
+    public readonly int DoorPoints = 15;
+
+    public readonly int UnusedItemPoints = 10;
 }

@@ -24,6 +24,7 @@ namespace Assets.Scripts.Items
             }
 
             Item item = gameObject.GetComponent<Item>();
+            PointsManager.Instance.AddPoints(item);
 
             Destroy(gameObject);
             inventory.PickUpItem(item);

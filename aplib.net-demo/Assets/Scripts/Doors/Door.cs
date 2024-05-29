@@ -52,7 +52,10 @@ namespace Assets.Scripts.Doors
         {
             // Delete door if it is triggered by the player and the player has the correct key.
             if (collidingObject.gameObject.CompareTag("Player") && GameObject.Find("KeyRingObject").GetComponent<KeyRing>().KeyQuery(this))
+            {
                 Open();
+                PointsManager.Instance.AddPoints(this);
+            }
         }
 
         /// <summary>

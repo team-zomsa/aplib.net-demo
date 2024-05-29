@@ -33,6 +33,9 @@ public class DummyEnemy : AbstractEnemy
 
     protected override void OnDeath(HealthComponent healthComponent)
     {
+        Debug.Log("Enemy died");
+        PointsManager.Instance.AddPoints(this);
+
         if (_respawn)
             _respawnableComponent.Respawn();
         else
