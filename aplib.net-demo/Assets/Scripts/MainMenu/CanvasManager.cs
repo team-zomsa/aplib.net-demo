@@ -115,8 +115,7 @@ public class CanvasManager : MonoBehaviour
         MenuOpenedEvent?.Invoke(true);
 
         // Pause game.
-        Time.timeScale = 0;
-        InputManager.Instance.DisablePlayerInput();
+        GameManager.Instance.Pause();
 
         // Set all off.
         SetAllCanvasesToInactive();
