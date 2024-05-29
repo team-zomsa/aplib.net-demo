@@ -581,6 +581,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenSettings"",
+                    ""type"": ""Button"",
+                    ""id"": ""a7360b94-86c1-4f5a-a065-4eb324e413e6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1012,6 +1021,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""ShowMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a7e7f148-2e0f-4bd9-bbb7-dd1a8c268f50"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""OpenSettings"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d77e188e-dc45-4faa-bd57-3bfcd2f05028"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""OpenSettings"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1101,6 +1132,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_ShowMouse = m_UI.FindAction("ShowMouse", throwIfNotFound: true);
+        m_UI_OpenSettings = m_UI.FindAction("OpenSettings", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1267,6 +1299,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_ShowMouse;
+    private readonly InputAction m_UI_OpenSettings;
     public struct UIActions
     {
         private @PlayerInput m_Wrapper;
@@ -1282,6 +1315,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @ShowMouse => m_Wrapper.m_UI_ShowMouse;
+        public InputAction @OpenSettings => m_Wrapper.m_UI_OpenSettings;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1324,6 +1358,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ShowMouse.started += instance.OnShowMouse;
             @ShowMouse.performed += instance.OnShowMouse;
             @ShowMouse.canceled += instance.OnShowMouse;
+            @OpenSettings.started += instance.OnOpenSettings;
+            @OpenSettings.performed += instance.OnOpenSettings;
+            @OpenSettings.canceled += instance.OnOpenSettings;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1361,6 +1398,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ShowMouse.started -= instance.OnShowMouse;
             @ShowMouse.performed -= instance.OnShowMouse;
             @ShowMouse.canceled -= instance.OnShowMouse;
+            @OpenSettings.started -= instance.OnOpenSettings;
+            @OpenSettings.performed -= instance.OnOpenSettings;
+            @OpenSettings.canceled -= instance.OnOpenSettings;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1446,5 +1486,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnShowMouse(InputAction.CallbackContext context);
+        void OnOpenSettings(InputAction.CallbackContext context);
     }
 }

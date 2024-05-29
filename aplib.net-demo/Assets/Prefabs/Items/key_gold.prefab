@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5177959914744329809}
   m_Layer: 0
   m_Name: pPlane3
-  m_TagString: Untagged
+  m_TagString: Key
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,7 +103,6 @@ MonoBehaviour:
   usesAddedPerPickup: 1
   stackable: 0
   iconTexture: {fileID: 0}
-  Id: 0
 --- !u!114 &4679408664850541634
 MonoBehaviour:
   m_ObjectHideFlags: 0

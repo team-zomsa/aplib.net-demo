@@ -6,11 +6,12 @@ namespace Assets.Scripts.Items
     /// Attach this class to make object pickupable.
     /// </summary>
     [RequireComponent(typeof(Item))]
+    [RequireComponent(typeof(Collider))]
     public class PickupableItem : MonoBehaviour
     {
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player"))
+            if (!other.CompareTag("Player") || !other.material.name.Contains("PlayerPhysic"))
                 return;
 
             GameObject inventoryObject = GameObject.Find("InventoryObject");
