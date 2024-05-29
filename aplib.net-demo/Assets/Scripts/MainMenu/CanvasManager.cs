@@ -28,6 +28,11 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public GameObject settingGameCanvas;
 
+    /// <summary>
+    /// Reference to the win screen.
+    /// </summary>
+    public GameObject WinScreenCanvas;
+
     public static CanvasManager Instance { get; private set; }
 
     /// <summary>
@@ -75,6 +80,7 @@ public class CanvasManager : MonoBehaviour
             menuCanvas.SetActive(true);
             settingMenuCanvas.SetActive(false);
             settingGameCanvas.SetActive(false);
+            WinScreenCanvas.SetActive(false);
             _isOnMenuSettings = false;
             _isOnGameSettings = false;
         }
@@ -83,6 +89,7 @@ public class CanvasManager : MonoBehaviour
             menuCanvas.SetActive(false);
             settingMenuCanvas.SetActive(false);
             settingGameCanvas.SetActive(false);
+            WinScreenCanvas.SetActive(false);
             _isOnMenuSettings = false;
             _isOnGameSettings = false;
         }
@@ -129,6 +136,29 @@ public class CanvasManager : MonoBehaviour
 
             GameSettingsToggled?.Invoke(_isOnGameSettings);
         }
+    }
+
+    /// <summary>
+    /// Show the win screen.
+    /// </summary>
+    public void ShowWinScreen()
+    {
+        // Mouse visible.
+        GameSettingsToggled?.Invoke(true);
+
+        // Pause game.
+        Time.timeScale = 0;
+        InputManager.Instance.DisablePlayerInput();
+
+        // Set all off.
+        menuCanvas.SetActive(false);
+        settingMenuCanvas.SetActive(false);
+        settingGameCanvas.SetActive(false);
+        _isOnMenuSettings = false;
+        _isOnGameSettings = false;
+
+        // On death ui.
+        WinScreenCanvas.SetActive(true);
     }
 
     /// <summary>
