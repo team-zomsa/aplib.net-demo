@@ -5,5 +5,8 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public class StartTSection : TSection
     {
+        public StartTSection(Direction facing) : base(facing)
+        {
+        }
     }
 }

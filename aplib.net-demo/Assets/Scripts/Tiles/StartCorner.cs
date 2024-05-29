@@ -5,5 +5,8 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public class StartCorner : Corner
     {
+        public StartCorner(Direction facing) : base(facing)
+        {
+        }
     }
 }

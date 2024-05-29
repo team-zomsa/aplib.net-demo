@@ -4256,10 +4256,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4286806815411611928}
     m_Modifications:
+    - target: {fileID: 6636577618798049180, guid: c343281465e7b114b85c84f2f072ccf3,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6880643570364035085, guid: c343281465e7b114b85c84f2f072ccf3,
         type: 3}
       propertyPath: m_Name
       value: MuralPlane
+      objectReference: {fileID: 0}
+    - target: {fileID: 7755590858699150655, guid: c343281465e7b114b85c84f2f072ccf3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7755590858699150655, guid: c343281465e7b114b85c84f2f072ccf3,
         type: 3}

@@ -5,5 +5,8 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public class StartStraight : Straight
     {
+        public StartStraight(Direction facing) : base(facing)
+        {
+        }
     }
 }

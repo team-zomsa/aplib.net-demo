@@ -5,5 +5,8 @@ namespace Assets.Scripts.Tiles
     /// </summary>
     public class StartDeadEnd : DeadEnd
     {
+        public StartDeadEnd(Direction facing) : base(facing)
+        {
+        }
     }
 }

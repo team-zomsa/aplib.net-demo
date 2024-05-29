@@ -125,9 +125,9 @@ namespace Assets.Scripts.Wfc
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            SetPlayerSpawn(randomPlayerSpawn);
-
             SwitchTile(randomPlayerSpawn);
+
+            SetPlayerSpawn(randomPlayerSpawn);
 
             PlaceGrid();
 
@@ -140,25 +140,30 @@ namespace Assets.Scripts.Wfc
 
         public void SwitchTile(Cell startTile)
         {
+            Direction facing = startTile.Tile.Facing;
+
             switch (startTile.Tile)
             {
                 case Corner:
-                    startTile.Tile = new StartCorner();
+                    startTile.Tile = new StartCorner(facing);
                     break;
                 case Crossing:
                     startTile.Tile = new StartCrossing();
                     break;
                 case DeadEnd:
-                    startTile.Tile = new StartDeadEnd();
+                    startTile.Tile = new StartDeadEnd(facing);
                     break;
                 case Room:
-                    startTile.Tile = new StartRoom();
+                    startTile.Tile = new StartRoom(
+                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West },
+                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West }
+                        );
                     break;
                 case Straight:
-                    startTile.Tile = new StartStraight();
+                    startTile.Tile = new StartStraight(facing);
                     break;
                 case TSection:
-                    startTile.Tile = new StartTSection();
+                    startTile.Tile = new StartTSection(facing);
                     break;
                 default:
                     break;
