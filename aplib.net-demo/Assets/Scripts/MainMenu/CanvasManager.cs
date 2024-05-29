@@ -33,6 +33,11 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public GameObject GameOverCanvas;
 
+    /// <summary>
+    /// Reference to the help/keybinds canvas.
+    /// </summary>
+    public GameObject HelpCanvas;
+
     public static CanvasManager Instance { get; private set; }
 
     /// <summary>
@@ -102,6 +107,7 @@ public class CanvasManager : MonoBehaviour
         SettingMenuCanvas.SetActive(false);
         SettingGameCanvas.SetActive(false);
         GameOverCanvas.SetActive(false);
+        HelpCanvas.SetActive(false);
         _isOnMenuSettings = false;
         _isOnGameSettings = false;
     }
@@ -155,6 +161,29 @@ public class CanvasManager : MonoBehaviour
         {
             _isOnGameSettings = !_isOnGameSettings;
             SettingGameCanvas.SetActive(_isOnGameSettings);
+
+            if (_isOnGameSettings) GameManager.Instance.Pause();
+            else GameManager.Instance.Resume();
+
+            MenuOpenedEvent?.Invoke(_isOnGameSettings);
+        }
+    }
+
+    /// <summary>
+    /// This button toggles the menu canvas off and the help canvas on or help canvas in game on and off.
+    /// </summary>
+    public void ToggleHelpScreen()
+    {
+        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to helpscreen and back.
+        {
+            _isOnMenuSettings = !_isOnMenuSettings;
+            HelpCanvas.SetActive(_isOnMenuSettings);
+            MenuCanvas.SetActive(!_isOnMenuSettings);
+        }
+        else if (_currentSceneName == _sceneNameGame) // Toggle from game to helpscreen and back.
+        {
+            _isOnGameSettings = !_isOnGameSettings;
+            HelpCanvas.SetActive(_isOnMenuSettings);
 
             if (_isOnGameSettings) GameManager.Instance.Pause();
             else GameManager.Instance.Resume();
