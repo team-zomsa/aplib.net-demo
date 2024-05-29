@@ -41,6 +41,11 @@ public class CanvasManager : MonoBehaviour
     private bool _isOnSettings = false;
 
     /// <summary>
+    /// Is Settings on or off.
+    /// </summary>
+    private bool _isOnHelp = false;
+
+    /// <summary>
     /// This string keeps track of what scene we are in.
     /// </summary>
     private string _currentSceneName = "";
@@ -159,24 +164,29 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// This button toggles the menu canvas off and the help canvas on or help canvas in game on and off.
     /// </summary>
-    public void ToggleHelpScreen()
+    public void OnToggleHelp()
     {
+        _isOnHelp = !_isOnHelp;
+
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to helpscreen and back.
         {
-            _isOnSettings = !_isOnSettings;
-            HelpCanvas.SetActive(_isOnSettings);
-            MenuCanvas.SetActive(!_isOnSettings);
+            SettingCanvas.SetActive(!_isOnHelp);
         }
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to helpscreen and back.
         {
-            _isOnSettings = !_isOnSettings;
-            HelpCanvas.SetActive(_isOnSettings);
-
-            if (_isOnSettings) GameManager.Instance.Pause();
-            else GameManager.Instance.Resume();
-
-            MenuOpenedEvent?.Invoke(_isOnSettings);
+            if (_isOnHelp)
+            {
+                GameManager.Instance.Pause();
+                MenuOpenedEvent?.Invoke(_isOnHelp);
+            }
+            else if (!_isOnHelp && !_isOnSettings)
+            {
+                GameManager.Instance.Resume();
+                MenuOpenedEvent?.Invoke(_isOnHelp);
+            }
         }
+
+        HelpCanvas.SetActive(_isOnHelp);
     }
 
     /// <summary>

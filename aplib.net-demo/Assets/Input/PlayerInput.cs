@@ -590,6 +590,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenHelp"",
+                    ""type"": ""Button"",
+                    ""id"": ""826413f5-b772-4f87-8a96-498a9f827436"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1043,6 +1052,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""OpenSettings"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""384eb43d-ed50-4000-b63a-2aaa2cef1cd3"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""OpenHelp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1133,6 +1153,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_ShowMouse = m_UI.FindAction("ShowMouse", throwIfNotFound: true);
         m_UI_OpenSettings = m_UI.FindAction("OpenSettings", throwIfNotFound: true);
+        m_UI_OpenHelp = m_UI.FindAction("OpenHelp", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1300,6 +1321,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_ShowMouse;
     private readonly InputAction m_UI_OpenSettings;
+    private readonly InputAction m_UI_OpenHelp;
     public struct UIActions
     {
         private @PlayerInput m_Wrapper;
@@ -1316,6 +1338,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @ShowMouse => m_Wrapper.m_UI_ShowMouse;
         public InputAction @OpenSettings => m_Wrapper.m_UI_OpenSettings;
+        public InputAction @OpenHelp => m_Wrapper.m_UI_OpenHelp;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1361,6 +1384,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @OpenSettings.started += instance.OnOpenSettings;
             @OpenSettings.performed += instance.OnOpenSettings;
             @OpenSettings.canceled += instance.OnOpenSettings;
+            @OpenHelp.started += instance.OnOpenHelp;
+            @OpenHelp.performed += instance.OnOpenHelp;
+            @OpenHelp.canceled += instance.OnOpenHelp;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1401,6 +1427,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @OpenSettings.started -= instance.OnOpenSettings;
             @OpenSettings.performed -= instance.OnOpenSettings;
             @OpenSettings.canceled -= instance.OnOpenSettings;
+            @OpenHelp.started -= instance.OnOpenHelp;
+            @OpenHelp.performed -= instance.OnOpenHelp;
+            @OpenHelp.canceled -= instance.OnOpenHelp;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1487,5 +1516,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnShowMouse(InputAction.CallbackContext context);
         void OnOpenSettings(InputAction.CallbackContext context);
+        void OnOpenHelp(InputAction.CallbackContext context);
     }
 }

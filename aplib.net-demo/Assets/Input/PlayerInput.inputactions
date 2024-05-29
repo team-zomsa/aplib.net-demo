@@ -568,6 +568,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "OpenHelp",
+                    "type": "Button",
+                    "id": "826413f5-b772-4f87-8a96-498a9f827436",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1019,6 +1028,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "OpenSettings",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "384eb43d-ed50-4000-b63a-2aaa2cef1cd3",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "OpenHelp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

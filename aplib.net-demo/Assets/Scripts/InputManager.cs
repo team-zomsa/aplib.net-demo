@@ -61,7 +61,11 @@ public class InputManager : MonoBehaviour
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
         _uiActions.Click.performed += _ => _mouseLock.OnLeftMousePressed();
         if (CanvasManager.Instance)
+        {
             _uiActions.OpenSettings.performed += _ => CanvasManager.Instance.OnToggleSettings();
+            _uiActions.OpenHelp.performed += _ => CanvasManager.Instance.OnToggleHelp();
+        }
+
     }
 
     /// <summary>
