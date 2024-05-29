@@ -300,7 +300,7 @@ namespace Assets.Scripts.Wfc
             Area winArea = winPoint.GetComponent<Area>();
             winArea.Bounds = new Bounds(spawningPoint, winArea.Bounds.extents);
 
-            // Set the colors of the start and end rooms
+            // Set the colors of the start and end rooms.
             playerSpawnCell.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;
         }
     }
