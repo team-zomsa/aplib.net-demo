@@ -39,12 +39,12 @@ namespace Entities.Weapons
 
             if (_ammoPouch == null)
             {
-                Debug.LogError("AmmoPouch not found in the scene. Defaulting to global ammo pouch.");
-                _ammoPouch = FindObjectOfType<AmmoPouch>();
+                Debug.LogError("AmmoPouch not found in the scene. Defaulting to parent ammo pouch.");
+                _ammoPouch = GetComponentInParent<AmmoPouch>();
 
                 if (_ammoPouch == null)
                 {
-                    Debug.LogError("No global ammo pouch found. Disabling ranged weapon.");
+                    Debug.LogError("No parent ammo pouch found. Disabling ranged weapon.");
                     enabled = false;
                 }
             }

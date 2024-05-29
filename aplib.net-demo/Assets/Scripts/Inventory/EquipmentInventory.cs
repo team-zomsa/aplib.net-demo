@@ -57,6 +57,9 @@ public class EquipmentInventory : MonoBehaviour
 
     private void Start()
     {
+        // Link to the input manager
+        InputManager.Instance.equipmentInventory = this;
+
         // If the default equipment is empty, add the default equipment to the equipment list.
         // This is to ensure backward compatibility with the previous implementation.
         if (DefaultEquipment?.Count <= 0)

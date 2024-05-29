@@ -2,6 +2,7 @@ using Entities;
 using Entities.Weapons;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class InputManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class InputManager : MonoBehaviour
     private Inventory _inventory;
 
     [SerializeField]
-    private EquipmentInventory _equipmentInventory;
+    public EquipmentInventory equipmentInventory;
 
     private RespawnableComponent _playerRespawn;
 
@@ -44,16 +45,6 @@ public class InputManager : MonoBehaviour
             Instance = this;
         }
 
-        // Get the equipment inventory if it is not set.
-        if (!_equipmentInventory)
-        {
-            _equipmentInventory = _playerTransform.gameObject.GetComponentInChildren<EquipmentInventory>();
-            if (!_equipmentInventory)
-            {
-                Debug.LogError("Equipment Inventory not found.");
-            }
-        }
-
         _input = new PlayerInput();
         _playerActions = _input.Player;
         _uiActions = _input.UI;
@@ -68,14 +59,14 @@ public class InputManager : MonoBehaviour
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.Respawn();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
-        _playerActions.NextItem.performed += _ => _equipmentInventory.MoveNext();
-        _playerActions.PreviousItem.performed += _ => _equipmentInventory.MovePrevious();
+        _playerActions.NextItem.performed += _ => equipmentInventory.MoveNext();
+        _playerActions.PreviousItem.performed += _ => equipmentInventory.MovePrevious();
         _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         _playerActions.Fire.performed += _ =>
         {
-            if (_equipmentInventory.HasItems)
+            if (equipmentInventory.HasItems)
             {
-                _equipmentInventory.CurrentEquipment.UseEquipment();
+                equipmentInventory.CurrentEquipment.UseEquipment();
             }
         };
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
