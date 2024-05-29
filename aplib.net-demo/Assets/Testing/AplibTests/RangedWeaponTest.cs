@@ -1,7 +1,10 @@
 using Aplib.Core;
-using Aplib.Core.Belief;
-using Aplib.Core.Desire;
+using Aplib.Core.Agents;
+using Aplib.Core.Belief.Beliefs;
+using Aplib.Core.Belief.BeliefSets;
+using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
+using Aplib.Core.Desire.GoalStructures;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
@@ -99,7 +102,7 @@ namespace Testing.AplibTests
             Tactic<RangeedWeaponTestBeliefSet> TurnToEnemy = new PrimitiveTactic<RangeedWeaponTestBeliefSet>(RotatePlayerToEnemy);
 
             // Tactic first try to shoot, otherwise turn.
-            Tactic<RangeedWeaponTestBeliefSet> FinalTactic = new FirstOfTactic<RangeedWeaponTestBeliefSet>(metadata: null, KillEnemy, TurnToEnemy);
+            Tactic<RangeedWeaponTestBeliefSet> FinalTactic = new FirstOfTactic<RangeedWeaponTestBeliefSet>(KillEnemy, TurnToEnemy);
 
             // Goal: enemy is dead
             PrimitiveGoalStructure<RangeedWeaponTestBeliefSet> goal = new(goal: new Goal<RangeedWeaponTestBeliefSet>(FinalTactic, EnemyKilledPredicate));
