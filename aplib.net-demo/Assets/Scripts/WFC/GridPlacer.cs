@@ -58,11 +58,6 @@ namespace Assets.Scripts.Wfc
         private GameObjectPlacer _gameObjectPlacer;
 
         /// <summary>
-        /// The distance from the floor to the player localpos.
-        /// </summary>
-        private Vector3 _playerHeightOffset;
-
-        /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private Random _random = new();
@@ -79,15 +74,6 @@ namespace Assets.Scripts.Wfc
         {
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
             _gameObjectPlacer.Initialize();
-
-            GameObject player = GameObject.FindWithTag("Player");
-
-            if (player == null) throw new UnityException("No player was found.");
-
-            float playerHeight = player.GetComponent<CapsuleCollider>().height;
-            Vector3 playerHeightOffset = new(0, playerHeight, 0);
-
-            _playerHeightOffset = playerHeightOffset;
 
             MakeScene();
         }
@@ -119,7 +105,15 @@ namespace Assets.Scripts.Wfc
             if (_amountOfRooms > _gridWidthX * _gridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
 
-            if (_useSeed) _random = new Random(_seed);
+            if (!_useSeed)
+            {
+                Random tempRandom = new();
+                _seed = tempRandom.Next();
+            }
+            _random = new Random(_seed);
+
+
+            Debug.Log("Seed: " + _seed);
 
             MakeGrid();
 
@@ -127,7 +121,7 @@ namespace Assets.Scripts.Wfc
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            SetPlayerSpawn(randomPlayerSpawn);
+            _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
 
             JoinConnectedComponentsWithTeleporters();
 
@@ -179,30 +173,6 @@ namespace Assets.Scripts.Wfc
                 for (int x = 0; x < Grid.Width; x++)
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
             }
-        }
-
-        /// <summary>
-        /// Sets the player spawn point to a random room.
-        /// </summary>
-        /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
-        private void SetPlayerSpawn(Cell playerSpawnCell)
-        {
-            GameObject player = GameObject.FindWithTag("Player");
-
-            if (player == null) throw new UnityException("No player was found.");
-
-            Vector3 spawningPoint = _gameObjectPlacer.CenterOfCell(playerSpawnCell) + _playerHeightOffset;
-
-            Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
-            playerRigidbody.position = spawningPoint;
-
-            GameObject respawnPoint = GameObject.FindWithTag("Respawn");
-
-            if (respawnPoint == null) return;
-
-            respawnPoint.transform.position = spawningPoint;
-            Area area = respawnPoint.GetComponent<Area>();
-            area.Bounds = new Bounds(spawningPoint, area.Bounds.extents);
         }
 
         /// <summary>

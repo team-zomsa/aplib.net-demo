@@ -2,10 +2,10 @@ using Assets.Scripts.Wfc;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editors
+namespace Editor
 {
     [CustomEditor(typeof(GridPlacer))]
-    public class GridPlacerEditor : Editor
+    public class GridPlacerEditor : UnityEditor.Editor
     {
         /// <summary>
         /// <inheritdoc />
