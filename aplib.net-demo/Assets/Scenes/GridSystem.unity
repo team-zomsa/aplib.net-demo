@@ -764,7 +764,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1020104603}
   m_Layer: 0
-  m_Name: '--- Rendering ---'
+  m_Name: --- Rendering ---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -870,7 +870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1117530212}
   m_Layer: 0
-  m_Name: '--- Managers ---'
+  m_Name: --- Managers ---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1272,6 +1272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8366bd27287d4220a09e6d3e8d715bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tileSizeX: 16
+  _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
   _spawnableItems: {fileID: 11400000, guid: 337f0455961848e4daae35638c40a3ae, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
@@ -1870,7 +1872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2078410558}
   m_Layer: 0
-  m_Name: '--- World ---'
+  m_Name: --- World ---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
