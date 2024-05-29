@@ -60,6 +60,11 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     private bool _isOnMenuSettings;
 
+    /// <summary>
+    /// Prevent the settings toggle when the variable is true.
+    /// </summary>
+    private bool _preventSettingsToggle;
+
     public static CanvasManager Instance { get; private set; }
 
     private void Awake()
@@ -130,6 +135,7 @@ public class CanvasManager : MonoBehaviour
 
         // Set all off.
         SetAllCanvasesToInactive();
+        _preventSettingsToggle = true;
 
         // On death ui.
         GameOverCanvas.SetActive(true);
@@ -150,6 +156,8 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleSettings()
     {
+        if (_preventSettingsToggle) return;
+
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
         {
             _isOnMenuSettings = !_isOnMenuSettings;
@@ -181,6 +189,7 @@ public class CanvasManager : MonoBehaviour
 
         // Set all off.
         SetAllCanvasesToInactive();
+        _preventSettingsToggle = true;
 
         // On win ui.
         WinScreenCanvas.SetActive(true);
