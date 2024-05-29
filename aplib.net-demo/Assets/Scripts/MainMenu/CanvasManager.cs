@@ -62,7 +62,6 @@ public class CanvasManager : MonoBehaviour
     [SerializeField]
     private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
 
-
     private void Awake()
     {
         if (Instance != null && Instance != this)

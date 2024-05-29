@@ -13,8 +13,9 @@ using UnityEngine.TestTools;
 
 namespace Testing.AplibTests
 {
-    public class YouCanDieTestBeliefSet : BeliefSet
+    public class MyFirstAplibTestBeliefSet : BeliefSet
     {
+
         /// <summary>
         /// The player object in the scene.
         /// </summary>
@@ -37,10 +38,10 @@ namespace Testing.AplibTests
         {
             // Arrange
             // Create a belief set for the agent.
-            YouCanDieTestBeliefSet beliefSet = new();
+            MyFirstAplibTestBeliefSet beliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.
-            Action<YouCanDieTestBeliefSet> moveTowardsTargetAction = new(
+            Action<MyFirstAplibTestBeliefSet> moveTowardsTargetAction = new(
                 beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
@@ -53,10 +54,10 @@ namespace Testing.AplibTests
                     );
                 }
             );
-            PrimitiveTactic<YouCanDieTestBeliefSet> moveTowardsTargetTactic = new(moveTowardsTargetAction);
+            PrimitiveTactic<MyFirstAplibTestBeliefSet> moveTowardsTargetTactic = new(moveTowardsTargetAction);
 
             // Create a desire for the agent to reach the target position.
-            Goal<YouCanDieTestBeliefSet> reachTargetGoal = new(
+            Goal<MyFirstAplibTestBeliefSet> reachTargetGoal = new(
                 moveTowardsTargetTactic,
                 beliefSet =>
                 {
@@ -66,12 +67,12 @@ namespace Testing.AplibTests
                     return Vector3.Distance(playerPosition, targetPosition) < 0.1f;
                 }
             );
-            PrimitiveGoalStructure<YouCanDieTestBeliefSet> reachTargetGoalStructure = new(reachTargetGoal);
-            RepeatGoalStructure<YouCanDieTestBeliefSet> repeat = new(reachTargetGoalStructure);
-            DesireSet<YouCanDieTestBeliefSet> desireSet = new(repeat);
+            PrimitiveGoalStructure<MyFirstAplibTestBeliefSet> reachTargetGoalStructure = new(reachTargetGoal);
+            RepeatGoalStructure<MyFirstAplibTestBeliefSet> repeat = new(reachTargetGoalStructure);
+            DesireSet<MyFirstAplibTestBeliefSet> desireSet = new(repeat);
 
             // Setup the agent with the belief set and desire set and initialize the test runner.
-            BdiAgent<YouCanDieTestBeliefSet> agent = new(beliefSet, desireSet);
+            BdiAgent<MyFirstAplibTestBeliefSet> agent = new(beliefSet, desireSet);
             AplibRunner testRunner = new(agent);
 
             // Act
