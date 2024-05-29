@@ -156,18 +156,12 @@ public class CanvasManager : MonoBehaviour
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
         {
             _isOnGameSettings = !_isOnGameSettings;
-            SettingGameCanvas.SetActive(_isOnGameSettings);
-            if (_isOnGameSettings)
-            {
-                Time.timeScale = 0;
-                InputManager.Instance.DisablePlayerInput();
-            }
-            else
-            {
-                Time.timeScale = 1;
-                InputManager.Instance.EnablePlayerInput();
-            }
-            MenuOpenedEvent?.Invoke(_isOnGameSettings);
+            settingGameCanvas.SetActive(_isOnGameSettings);
+
+            if (_isOnGameSettings) GameManager.Instance.Pause();
+            else GameManager.Instance.Resume();
+
+            GameSettingsToggled?.Invoke(_isOnGameSettings);
         }
     }
 
