@@ -1,3 +1,4 @@
+using Entities;
 using Entities.Weapons;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private MouseLock _mouseLock;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Inventory _inventory;
-    private CanvasManager _canvasManager;
-    private ResetRigidbody _playerRespawn;
+    private RespawnableComponent _playerRespawn;
     private Movement _playerMovement;
     // TODO: Change when inventory is added
     // Doing it this way for now, change when inventory is implemented.
@@ -28,25 +28,32 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         if (Instance != null && Instance != this)
+        {
             Destroy(gameObject);
-        else
+            return;
+        }
+        else 
+        {
             Instance = this;
-        DontDestroyOnLoad(gameObject);
+        }
 
         _input = new PlayerInput();
         _playerActions = _input.Player;
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
-        _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
-        List<Weapon> playerWeapons = new(_playerTransform.GetComponentsInChildren<Weapon>());
+        _playerRespawn = _playerTransform.GetComponent<RespawnableComponent>();
+    }
 
+    private void Start()
+    {
+        List<Weapon> playerWeapons = new(_playerTransform.GetComponentsInChildren<Weapon>());
         if (playerWeapons.Count > 0)
             _activeWeapon = playerWeapons[0];
 
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
-        _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
+        _playerActions.Respawn.performed += _ => _playerRespawn.Respawn();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
         _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         if (_activeWeapon)

@@ -125,6 +125,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DoorNavMesh
       objectReference: {fileID: 0}
+    - target: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
+        type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -183,7 +188,7 @@ OffMeshLink:
   m_End: {fileID: 1385216037311807901}
   m_CostOverride: -1
   m_BiDirectional: 1
-  m_Activated: 1
+  m_Activated: 0
   m_AutoUpdatePositions: 1
 --- !u!4 &9020146878140602953 stripped
 Transform:
