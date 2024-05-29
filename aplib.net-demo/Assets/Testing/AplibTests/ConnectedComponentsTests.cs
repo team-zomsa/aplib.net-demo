@@ -1,7 +1,10 @@
 using Aplib.Core;
-using Aplib.Core.Belief;
-using Aplib.Core.Desire;
+using Aplib.Core.Agents;
+using Aplib.Core.Belief.Beliefs;
+using Aplib.Core.Belief.BeliefSets;
+using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
+using Aplib.Core.Desire.GoalStructures;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
@@ -72,7 +75,7 @@ namespace Testing.AplibTests
             PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
                 guard: beliefSet => teleporterPositions.Any(teleporterPosition =>
                     (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
-            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(metadata: null,
+            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(
                 waitForTeleportTactic,
                 approachCurrentCellTactic);
 
