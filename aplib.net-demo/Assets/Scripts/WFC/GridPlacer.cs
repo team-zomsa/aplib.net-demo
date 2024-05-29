@@ -123,20 +123,46 @@ namespace Assets.Scripts.Wfc
 
             MakeGrid();
 
-            PlaceGrid();
-
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            // Cell found, change it to the start model. Might need "old" model to function
-            Debug.Log(randomPlayerSpawn.Tile);
-
             SetPlayerSpawn(randomPlayerSpawn);
+
+            SwitchTile(randomPlayerSpawn);
+
+            PlaceGrid();
 
             JoinConnectedComponentsWithTeleporters();
 
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
 
             SpawnItems();
+        }
+
+        public void SwitchTile(Cell startTile)
+        {
+            switch (startTile.Tile)
+            {
+                case Corner:
+                    startTile.Tile = new StartCorner();
+                    break;
+                case Crossing:
+                    startTile.Tile = new StartCrossing();
+                    break;
+                case DeadEnd:
+                    startTile.Tile = new StartDeadEnd();
+                    break;
+                case Room:
+                    startTile.Tile = new StartRoom();
+                    break;
+                case Straight:
+                    startTile.Tile = new StartStraight();
+                    break;
+                case TSection:
+                    startTile.Tile = new StartTSection();
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>

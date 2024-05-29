@@ -171,11 +171,17 @@ namespace Assets.Scripts.Wfc
         {
             GameObject prefab = tile switch
             {
+                StartCorner => _roomObjects.StartCorner,
                 Corner => _roomObjects.Corner,
+                StartCrossing => _roomObjects.StartCrossing,
                 Crossing => _roomObjects.Crossing,
+                StartDeadEnd => _roomObjects.StartDeadEnd,
                 DeadEnd => _roomObjects.DeadEnd,
+                StartRoom => _roomObjects.StartRoom,
                 Room => _roomObjects.Room,
+                StartStraight => _roomObjects.StartStraight,
                 Straight => _roomObjects.Straight,
+                StartTSection => _roomObjects.StartTSection,
                 TSection => _roomObjects.TSection,
                 _ => _roomObjects.Empty
             };
