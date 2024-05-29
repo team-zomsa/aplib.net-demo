@@ -2470,6 +2470,7 @@ GameObject:
   - component: {fileID: 975005994}
   - component: {fileID: 975005993}
   - component: {fileID: 975005992}
+  - component: {fileID: 975005996}
   m_Layer: 5
   m_Name: InventoryObject
   m_TagString: Untagged
@@ -2559,6 +2560,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975005990}
   m_CullTransparentMesh: 1
+--- !u!114 &975005996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975005990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50faf2387a65b49408705dcb20039fbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &996726064
 GameObject:
   m_ObjectHideFlags: 0
@@ -2826,6 +2839,7 @@ MonoBehaviour:
   _mouseLock: {fileID: 630626820}
   _playerTransform: {fileID: 1842886787}
   _inventory: {fileID: 0}
+  _equipmentInventory: {fileID: 1842886788}
 --- !u!4 &1105410511
 Transform:
   m_ObjectHideFlags: 0
@@ -3580,7 +3594,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.33333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 37a7612c1ae798f4a807d7ad6d6999d4, type: 2}
   m_BuildHeightMesh: 0
@@ -4556,6 +4570,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 282222471709563887, guid: 6b106093d51a6134e89463af01c7af10,
+        type: 3}
+      propertyPath: m_Name
+      value: Crossbow
+      objectReference: {fileID: 0}
     - target: {fileID: 938185264153980833, guid: 6b106093d51a6134e89463af01c7af10,
         type: 3}
       propertyPath: _firePoint
@@ -4566,6 +4585,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Ranged
       objectReference: {fileID: 0}
+    - target: {fileID: 6200821051112023543, guid: 6b106093d51a6134e89463af01c7af10,
+        type: 3}
+      propertyPath: _firePoint
+      value: 
+      objectReference: {fileID: 1842886785}
     - target: {fileID: 6444749009958455111, guid: 6b106093d51a6134e89463af01c7af10,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4639,6 +4663,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1842886784}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1842886788 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 51469969266692319, guid: 6b106093d51a6134e89463af01c7af10,
+    type: 3}
+  m_PrefabInstance: {fileID: 1842886784}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62f9716eb62840d28d877cd9e7c1a460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1930282102
 Mesh:
   m_ObjectHideFlags: 0

@@ -20,9 +20,10 @@ namespace Entities.Weapons
         [SerializeField]
         private int _range = 50;
 
-        private IEnumerable<RaycastHit> _orderedHits;
-
+        [SerializeField]
         private AmmoPouch _ammoPouch;
+
+        private IEnumerable<RaycastHit> _orderedHits;
 
         /// <summary>
         /// By default, assume the weapon will be fired by the player, from the camera.
@@ -31,11 +32,22 @@ namespace Entities.Weapons
         {
             // This needs to be '==' and not 'is', because the check for None (transform) only works with '=='.
             if (_firePoint == null)
+            {
                 _firePoint = Camera.main.transform;
+            }
 
-            _ammoPouch = FindObjectOfType<AmmoPouch>();
+
             if (_ammoPouch == null)
-                Debug.LogError("AmmoPouch not found in the scene.");
+            {
+                Debug.LogError("AmmoPouch not found in the scene. Defaulting to global ammo pouch.");
+                _ammoPouch = FindObjectOfType<AmmoPouch>();
+
+                if (_ammoPouch == null)
+                {
+                    Debug.LogError("No global ammo pouch found. Disabling ranged weapon.");
+                    enabled = false;
+                }
+            }
         }
 
         /// <summary>
@@ -60,19 +72,25 @@ namespace Entities.Weapons
         public override void UseWeapon()
         {
             if (!_ammoPouch.TryUseAmmo())
+            {
                 return;
+            }
 
             // Play a random whoosh crossbow sound.
             _entitySound.Shoot();
 
             if (!EnemiesInLineOfSight())
+            {
                 return;
+            }
 
             // Will damage only enemies and the ray will stop when it hits an object that is not an enemy.
             foreach (RaycastHit hit in _orderedHits)
             {
                 if (!hit.collider.CompareTag(_targetTag))
+                {
                     break;
+                }
 
                 // Check if the enemy has a Health component.
                 HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
