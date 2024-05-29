@@ -123,16 +123,13 @@ namespace Assets.Scripts.Wfc
             if (_amountOfRooms > _gridWidthX * _gridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
 
-            if (_useSeed)
-            {
-                _random = new Random(_seed);
-            }
-            else
+            if (!_useSeed)
             {
                 Random tempRandom = new();
                 _seed = tempRandom.Next();
-                _random = new Random(_seed);
             }
+            _random = new Random(_seed);
+
 
             Debug.Log("Seed: " + _seed);
 

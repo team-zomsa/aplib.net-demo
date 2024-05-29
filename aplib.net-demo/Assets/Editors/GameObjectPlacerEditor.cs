@@ -2,10 +2,10 @@ using Assets.Scripts.Wfc;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editors
+namespace Editor
 {
     [CustomEditor(typeof(GameObjectPlacer))]
-    public class GameObjectPlacerEditor : Editor
+    public class GameObjectPlacerEditor : UnityEditor.Editor
     {
         /// <summary>
         /// <inheritdoc />
@@ -20,6 +20,8 @@ namespace Editors
             SerializedProperty keyPrefab = gameObjectPlacerSettings.FindProperty("_keyPrefab");
             SerializedProperty teleporterPrefab = gameObjectPlacerSettings.FindProperty("_teleporterPrefab");
             SerializedProperty endItemPrefab = gameObjectPlacerSettings.FindProperty("_endItemPrefab");
+            SerializedProperty startRoomMaterial = gameObjectPlacerSettings.FindProperty("_startRoomMat");
+            SerializedProperty endRoomMaterial = gameObjectPlacerSettings.FindProperty("_endRoomMat");
 
             roomObjects.objectReferenceValue = EditorGUILayout.ObjectField("Room objects",
                 roomObjects.objectReferenceValue, typeof(RoomObjects), false);
@@ -38,6 +40,12 @@ namespace Editors
 
             endItemPrefab.objectReferenceValue = EditorGUILayout.ObjectField("End Item prefab",
                 endItemPrefab.objectReferenceValue, typeof(GameObject), false);
+
+            startRoomMaterial.objectReferenceValue = EditorGUILayout.ObjectField("Start Room Material",
+                startRoomMaterial.objectReferenceValue, typeof(Material), false);
+
+            endRoomMaterial.objectReferenceValue = EditorGUILayout.ObjectField("End Room Material",
+                endRoomMaterial.objectReferenceValue, typeof(Material), false);
 
             gameObjectPlacerSettings.ApplyModifiedProperties();
         }

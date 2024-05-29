@@ -12,6 +12,18 @@ namespace Assets.Scripts.Wfc
     public class GameObjectPlacer : MonoBehaviour
     {
         /// <summary>
+        /// The size of the tiles in the x-direction.
+        /// </summary>
+        [SerializeField]
+        private int _tileSizeX = 16;
+
+        /// <summary>
+        /// The size of the tiles in the z-direction.
+        /// </summary>
+        [SerializeField]
+        private int _tileSizeZ = 16;
+
+        /// <summary>
         /// Represents the room objects.
         /// </summary>
         [SerializeField]
@@ -46,6 +58,18 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         [SerializeField]
         private GameObject _endItemPrefab;
+
+        /// <summary>
+        /// The material of the start room.
+        /// </summary>
+        [SerializeField]
+        private Material _startRoomMat;
+
+        /// <summary>
+        /// The material of the end room.
+        /// </summary>
+        [SerializeField]
+        private Material _endRoomMat;
 
         /// <summary>
         /// The depth of the door prefab.
@@ -102,7 +126,13 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="cell">The cell to spawn the end item in.</param>
         /// <param name="parent">The parent of the end item.</param>
-        public void PlaceEndItem(Cell cell, Transform parent) => _spawningExtensions.PlacePrefab(_endItemPrefab, cell, parent);
+        public void PlaceEndItem(Cell cell, Transform parent)
+        {
+            _spawningExtensions.PlacePrefab(_endItemPrefab, cell, parent);
+
+            // Change the cell color to end room color.
+            cell.Tile.GameObject.GetComponent<Renderer>().material = _endRoomMat;
+        }
 
         /// <summary>
         /// Spawns all items in the world.
@@ -238,6 +268,9 @@ namespace Assets.Scripts.Wfc
             winPoint.transform.position = spawningPoint;
             Area winArea = winPoint.GetComponent<Area>();
             winArea.Bounds = new Bounds(spawningPoint, winArea.Bounds.extents);
+
+            // Set the colors of the start and end rooms.
+            playerSpawnCell.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;
         }
     }
 }
