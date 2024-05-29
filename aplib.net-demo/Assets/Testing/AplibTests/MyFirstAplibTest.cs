@@ -15,6 +15,7 @@ namespace Testing.AplibTests
 {
     public class MyFirstBeliefSet : BeliefSet
     {
+
         /// <summary>
         /// The player object in the scene.
         /// </summary>
