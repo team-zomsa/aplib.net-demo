@@ -85,6 +85,7 @@ namespace Testing.AplibTests
         /// </summary>
         /// <returns>An IEnumerator usable to iterate the test.</returns>
         [UnityTest]
+        [Timeout(300000)]
         public IEnumerator CanFindEndItem()
         {
             // Arrange
