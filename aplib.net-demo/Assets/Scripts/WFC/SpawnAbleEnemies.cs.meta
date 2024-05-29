@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dc2faddc161663044bf4eb96b70992b3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - EndItem: {instanceID: 0}
+  - HealthPotion: {instanceID: 0}
+  - RagePotion: {instanceID: 0}
+  - Ammunition: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
