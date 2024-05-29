@@ -9,11 +9,6 @@ using UnityEngine.SceneManagement;
 public class CanvasManager : MonoBehaviour
 {
     /// <summary>
-    /// Event that is fired when the game settings are toggled.
-    /// </summary>
-    public event Action<bool> MenuOpenedEvent;
-
-    /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
     public GameObject MenuCanvas;
@@ -38,23 +33,6 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public GameObject WinScreenCanvas;
 
-    public static CanvasManager Instance { get; private set; }
-
-    /// <summary>
-    /// To ensure the menu settings and menu UI aren't on at the same time.
-    /// </summary>
-    private bool _isOnMenuSettings = false;
-
-    /// <summary>
-    /// To ensure the game settings and menu UI aren't on at the same time.
-    /// </summary>
-    private bool _isOnGameSettings = false;
-
-    /// <summary>
-    /// This string keeps track of what scene we are in.
-    /// </summary>
-    private string _currentSceneName = "";
-
     /// <summary>
     /// Name of the start screen.
     /// </summary>
@@ -66,6 +44,23 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
+
+    /// <summary>
+    /// This string keeps track of what scene we are in.
+    /// </summary>
+    private string _currentSceneName = "";
+
+    /// <summary>
+    /// To ensure the game settings and menu UI aren't on at the same time.
+    /// </summary>
+    private bool _isOnGameSettings;
+
+    /// <summary>
+    /// To ensure the menu settings and menu UI aren't on at the same time.
+    /// </summary>
+    private bool _isOnMenuSettings;
+
+    public static CanvasManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -85,8 +80,6 @@ public class CanvasManager : MonoBehaviour
         else
             Debug.LogWarning("No WinArea found in scene!");
 
-
-
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
             SetAllCanvasesToInactive();
@@ -104,6 +97,11 @@ public class CanvasManager : MonoBehaviour
             Debug.Log("Scene names are wrong. Check MenuButtons script");
         }
     }
+
+    /// <summary>
+    /// Event that is fired when the game settings are toggled.
+    /// </summary>
+    public event Action<bool> MenuOpenedEvent;
 
     /// <summary>
     /// Sets all UI canvases to false.
@@ -140,18 +138,12 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// When the play button in the main menu is clicked, it wil teleport the player to the game.
     /// </summary>
-    public void PlayGame()
-    {
-        SceneManager.LoadScene(_sceneNameGame);
-    }
+    public void PlayGame() => SceneManager.LoadScene(_sceneNameGame);
 
     /// <summary>
     /// When the Quit To Menu button in the game setting is clicked, it will take you back to the menu.
     /// </summary>
-    public void ToMenu()
-    {
-        SceneManager.LoadScene(_sceneNameStartingMenu);
-    }
+    public void ToMenu() => SceneManager.LoadScene(_sceneNameStartingMenu);
 
     /// <summary>
     /// This button toggles the menu canvas off and the setting canvas on or game settings on and off.
@@ -182,17 +174,13 @@ public class CanvasManager : MonoBehaviour
     public void ShowWinScreen()
     {
         // Mouse visible.
-        GameSettingsToggled?.Invoke(true);
+        MenuOpenedEvent?.Invoke(true);
 
         // Pause game.
         GameManager.Instance.Pause();
 
         // Set all off.
-        menuCanvas.SetActive(false);
-        settingMenuCanvas.SetActive(false);
-        settingGameCanvas.SetActive(false);
-        _isOnMenuSettings = false;
-        _isOnGameSettings = false;
+        SetAllCanvasesToInactive();
 
         // On death ui.
         WinScreenCanvas.SetActive(true);
@@ -202,8 +190,5 @@ public class CanvasManager : MonoBehaviour
     /// When player presses the quit button the application closes.
     /// This works with the build not in the editor. Keep this in mind.
     /// </summary>
-    public void QuitApplication()
-    {
-        Application.Quit();
-    }
+    public void QuitApplication() => Application.Quit();
 }
