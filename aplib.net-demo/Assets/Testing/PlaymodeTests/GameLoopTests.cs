@@ -24,8 +24,6 @@ public class GameLoopTests
 
         // Assert
         Assert.AreEqual(1f, Time.timeScale);
-
-        yield break;
     }
 
     /// <summary>
@@ -46,7 +44,5 @@ public class GameLoopTests
 
         // Assert
         Assert.AreEqual(0f, Time.timeScale);
-
-        yield break;
     }
 }
