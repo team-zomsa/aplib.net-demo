@@ -141,7 +141,7 @@ namespace Assets.Scripts.Wfc
         public void PlaceEndItem(Cell cell, Transform parent)
         {
             Instantiate(_endItemPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
-            // Change the cell color to end room color
+            // Change the cell color to end room color.
             cell.Tile.GameObject.GetComponent<Renderer>().material = _endRoomMat;
         }
 

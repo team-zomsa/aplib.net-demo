@@ -76,10 +76,11 @@ public class CanvasManager : MonoBehaviour
         _currentSceneName = SceneManager.GetActiveScene().name;
         WinArea winArea = FindObjectOfType<WinArea>();
         if (winArea != null)
-        {
             winArea.OnWin += ShowWinScreen;
+        else
+            Debug.LogWarning("No WinArea found in scene!");
 
-        }
+
 
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
