@@ -74,6 +74,12 @@ public class CanvasManager : MonoBehaviour
     private void Start()
     {
         _currentSceneName = SceneManager.GetActiveScene().name;
+        WinArea winArea = FindObjectOfType<WinArea>();
+        if (winArea != null)
+        {
+            winArea.OnWin += ShowWinScreen;
+
+        }
 
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
@@ -147,8 +153,7 @@ public class CanvasManager : MonoBehaviour
         GameSettingsToggled?.Invoke(true);
 
         // Pause game.
-        Time.timeScale = 0;
-        InputManager.Instance.DisablePlayerInput();
+        GameManager.Instance.Pause();
 
         // Set all off.
         menuCanvas.SetActive(false);

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class WinArea : Area
 {
+    public event Action OnWin;
+
     private Inventory _inventory;
 
     public void Start()
@@ -21,7 +24,6 @@ public class WinArea : Area
     {
         if (!other.CompareTag("Player") || !_inventory.ContainsItem("The Eternal Elixir")) return;
 
-        Debug.Log("You win!");
-        Application.Quit();
+        OnWin?.Invoke();
     }
 }
