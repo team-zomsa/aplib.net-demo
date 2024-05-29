@@ -22,6 +22,8 @@ namespace Entities.Weapons
 
         private IEnumerable<RaycastHit> _orderedHits;
 
+        private AmmoPouch _ammoPouch;
+
         /// <summary>
         /// By default, assume the weapon will be fired by the player, from the camera.
         /// </summary>
@@ -30,6 +32,10 @@ namespace Entities.Weapons
             // This needs to be '==' and not 'is', because the check for None (transform) only works with '=='.
             if (_firePoint == null)
                 _firePoint = Camera.main.transform;
+
+            _ammoPouch = FindObjectOfType<AmmoPouch>();
+            if (_ammoPouch == null)
+                Debug.LogError("AmmoPouch not found in the scene.");
         }
 
         /// <summary>
@@ -53,6 +59,9 @@ namespace Entities.Weapons
         /// </summary>
         public override void UseWeapon()
         {
+            if (!_ammoPouch.TryUseAmmo())
+                return;
+
             // Play a random whoosh crossbow sound.
             _entitySound.Shoot();
 
