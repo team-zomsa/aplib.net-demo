@@ -71,6 +71,11 @@ namespace Assets.Scripts.Wfc
         private float _doorDepthExtent;
 
         /// <summary>
+        /// The distance from the floor to the player localpos.
+        /// </summary>
+        private Vector3 _playerHeightOffset;
+
+        /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Initialize()
@@ -79,6 +84,15 @@ namespace Assets.Scripts.Wfc
                 throw new UnityException("Door prefab does not have a renderer component.");
 
             _doorDepthExtent = doorRenderer.bounds.extents.z;
+
+            GameObject player = GameObject.FindWithTag("Player");
+
+            if (player == null) throw new UnityException("No player was found.");
+
+            float playerHeight = player.GetComponent<CapsuleCollider>().height;
+            Vector3 playerHeightOffset = new(0, playerHeight, 0);
+
+            _playerHeightOffset = playerHeightOffset;
         }
 
         /// <summary>
@@ -236,6 +250,38 @@ namespace Assets.Scripts.Wfc
 
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
+        }
+
+        /// <summary>
+        /// Sets the player spawn point to a random room.
+        /// </summary>
+        /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
+        public void SetPlayerSpawn(Cell playerSpawnCell)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+
+            if (player == null) throw new UnityException("No player was found.");
+
+            Vector3 spawningPoint = CenterOfCell(playerSpawnCell) + _playerHeightOffset;
+
+            Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
+            playerRigidbody.position = spawningPoint;
+
+            GameObject respawnPoint = GameObject.FindWithTag("Respawn");
+
+            if (respawnPoint == null) return;
+
+            respawnPoint.transform.position = spawningPoint;
+            Area respawnArea = respawnPoint.GetComponent<Area>();
+            respawnArea.Bounds = new Bounds(spawningPoint, respawnArea.Bounds.extents);
+
+            GameObject winPoint = GameObject.FindWithTag("Win");
+
+            if (winPoint == null) return;
+
+            winPoint.transform.position = spawningPoint;
+            Area winArea = winPoint.GetComponent<Area>();
+            winArea.Bounds = new Bounds(spawningPoint, winArea.Bounds.extents);
         }
     }
 }

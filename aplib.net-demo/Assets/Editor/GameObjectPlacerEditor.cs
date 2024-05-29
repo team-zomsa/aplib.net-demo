@@ -2,10 +2,10 @@ using Assets.Scripts.Wfc;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editors
+namespace Editor
 {
     [CustomEditor(typeof(GameObjectPlacer))]
-    public class GameObjectPlacerEditor : Editor
+    public class GameObjectPlacerEditor : UnityEditor.Editor
     {
         /// <summary>
         /// <inheritdoc />
