@@ -23,6 +23,9 @@ public class PointsManager : MonoBehaviour
     /// </summary>
     public static PointsManager Instance { get; private set; }
 
+    [SerializeField]
+    private PoinstList _pointsList;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

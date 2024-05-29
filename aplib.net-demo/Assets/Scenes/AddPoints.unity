@@ -6099,7 +6099,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _mouseLock
       value: 
-      objectReference: {fileID: 844829002}
+      objectReference: {fileID: 191900091}
     - target: {fileID: 6991583909101682435, guid: 7ef51145806d8f144979775b83032e6d,
         type: 3}
       propertyPath: _playerTransform
