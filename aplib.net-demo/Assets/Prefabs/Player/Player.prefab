@@ -181,12 +181,12 @@ GameObject:
   - component: {fileID: 5406434194941833880}
   - component: {fileID: 8680734376277569563}
   - component: {fileID: 4639094785897223686}
-  - component: {fileID: 4704915512707521697}
   - component: {fileID: 4120109883158613966}
   - component: {fileID: 8270781970849270890}
   - component: {fileID: 3363266588949181139}
   - component: {fileID: 4597483415818435336}
   - component: {fileID: 926564437708444879}
+  - component: {fileID: 7549273605602703630}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -351,19 +351,6 @@ MonoBehaviour:
   _slopeCheckRayExtraLength: 0.3
   _wallCheckMaxDistance: 0.5
   _playerVisTransform: {fileID: 6027258894572874222}
---- !u!114 &4704915512707521697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3350569462782925553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08a9ec7e59e7d974e8d82ff3dbc6c324, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _respawnPointTransform: {fileID: 0}
 --- !u!114 &4120109883158613966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,6 +522,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72fc9e12715db454a865b9ad24e83cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnOnDeath: 1
+--- !u!114 &7549273605602703630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3350569462782925553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648b288588b042ea812320b0f63da5f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpawnArea: {fileID: 0}
 --- !u!1 &4312664866236832737
 GameObject:
   m_ObjectHideFlags: 0

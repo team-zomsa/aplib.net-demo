@@ -56,10 +56,8 @@ public class Inventory : MonoBehaviour
         }
 
         if (!item.stackable)
-        {
             // If the the item is non stackable, we cannot store it in the inventory system.
             return;
-        }
 
         Item existingItem = _itemList.FirstOrDefault(i => i.name == item.name);
         bool alreadyInInventory = existingItem is not null;
@@ -76,7 +74,9 @@ public class Inventory : MonoBehaviour
             item.transform.SetParent(transform);
             Item itemCopy = Instantiate(item);
             itemCopy.gameObject.GetComponent<Collider>().enabled = false;
-            itemCopy.transform.Find("Visual").gameObject.SetActive(false);
+
+            itemCopy.transform.Find("Visual")?.gameObject.SetActive(false);
+
             itemCopy.name = item.name;
             _itemList.Enqueue(itemCopy);
 
@@ -94,10 +94,7 @@ public class Inventory : MonoBehaviour
         {
             _itemList.Peek().UseItem();
 
-            if (_itemList.Peek().uses <= 0)
-            {
-                _ = _itemList.Dequeue();
-            }
+            if (_itemList.Peek().uses <= 0) _ = _itemList.Dequeue();
         }
 
         DisplayItem();
@@ -108,11 +105,10 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void SwitchItem()
     {
-        if (_itemList.Any())
-        {
-            _itemList.Enqueue(_itemList.Dequeue());
-            DisplayItem();
-        }
+        if (!_itemList.Any()) return;
+
+        _itemList.Enqueue(_itemList.Dequeue());
+        DisplayItem();
     }
 
     /// <summary>
@@ -120,4 +116,11 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void DisplayItem() => _inventoryIndicator.texture =
         _itemList.Count == 0 ? emptyInventoryImage : _itemList.Peek().iconTexture;
+
+    /// <summary>
+    /// Checks if the inventory contains an item with the given name.
+    /// </summary>
+    /// <param name="queryName">The name of the item to check for.</param>
+    /// <returns>True if the item is in the inventory, otherwise false.</returns>
+    public bool ContainsItem(string queryName) => _itemList.Any(i => i.name == queryName);
 }

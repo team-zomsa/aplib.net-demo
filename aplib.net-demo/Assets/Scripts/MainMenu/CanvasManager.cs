@@ -123,16 +123,10 @@ public class CanvasManager : MonoBehaviour
         {
             _isOnGameSettings = !_isOnGameSettings;
             settingGameCanvas.SetActive(_isOnGameSettings);
-            if (_isOnGameSettings)
-            {
-                Time.timeScale = 0;
-                InputManager.Instance.DisablePlayerInput();
-            }
-            else
-            {
-                Time.timeScale = 1;
-                InputManager.Instance.EnablePlayerInput();
-            }
+
+            if (_isOnGameSettings) GameManager.Instance.Pause();
+            else GameManager.Instance.Resume();
+
             GameSettingsToggled?.Invoke(_isOnGameSettings);
         }
     }

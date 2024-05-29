@@ -1,3 +1,6 @@
+using Entities;
+using Entities.Weapons;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -14,14 +17,13 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private EquipmentInventory _equipmentInventory;
 
+    private RespawnableComponent _playerRespawn;
+
     private CanvasManager _canvasManager;
-
     private Vector2 _horizontalInput;
-
     private PlayerInput _input;
     private PlayerInput.PlayerActions _playerActions;
     private Movement _playerMovement;
-    private ResetRigidbody _playerRespawn;
     private PlayerInput.UIActions _uiActions;
 
     public static InputManager Instance { get; private set; }
@@ -35,13 +37,12 @@ public class InputManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
         else
         {
             Instance = this;
         }
-
-        DontDestroyOnLoad(gameObject);
 
         // Get the equipment inventory if it is not set.
         if (!_equipmentInventory)
@@ -57,12 +58,15 @@ public class InputManager : MonoBehaviour
         _playerActions = _input.Player;
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
-        _playerRespawn = _playerTransform.GetComponent<ResetRigidbody>();
+        _playerRespawn = _playerTransform.GetComponent<RespawnableComponent>();
+    }
 
+    private void Start()
+    {
         _playerActions.Move.performed += inputContext => _horizontalInput = inputContext.ReadValue<Vector2>();
         _playerActions.Jump.performed += _ => _playerMovement.OnJumpDown();
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
-        _playerActions.Respawn.performed += _ => _playerRespawn.ResetObject();
+        _playerActions.Respawn.performed += _ => _playerRespawn.Respawn();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
         _playerActions.NextItem.performed += _ => _equipmentInventory.MoveNext();
         _playerActions.PreviousItem.performed += _ => _equipmentInventory.MovePrevious();
