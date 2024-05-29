@@ -102,7 +102,7 @@ namespace Testing.AplibTests
             Tactic<RangeedWeaponTestBeliefSet> TurnToEnemy = new PrimitiveTactic<RangeedWeaponTestBeliefSet>(RotatePlayerToEnemy);
 
             // Tactic first try to shoot, otherwise turn.
-            Tactic<RangeedWeaponTestBeliefSet> FinalTactic = new FirstOfTactic<RangeedWeaponTestBeliefSet>(metadata: null, KillEnemy, TurnToEnemy);
+            Tactic<RangeedWeaponTestBeliefSet> FinalTactic = new FirstOfTactic<RangeedWeaponTestBeliefSet>(KillEnemy, TurnToEnemy);
 
             // Goal: enemy is dead
             PrimitiveGoalStructure<RangeedWeaponTestBeliefSet> goal = new(goal: new Goal<RangeedWeaponTestBeliefSet>(FinalTactic, EnemyKilledPredicate));
