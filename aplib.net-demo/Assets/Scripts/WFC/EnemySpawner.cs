@@ -43,7 +43,7 @@ public class EnemySpawner : MonoBehaviour
             for (int j = 0; j < spawnableEnemy.Count; j++)
             {
                 Cell cell = cells[random.Next(cells.Count)];
-                _spawningExtensions.PlaceItem(spawnableEnemy.Enemy, cell, enemyParent.transform);
+                _spawningExtensions.PlacePrefab(spawnableEnemy.Enemy, cell, enemyParent.transform);
                 cells.Remove(cell);
             }
         }

@@ -45,7 +45,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="prefab">The item prefab to spawn.</param>
         /// <param name="cell">The cell to spawn the item in.</param>
         /// <param name="parent">The parent of the item.</param>
-        public void PlaceItem(GameObject prefab, Cell cell, Transform parent) =>
+        public void PlacePrefab(GameObject prefab, Cell cell, Transform parent) =>
             Instantiate(prefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="cell">The cell to spawn the item in.</param>
         /// <param name="rotation">The rotation of the item.</param>
         /// <param name="parent">The parent of the item.</param>
-        public GameObject PlaceItem(GameObject prefab, Cell cell, Quaternion rotation, Transform parent) =>
+        public GameObject PlacePrefab(GameObject prefab, Cell cell, Quaternion rotation, Transform parent) =>
             Instantiate(prefab, CenterOfCell(cell) + _floorOffset, rotation, parent);
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Assets.Scripts.Wfc
         /// <param name="position">The position where the item is spawned.</param>
         /// <param name="rotation">The rotation of the item.</param>
         /// <param name="parent">The parent of the item.</param>
-        public static GameObject PlaceItem(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) =>
+        public static GameObject PlacePrefab(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) =>
             Instantiate(prefab, position, rotation, parent);
 
         /// <summary>

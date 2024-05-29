@@ -107,7 +107,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="cell">The cell to spawn the end item in.</param>
         /// <param name="parent">The parent of the end item.</param>
-        public void PlaceEndItem(Cell cell, Transform parent) => _spawningExtensions.PlaceItem(_endItemPrefab, cell, parent);
+        public void PlaceEndItem(Cell cell, Transform parent) => _spawningExtensions.PlacePrefab(_endItemPrefab, cell, parent);
 
         /// <summary>
         /// Spawns all items in the world.
@@ -129,7 +129,7 @@ namespace Assets.Scripts.Wfc
                 for (int j = 0; j < spawnableItem.Count; j++)
                 {
                     Cell cell = cells[random.Next(cells.Count)];
-                    _spawningExtensions.PlaceItem(spawnableItem.Item, cell, itemParent.transform);
+                    _spawningExtensions.PlacePrefab(spawnableItem.Item, cell, itemParent.transform);
                     cell.CannotAddItem = true;
                     cells.Remove(cell);
                 }
@@ -202,12 +202,12 @@ namespace Assets.Scripts.Wfc
             Quaternion doorRotation = roomRotation * relativeDoorRotation;
 
             // Spawn the door and key
-            GameObject instantiatedDoorPrefab = SpawningExtensions.PlaceItem(_doorPrefab, doorPosition, doorRotation, parent);
+            GameObject instantiatedDoorPrefab = SpawningExtensions.PlacePrefab(_doorPrefab, doorPosition, doorRotation, parent);
             Door doorComponent = instantiatedDoorPrefab.GetComponentInChildren<Door>();
 
             cell.CannotAddItem = true;
 
-            GameObject instantiatedKeyPrefab = _spawningExtensions.PlaceItem(_keyPrefab, cell, doorRotation, parent);
+            GameObject instantiatedKeyPrefab = _spawningExtensions.PlacePrefab(_keyPrefab, cell, doorRotation, parent);
 
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
