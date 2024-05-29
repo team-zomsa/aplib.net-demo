@@ -9,7 +9,6 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Inventory _inventory;
     private RespawnableComponent _playerRespawn;
-    private CanvasManager _canvasManager;
     private Movement _playerMovement;
     // TODO: Change when inventory is added
     // Doing it this way for now, change when inventory is implemented.
@@ -29,18 +28,25 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         if (Instance != null && Instance != this)
+        {
             Destroy(gameObject);
-        else
+            return;
+        }
+        else 
+        {
             Instance = this;
-        DontDestroyOnLoad(gameObject);
+        }
 
         _input = new PlayerInput();
         _playerActions = _input.Player;
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
         _playerRespawn = _playerTransform.GetComponent<RespawnableComponent>();
-        List<Weapon> playerWeapons = new(_playerTransform.GetComponentsInChildren<Weapon>());
+    }
 
+    private void Start()
+    {
+        List<Weapon> playerWeapons = new(_playerTransform.GetComponentsInChildren<Weapon>());
         if (playerWeapons.Count > 0)
             _activeWeapon = playerWeapons[0];
 
