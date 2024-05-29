@@ -11,22 +11,27 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Event that is fired when the game settings are toggled.
     /// </summary>
-    public event Action<bool> GameSettingsToggled;
+    public event Action<bool> MenuOpenedEvent;
 
     /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
-    public GameObject menuCanvas;
+    public GameObject MenuCanvas;
 
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject settingMenuCanvas;
+    public GameObject SettingMenuCanvas;
 
     /// <summary>
     /// Reference to the settings canvas of the game.
     /// </summary>
-    public GameObject settingGameCanvas;
+    public GameObject SettingGameCanvas;
+
+    /// <summary>
+    /// Reference to the game over canvas.
+    /// </summary>
+    public GameObject GameOverCanvas;
 
     /// <summary>
     /// Reference to the win screen.
@@ -36,12 +41,12 @@ public class CanvasManager : MonoBehaviour
     public static CanvasManager Instance { get; private set; }
 
     /// <summary>
-    /// To ensure the menu settings and menu UI aren't on on the same time.
+    /// To ensure the menu settings and menu UI aren't on at the same time.
     /// </summary>
     private bool _isOnMenuSettings = false;
 
     /// <summary>
-    /// To ensure the game settings and menu UI aren't on on the same time.
+    /// To ensure the game settings and menu UI aren't on at the same time.
     /// </summary>
     private bool _isOnGameSettings = false;
 
@@ -60,7 +65,7 @@ public class CanvasManager : MonoBehaviour
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private string _sceneNameGame = "GameSettings"; // TODO:: Load main game screen
+    private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
 
     private void Awake()
     {
@@ -84,26 +89,52 @@ public class CanvasManager : MonoBehaviour
 
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
-            menuCanvas.SetActive(true);
-            settingMenuCanvas.SetActive(false);
-            settingGameCanvas.SetActive(false);
-            WinScreenCanvas.SetActive(false);
-            _isOnMenuSettings = false;
-            _isOnGameSettings = false;
+            SetAllCanvasesToInactive();
+            MenuCanvas.SetActive(true);
         }
         else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
         {
-            menuCanvas.SetActive(false);
-            settingMenuCanvas.SetActive(false);
-            settingGameCanvas.SetActive(false);
-            WinScreenCanvas.SetActive(false);
-            _isOnMenuSettings = false;
-            _isOnGameSettings = false;
+            HealthComponent playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
+            playerHealth.Death += OnPlayerDeath;
+
+            SetAllCanvasesToInactive();
         }
         else // TODO:: Remove when game is done. This is for future ease.
         {
             Debug.Log("Scene names are wrong. Check MenuButtons script");
         }
+    }
+
+    /// <summary>
+    /// Sets all UI canvases to false.
+    /// </summary>
+    private void SetAllCanvasesToInactive()
+    {
+        MenuCanvas.SetActive(false);
+        SettingMenuCanvas.SetActive(false);
+        SettingGameCanvas.SetActive(false);
+        GameOverCanvas.SetActive(false);
+        WinScreenCanvas.SetActive(false);
+        _isOnMenuSettings = false;
+        _isOnGameSettings = false;
+    }
+
+    /// <summary>
+    /// When the player dies, the game over ui is shown.
+    /// </summary>
+    public void OnPlayerDeath(HealthComponent _)
+    {
+        // Mouse visible.
+        MenuOpenedEvent?.Invoke(true);
+
+        // Pause game.
+        GameManager.Instance.Pause();
+
+        // Set all off.
+        SetAllCanvasesToInactive();
+
+        // On death ui.
+        GameOverCanvas.SetActive(true);
     }
 
     /// <summary>
@@ -127,21 +158,21 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleSettings()
     {
-        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back
+        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
         {
             _isOnMenuSettings = !_isOnMenuSettings;
-            settingMenuCanvas.SetActive(_isOnMenuSettings);
-            menuCanvas.SetActive(!_isOnMenuSettings);
+            SettingMenuCanvas.SetActive(_isOnMenuSettings);
+            MenuCanvas.SetActive(!_isOnMenuSettings);
         }
-        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back
+        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
         {
             _isOnGameSettings = !_isOnGameSettings;
-            settingGameCanvas.SetActive(_isOnGameSettings);
+            SettingGameCanvas.SetActive(_isOnGameSettings);
 
             if (_isOnGameSettings) GameManager.Instance.Pause();
             else GameManager.Instance.Resume();
 
-            GameSettingsToggled?.Invoke(_isOnGameSettings);
+            MenuOpenedEvent?.Invoke(_isOnGameSettings);
         }
     }
 
