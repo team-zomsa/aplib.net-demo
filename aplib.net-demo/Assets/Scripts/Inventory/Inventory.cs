@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AmmoPouch))]
+[RequireComponent(typeof(KeyRing))]
 public class Inventory : MonoBehaviour
 {
     /// <summary>

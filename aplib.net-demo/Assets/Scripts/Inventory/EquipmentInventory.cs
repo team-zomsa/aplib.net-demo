@@ -1,49 +1,50 @@
 using Entities.Weapons;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents an inventory of equipment items.
 /// </summary>
 public class EquipmentInventory : MonoBehaviour
 {
+    [SerializeField] private int inventorySize = 2;
+
+    /// <summary>
+    /// Specifies whether to switch to the new item when it is equipped.
+    /// </summary>
+    /// <remarks>
+    /// If <c>true</c>, the <see cref="CurrentEquipment" /> will be automatically updated to the newly equipped item.
+    /// </remarks>
+    /// <value>
+    /// <c>true</c> if switching to the new item is enabled; otherwise, <c>false</c>.
+    /// </value>
+    /// <seealso cref="EquipmentInventory.EquipItem(IEquipment)" />
+    /// <seealso cref="EquipmentInventory.CurrentEquipment" />
+    [SerializeField] public bool SwitchToNewItem;
+
     /// <summary>
     /// The default equipment collection.
     /// </summary>
     /// <remarks>
     /// This collection contains the default equipment items that are added to the equipment inventory when it is instantiated.
     /// </remarks>
-    public List<IEquipment> DefaultEquipment = new();
-
-    private List<IEquipment> _equipmentList;
-
-    [SerializeField]
-    private int inventorySize = 2;
+    [field: SerializeField]
+    public List<Equipment> DefaultEquipment { get; set; } = new();
 
     private int _currentEquipmentIndex;
 
-    /// <summary>
-    /// Specifies whether to switch to the new item when it is equipped.
-    /// </summary>
-    /// <remarks>
-    /// If <c>true</c>, the <see cref="CurrentEquipment"/> will be automatically updated to the newly equipped item.
-    /// </remarks>
-    /// <value>
-    /// <c>true</c> if switching to the new item is enabled; otherwise, <c>false</c>.
-    /// </value>
-    /// <seealso cref="EquipmentInventory.EquipItem(IEquipment)"/>
-    /// <seealso cref="EquipmentInventory.CurrentEquipment"/>
-    [SerializeField] public bool SwitchToNewItem;
+    private List<Equipment> _equipmentList;
 
     /// <summary>
     /// Specifies whether the EquipmentInventory has any items.
     /// </summary>
     /// <remarks>
-    /// This property returns <c>true</c> if the EquipmentInventory has at least one item in its EquipmentList, and <c>false</c> otherwise.
+    /// This property returns <c>true</c> if the EquipmentInventory has at least one item in its EquipmentList, and
+    /// <c>false</c> otherwise.
     /// </remarks>
     /// <value><c>true</c> if the EquipmentInventory has items; otherwise, <c>false</c>.</value>
-    /// <seealso cref="EquipmentInventory.EquipItem(IEquipment)"/>
+    /// <seealso cref="EquipmentInventory.EquipItem(IEquipment)" />
     public bool HasItems => _equipmentList?.Count > 0;
 
     /// <summary>
@@ -52,13 +53,13 @@ public class EquipmentInventory : MonoBehaviour
     /// <value>
     /// The currently equipped item.
     /// </value>
-    public IEquipment CurrentEquipment => _equipmentList[_currentEquipmentIndex];
+    public Equipment CurrentEquipment => _equipmentList[_currentEquipmentIndex];
 
     private void Start()
     {
         // If the default equipment is empty, add the default equipment to the equipment list.
         // This is to ensure backward compatibility with the previous implementation.
-        if (DefaultEquipment?.Count == 0)
+        if (DefaultEquipment?.Count <= 0)
         {
             Debug.LogWarning(
                 "Default equipment is empty! Rolling back to obsolete implementation. \n "
@@ -66,18 +67,23 @@ public class EquipmentInventory : MonoBehaviour
             );
             GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
 
-            DefaultEquipment = new(playerObject.transform.GetComponentsInChildren<Weapon>());
+            DefaultEquipment = new List<Equipment>(playerObject.transform.GetComponentsInChildren<Equipment>());
         }
 
-        _equipmentList = new List<IEquipment>();
-        _equipmentList.AddRange(DefaultEquipment);
+        _equipmentList = DefaultEquipment.ToList();
+
+        // Set every equipment item to be inactive, except the first one.
+        for (int i = 1; i < _equipmentList.Count; i++)
+        {
+            _equipmentList[i].gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
     /// Equip the specified equipment item to the EquipmentInventory.
     /// </summary>
     /// <param name="equipment">The equipment item to be equipped.</param>
-    public void EquipItem(IEquipment equipment)
+    public void EquipItem(Weapon equipment)
     {
         if (_equipmentList.Count >= inventorySize)
         {
@@ -95,7 +101,7 @@ public class EquipmentInventory : MonoBehaviour
 
         if (SwitchToNewItem)
         {
-            _currentEquipmentIndex = _equipmentList.Count - 1;
+            SwitchEquipment(_equipmentList.Count - 1);
         }
     }
 
@@ -111,7 +117,13 @@ public class EquipmentInventory : MonoBehaviour
             return;
         }
 
+        // Disable current equipment
+        CurrentEquipment.gameObject.SetActive(false);
+
         _currentEquipmentIndex = index;
+
+        // Enable new equipment
+        CurrentEquipment.gameObject.SetActive(true);
     }
 
     /// <summary>
