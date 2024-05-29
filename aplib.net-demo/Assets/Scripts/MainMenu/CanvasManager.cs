@@ -21,12 +21,7 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject SettingMenuCanvas;
-
-    /// <summary>
-    /// Reference to the settings canvas of the game.
-    /// </summary>
-    public GameObject SettingGameCanvas;
+    public GameObject SettingCanvas;
 
     /// <summary>
     /// Reference to the game over canvas.
@@ -41,14 +36,9 @@ public class CanvasManager : MonoBehaviour
     public static CanvasManager Instance { get; private set; }
 
     /// <summary>
-    /// To ensure the menu settings and menu UI aren't on at the same time.
+    /// Is Settings on or off.
     /// </summary>
-    private bool _isOnMenuSettings = false;
-
-    /// <summary>
-    /// To ensure the game settings and menu UI aren't on at the same time.
-    /// </summary>
-    private bool _isOnGameSettings = false;
+    private bool _isOnSettings = false;
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -104,12 +94,10 @@ public class CanvasManager : MonoBehaviour
     private void SetAllCanvasesToInactive()
     {
         MenuCanvas.SetActive(false);
-        SettingMenuCanvas.SetActive(false);
-        SettingGameCanvas.SetActive(false);
+        SettingCanvas.SetActive(false);
         GameOverCanvas.SetActive(false);
         HelpCanvas.SetActive(false);
-        _isOnMenuSettings = false;
-        _isOnGameSettings = false;
+        _isOnSettings = false;
     }
 
     /// <summary>
@@ -151,22 +139,21 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleSettings()
     {
-        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
+        _isOnSettings = !_isOnSettings;
+
+        if (_currentSceneName == _sceneNameStartingMenu)
         {
-            _isOnMenuSettings = !_isOnMenuSettings;
-            SettingMenuCanvas.SetActive(_isOnMenuSettings);
-            MenuCanvas.SetActive(!_isOnMenuSettings);
+            MenuCanvas.SetActive(!_isOnSettings);
         }
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
         {
-            _isOnGameSettings = !_isOnGameSettings;
-            SettingGameCanvas.SetActive(_isOnGameSettings);
-
-            if (_isOnGameSettings) GameManager.Instance.Pause();
+            if (_isOnSettings) GameManager.Instance.Pause();
             else GameManager.Instance.Resume();
 
-            MenuOpenedEvent?.Invoke(_isOnGameSettings);
+            MenuOpenedEvent?.Invoke(_isOnSettings);
         }
+
+        SettingCanvas.SetActive(_isOnSettings);
     }
 
     /// <summary>
@@ -176,19 +163,19 @@ public class CanvasManager : MonoBehaviour
     {
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to helpscreen and back.
         {
-            _isOnMenuSettings = !_isOnMenuSettings;
-            HelpCanvas.SetActive(_isOnMenuSettings);
-            MenuCanvas.SetActive(!_isOnMenuSettings);
+            _isOnSettings = !_isOnSettings;
+            HelpCanvas.SetActive(_isOnSettings);
+            MenuCanvas.SetActive(!_isOnSettings);
         }
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to helpscreen and back.
         {
-            _isOnGameSettings = !_isOnGameSettings;
-            HelpCanvas.SetActive(_isOnMenuSettings);
+            _isOnSettings = !_isOnSettings;
+            HelpCanvas.SetActive(_isOnSettings);
 
-            if (_isOnGameSettings) GameManager.Instance.Pause();
+            if (_isOnSettings) GameManager.Instance.Pause();
             else GameManager.Instance.Resume();
 
-            MenuOpenedEvent?.Invoke(_isOnGameSettings);
+            MenuOpenedEvent?.Invoke(_isOnSettings);
         }
     }
 
@@ -196,8 +183,15 @@ public class CanvasManager : MonoBehaviour
     /// When player presses the quit button the application closes.
     /// This works with the build not in the editor. Keep this in mind.
     /// </summary>
-    public void QuitApplication()
+    public void Quit()
     {
-        Application.Quit();
+        if (_currentSceneName == _sceneNameStartingMenu) // From menu quit game.
+        {
+            Application.Quit();
+        }
+        else if (_currentSceneName == _sceneNameGame) // From game quit to menu. 
+        {
+            ToMenu();
+        }
     }
 }
