@@ -1,7 +1,10 @@
 using Aplib.Core;
-using Aplib.Core.Belief;
-using Aplib.Core.Desire;
+using Aplib.Core.Agents;
+using Aplib.Core.Belief.Beliefs;
+using Aplib.Core.Belief.BeliefSets;
+using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
+using Aplib.Core.Desire.GoalStructures;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
@@ -15,6 +18,7 @@ namespace Testing.AplibTests
 {
     public class MyFirstBeliefSet : BeliefSet
     {
+
         /// <summary>
         /// The player object in the scene.
         /// </summary>

@@ -1,7 +1,10 @@
 using Aplib.Core;
-using Aplib.Core.Belief;
-using Aplib.Core.Desire;
+using Aplib.Core.Agents;
+using Aplib.Core.Belief.Beliefs;
+using Aplib.Core.Belief.BeliefSets;
+using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
+using Aplib.Core.Desire.GoalStructures;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
@@ -26,7 +29,6 @@ namespace Testing.AplibTests
     public class ConnectedComponentsTests
     {
         private const string _sceneName = "ConnectedComponentsTestScene";
-
         private readonly Vector3 _centreOfCellHeightOffset = Vector3.up * 1.7f;
 
         [SetUp]
@@ -77,8 +79,7 @@ namespace Testing.AplibTests
             PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
                 beliefSet => teleporterPositions.Any(teleporterPosition =>
                     (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
-
-            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(null,
+            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(
                 waitForTeleportTactic,
                 approachCurrentCellTactic);
 
