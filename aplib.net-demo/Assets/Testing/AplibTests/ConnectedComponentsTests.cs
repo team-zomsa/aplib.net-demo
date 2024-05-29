@@ -26,6 +26,7 @@ namespace Testing.AplibTests
     public class ConnectedComponentsTests
     {
         private const string _sceneName = "ConnectedComponentsTestScene";
+
         private readonly Vector3 _centreOfCellHeightOffset = Vector3.up * 1.7f;
 
         [SetUp]
@@ -47,18 +48,22 @@ namespace Testing.AplibTests
             // Arrange
             ConnectedComponentsBeliefSet rootBeliefSet = new();
             GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
-            GameObjectPlacer gameObjectPlacer = GameObject.Find("Grid").GetComponent<GameObjectPlacer>();
+            SpawningExtensions spawningExtensions = GameObject.Find("Grid").GetComponent<SpawningExtensions>();
 
             // Arrange ==> Level information
             Vector3[] cellsToVisit = gridPlacer.Grid.DetermineConnectedComponents()
-                .Select(cells => gameObjectPlacer.CenterOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
+                .Select(cells => spawningExtensions.CenterOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
+
             Vector3[] teleporterPositions = GameObject.Find("Teleporters")
                 .GetComponentsInChildren<Teleporter.Teleporter>()
                 .Select(x => x.LandingPoint).ToArray();
 
             int currentCellToVisitIndex = 0;
 
-            Vector3 currentCellPosition() => cellsToVisit[currentCellToVisitIndex];
+            Vector3 currentCellPosition()
+            {
+                return cellsToVisit[currentCellToVisitIndex];
+            }
 
             // Arrange ==> GoalStructure: Visit cell of the current connected component
             TransformPathfinderAction<ConnectedComponentsBeliefSet> approachCurrentCellAction = new(
@@ -70,17 +75,20 @@ namespace Testing.AplibTests
 
             PrimitiveTactic<ConnectedComponentsBeliefSet> approachCurrentCellTactic = new(approachCurrentCellAction);
             PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
-                guard: beliefSet => teleporterPositions.Any(teleporterPosition =>
+                beliefSet => teleporterPositions.Any(teleporterPosition =>
                     (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
-            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(metadata: null,
+
+            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(null,
                 waitForTeleportTactic,
                 approachCurrentCellTactic);
 
             Goal<ConnectedComponentsBeliefSet> approachCurrentCellGoal = new(waitForTeleportOrApproachCurrentCellTactic,
                 beliefSet => (currentCellPosition() - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude <
                              1.5f);
+
             PrimitiveGoalStructure<ConnectedComponentsBeliefSet> approachCurrentCellGoalStructure =
                 new(approachCurrentCellGoal);
+
             RepeatGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellGoalStructure =
                 new(approachCurrentCellGoalStructure);
 
@@ -94,12 +102,14 @@ namespace Testing.AplibTests
             PrimitiveTactic<ConnectedComponentsBeliefSet> targetNextCellTactic = new(targetNextCellAction);
             Goal<ConnectedComponentsBeliefSet> visitedEveryCellGoal = new(targetNextCellTactic,
                 _ => currentCellToVisitIndex >= cellsToVisit.Length);
+
             PrimitiveGoalStructure<ConnectedComponentsBeliefSet> visitedEveryCellGoalStructure =
                 new(visitedEveryCellGoal);
 
             // Arrange ==> GoalStructure: Visit every connected component
             SequentialGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellAndVisitEveryCellGoalStructure =
                 new(visitCurrentCellGoalStructure, visitedEveryCellGoalStructure);
+
             RepeatGoalStructure<ConnectedComponentsBeliefSet> visitEveryConnectedComponentGoalStructure =
                 new(visitCurrentCellAndVisitEveryCellGoalStructure);
 

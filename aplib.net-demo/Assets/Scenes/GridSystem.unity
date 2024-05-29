@@ -1142,6 +1142,8 @@ GameObject:
   - component: {fileID: 1455078763}
   - component: {fileID: 1455078762}
   - component: {fileID: 1455078764}
+  - component: {fileID: 1455078765}
+  - component: {fileID: 1455078766}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -1193,8 +1195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8366bd27287d4220a09e6d3e8d715bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tileSizeX: 16
-  _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
   _spawnableItems: {fileID: 11400000, guid: 337f0455961848e4daae35638c40a3ae, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
@@ -1204,6 +1204,33 @@ MonoBehaviour:
     type: 3}
   _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
     type: 3}
+--- !u!114 &1455078765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455078761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535fefb0b92d5a344b634ca0a3472e01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnableEnemies: {fileID: 11400000, guid: 842bbce29d49004459d43759b8e65d66, type: 2}
+--- !u!114 &1455078766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455078761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b442616a9cd449993876de7096f51bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TileSizeX>k__BackingField: 16
+  <TileSizeZ>k__BackingField: 16
 --- !u!1 &1515546304
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ namespace Assets.Scripts.Wfc
     public class SpawnableEnemies : ScriptableObject
     {
         [field: SerializeField]
-        public List<SpawnableEnemy> Items { get; set; }
+        public List<SpawnableEnemy> Enemies { get; set; }
     }
 
     [Serializable]

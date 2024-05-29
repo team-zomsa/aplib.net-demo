@@ -63,6 +63,11 @@ namespace Assets.Scripts.Wfc
         private Random _random = new();
 
         /// <summary>
+        /// Represents the spawning extensions.
+        /// </summary>
+        private SpawningExtensions _spawningExtensions;
+
+        /// <summary>
         /// Represents the grid.
         /// </summary>
         public Grid Grid { get; private set; }
@@ -74,6 +79,9 @@ namespace Assets.Scripts.Wfc
         {
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
             _gameObjectPlacer.Initialize();
+
+            if (!TryGetComponent(out _spawningExtensions))
+                throw new UnityException("SpawningExtensions not found.");
 
             MakeScene();
         }
@@ -169,7 +177,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void PlaceGrid()
         {
-            GameObject tiles = CreateGameObject("Tiles", transform);
+            GameObject tiles = SpawningExtensions.CreateGameObject("Tiles", transform);
 
             for (int z = 0; z < Grid.Height; z++)
             {
@@ -217,7 +225,7 @@ namespace Assets.Scripts.Wfc
         /// <returns>The cell at the given position.</returns>
         private Cell GetCellAtPosition(Vector3 position)
         {
-            (int x, int z) = _gameObjectPlacer.GetCellCoordinates(position);
+            (int x, int z) = _spawningExtensions.GetCellCoordinates(position);
             return Grid[x, z];
         }
 
@@ -229,7 +237,7 @@ namespace Assets.Scripts.Wfc
         /// <exception cref="UnityException">No teleporters were found.</exception>
         private void PlaceDoorsBetweenConnectedComponents(Cell startCell)
         {
-            GameObject doors = CreateGameObject("Doors and keys", transform);
+            GameObject doors = SpawningExtensions.CreateGameObject("Doors and keys", transform);
             List<(ConnectedComponent connectedComponent, ConnectedComponent neighbouringRooms)> connectedComponents =
                 Grid.DetermineConnectedComponentsBetweenDoors();
 
@@ -245,15 +253,6 @@ namespace Assets.Scripts.Wfc
 
             ProcessNeighbouringRooms(startComponent, neighbouringRooms, connectedComponents, doors);
         }
-
-        /// <summary>
-        /// Creates a new game object with a given name and parent.
-        /// </summary>
-        /// <param name="objectName">The name of the game object.</param>
-        /// <param name="parent">The parent of the game object.</param>
-        /// <returns>The newly created game object.</returns>
-        private static GameObject CreateGameObject(string objectName, Transform parent) =>
-            new(objectName) { transform = { parent = parent } };
 
         /// <summary>
         /// Gets the unique teleporters from a given game object.
@@ -389,7 +388,7 @@ namespace Assets.Scripts.Wfc
         /// <remarks>Assumes that every connected component has at least two cells.</remarks>
         private void JoinConnectedComponentsWithTeleporters()
         {
-            GameObject teleporters = CreateGameObject("Teleporters", transform);
+            GameObject teleporters = SpawningExtensions.CreateGameObject("Teleporters", transform);
 
             // Prepare some variables
             using IEnumerator<ConnectedComponent> connectedComponentsEnumerator =
@@ -410,7 +409,7 @@ namespace Assets.Scripts.Wfc
                     nextEntryCell.CannotAddItem = true;
                     Teleporter.Teleporter entryTeleporter =
                         _gameObjectPlacer.PlaceTeleporter(
-                            _gameObjectPlacer.CenterOfCell(nextEntryCell) + _teleporterHeightOffset,
+                            _spawningExtensions.CenterOfCell(nextEntryCell) + _teleporterHeightOffset,
                             teleporters.transform);
 
                     // Link the entry teleporter back to the previous connected component, bidirectionally.
@@ -431,7 +430,7 @@ namespace Assets.Scripts.Wfc
                 nextExitCell.CannotAddItem = true; // No item can be placed in this cell anymore.
                 Teleporter.Teleporter exitTeleporter =
                     _gameObjectPlacer.PlaceTeleporter(
-                        _gameObjectPlacer.CenterOfCell(nextExitCell) + _teleporterHeightOffset,
+                        _spawningExtensions.CenterOfCell(nextExitCell) + _teleporterHeightOffset,
                         teleporters.transform);
 
                 // Update iteration progress
