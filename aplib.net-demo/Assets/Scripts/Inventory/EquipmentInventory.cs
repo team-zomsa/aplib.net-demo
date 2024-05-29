@@ -67,7 +67,10 @@ public class EquipmentInventory : MonoBehaviour
             );
             GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
 
-            DefaultEquipment = new List<Equipment>(playerObject.transform.GetComponentsInChildren<Equipment>());
+            if (playerObject)
+            {
+                DefaultEquipment = new List<Equipment>(playerObject.transform.GetComponentsInChildren<Equipment>());
+            }
         }
 
         _equipmentList = DefaultEquipment.ToList();
@@ -91,7 +94,7 @@ public class EquipmentInventory : MonoBehaviour
             return;
         }
 
-        if (_equipmentList.Contains(equipment))
+        if (_equipmentList.Select(x => x.GetType()).Contains(equipment.GetType()))
         {
             Debug.LogWarning("Item already in inventory!");
             return;
