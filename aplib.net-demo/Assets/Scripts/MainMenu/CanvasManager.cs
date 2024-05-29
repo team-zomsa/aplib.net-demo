@@ -182,7 +182,7 @@ public class CanvasManager : MonoBehaviour
         // Set all off.
         SetAllCanvasesToInactive();
 
-        // On death ui.
+        // On win ui.
         WinScreenCanvas.SetActive(true);
     }
 
