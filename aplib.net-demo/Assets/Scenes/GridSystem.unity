@@ -1163,9 +1163,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _useSeed: 0
   _seed: 0
-  _gridWidthX: 10
-  _gridWidthZ: 10
-  _amountOfRooms: 5
+  _gridWidthX: 3
+  _gridWidthZ: 3
+  _amountOfRooms: 3
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
@@ -1204,6 +1204,8 @@ MonoBehaviour:
     type: 3}
   _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
     type: 3}
+  _startRoomMat: {fileID: 2100000, guid: f778c1623601f9a49bae03f91296af4f, type: 2}
+  _endRoomMat: {fileID: 2100000, guid: d8e9a1c487e0d7d4c881fce470e9d9a8, type: 2}
 --- !u!1 &1515546304
 GameObject:
   m_ObjectHideFlags: 0
