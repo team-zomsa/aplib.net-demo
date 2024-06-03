@@ -1612,7 +1612,22 @@ PrefabInstance:
       propertyPath: m_text
       value: Back to main menu
       objectReference: {fileID: 0}
+    - target: {fileID: 1036647114414517619, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: WinScreenCanvas
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1526500251675296066, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2595811750831644300, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741452075886939737, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1622,10 +1637,20 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6406122252923157993, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7084838678367223057, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ToMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 7650085221679117450, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7747302554834401989, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}

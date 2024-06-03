@@ -60,6 +60,18 @@ namespace Assets.Scripts.Wfc
         private GameObject _endItemPrefab;
 
         /// <summary>
+        /// The material of the start room.
+        /// </summary>
+        [SerializeField]
+        private Material _startRoomMat;
+
+        /// <summary>
+        /// The material of the end room.
+        /// </summary>
+        [SerializeField]
+        private Material _endRoomMat;
+
+        /// <summary>
         /// The offset of the floor.
         /// </summary>
         private readonly Vector3 _floorOffset = Vector3.up;
@@ -71,6 +83,11 @@ namespace Assets.Scripts.Wfc
         private float _doorDepthExtent;
 
         /// <summary>
+        /// The distance from the floor to the player localpos.
+        /// </summary>
+        private Vector3 _playerHeightOffset;
+
+        /// <summary>
         /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
         /// </summary>
         public void Initialize()
@@ -79,6 +96,15 @@ namespace Assets.Scripts.Wfc
                 throw new UnityException("Door prefab does not have a renderer component.");
 
             _doorDepthExtent = doorRenderer.bounds.extents.z;
+
+            GameObject player = GameObject.FindWithTag("Player");
+
+            if (player == null) throw new UnityException("No player was found.");
+
+            float playerHeight = player.GetComponent<CapsuleCollider>().height;
+            Vector3 playerHeightOffset = new(0, playerHeight, 0);
+
+            _playerHeightOffset = playerHeightOffset;
         }
 
         /// <summary>
@@ -112,8 +138,12 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="cell">The cell to spawn the end item in.</param>
         /// <param name="parent">The parent of the end item.</param>
-        public void PlaceEndItem(Cell cell, Transform parent) =>
+        public void PlaceEndItem(Cell cell, Transform parent)
+        {
             Instantiate(_endItemPrefab, CenterOfCell(cell) + _floorOffset, Quaternion.identity, parent);
+            // Change the cell color to end room color.
+            cell.Tile.GameObject.GetComponent<Renderer>().material = _endRoomMat;
+        }
 
         /// <summary>
         /// Creates a new game object with a given name and parent.
@@ -236,6 +266,42 @@ namespace Assets.Scripts.Wfc
 
             Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
             keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
+        }
+
+        /// <summary>
+        /// Sets the player spawn point to a random room.
+        /// Also set the colors of start and end rooms.
+        /// </summary>
+        /// <param name="playerSpawnCell">The cell where the player should spawn.</param>
+        public void SetPlayerSpawn(Cell playerSpawnCell)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+
+            if (player == null) throw new UnityException("No player was found.");
+
+            Vector3 spawningPoint = CenterOfCell(playerSpawnCell) + _playerHeightOffset;
+
+            Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
+            playerRigidbody.position = spawningPoint;
+
+            GameObject respawnPoint = GameObject.FindWithTag("Respawn");
+
+            if (respawnPoint == null) return;
+
+            respawnPoint.transform.position = spawningPoint;
+            Area respawnArea = respawnPoint.GetComponent<Area>();
+            respawnArea.Bounds = new Bounds(spawningPoint, respawnArea.Bounds.extents);
+
+            GameObject winPoint = GameObject.FindWithTag("Win");
+
+            if (winPoint == null) return;
+
+            winPoint.transform.position = spawningPoint;
+            Area winArea = winPoint.GetComponent<Area>();
+            winArea.Bounds = new Bounds(spawningPoint, winArea.Bounds.extents);
+
+            // Set the colors of the start and end rooms.
+            playerSpawnCell.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;
         }
     }
 }
