@@ -16,7 +16,7 @@ public class RangedEnemy : DummyEnemy
     private int _attackRange = 10;
 
     [SerializeField]
-    private int _visionRange = 20;
+    private int _visionRange = 25;
 
     private Timer _attackTimer;
 
@@ -84,7 +84,7 @@ public class RangedEnemy : DummyEnemy
     {
         while (_pathFind.GoalWithinRange(_visionRange) && !_rangedWeapon.EnemiesInLineOfSight())
         {
-            _pathFind.UpdateAgent();
+            _pathFind.UpdateAgent(_visionRange);
             yield return null;
         }
 

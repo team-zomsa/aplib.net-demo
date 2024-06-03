@@ -14,6 +14,8 @@ public class PathFind : MonoBehaviour
 
     private NavMeshAgent _agent;
 
+    private bool _enabled;
+
     private Transform _goal;
 
     /// <summary>
@@ -32,13 +34,21 @@ public class PathFind : MonoBehaviour
     /// <summary>
     /// Update the NavMeshAgent's destination to the goal's position.
     /// </summary>
-    public void UpdateAgent()
+    public void UpdateAgent(float remainingDistanceThreshold)
     {
-        if (_goal is null) return;
+        if (_goal == null) return;
 
-        _agent.SetDestination(_goal.position);
+        if (_agent.isOnNavMesh) _agent.SetDestination(_goal.position);
 
-        ToggleAgent(_agent.path.status == NavMeshPathStatus.PathComplete);
+        if (_agent.remainingDistance < remainingDistanceThreshold && _agent.pathStatus == NavMeshPathStatus.PathComplete)
+        {
+            _enabled = true;
+            ToggleAgent(true);
+        }
+        else if (_enabled)
+        {
+            ToggleAgent(_agent.pathStatus == NavMeshPathStatus.PathComplete);
+        }
 
         _agent.transform.LookAt(_goal);
     }
