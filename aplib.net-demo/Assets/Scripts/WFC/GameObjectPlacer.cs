@@ -9,20 +9,9 @@ using Random = System.Random;
 namespace Assets.Scripts.Wfc
 {
     [RequireComponent(typeof(GridPlacer))]
+    [RequireComponent(typeof(SpawningExtensions))]
     public class GameObjectPlacer : MonoBehaviour
     {
-        /// <summary>
-        /// The size of the tiles in the x-direction.
-        /// </summary>
-        [SerializeField]
-        private int _tileSizeX = 16;
-
-        /// <summary>
-        /// The size of the tiles in the z-direction.
-        /// </summary>
-        [SerializeField]
-        private int _tileSizeZ = 16;
-
         /// <summary>
         /// Represents the room objects.
         /// </summary>

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
@@ -15,6 +16,8 @@ namespace Assets.Scripts.Wfc
     /// and doors between the rooms, and the teleporters between the connected components.
     /// </summary>
     [RequireComponent(typeof(GameObjectPlacer))]
+    [RequireComponent(typeof(SpawningExtensions))]
+    [RequireComponent(typeof(EnemySpawner))]
     public class GridPlacer : MonoBehaviour
     {
         /// <summary>
@@ -128,6 +131,7 @@ namespace Assets.Scripts.Wfc
                 Random tempRandom = new();
                 _seed = tempRandom.Next();
             }
+
             _random = new Random(_seed);
 
 
@@ -146,6 +150,15 @@ namespace Assets.Scripts.Wfc
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
 
             SpawnItems();
+
+            GameObject environmentGameObject = GameObject.FindWithTag("Environment");
+
+            if (environmentGameObject != null)
+            {
+                NavMeshSurface navMeshSurface = environmentGameObject.GetComponent<NavMeshSurface>();
+                Debug.Log("Building navmesh...");
+                navMeshSurface.BuildNavMesh();
+            }
 
             SpawnEnemies();
         }
