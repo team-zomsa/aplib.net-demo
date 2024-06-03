@@ -1188,7 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535fefb0b92d5a344b634ca0a3472e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnableEnemies: {fileID: 11400000, guid: a78bad4eeaa56314383ebdc0ee47c354, type: 2}
+  _spawnableEnemies: {fileID: 11400000, guid: 842bbce29d49004459d43759b8e65d66, type: 2}
 --- !u!1 &1515546304
 GameObject:
   m_ObjectHideFlags: 0
