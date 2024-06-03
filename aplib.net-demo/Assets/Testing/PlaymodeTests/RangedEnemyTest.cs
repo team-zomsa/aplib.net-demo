@@ -6,15 +6,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 public class RangedEnemyTest
 {
-    [SetUp]
-    public void SetUp()
-    {
-        SceneManager.LoadScene("RangedEnemyTestScene");
-    }
-
     [UnityTest]
     public IEnumerator TestAmmo()
     {
+        SceneManager.LoadScene("RangedEnemyTestScene");
+        yield return null;
+
         // Get the players crossbow
         var player = GameObject.Find("Player");
         Equipment crossbow = player.GetComponentInChildren<RangedWeapon>();
@@ -34,5 +31,24 @@ public class RangedEnemyTest
         // Check if the player has no ammo left
         bool hasAmmo = ammoPouch.TryUseAmmo();
         Assert.IsFalse(hasAmmo);
+    }
+
+    [UnityTest]
+    public IEnumerator TestIfDisabledWhenAmmoPouchNotPresent()
+    {
+        SceneManager.LoadScene("RangedWeaponBroken");
+        yield return null;
+
+        LogAssert.Expect(LogType.Error, "AmmoPouch not found in the scene. Defaulting to parent ammo pouch.");
+        LogAssert.Expect(LogType.Error, "No parent ammo pouch found. Disabling ranged weapon.");
+
+        // Get the players crossbow
+        var player = GameObject.Find("Player Ranged");
+        Equipment crossbow = player.GetComponentInChildren<RangedWeapon>();
+
+        yield return null;
+
+        // Assert
+        Assert.IsFalse(crossbow.enabled);
     }
 }
