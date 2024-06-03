@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -186,6 +189,13 @@ public class CanvasManager : MonoBehaviour
 
         // Pause game.
         GameManager.Instance.Pause();
+
+        // Set points text.
+        List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
+        pointsText.text = "Points: " + PointsManager.Instance.Points;
+
+        Debug.Log("Win screen points: " + PointsManager.Instance.Points);
 
         // Set all off.
         SetAllCanvasesToInactive();

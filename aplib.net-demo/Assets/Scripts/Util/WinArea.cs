@@ -5,6 +5,7 @@ using UnityEngine;
 /// The win area for the player.
 /// The size is defined by the local scale of the transform.
 /// </summary>
+[RequireComponent(typeof(BoxCollider))]
 public class WinArea : Area
 {
     public event Action OnWin;
