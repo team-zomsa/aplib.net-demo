@@ -36,20 +36,9 @@ public class PathFind : MonoBehaviour
     /// </summary>
     public void UpdateAgent(float remainingDistanceThreshold)
     {
-        if (_goal == null) return;
+        if (_goal == null || !_agent.isOnNavMesh || !GoalWithinRange(remainingDistanceThreshold)) return;
 
-        if (_agent.isOnNavMesh) _agent.SetDestination(_goal.position);
-
-        if (_agent.remainingDistance < remainingDistanceThreshold && _agent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            _enabled = true;
-            ToggleAgent(true);
-        }
-        else if (_enabled)
-        {
-            ToggleAgent(_agent.pathStatus == NavMeshPathStatus.PathComplete);
-        }
-
+        _agent.SetDestination(_goal.position);
         _agent.transform.LookAt(_goal);
     }
 

@@ -54,9 +54,6 @@ public class MeleeEnemy : DummyEnemy
     {
         Debug.DrawRay(transform.position, Vector3.up * 20, Color.blue);
 
-        // If the target is not within vision range, do nothing.
-        if (!_pathFind.GoalWithinRange(_visionRange)) return;
-
         if (_isSwinging)
             return;
 
