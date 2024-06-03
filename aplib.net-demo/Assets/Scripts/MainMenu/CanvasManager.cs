@@ -9,11 +9,6 @@ using UnityEngine.SceneManagement;
 public class CanvasManager : MonoBehaviour
 {
     /// <summary>
-    /// Event that is fired when the game settings are toggled.
-    /// </summary>
-    public event Action<bool> MenuOpenedEvent;
-
-    /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
     public GameObject MenuCanvas;
@@ -33,22 +28,10 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public GameObject GameOverCanvas;
 
-    public static CanvasManager Instance { get; private set; }
-
     /// <summary>
-    /// To ensure the menu settings and menu UI aren't on at the same time.
+    /// Reference to the win screen.
     /// </summary>
-    private bool _isOnMenuSettings = false;
-
-    /// <summary>
-    /// To ensure the game settings and menu UI aren't on at the same time.
-    /// </summary>
-    private bool _isOnGameSettings = false;
-
-    /// <summary>
-    /// This string keeps track of what scene we are in.
-    /// </summary>
-    private string _currentSceneName = "";
+    public GameObject WinScreenCanvas;
 
     /// <summary>
     /// Name of the start screen.
@@ -62,6 +45,28 @@ public class CanvasManager : MonoBehaviour
     [SerializeField]
     private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
 
+    /// <summary>
+    /// This string keeps track of what scene we are in.
+    /// </summary>
+    private string _currentSceneName = "";
+
+    /// <summary>
+    /// To ensure the game settings and menu UI aren't on at the same time.
+    /// </summary>
+    private bool _isOnGameSettings;
+
+    /// <summary>
+    /// To ensure the menu settings and menu UI aren't on at the same time.
+    /// </summary>
+    private bool _isOnMenuSettings;
+
+    /// <summary>
+    /// Prevent the settings toggle when the variable is true.
+    /// </summary>
+    private bool _preventSettingsToggle;
+
+    public static CanvasManager Instance { get; private set; }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -74,6 +79,11 @@ public class CanvasManager : MonoBehaviour
     private void Start()
     {
         _currentSceneName = SceneManager.GetActiveScene().name;
+        WinArea winArea = FindObjectOfType<WinArea>();
+        if (winArea != null)
+            winArea.OnWin += ShowWinScreen;
+        else
+            Debug.LogWarning("No WinArea found in scene!");
 
         if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
         {
@@ -94,6 +104,11 @@ public class CanvasManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Event that is fired when the game settings are toggled.
+    /// </summary>
+    public event Action<bool> MenuOpenedEvent;
+
+    /// <summary>
     /// Sets all UI canvases to false.
     /// </summary>
     private void SetAllCanvasesToInactive()
@@ -102,6 +117,7 @@ public class CanvasManager : MonoBehaviour
         SettingMenuCanvas.SetActive(false);
         SettingGameCanvas.SetActive(false);
         GameOverCanvas.SetActive(false);
+        WinScreenCanvas.SetActive(false);
         _isOnMenuSettings = false;
         _isOnGameSettings = false;
     }
@@ -119,6 +135,7 @@ public class CanvasManager : MonoBehaviour
 
         // Set all off.
         SetAllCanvasesToInactive();
+        _preventSettingsToggle = true;
 
         // On death ui.
         GameOverCanvas.SetActive(true);
@@ -127,24 +144,20 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// When the play button in the main menu is clicked, it wil teleport the player to the game.
     /// </summary>
-    public void PlayGame()
-    {
-        SceneManager.LoadScene(_sceneNameGame);
-    }
+    public void PlayGame() => SceneManager.LoadScene(_sceneNameGame);
 
     /// <summary>
     /// When the Quit To Menu button in the game setting is clicked, it will take you back to the menu.
     /// </summary>
-    public void ToMenu()
-    {
-        SceneManager.LoadScene(_sceneNameStartingMenu);
-    }
+    public void ToMenu() => SceneManager.LoadScene(_sceneNameStartingMenu);
 
     /// <summary>
     /// This button toggles the menu canvas off and the setting canvas on or game settings on and off.
     /// </summary>
     public void OnToggleSettings()
     {
+        if (_preventSettingsToggle) return;
+
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
         {
             _isOnMenuSettings = !_isOnMenuSettings;
@@ -164,11 +177,27 @@ public class CanvasManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Show the win screen.
+    /// </summary>
+    public void ShowWinScreen()
+    {
+        // Mouse visible.
+        MenuOpenedEvent?.Invoke(true);
+
+        // Pause game.
+        GameManager.Instance.Pause();
+
+        // Set all off.
+        SetAllCanvasesToInactive();
+        _preventSettingsToggle = true;
+
+        // On win ui.
+        WinScreenCanvas.SetActive(true);
+    }
+
+    /// <summary>
     /// When player presses the quit button the application closes.
     /// This works with the build not in the editor. Keep this in mind.
     /// </summary>
-    public void QuitApplication()
-    {
-        Application.Quit();
-    }
+    public void QuitApplication() => Application.Quit();
 }
