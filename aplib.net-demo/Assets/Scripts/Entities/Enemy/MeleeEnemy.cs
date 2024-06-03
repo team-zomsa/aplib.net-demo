@@ -52,6 +52,8 @@ public class MeleeEnemy : DummyEnemy
     /// </summary>
     protected override void Update()
     {
+        Debug.DrawRay(transform.position, Vector3.up * 20, Color.blue);
+
         // If the target is not within vision range, do nothing.
         if (!_pathFind.GoalWithinRange(_visionRange)) return;
 

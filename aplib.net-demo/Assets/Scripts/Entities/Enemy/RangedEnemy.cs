@@ -18,8 +18,10 @@ public class RangedEnemy : DummyEnemy
     [SerializeField]
     private int _visionRange = 20;
 
-    private bool _movingCloser;
     private Timer _attackTimer;
+
+    private bool _movingCloser;
+
     private RangedWeapon _rangedWeapon;
 
     /// <summary>
@@ -44,6 +46,8 @@ public class RangedEnemy : DummyEnemy
     /// </summary>
     protected override void Update()
     {
+        Debug.DrawRay(transform.position, Vector3.up * 20, Color.green);
+
         // If the target is not within vision range, do nothing.
         if (!_pathFind.GoalWithinRange(_visionRange))
         {

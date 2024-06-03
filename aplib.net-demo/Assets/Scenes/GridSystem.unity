@@ -1229,8 +1229,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _useSeed: 0
   _seed: 0
-  _gridWidthX: 4
-  _gridWidthZ: 4
+  _gridWidthX: 6
+  _gridWidthZ: 6
   _amountOfRooms: 3
 --- !u!4 &1455078763
 Transform:
@@ -1261,7 +1261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
   _spawnableItems: {fileID: 11400000, guid: 337f0455961848e4daae35638c40a3ae, type: 2}
-  _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
+  _doorPrefab: {fileID: 5163913735208331690, guid: 68173a35499684249a46fbd42c360c6c,
     type: 3}
   _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
   _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
