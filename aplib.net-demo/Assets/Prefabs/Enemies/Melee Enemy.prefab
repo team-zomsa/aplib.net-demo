@@ -130,7 +130,7 @@ Transform:
   m_GameObject: {fileID: 2514419866930457234}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.73, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -364,7 +364,7 @@ Transform:
   m_GameObject: {fileID: 6690696244981897467}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.38, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -508,6 +508,7 @@ MonoBehaviour:
   _damagePoints: 50
   _targetTag: Player
   _respawn: 0
+  _canMove: 1
   _attackCooldown: 2
   _hitDelay: 1
   _swingWidth: 1.4
@@ -670,7 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648b288588b042ea812320b0f63da5f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 4796441169114859087}
+  _spawnArea: {fileID: 0}
 --- !u!1 &7965706561864693241
 GameObject:
   m_ObjectHideFlags: 0
