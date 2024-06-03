@@ -112,54 +112,23 @@ namespace Assets.Scripts.Wfc
             }
             _random = new Random(_seed);
 
-
             Debug.Log("Seed: " + _seed);
 
             MakeGrid();
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
+            SwitchTile(randomPlayerSpawn);
+
             _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
 
-            PlaceGrid();
+            PlaceGrid(randomPlayerSpawn.X, randomPlayerSpawn.Z);
 
             JoinConnectedComponentsWithTeleporters();
 
             PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
 
             SpawnItems();
-        }
-
-        public void SwitchTile(Cell startTile)
-        {
-            Direction facing = startTile.Tile.Facing;
-
-            switch (startTile.Tile)
-            {
-                case Corner:
-                    startTile.Tile = new StartCorner(facing);
-                    break;
-                case Crossing:
-                    startTile.Tile = new StartCrossing();
-                    break;
-                case DeadEnd:
-                    startTile.Tile = new StartDeadEnd(facing);
-                    break;
-                case Room:
-                    startTile.Tile = new StartRoom(
-                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West },
-                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West }
-                        );
-                    break;
-                case Straight:
-                    startTile.Tile = new StartStraight(facing);
-                    break;
-                case TSection:
-                    startTile.Tile = new StartTSection(facing);
-                    break;
-                default:
-                    break;
-            }
         }
 
         /// <summary>
@@ -193,16 +162,53 @@ namespace Assets.Scripts.Wfc
             }
         }
 
+        public void SwitchTile(Cell startTile)
+        {
+            Direction facing = startTile.Tile.Facing;
+
+            switch (startTile.Tile)
+            {
+                case Corner:
+                    startTile.Tile = new StartCorner(facing);
+                    break;
+                case Crossing:
+                    startTile.Tile = new StartCrossing();
+                    break;
+                case DeadEnd:
+                    startTile.Tile = new StartDeadEnd(facing);
+                    break;
+                case Room:
+                    startTile.Tile = new StartRoom(
+                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West },
+                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West }
+                        );
+                    break;
+                case Straight:
+                    startTile.Tile = new StartStraight(facing);
+                    break;
+                case TSection:
+                    startTile.Tile = new StartTSection(facing);
+                    break;
+                default:
+                    break;
+            }
+
+            int x = startTile.X;
+            int z = startTile.Z;
+
+            _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, new GameObject().transform);
+        }
+
         /// <summary>
         /// Places the grid in the world.
         /// </summary>
-        private void PlaceGrid()
+        private void PlaceGrid(int xStart, int zStart)
         {
             GameObject tiles = CreateGameObject("Tiles", transform);
 
-            for (int z = 0; z < Grid.Height; z++)
+            for (int z = 0; z < Grid.Height && z != zStart; z++)
             {
-                for (int x = 0; x < Grid.Width; x++)
+                for (int x = 0; x < Grid.Width && x != zStart; x++)
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
             }
         }
