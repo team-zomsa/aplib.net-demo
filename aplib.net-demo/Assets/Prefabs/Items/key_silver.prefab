@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5110850175473961303}
   - component: {fileID: 6409961272102491702}
   - component: {fileID: 7006872941668042291}
+  - component: {fileID: 5545111538758701714}
   m_Layer: 0
   m_Name: pPlane3
   m_TagString: Key
@@ -136,6 +137,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.15263, y: 6.3028283, z: 2.402361}
   m_Center: {x: 0.31444496, y: 3.138778, z: -0.1601255}
+--- !u!114 &5545111538758701714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9192114218a522347bf5eda4a12a3163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointAmount: 15
 --- !u!1 &155280
 GameObject:
   m_ObjectHideFlags: 0

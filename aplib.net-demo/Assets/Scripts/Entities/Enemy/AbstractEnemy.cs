@@ -5,12 +5,14 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(PathFind))]
 [RequireComponent(typeof(HealthComponent))]
+[RequireComponent(typeof(EnemyPointsAdder))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
     /// <summary>
     /// The amount of damage the enemy deals to the player.
     /// </summary>
     [SerializeField] protected int _damagePoints = 25;
+    [SerializeField] protected bool _canMove = true;
     [SerializeField] protected string _targetTag = "Player";
     protected HealthComponent _healthComponent;
     protected PathFind _pathFind;
@@ -76,7 +78,8 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// </summary>
     protected virtual void Update()
     {
-        _pathFind.UpdateAgent();
+        if (_canMove)
+            _pathFind.UpdateAgent();
     }
 
     /// <summary>

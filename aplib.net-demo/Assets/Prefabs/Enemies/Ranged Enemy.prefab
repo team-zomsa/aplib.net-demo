@@ -202,6 +202,7 @@ GameObject:
   - component: {fileID: 8116374137221868876}
   - component: {fileID: 5007256389150739156}
   - component: {fileID: 3330466833410674930}
+  - component: {fileID: 140480979352382546}
   m_Layer: 0
   m_Name: Ranged Enemy Body
   m_TagString: Enemy
@@ -360,6 +361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damagePoints: 25
+  _canMove: 1
   _targetTag: Player
   _respawn: 0
   _attackCooldown: 2
@@ -523,7 +525,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648b288588b042ea812320b0f63da5f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 3563055558079486355}
+  _spawnArea: {fileID: 3563055558079486355}
+--- !u!114 &140480979352382546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5361096258398959275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9192114218a522347bf5eda4a12a3163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointAmount: 10
 --- !u!1 &6630535104659245811
 GameObject:
   m_ObjectHideFlags: 0

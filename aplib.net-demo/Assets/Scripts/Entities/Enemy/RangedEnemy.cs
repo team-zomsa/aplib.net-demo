@@ -7,7 +7,7 @@ using UnityEngine;
 /// Has a separate vision range within which it will move closer to the player.
 /// </summary>
 [RequireComponent(typeof(Timer))]
-public class RangedEnemy : DummyEnemy
+public class RangedEnemy : RespawningEnemy
 {
     [SerializeField]
     private float _attackCooldown = 2f;

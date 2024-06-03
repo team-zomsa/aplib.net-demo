@@ -7,13 +7,9 @@ namespace Assets.Scripts.Doors
     /// This class handles collisions with the player and makes sure that the parent object (the door) disappears/opens when
     /// the player is in range and the prerequisites are met (the right key).
     /// </summary>
+    [RequireComponent(typeof(PointsAdderComponent))]
     public class Door : MonoBehaviour
     {
-        /// <summary>
-        /// The number of doors that have been spawned in the level so far. This is used to give each door a unique ID.
-        /// </summary>
-        private static int _numberOfDoors;
-
         /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
         public int DoorId;
 
@@ -21,6 +17,13 @@ namespace Assets.Scripts.Doors
         /// The color of the door, which is used to determine which key is needed to open it.
         /// </summary>
         public Color Color { get; private set; }
+
+        /// <summary>
+        /// The number of doors that have been spawned in the level so far. This is used to give each door a unique ID.
+        /// </summary>
+        private static int _numberOfDoors;
+
+        private PointsAdderComponent _pointsAdderComponent;
 
         [SerializeField] private float _minSaturation = 0.5f;
 
@@ -37,6 +40,7 @@ namespace Assets.Scripts.Doors
         /// </summary>
         private void Awake()
         {
+            _pointsAdderComponent = GetComponent<PointsAdderComponent>();
             DoorId = _numberOfDoors;
             _numberOfDoors++;
             Color = Random.ColorHSV(0f, 1f, _minSaturation, _maxSaturation, _minValue, _maxValue);
@@ -54,7 +58,7 @@ namespace Assets.Scripts.Doors
             if (collidingObject.gameObject.CompareTag("Player") && GameObject.Find("KeyRingObject").GetComponent<KeyRing>().KeyQuery(this))
             {
                 Open();
-                PointsManager.Instance.AddPoints(this);
+                _pointsAdderComponent.SendPoints();
             }
         }
 

@@ -7,7 +7,7 @@ using UnityEngine;
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
 [RequireComponent(typeof(Timer))]
-public class MeleeEnemy : DummyEnemy
+public class MeleeEnemy : RespawningEnemy
 {
     [SerializeField]
     private float _attackCooldown = 2f;

@@ -6,9 +6,12 @@ namespace Assets.Scripts.Items
     /// Attach this class to make object pickupable.
     /// </summary>
     [RequireComponent(typeof(Key))]
+    [RequireComponent(typeof(PointsAdderComponent))]
     public class PickupableKey : MonoBehaviour
     {
         private KeyRing _keyRing;
+        private Key _item;
+        private PointsAdderComponent _pointsAdderComponent;
 
         public void Start()
         {
@@ -16,6 +19,9 @@ namespace Assets.Scripts.Items
             _keyRing = inventoryObject.GetComponent<KeyRing>();
 
             if (!_keyRing) throw new UnityException("Key ring not found!");
+
+            _item = gameObject.GetComponent<Key>();
+            _pointsAdderComponent = GetComponent<PointsAdderComponent>();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -23,10 +29,9 @@ namespace Assets.Scripts.Items
             if (!other.CompareTag("Player"))
                 return;
 
-            Key item = gameObject.GetComponent<Key>();
-            PointsManager.Instance.AddPoints(item);
+            _pointsAdderComponent.SendPoints();
 
-            _keyRing.StoreKey(item);
+            _keyRing.StoreKey(_item);
 
             Destroy(gameObject);
         }

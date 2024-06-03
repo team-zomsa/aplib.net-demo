@@ -1,12 +1,10 @@
-using Assets.Scripts.Doors;
-using Assets.Scripts.Items;
 using System;
 using UnityEngine;
 
 /// <summary>
 /// Manages the player's points.
 /// </summary>
-public class PointsManager : MonoBehaviour
+public class PointsManager
 {
     /// <summary>
     /// Event that is invoked when points are added.
@@ -23,55 +21,22 @@ public class PointsManager : MonoBehaviour
     /// <summary>
     /// The singleton instance of this class.
     /// </summary>
-    public static PointsManager Instance { get; private set; }
-
-    [SerializeField]
-    private PoinstList _pointsList;
-
-    private void Awake()
+    public static PointsManager Instance
     {
-        if (Instance != null && Instance != this)
-            Destroy(gameObject);
-        else
-            Instance = this;
+        get
+        {
+            _instance ??= new PointsManager();
+            return _instance;
+        }
+        private set => _instance = value;
     }
+
+    private static PointsManager _instance;
 
     /// <summary>
-    /// Adds points to the player's total amount based on the class of the parameter.
+    /// Private constructor to prevent instantiation by other classes.
     /// </summary>
-    /// <param name="obj">The object that was picked up.</param>
-    // This is probably not a super nice way to do this, but it will work for now.
-    public void AddPoints(MonoBehaviour obj)
-    {
-        switch (obj)
-        {
-            case AbstractEnemy:
-                AddPoints(_pointsList.EnemyPoints);
-                Debug.Log("Enemy points added");
-                break;
-
-            case RagePotion:
-            case HealthPotion:
-                AddPoints(_pointsList.PotionPoints);
-                Debug.Log("Potion points added");
-                break;
-
-            case EndItem:
-                AddPoints(_pointsList.EndItemPoints);
-                Debug.Log("End item points added");
-                break;
-
-            case Key:
-                AddPoints(_pointsList.KeyPoints);
-                Debug.Log("Key points added");
-                break;
-
-            case Door:
-                AddPoints(_pointsList.DoorPoints);
-                Debug.Log("Door points added");
-                break;
-        }
-    }
+    private PointsManager() { }
 
     /// <summary>
     /// Grab the health from the player and add points based on the health.
@@ -92,7 +57,7 @@ public class PointsManager : MonoBehaviour
     /// Add points to the player's total amount.
     /// </summary>
     /// <param name="points">The amount of points to add.</param>
-    private void AddPoints(int points)
+    public void AddPoints(int points)
     {
         Points += points;
         PointsAdded?.Invoke(Points);
