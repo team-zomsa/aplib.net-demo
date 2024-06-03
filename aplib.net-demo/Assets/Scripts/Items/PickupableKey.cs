@@ -6,9 +6,11 @@ namespace Assets.Scripts.Items
     /// Attach this class to make object pickupable.
     /// </summary>
     [RequireComponent(typeof(Key))]
-    [RequireComponent(typeof(PointsAdderComponent))]
+    [RequireComponent(typeof(KeyPointsAdder))]
     public class PickupableKey : MonoBehaviour
     {
+        public event System.Action<Key> KeyPickedUp;
+
         private KeyRing _keyRing;
         private Key _item;
         private PointsAdderComponent _pointsAdderComponent;
@@ -29,7 +31,7 @@ namespace Assets.Scripts.Items
             if (!other.CompareTag("Player") || !other.material.name.Contains("PlayerPhysic"))
                 return;
 
-            _pointsAdderComponent.SendPoints();
+            KeyPickedUp?.Invoke(_item);
 
             _keyRing.StoreKey(_item);
 

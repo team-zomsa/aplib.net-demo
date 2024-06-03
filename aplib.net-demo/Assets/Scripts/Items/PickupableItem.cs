@@ -9,13 +9,16 @@ namespace Assets.Scripts.Items
     [RequireComponent(typeof(Collider))]
     public class PickupableItem : MonoBehaviour
     {
-        private PointsAdderComponent _pointsAdderComponent;
+        /// <summary>
+        /// Event that is triggered when the item is picked up.
+        /// </summary>
+        public event System.Action<Item> ItemPickedUp;
+        
         private Item _item;
         private Inventory _inventory;
 
         private void Awake()
         {
-            _pointsAdderComponent = GetComponent<PointsAdderComponent>();
             _item = GetComponent<Item>();
             GameObject inventoryObject = GameObject.Find("InventoryObject");
             _inventory = inventoryObject.GetComponent<Inventory>();
@@ -32,8 +35,7 @@ namespace Assets.Scripts.Items
                 return;
 
             // Not all items give points when picked up
-            if (_pointsAdderComponent)
-                _pointsAdderComponent.SendPoints();
+            ItemPickedUp?.Invoke(_item);
 
             Destroy(gameObject);
             _inventory.PickUpItem(_item);

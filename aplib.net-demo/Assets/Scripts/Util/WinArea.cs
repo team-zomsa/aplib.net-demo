@@ -29,6 +29,6 @@ public class WinArea : Area
         if (!other.CompareTag("Player") || !_inventory.ContainsItem("The Eternal Elixir")
             || !other.material.name.Contains("PlayerPhysic")) return;
 
-        OnWin.Invoke();
+        OnWin?.Invoke();
     }
 }

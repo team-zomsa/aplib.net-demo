@@ -184,11 +184,6 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void ShowWinScreen()
     {
-        // Set points text.
-        List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
-        pointsText.text = "Points: " + PointsManager.Instance.Points;
-
         // Mouse visible.
         MenuOpenedEvent?.Invoke(true);
 
@@ -201,6 +196,17 @@ public class CanvasManager : MonoBehaviour
 
         // On win ui.
         WinScreenCanvas.SetActive(true);
+    }
+
+    /// <summary>
+    /// Set the points text on the win screen.
+    /// Call from the PointsManager after updating final score to circumvent race conditions of events.
+    /// </summary>
+    public void SetPointsText(int points)
+    {
+        List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
+        pointsText.text = "Points: " + points;
     }
 
     /// <summary>
