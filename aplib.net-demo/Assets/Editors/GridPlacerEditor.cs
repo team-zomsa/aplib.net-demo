@@ -28,7 +28,8 @@ namespace Editors
 
             gridPlacerSettings.ApplyModifiedProperties();
 
-            if (!GUILayout.Button("Generate new level") || !Application.IsPlaying(target)) return;
+            if (!GUILayout.Button("Generate new level") || !Application.IsPlaying(target) || CanvasManager.Instance.IsOnGameSettings ||
+                CanvasManager.Instance.IsOnMenuSettings) return;
 
             GridPlacer gridPlacer = (GridPlacer)target;
             foreach (Transform child in gridPlacer.transform) Destroy(child.gameObject);
