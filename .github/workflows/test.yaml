@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Fetch Main Branch
         run: git fetch origin main:main
       - uses: actions/cache@v4
