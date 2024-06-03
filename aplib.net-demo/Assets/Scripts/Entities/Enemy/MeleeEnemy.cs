@@ -21,10 +21,16 @@ public class MeleeEnemy : DummyEnemy
     [SerializeField]
     private float _swingLength = 4f;
 
+    [SerializeField]
+    private int _visionRange = 20;
+
     private readonly float _sizeIncrease = 1.2f;
-    private MeleeWeapon _meleeWeapon;
+
     private Timer _cooldownTimer;
-    private bool _isSwinging = false;
+
+    private bool _isSwinging;
+
+    private MeleeWeapon _meleeWeapon;
 
     /// <summary>
     /// Sets the target tag for the melee weapon.
@@ -46,6 +52,9 @@ public class MeleeEnemy : DummyEnemy
     /// </summary>
     protected override void Update()
     {
+        // If the target is not within vision range, do nothing.
+        if (!_pathFind.GoalWithinRange(_visionRange)) return;
+
         if (_isSwinging)
             return;
 
