@@ -23,8 +23,10 @@ public class WinArea : Area
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player") || !_inventory.ContainsItem("The Eternal Elixir")) return;
+        // Check for material to prevent double triggering.
+        if (!other.CompareTag("Player") || !_inventory.ContainsItem("The Eternal Elixir")
+            || !other.material.name.Contains("PlayerPhysic")) return;
 
-        OnWin?.Invoke();
+        OnWin.Invoke();
     }
 }

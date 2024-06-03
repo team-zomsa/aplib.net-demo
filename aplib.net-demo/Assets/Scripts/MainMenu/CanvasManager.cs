@@ -184,18 +184,17 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void ShowWinScreen()
     {
+        // Set points text.
+        PointsManager.Instance.AddPointsOnGameEnd();
+        List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
+        pointsText.text = "Points: " + PointsManager.Instance.Points;
+
         // Mouse visible.
         MenuOpenedEvent?.Invoke(true);
 
         // Pause game.
         GameManager.Instance.Pause();
-
-        // Set points text.
-        List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
-        pointsText.text = "Points: " + PointsManager.Instance.Points;
-
-        Debug.Log("Win screen points: " + PointsManager.Instance.Points);
 
         // Set all off.
         SetAllCanvasesToInactive();
