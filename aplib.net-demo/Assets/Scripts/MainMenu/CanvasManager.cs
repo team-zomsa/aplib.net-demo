@@ -185,7 +185,6 @@ public class CanvasManager : MonoBehaviour
     public void ShowWinScreen()
     {
         // Set points text.
-        PointsManager.Instance.AddPointsOnGameEnd();
         List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
         TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
         pointsText.text = "Points: " + PointsManager.Instance.Points;

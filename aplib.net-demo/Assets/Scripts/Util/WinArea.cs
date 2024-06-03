@@ -19,6 +19,8 @@ public class WinArea : Area
         if (inventoryObject == null) throw new UnityException("InventoryObject not found!");
 
         if (!inventoryObject.TryGetComponent(out _inventory)) throw new UnityException("Inventory not found!");
+
+        OnWin += PointsManager.Instance.AddPointsOnGameEnd;
     }
 
     private void OnTriggerEnter(Collider other)
