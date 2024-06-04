@@ -211,7 +211,7 @@ namespace Assets.Scripts.Wfc
                 for (int x = 0; x < Grid.Width; x++)
                 {
                     if (x == xStart && z == zStart)
-                        break;
+                        continue;
 
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
                 }
