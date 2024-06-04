@@ -40,7 +40,7 @@ public class RangedWeaponTest
         SceneManager.LoadScene("RangedWeaponBroken");
         yield return null;
 
-        LogAssert.Expect(LogType.Error, "AmmoPouch not found in the scene. Defaulting to parent ammo pouch.");
+        LogAssert.Expect(LogType.Error, "AmmoPouch not assigned. Defaulting to parent ammo pouch.");
         LogAssert.Expect(LogType.Error, "No parent ammo pouch found. Disabling ranged weapon.");
 
         // Get the players crossbow
