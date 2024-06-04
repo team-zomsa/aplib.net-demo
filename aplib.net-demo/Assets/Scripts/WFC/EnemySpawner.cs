@@ -31,7 +31,7 @@ public class EnemySpawner : MonoBehaviour
     /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
     public void SpawnEnemies(List<Cell> cells, Random random)
     {
-        if (_spawnableEnemies.Enemies.Select(x => x.Count).Aggregate((x, y) => x + y) > cells.Count)
+        if (_spawnableEnemies.Enemies.Select(x => x.Count).Sum() > cells.Count)
             throw new UnityException("Not enough empty cells to place all enemies.");
 
         GameObject enemies = SpawningExtensions.CreateGameObject("Enemies", transform);

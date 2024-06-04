@@ -61,7 +61,7 @@ public class CanvasManager : MonoBehaviour
     public bool IsOnGameSettings { get; private set; }
 
     /// <summary>
-    /// To ensure the menu settings and menu UI aren't on at the same time.
+    /// Gets an indication whether the menu settings are active right now
     /// </summary>
     public bool IsOnMenuSettings { get; private set; }
 
