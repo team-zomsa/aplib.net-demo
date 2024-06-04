@@ -206,10 +206,16 @@ namespace Assets.Scripts.Wfc
         {
             GameObject tiles = CreateGameObject("Tiles", transform);
 
-            for (int z = 0; z < Grid.Height && z != zStart; z++)
+            for (int z = 0; z < Grid.Height; z++)
             {
-                for (int x = 0; x < Grid.Width && x != zStart; x++)
+                for (int x = 0; x < Grid.Width; x++)
+                {
+                    if (x == xStart && z == zStart)
+                        break;
+
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
+                }
+
             }
         }
 
