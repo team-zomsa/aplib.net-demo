@@ -2,13 +2,15 @@ using Entities.Weapons;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents an inventory of equipment items.
 /// </summary>
 public class EquipmentInventory : MonoBehaviour
 {
-    [SerializeField] private int inventorySize = 2;
+    [SerializeField]
+    private int _inventorySize = 2;
 
     /// <summary>
     /// Specifies whether to switch to the new item when it is equipped.
@@ -91,7 +93,7 @@ public class EquipmentInventory : MonoBehaviour
     /// <param name="equipment">The equipment item to be equipped.</param>
     public void EquipItem(Weapon equipment)
     {
-        if (_equipmentList.Count >= inventorySize)
+        if (_equipmentList.Count >= _inventorySize)
         {
             Debug.LogWarning("Inventory is full!");
             return;

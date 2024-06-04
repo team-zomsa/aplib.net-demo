@@ -4,7 +4,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
-public class RangedEnemyTest
+
+public class RangedWeaponTest
 {
     [UnityTest]
     public IEnumerator TestAmmo()
@@ -14,7 +15,7 @@ public class RangedEnemyTest
 
         // Get the players crossbow
         var player = GameObject.Find("Player");
-        Equipment crossbow = player.GetComponentInChildren<RangedWeapon>();
+        Equipment crossbow = player.GetComponentInChildren<Entities.Weapons.RangedWeapon>();
         var ammoPouch = player.GetComponentInChildren<AmmoPouch>();
 
         // Shoot the crossbow 10 times, but miss the shots
@@ -44,7 +45,7 @@ public class RangedEnemyTest
 
         // Get the players crossbow
         var player = GameObject.Find("Player Ranged");
-        Equipment crossbow = player.GetComponentInChildren<RangedWeapon>();
+        Equipment crossbow = player.GetComponentInChildren<Entities.Weapons.RangedWeapon>();
 
         yield return null;
 
