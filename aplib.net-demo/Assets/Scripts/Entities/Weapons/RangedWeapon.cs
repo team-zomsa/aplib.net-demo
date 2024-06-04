@@ -39,7 +39,7 @@ namespace Entities.Weapons
 
             if (_ammoPouch == null)
             {
-                Debug.LogError("AmmoPouch not found in the scene. Defaulting to parent ammo pouch.");
+                Debug.LogError("AmmoPouch not assigned. Defaulting to parent ammo pouch.");
                 _ammoPouch = GetComponentInParent<AmmoPouch>();
 
                 if (_ammoPouch == null)

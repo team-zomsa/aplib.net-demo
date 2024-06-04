@@ -21,7 +21,7 @@ public class EquipmentInventory : MonoBehaviour
     /// </value>
     /// <seealso cref="EquipmentInventory.EquipItem(IEquipment)" />
     /// <seealso cref="EquipmentInventory.CurrentEquipment" />
-    [SerializeField] public bool SwitchToNewItem;
+    public bool SwitchToNewItem;
 
     /// <summary>
     /// The default equipment collection.
