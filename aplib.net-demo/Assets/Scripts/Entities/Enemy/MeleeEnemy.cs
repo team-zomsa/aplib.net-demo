@@ -9,6 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(Timer))]
 public class MeleeEnemy : DummyEnemy
 {
+    private const float _sizeIncrease = 1.2f;
+
     [SerializeField]
     private float _attackCooldown = 2f;
 
@@ -20,11 +22,6 @@ public class MeleeEnemy : DummyEnemy
 
     [SerializeField]
     private float _swingLength = 4f;
-
-    [SerializeField]
-    private int _visionRange = 20;
-
-    private readonly float _sizeIncrease = 1.2f;
 
     private Timer _cooldownTimer;
 
