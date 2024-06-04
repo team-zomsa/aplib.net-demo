@@ -9,12 +9,6 @@ using UnityEngine.TestTools;
 
 public class SwitchTileTests
 {
-    [SetUp]
-    public void Setup()
-    {
-        SceneManager.LoadScene("SwitchTileTest");
-    }
-
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
@@ -22,8 +16,9 @@ public class SwitchTileTests
     {
         // Arrange
         GameObject gameObject = new GameObject();
-        GridPlacer grid = gameObject.GetComponent<GridPlacer>();
-
+        gameObject.SetActive(false);
+        GridPlacer grid = gameObject.AddComponent<GridPlacer>();
+        GameObjectPlacer gameObjectPlacer = gameObject.AddComponent<GameObjectPlacer>();
 
         Cell randomTile = new Cell(10, 10);
         randomTile.Tile = new Corner(Direction.North);

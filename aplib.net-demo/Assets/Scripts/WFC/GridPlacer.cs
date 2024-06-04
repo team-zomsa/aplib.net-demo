@@ -215,7 +215,6 @@ namespace Assets.Scripts.Wfc
 
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
                 }
-
             }
         }
 
