@@ -41,7 +41,7 @@ public class CanvasManager : MonoBehaviour
     private bool _isOnSettings = false;
 
     /// <summary>
-    /// Is Settings on or off.
+    /// Is Help screen on or off.
     /// </summary>
     private bool _isOnHelp = false;
 
@@ -54,13 +54,13 @@ public class CanvasManager : MonoBehaviour
     /// Name of the start screen.
     /// </summary>
     [SerializeField]
-    private string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
+    private const string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
 
     /// <summary>
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
+    private const string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
 
     private void Awake()
     {
@@ -75,21 +75,21 @@ public class CanvasManager : MonoBehaviour
     {
         _currentSceneName = SceneManager.GetActiveScene().name;
 
-        if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
+        switch (_currentSceneName)
         {
-            SetAllCanvasesToInactive();
-            MenuCanvas.SetActive(true);
-        }
-        else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
-        {
-            HealthComponent playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
-            playerHealth.Death += OnPlayerDeath;
+            case _sceneNameStartingMenu:    // Are we at the starting screen?
+                SetAllCanvasesToInactive();
+                MenuCanvas.SetActive(true);
+                break;
+            case _sceneNameGame:    // Are we at the main gaming scene?
+                HealthComponent playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
+                playerHealth.Death += OnPlayerDeath;
 
-            SetAllCanvasesToInactive();
-        }
-        else // TODO:: Remove when game is done. This is for future ease.
-        {
-            Debug.Log("Scene names are wrong. Check MenuButtons script");
+                SetAllCanvasesToInactive();
+                break;
+            default:
+                Debug.Log("Scene names are wrong. Check MenuButtons script");   // TODO:: Remove when game is done. This is for future ease.
+                break;
         }
     }
 
@@ -146,16 +146,19 @@ public class CanvasManager : MonoBehaviour
     {
         _isOnSettings = !_isOnSettings;
 
-        if (_currentSceneName == _sceneNameStartingMenu)
+        switch (_currentSceneName)
         {
-            MenuCanvas.SetActive(!_isOnSettings);
-        }
-        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
-        {
-            if (_isOnSettings) GameManager.Instance.Pause();
-            else GameManager.Instance.Resume();
+            case _sceneNameStartingMenu:
+                MenuCanvas.SetActive(!_isOnSettings);
+                break;
+            case _sceneNameGame:    // Toggle from game to game settings and back.
+                if (_isOnSettings) GameManager.Instance.Pause();
+                else GameManager.Instance.Resume();
 
-            MenuOpenedEvent?.Invoke(_isOnSettings);
+                MenuOpenedEvent?.Invoke(_isOnSettings);
+                break;
+            default:
+                break;
         }
 
         SettingCanvas.SetActive(_isOnSettings);
@@ -168,22 +171,25 @@ public class CanvasManager : MonoBehaviour
     {
         _isOnHelp = !_isOnHelp;
 
-        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to helpscreen and back.
+        switch (_currentSceneName)
         {
-            SettingCanvas.SetActive(!_isOnHelp);
-        }
-        else if (_currentSceneName == _sceneNameGame) // Toggle from game to helpscreen and back.
-        {
-            if (_isOnHelp)
-            {
-                GameManager.Instance.Pause();
-                MenuOpenedEvent?.Invoke(_isOnHelp);
-            }
-            else if (!_isOnHelp && !_isOnSettings)
-            {
-                GameManager.Instance.Resume();
-                MenuOpenedEvent?.Invoke(_isOnHelp);
-            }
+            case _sceneNameStartingMenu:    // Toggle from menu to helpscreen and back.
+                SettingCanvas.SetActive(!_isOnHelp);
+                break;
+            case _sceneNameGame:    // Toggle from game to helpscreen and back.
+                if (_isOnHelp)
+                {
+                    GameManager.Instance.Pause();
+                    MenuOpenedEvent?.Invoke(_isOnHelp);
+                }
+                else if (!_isOnSettings)
+                {
+                    GameManager.Instance.Resume();
+                    MenuOpenedEvent?.Invoke(_isOnHelp);
+                }
+                break;
+            default:
+                break;
         }
 
         HelpCanvas.SetActive(_isOnHelp);
@@ -195,13 +201,16 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void Quit()
     {
-        if (_currentSceneName == _sceneNameStartingMenu) // From menu quit game.
+        switch (_currentSceneName)
         {
-            Application.Quit();
-        }
-        else if (_currentSceneName == _sceneNameGame) // From game quit to menu. 
-        {
-            ToMenu();
+            case _sceneNameStartingMenu:    // From menu quit game.
+                Application.Quit();
+                break;
+            case _sceneNameGame:    // From game quit to menu. 
+                ToMenu();
+                break;
+            default:
+                break;
         }
     }
 }
