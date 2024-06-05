@@ -51,19 +51,19 @@ public class CanvasManager : MonoBehaviour
     private string _currentSceneName = "";
 
     /// <summary>
-    /// To ensure the game settings and menu UI aren't on at the same time.
-    /// </summary>
-    private bool _isOnGameSettings;
-
-    /// <summary>
-    /// To ensure the menu settings and menu UI aren't on at the same time.
-    /// </summary>
-    private bool _isOnMenuSettings;
-
-    /// <summary>
     /// Prevent the settings toggle when the variable is true.
     /// </summary>
     private bool _preventSettingsToggle;
+
+    /// <summary>
+    /// To ensure the game settings and menu UI aren't on at the same time.
+    /// </summary>
+    public bool IsOnGameSettings { get; private set; }
+
+    /// <summary>
+    /// Gets an indication whether the menu settings are active right now
+    /// </summary>
+    public bool IsOnMenuSettings { get; private set; }
 
     public static CanvasManager Instance { get; private set; }
 
@@ -118,8 +118,8 @@ public class CanvasManager : MonoBehaviour
         SettingGameCanvas.SetActive(false);
         GameOverCanvas.SetActive(false);
         WinScreenCanvas.SetActive(false);
-        _isOnMenuSettings = false;
-        _isOnGameSettings = false;
+        IsOnMenuSettings = false;
+        IsOnGameSettings = false;
     }
 
     /// <summary>
@@ -160,19 +160,19 @@ public class CanvasManager : MonoBehaviour
 
         if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
         {
-            _isOnMenuSettings = !_isOnMenuSettings;
-            SettingMenuCanvas.SetActive(_isOnMenuSettings);
-            MenuCanvas.SetActive(!_isOnMenuSettings);
+            IsOnMenuSettings = !IsOnMenuSettings;
+            SettingMenuCanvas.SetActive(IsOnMenuSettings);
+            MenuCanvas.SetActive(!IsOnMenuSettings);
         }
         else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
         {
-            _isOnGameSettings = !_isOnGameSettings;
-            SettingGameCanvas.SetActive(_isOnGameSettings);
+            IsOnGameSettings = !IsOnGameSettings;
+            SettingGameCanvas.SetActive(IsOnGameSettings);
 
-            if (_isOnGameSettings) GameManager.Instance.Pause();
+            if (IsOnGameSettings) GameManager.Instance.Pause();
             else GameManager.Instance.Resume();
 
-            MenuOpenedEvent?.Invoke(_isOnGameSettings);
+            MenuOpenedEvent?.Invoke(IsOnGameSettings);
         }
     }
 

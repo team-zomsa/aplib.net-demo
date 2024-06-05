@@ -11,8 +11,12 @@ public class DummyEnemy : AbstractEnemy
     /// <summary>
     /// The spawn area for the enemy.
     /// </summary>
-    [SerializeField] private bool _respawn = true;
-    [SerializeField] private bool _canMove = true;
+    [SerializeField]
+    private bool _respawn = true;
+
+    [SerializeField]
+    private bool _canMove = true;
+
     private RespawnableComponent _respawnableComponent;
 
     /// <summary>
@@ -42,8 +46,5 @@ public class DummyEnemy : AbstractEnemy
     /// <summary>
     /// Resets its health.
     /// </summary>
-    private void OnRespawn(RespawnableComponent _)
-    {
-        _healthComponent.Reset();
-    }
+    private void OnRespawn(RespawnableComponent _) => _healthComponent.Reset();
 }

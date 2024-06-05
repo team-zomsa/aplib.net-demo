@@ -2,10 +2,10 @@ using Assets.Scripts.Wfc;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editors
 {
     [CustomEditor(typeof(GameObjectPlacer))]
-    public class GameObjectPlacerEditor : UnityEditor.Editor
+    public class GameObjectPlacerEditor : Editor
     {
         /// <summary>
         /// <inheritdoc />
@@ -14,8 +14,6 @@ namespace Editor
         {
             SerializedObject gameObjectPlacerSettings = serializedObject;
 
-            SerializedProperty tileSizeX = gameObjectPlacerSettings.FindProperty("_tileSizeX");
-            SerializedProperty tileSizeZ = gameObjectPlacerSettings.FindProperty("_tileSizeZ");
             SerializedProperty roomObjects = gameObjectPlacerSettings.FindProperty("_roomObjects");
             SerializedProperty spawnAbleItems = gameObjectPlacerSettings.FindProperty("_spawnableItems");
             SerializedProperty doorPrefab = gameObjectPlacerSettings.FindProperty("_doorPrefab");
@@ -25,8 +23,6 @@ namespace Editor
             SerializedProperty startRoomMaterial = gameObjectPlacerSettings.FindProperty("_startRoomMat");
             SerializedProperty endRoomMaterial = gameObjectPlacerSettings.FindProperty("_endRoomMat");
 
-            tileSizeX.intValue = EditorGUILayout.IntField("Tile size X", tileSizeX.intValue);
-            tileSizeZ.intValue = EditorGUILayout.IntField("Tile size Z", tileSizeZ.intValue);
             roomObjects.objectReferenceValue = EditorGUILayout.ObjectField("Room objects",
                 roomObjects.objectReferenceValue, typeof(RoomObjects), false);
 

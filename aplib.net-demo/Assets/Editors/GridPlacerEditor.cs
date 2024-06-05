@@ -2,10 +2,10 @@ using Assets.Scripts.Wfc;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editors
 {
     [CustomEditor(typeof(GridPlacer))]
-    public class GridPlacerEditor : UnityEditor.Editor
+    public class GridPlacerEditor : Editor
     {
         /// <summary>
         /// <inheritdoc />
@@ -28,7 +28,8 @@ namespace Editor
 
             gridPlacerSettings.ApplyModifiedProperties();
 
-            if (!GUILayout.Button("Generate new level") || !Application.IsPlaying(target)) return;
+            if (!GUILayout.Button("Generate new level") || !Application.IsPlaying(target) || CanvasManager.Instance.IsOnGameSettings ||
+                CanvasManager.Instance.IsOnMenuSettings) return;
 
             GridPlacer gridPlacer = (GridPlacer)target;
             foreach (Transform child in gridPlacer.transform) Destroy(child.gameObject);
