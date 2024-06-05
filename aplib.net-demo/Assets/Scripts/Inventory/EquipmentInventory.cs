@@ -1,8 +1,6 @@
-using Entities.Weapons;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents an inventory of equipment items.
