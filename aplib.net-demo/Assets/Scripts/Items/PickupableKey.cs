@@ -7,14 +7,12 @@ namespace Assets.Scripts.Items
     /// Attach this class to make object pickupable.
     /// </summary>
     [RequireComponent(typeof(Key))]
-    [RequireComponent(typeof(KeyPointsContributor))]
     public class PickupableKey : MonoBehaviour
     {
         public event Action<Key> KeyPickedUp;
 
         private KeyRing _keyRing;
         private Key _item;
-        private KeyPointsContributor _keyPointsAdder;
 
         public void Start()
         {
@@ -24,7 +22,6 @@ namespace Assets.Scripts.Items
             if (!_keyRing) throw new UnityException("Key ring not found!");
 
             _item = gameObject.GetComponent<Key>();
-            _keyPointsAdder = GetComponent<KeyPointsContributor>();
         }
 
         private void OnTriggerEnter(Collider other)

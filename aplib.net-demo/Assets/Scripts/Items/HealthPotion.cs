@@ -6,7 +6,6 @@ namespace Assets.Scripts.Items
     /// Health potion item that can be used to heal the player.
     /// </summary>
     [RequireComponent(typeof(PickupableItem))]
-    [RequireComponent(typeof(ItemPointsContributor))]
     public class HealthPotion : Item
     {
         [SerializeField]
