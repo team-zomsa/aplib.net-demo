@@ -1741,18 +1741,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 22.289, z: 0}
---- !u!114 &848895207 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3757874448323410464, guid: a97359d0503e62444882482848ac8602,
-    type: 3}
-  m_PrefabInstance: {fileID: 1582645436}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62f9716eb62840d28d877cd9e7c1a460, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &859168502 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1432395014528688006, guid: 5924d3f50fb1bb146897ba52aa3d7a49,
@@ -1828,7 +1816,7 @@ MonoBehaviour:
   _mouseLock: {fileID: 844829002}
   _playerTransform: {fileID: 1582645439}
   _inventory: {fileID: 81585838}
-  _equipmentInventory: {fileID: 848895207}
+  equipmentInventory: {fileID: 0}
 --- !u!4 &892692874
 Transform:
   m_ObjectHideFlags: 0
@@ -3751,6 +3739,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 98459274967107310, guid: f467669cc78c8714383ff9fa4bce38ef,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 32
+      objectReference: {fileID: 0}
     - target: {fileID: 1714929719199334556, guid: f467669cc78c8714383ff9fa4bce38ef,
         type: 3}
       propertyPath: m_LocalPosition.x
