@@ -362,11 +362,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damagePoints: 25
   _targetTag: Player
-  _visionRange: 20
   _respawn: 0
   _canMove: 1
   _attackCooldown: 2
   _attackRange: 10
+  _visionRange: 20
 --- !u!114 &3802688324864422353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,6 +553,51 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!1 &6437899815897636569
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8488767769105598618}
+  - component: {fileID: 1948759600369383589}
+  m_Layer: 0
+  m_Name: EnemyAmmoPouch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8488767769105598618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437899815897636569}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.6043491, y: -0.100000024, z: 0.65527534}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1714929719199334556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1948759600369383589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437899815897636569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c43b04ec1fb42d99a32ba831149d1ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxAmmoCount: 2000
 --- !u!1 &6630535104659245811
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +712,7 @@ Transform:
   m_Children:
   - {fileID: 8794975453294518190}
   - {fileID: 6903289118291040228}
+  - {fileID: 8488767769105598618}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8045162280133259918
@@ -732,6 +778,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6098721876212132164, guid: a32b9718dd054174cb328e71472939bb,
+        type: 3}
+      propertyPath: _ammoPouch
+      value: 
+      objectReference: {fileID: 1948759600369383589}
     - target: {fileID: 6098721876212132164, guid: a32b9718dd054174cb328e71472939bb,
         type: 3}
       propertyPath: _firePoint
