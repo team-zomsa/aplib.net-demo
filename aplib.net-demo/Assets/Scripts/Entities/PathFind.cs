@@ -14,8 +14,6 @@ public class PathFind : MonoBehaviour
 
     private NavMeshAgent _agent;
 
-    private bool _enabled;
-
     private Transform _goal;
 
     /// <summary>
