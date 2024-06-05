@@ -17,7 +17,7 @@ public abstract class AbstractEnemy : MonoBehaviour
     protected string _targetTag = "Player";
 
     [SerializeField]
-    private int _defaultVisionRange = 25;
+    protected int _visionRange = 20;
 
     protected HealthComponent _healthComponent;
 
@@ -46,7 +46,7 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// <summary>
     /// Update the pathfinding agent.
     /// </summary>
-    protected virtual void Update() => _pathFind.UpdateAgent(_defaultVisionRange);
+    protected virtual void Update() => _pathFind.UpdateAgent(_visionRange);
 
     /// <summary>
     /// Unsubscribes from the health component's events.

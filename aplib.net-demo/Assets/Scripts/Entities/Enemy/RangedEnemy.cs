@@ -15,9 +15,6 @@ public class RangedEnemy : DummyEnemy
     [SerializeField]
     private int _attackRange = 10;
 
-    [SerializeField]
-    private int _visionRange = 25;
-
     private Timer _attackTimer;
 
     private bool _movingCloser;
