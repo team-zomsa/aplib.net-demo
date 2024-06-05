@@ -1,5 +1,4 @@
 using Entities.Weapons;
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -44,47 +43,16 @@ public class RangedEnemy : DummyEnemy
     {
         Debug.DrawRay(transform.position, Vector3.up * 20, Color.green);
 
-        // If the target is not within vision range, do nothing.
-        if (!_pathFind.GoalWithinRange(_visionRange))
-        {
-            _pathFind.ToggleAgent(false);
-            return;
-        }
-
-        if (_movingCloser)
-            return;
-
         // If the target is not directly visible but within vision range, move closer to the target.
-        if (!_rangedWeapon.EnemiesInLineOfSight())
-        {
-            _pathFind.SetStoppingDistance(1f);
-            _pathFind.ToggleAgent(true);
-            _movingCloser = true;
-            StartCoroutine(MoveCloser());
-            return;
-        }
+        if (!_rangedWeapon.EnemiesInLineOfSight() && _pathFind.GoalWithinRange(_visionRange)) _pathFind.SetStoppingDistance(1f);
 
-        if (_attackTimer.IsFinished())
+        if (_attackTimer.IsFinished() && _rangedWeapon.EnemiesInLineOfSight())
         {
+            _pathFind.SetStoppingDistance(_attackRange - 1f);
             _rangedWeapon.UseWeapon();
             _attackTimer.Reset();
         }
 
         base.Update();
-    }
-
-    /// <summary>
-    /// Coroutine to move closer until the enemy is within line of sight.
-    /// </summary>
-    private IEnumerator MoveCloser()
-    {
-        while (_pathFind.GoalWithinRange(_visionRange) && !_rangedWeapon.EnemiesInLineOfSight())
-        {
-            _pathFind.UpdateAgent(_visionRange);
-            yield return null;
-        }
-
-        _movingCloser = false;
-        _pathFind.SetStoppingDistance(_attackRange - 1f);
     }
 }
