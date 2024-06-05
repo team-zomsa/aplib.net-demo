@@ -507,6 +507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damagePoints: 50
   _targetTag: Player
+  _visionRange: 20
   _respawn: 0
   _canMove: 1
   _attackCooldown: 2

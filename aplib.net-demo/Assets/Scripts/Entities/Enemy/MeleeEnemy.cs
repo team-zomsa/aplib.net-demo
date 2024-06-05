@@ -56,11 +56,10 @@ public class MeleeEnemy : DummyEnemy
 
         base.Update();
 
-        if (_cooldownTimer.IsFinished() && _meleeWeapon.EnemiesWithinRange())
-        {
-            _cooldownTimer.Reset();
-            StartSwing();
-        }
+        if (!_cooldownTimer.IsFinished() || !_meleeWeapon.EnemiesWithinRange()) return;
+
+        _cooldownTimer.Reset();
+        StartSwing();
     }
 
     /// <summary>

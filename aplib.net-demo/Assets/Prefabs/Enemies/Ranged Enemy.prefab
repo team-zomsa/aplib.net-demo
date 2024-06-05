@@ -362,11 +362,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damagePoints: 25
   _targetTag: Player
+  _visionRange: 20
   _respawn: 0
   _canMove: 1
   _attackCooldown: 2
   _attackRange: 10
-  _visionRange: 20
 --- !u!114 &3802688324864422353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,7 +535,7 @@ Rigidbody:
   m_GameObject: {fileID: 5361096258398959275}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 2
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

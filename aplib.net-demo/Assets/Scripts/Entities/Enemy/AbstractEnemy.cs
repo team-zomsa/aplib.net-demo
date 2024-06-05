@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(PathFind))]
 [RequireComponent(typeof(HealthComponent))]
+[RequireComponent(typeof(Rigidbody))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
     /// <summary>
@@ -34,6 +35,9 @@ public abstract class AbstractEnemy : MonoBehaviour
         _healthComponent.Death += OnDeath;
         _healthComponent.Healed += OnHealed;
         _healthComponent.Hurt += OnHurt;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.drag = 2;
     }
 
     /// <summary>
