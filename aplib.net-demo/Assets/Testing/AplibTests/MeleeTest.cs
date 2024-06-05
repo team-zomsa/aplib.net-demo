@@ -1,7 +1,10 @@
 using Aplib.Core;
-using Aplib.Core.Belief;
-using Aplib.Core.Desire;
+using Aplib.Core.Agents;
+using Aplib.Core.Belief.Beliefs;
+using Aplib.Core.Belief.BeliefSets;
+using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
+using Aplib.Core.Desire.GoalStructures;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
@@ -18,17 +21,12 @@ namespace Testing.AplibTests
     public class MeleeBeliefSet : BeliefSet
     {
         /// <summary>
-        /// The player object in the scene.
-        /// </summary>
-        public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
-
-        /// <summary>
         /// Whether the enemy exists in the scene.
         /// </summary>
         public Belief<GameObject, bool> EnemyExists = new
         (
-            reference: GameObject.Find("Target Dummy Body"),
-            getObservationFromReference: enemy => enemy
+            GameObject.FindWithTag("Enemy"),
+            enemy => enemy
         );
 
         /// <summary>
@@ -36,9 +34,14 @@ namespace Testing.AplibTests
         /// Find the first enemy in the scene.
         /// </summary>
         public Belief<GameObject, Vector3> EnemyPosition = new(
-            reference: GameObject.Find("Target Dummy Body"),
-            getObservationFromReference: enemy => enemy ? enemy.transform.position : Vector3.zero
+            GameObject.FindWithTag("Enemy"),
+            enemy => enemy ? enemy.transform.position : Vector3.zero
         );
+
+        /// <summary>
+        /// The player object in the scene.
+        /// </summary>
+        public Belief<GameObject, GameObject> Player = new(GameObject.Find("PlayerPhysics"), x => x);
     }
 
     public class MeleeAplibTest
@@ -58,18 +61,18 @@ namespace Testing.AplibTests
 
             // Create an intent for the agent that moves the agent towards the target position.
             TransformPathfinderAction<MeleeBeliefSet> transformPathfinderAction = new(
-                objectQuery: beliefSet =>
+                beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
                     return player.GetComponent<Rigidbody>();
                 },
-                location: beliefSet => beliefSet.EnemyPosition,
-                heightOffset: 0.9f
+                beliefSet => beliefSet.EnemyPosition,
+                0.9f
             );
 
             // Create an attack action for the agent, that attacks the enemy.
             Action<MeleeBeliefSet> attackAction = new(
-                effect: beliefSet =>
+                beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
                     MeleeWeapon weapon = player.GetComponentInChildren<MeleeWeapon>();
@@ -84,8 +87,8 @@ namespace Testing.AplibTests
             PrimitiveTactic<MeleeBeliefSet> attackTactic = new(attackAction);
 
             // Goal: Reach the target position and attack the enemy
-            PrimitiveGoalStructure<MeleeBeliefSet> moveGoal = new(goal: new Goal<MeleeBeliefSet>(moveTactic, MovePredicate));
-            PrimitiveGoalStructure<MeleeBeliefSet> attackGoal = new(goal: new Goal<MeleeBeliefSet>(attackTactic, EnemyKilledPredicate));
+            PrimitiveGoalStructure<MeleeBeliefSet> moveGoal = new(new Goal<MeleeBeliefSet>(moveTactic, MovePredicate));
+            PrimitiveGoalStructure<MeleeBeliefSet> attackGoal = new(new Goal<MeleeBeliefSet>(attackTactic, EnemyKilledPredicate));
             SequentialGoalStructure<MeleeBeliefSet> finalGoal = new(moveGoal, attackGoal);
 
             DesireSet<MeleeBeliefSet> desire = new(finalGoal);
@@ -100,7 +103,7 @@ namespace Testing.AplibTests
             yield return testRunner.Test();
 
             // Assert that the player has reached the target position
-            Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);
+            Assert.IsTrue(agent.Status == CompletionStatus.Success);
             yield break;
 
             bool MovePredicate(MeleeBeliefSet beliefSet)
@@ -109,10 +112,13 @@ namespace Testing.AplibTests
                 GameObject player = beliefSet.Player;
                 Vector3 target = beliefSet.EnemyPosition;
 
-                return Vector3.Distance(player.transform.position, target) < 2f;
+                return Vector3.Distance(player.transform.position, target) < 1.5f;
             }
 
-            bool EnemyKilledPredicate(MeleeBeliefSet beliefSet) => !beliefSet.EnemyExists;
+            bool EnemyKilledPredicate(MeleeBeliefSet beliefSet)
+            {
+                return !beliefSet.EnemyExists;
+            }
         }
     }
 }

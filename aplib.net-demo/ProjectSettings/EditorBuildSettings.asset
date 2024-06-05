@@ -50,4 +50,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/ItemSpawningTestScene.unity
     guid: 2dd468c8feeb4c9419e47210cfceafd3
+  - enabled: 1
+    path: Assets/Scenes/GridSystemMainMenu.unity
+    guid: e9793cfddbd4bff48b1aaf235bea6469
+  - enabled: 1
+    path: Assets/Scenes/GridSystem.unity
+    guid: a6c482950b9b7034f9ee20862824b9c8
   m_configObjects: {}
