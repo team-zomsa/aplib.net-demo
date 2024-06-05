@@ -89,6 +89,24 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Next Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""1d5c9aec-37fa-4e13-84f5-b847956d07f3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Previous Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""9423ec98-114c-40ad-bf06-dd824ad32eb5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -474,6 +492,72 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Joystick"",
                     ""action"": ""Switch Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c29fd54c-fca1-4454-9825-469c0309d461"",
+                    ""path"": ""Mouse/Scroll/Y"",
+                    ""interactions"": ""Press"",
+                    ""processors"": ""Invert"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Next Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""833602b0-ca48-4353-a576-f7746d856998"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Next Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""841afca7-d39f-466f-b22b-564317663e71"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Next Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0560d4bb-17f7-4c53-8c7f-a20594dd11fe"",
+                    ""path"": ""Mouse/Scroll/Y"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Previous Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a118e82b-f8e0-4a52-9a39-2908e344ab9a"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Previous Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ddd7341-5cfe-4586-b500-d093484ac7c2"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Previous Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1119,6 +1203,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_Respawn = m_Player.FindAction("Respawn", throwIfNotFound: true);
         m_Player_UseItem = m_Player.FindAction("Use Item", throwIfNotFound: true);
         m_Player_SwitchItem = m_Player.FindAction("Switch Item", throwIfNotFound: true);
+        m_Player_NextItem = m_Player.FindAction("Next Item", throwIfNotFound: true);
+        m_Player_PreviousItem = m_Player.FindAction("Previous Item", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1201,6 +1287,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Respawn;
     private readonly InputAction m_Player_UseItem;
     private readonly InputAction m_Player_SwitchItem;
+    private readonly InputAction m_Player_NextItem;
+    private readonly InputAction m_Player_PreviousItem;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -1212,6 +1300,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Respawn => m_Wrapper.m_Player_Respawn;
         public InputAction @UseItem => m_Wrapper.m_Player_UseItem;
         public InputAction @SwitchItem => m_Wrapper.m_Player_SwitchItem;
+        public InputAction @NextItem => m_Wrapper.m_Player_NextItem;
+        public InputAction @PreviousItem => m_Wrapper.m_Player_PreviousItem;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1242,6 +1332,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SwitchItem.started += instance.OnSwitchItem;
             @SwitchItem.performed += instance.OnSwitchItem;
             @SwitchItem.canceled += instance.OnSwitchItem;
+            @NextItem.started += instance.OnNextItem;
+            @NextItem.performed += instance.OnNextItem;
+            @NextItem.canceled += instance.OnNextItem;
+            @PreviousItem.started += instance.OnPreviousItem;
+            @PreviousItem.performed += instance.OnPreviousItem;
+            @PreviousItem.canceled += instance.OnPreviousItem;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1267,6 +1363,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SwitchItem.started -= instance.OnSwitchItem;
             @SwitchItem.performed -= instance.OnSwitchItem;
             @SwitchItem.canceled -= instance.OnSwitchItem;
+            @NextItem.started -= instance.OnNextItem;
+            @NextItem.performed -= instance.OnNextItem;
+            @NextItem.canceled -= instance.OnNextItem;
+            @PreviousItem.started -= instance.OnPreviousItem;
+            @PreviousItem.performed -= instance.OnPreviousItem;
+            @PreviousItem.canceled -= instance.OnPreviousItem;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1472,6 +1574,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnRespawn(InputAction.CallbackContext context);
         void OnUseItem(InputAction.CallbackContext context);
         void OnSwitchItem(InputAction.CallbackContext context);
+        void OnNextItem(InputAction.CallbackContext context);
+        void OnPreviousItem(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
