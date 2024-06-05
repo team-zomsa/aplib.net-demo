@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 public class EquipmentInventory : MonoBehaviour
 {
     [SerializeField]
-    private int _inventorySize = 2;
+    private int _equipmentInventorySize = 2;
 
     /// <summary>
     /// Specifies whether to switch to the new item when it is equipped.
@@ -67,7 +67,7 @@ public class EquipmentInventory : MonoBehaviour
         if (DefaultEquipment?.Count <= 0)
         {
             Debug.LogWarning(
-                "Default equipment is empty! Rolling back to obsolete implementation. \n "
+                "Default equipment is empty! Rolling back to obsolete implementation.\n "
                 + "Make sure to set the default equipment in the inspector."
             );
             GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -91,9 +91,9 @@ public class EquipmentInventory : MonoBehaviour
     /// Equip the specified equipment item to the EquipmentInventory.
     /// </summary>
     /// <param name="equipment">The equipment item to be equipped.</param>
-    public void EquipItem(Weapon equipment)
+    public void EquipItem(Equipment equipment)
     {
-        if (_equipmentList.Count >= _inventorySize)
+        if (_equipmentList.Count >= _equipmentInventorySize)
         {
             Debug.LogWarning("Inventory is full!");
             return;
