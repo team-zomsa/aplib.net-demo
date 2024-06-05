@@ -38,6 +38,8 @@ public abstract class AbstractEnemy : MonoBehaviour
 
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.drag = 2;
+        rb.freezeRotation = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotationY;
     }
 
     /// <summary>
