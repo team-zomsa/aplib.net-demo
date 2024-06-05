@@ -9,7 +9,7 @@ namespace Assets.Scripts.Doors
     /// This class handles collisions with the player and makes sure that the parent object (the door) disappears/opens when
     /// the player is in range and the prerequisites are met (the right key).
     /// </summary>
-    [RequireComponent(typeof(DoorPointsAdder))]
+    [RequireComponent(typeof(DoorPointsContributor))]
     public class Door : MonoBehaviour
     {
         public event Action DoorOpened;
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Doors
         /// </summary>
         private static int _numberOfDoors;
 
-        private PointsAdderComponent _pointsAdderComponent;
+        private PointsContributorComponent _pointsAdderComponent;
 
         [SerializeField] private float _minSaturation = 0.5f;
 
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Doors
         /// </summary>
         private void Awake()
         {
-            _pointsAdderComponent = GetComponent<PointsAdderComponent>();
+            _pointsAdderComponent = GetComponent<PointsContributorComponent>();
             DoorOpened += _pointsAdderComponent.SendPoints;
             DoorId = _numberOfDoors;
             _numberOfDoors++;

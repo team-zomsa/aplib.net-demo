@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(PathFind))]
 [RequireComponent(typeof(HealthComponent))]
-[RequireComponent(typeof(EnemyPointsAdder))]
+[RequireComponent(typeof(EnemyPointsContributor))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
     /// <summary>

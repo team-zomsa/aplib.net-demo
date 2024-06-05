@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Items
 {
-    [RequireComponent(typeof(ItemPointsAdder))]
+    [RequireComponent(typeof(ItemPointsContributor))]
     public class EndItem : Item
     {
     }

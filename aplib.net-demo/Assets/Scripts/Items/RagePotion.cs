@@ -8,7 +8,7 @@ namespace Assets.Scripts.Items
     /// Rage potion that temporarily increases the player's damage.
     /// </summary>
     [RequireComponent(typeof(PickupableItem))]
-    [RequireComponent(typeof(ItemPointsAdder))]
+    [RequireComponent(typeof(ItemPointsContributor))]
     public class RagePotion : Item
     {
         [SerializeField]

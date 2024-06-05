@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PointsAdderComponent : MonoBehaviour
+public class PointsContributorComponent : MonoBehaviour
 {
     [SerializeField]
     protected int _pointAmount = 10;
