@@ -122,4 +122,9 @@ public class Inventory : MonoBehaviour
     /// <param name="queryName">The name of the item to check for.</param>
     /// <returns>True if the item is in the inventory, otherwise false.</returns>
     public bool ContainsItem(string queryName) => _itemList.Any(i => i.name == queryName);
+
+    /// <summary>
+    /// Returns the amount of item uses left in every item in the inventory.
+    /// </summary>
+    public int UnusedItems() => _itemList.Sum(item => item.uses);
 }

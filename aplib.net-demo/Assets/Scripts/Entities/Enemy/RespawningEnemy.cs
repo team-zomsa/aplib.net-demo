@@ -6,16 +6,13 @@ using UnityEngine;
 /// It respawns after dying.
 /// </summary>
 [RequireComponent(typeof(RespawnableComponent))]
-public class DummyEnemy : AbstractEnemy
+public class RespawningEnemy : AbstractEnemy
 {
     /// <summary>
     /// The spawn area for the enemy.
     /// </summary>
     [SerializeField]
     private bool _respawn = true;
-
-    [SerializeField]
-    private bool _canMove = true;
 
     private RespawnableComponent _respawnableComponent;
 
@@ -27,12 +24,6 @@ public class DummyEnemy : AbstractEnemy
     {
         _respawnableComponent = GetComponent<RespawnableComponent>();
         _respawnableComponent.RespawnEvent += OnRespawn;
-    }
-
-    protected override void Update()
-    {
-        if (_canMove)
-            base.Update();
     }
 
     protected override void OnDeath(HealthComponent healthComponent)

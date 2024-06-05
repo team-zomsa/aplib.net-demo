@@ -349,6 +349,7 @@ GameObject:
   - component: {fileID: 7116717931493397264}
   - component: {fileID: 5902739208644364848}
   - component: {fileID: 3100105480385092635}
+  - component: {fileID: 756077488521599464}
   m_Layer: 0
   m_Name: Melee Enemy Body
   m_TagString: Enemy
@@ -507,10 +508,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damagePoints: 50
+  _canMove: 1
   _targetTag: Player
   _visionRange: 20
   _respawn: 0
-  _canMove: 1
   _attackCooldown: 2
   _hitDelay: 1
   _swingWidth: 1.4
@@ -673,7 +674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648b288588b042ea812320b0f63da5f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnArea: {fileID: 0}
+  _spawnArea: {fileID: 4796441169114859087}
 --- !u!54 &3100105480385092635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -701,6 +702,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &756077488521599464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6690696244981897467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1660c7c9ade60314498736aeb9795fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointAmount: 15
 --- !u!1 &7965706561864693241
 GameObject:
   m_ObjectHideFlags: 0

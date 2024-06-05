@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -193,6 +196,17 @@ public class CanvasManager : MonoBehaviour
 
         // On win ui.
         WinScreenCanvas.SetActive(true);
+    }
+
+    /// <summary>
+    /// Set the points text on the win screen.
+    /// Call from the PointsManager after updating final score to circumvent race conditions of events.
+    /// </summary>
+    public void SetPointsText(int points)
+    {
+        List<TextMeshProUGUI> textMeshes = WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
+        pointsText.text = "Points: " + points;
     }
 
     /// <summary>

@@ -15,6 +15,9 @@ public abstract class AbstractEnemy : MonoBehaviour
     protected int _damagePoints = 25;
 
     [SerializeField]
+    protected bool _canMove = true;
+
+    [SerializeField]
     protected string _targetTag = "Player";
 
     [SerializeField]
@@ -51,7 +54,11 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// <summary>
     /// Update the pathfinding agent.
     /// </summary>
-    protected virtual void Update() => _pathFind.UpdateAgent(_visionRange);
+    protected virtual void Update()
+    {
+        if (_canMove)
+            _pathFind.UpdateAgent(_visionRange);
+    }
 
     /// <summary>
     /// Unsubscribes from the health component's events.

@@ -7,7 +7,7 @@ using UnityEngine;
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
 [RequireComponent(typeof(Timer))]
-public class MeleeEnemy : DummyEnemy
+public class MeleeEnemy : RespawningEnemy
 {
     private const float _sizeIncrease = 1.2f;
 
