@@ -16,8 +16,6 @@ public class RangedEnemy : DummyEnemy
 
     private Timer _attackTimer;
 
-    private bool _movingCloser;
-
     private RangedWeapon _rangedWeapon;
 
     /// <summary>
