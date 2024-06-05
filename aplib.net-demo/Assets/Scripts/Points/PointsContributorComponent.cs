@@ -8,9 +8,6 @@ public class PointsContributorComponent : MonoBehaviour
     /// <summary>
     /// Add points to the player's total amount.
     /// </summary>
-    public void SendPoints()
-    {
-        Debug.Log("Points added: " + _pointAmount);
-        PointsManager.Instance.AddPoints(_pointAmount);
-    }
+    public void SendPoints() => PointsManager.Instance.AddPoints(_pointAmount);
+
 }

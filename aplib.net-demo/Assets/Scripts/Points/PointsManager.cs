@@ -48,12 +48,10 @@ public class PointsManager
     public void AddPointsOnGameEnd()
     {
         HealthComponent playerHealth = GameObject.Find("Player").GetComponent<HealthComponent>();
-        Debug.Log("Adding points based on health: " + playerHealth.Health);
         AddPoints(playerHealth.Health);
 
         // Add points for each unused item in the inventory
         Inventory inventory = GameObject.Find("InventoryObject").GetComponent<Inventory>();
-        Debug.Log("Adding points based on unused items: " + inventory.UnusedItems() + $" * {_unusedItemPoints}");
         AddPoints(inventory.UnusedItems() * _unusedItemPoints);
 
         CanvasManager.Instance.SetPointsText(Points);
