@@ -88,11 +88,8 @@ namespace Assets.Scripts.Wfc
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
             _gameObjectPlacer.Initialize();
 
-            if (!TryGetComponent(out _spawningExtensions))
-                throw new UnityException("SpawningExtensions not found.");
-
-            if (!TryGetComponent(out _enemySpawner))
-                throw new UnityException("EnemySpawner not found.");
+            _spawningExtensions = GetComponent<SpawningExtensions>();
+            _enemySpawner = GetComponent<EnemySpawner>();
 
             _enemySpawner.Initialize();
 

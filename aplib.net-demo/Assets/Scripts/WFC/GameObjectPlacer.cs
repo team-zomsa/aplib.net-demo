@@ -94,9 +94,7 @@ namespace Assets.Scripts.Wfc
             Vector3 playerHeightOffset = new(0, playerHeight, 0);
 
             _playerHeightOffset = playerHeightOffset;
-
-            if (!TryGetComponent(out _spawningExtensions))
-                throw new UnityException("SpawningExtensions not found.");
+            _spawningExtensions = GetComponent<SpawningExtensions>();
         }
 
         /// <summary>

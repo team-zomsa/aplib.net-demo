@@ -31,7 +31,6 @@ public class RangedEnemy : DummyEnemy
         _rangedWeapon.Initialize(_damagePoints, _targetTag, transform, _attackRange);
         _attackTimer = gameObject.AddComponent<Timer>();
         _attackTimer.SetExactTime(_attackCooldown);
-        _pathFind.TagToFind = _targetTag;
         _pathFind.SetStoppingDistance(_attackRange - 1f);
 
         base.Start();

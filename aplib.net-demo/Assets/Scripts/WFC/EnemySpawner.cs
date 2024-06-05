@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
+[RequireComponent(typeof(SpawningExtensions))]
 public class EnemySpawner : MonoBehaviour
 {
     /// <summary>
@@ -17,11 +18,7 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private SpawningExtensions _spawningExtensions;
 
-    public void Initialize()
-    {
-        if (!TryGetComponent(out _spawningExtensions))
-            throw new UnityException("SpawningExtensions not found.");
-    }
+    public void Initialize() => _spawningExtensions = GetComponent<SpawningExtensions>();
 
     /// <summary>
     /// Spawns all items in the world.
