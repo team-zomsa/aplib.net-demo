@@ -15,19 +15,48 @@ public class SwitchTileTests
     public IEnumerator SwitchTileTest()
     {
         // Arrange
+        //      Setup test object to access method switchTile in GridPlacer
         GameObject gameObject = new GameObject();
         gameObject.SetActive(false);
         GridPlacer grid = gameObject.AddComponent<GridPlacer>();
         GameObjectPlacer gameObjectPlacer = gameObject.AddComponent<GameObjectPlacer>();
 
-        Cell randomTile = new Cell(10, 10);
-        randomTile.Tile = new Corner(Direction.North);
+        //      Define testing cells
+        Cell corner = new Cell(10, 10);
+        corner.Tile = new Corner(Direction.North);
+
+        Cell crossing = new Cell(10, 10);
+        crossing.Tile = new Crossing();
+
+        Cell deadEnd = new Cell(10, 10);
+        deadEnd.Tile = new DeadEnd(Direction.North);
+
+        Cell room = new Cell(10, 10);
+        room.Tile = new Room(
+                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West },
+                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West });
+
+        Cell straight = new Cell(10, 10);
+        straight.Tile = new Straight(Direction.North);
+
+        Cell tSection = new Cell(10, 10);
+        tSection.Tile = new TSection(Direction.North);
 
         // Act
-        grid.SwitchTile(randomTile);
+        grid.SwitchTile(corner);
+        grid.SwitchTile(crossing);
+        grid.SwitchTile(deadEnd);
+        grid.SwitchTile(room);
+        grid.SwitchTile(straight);
+        grid.SwitchTile(tSection);
 
         // Assert
-        Assert.IsTrue(randomTile.Tile is StartCorner);
+        Assert.IsTrue(corner.Tile is StartCorner);
+        Assert.IsTrue(crossing.Tile is StartCrossing);
+        Assert.IsTrue(deadEnd.Tile is StartDeadEnd);
+        Assert.IsTrue(room.Tile is StartRoom);
+        Assert.IsTrue(straight.Tile is StartStraight);
+        Assert.IsTrue(tSection.Tile is StartTSection);
 
         yield return null;
     }
