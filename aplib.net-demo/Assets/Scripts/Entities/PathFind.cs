@@ -11,8 +11,10 @@ public class PathFind : MonoBehaviour
     /// The tag of the object to follow.
     /// </summary>
     public string TagToFind = "Player";
-    private Transform _goal;
+
     private NavMeshAgent _agent;
+
+    private Transform _goal;
 
     /// <summary>
     /// Get the agent and find the goal object by tag.
@@ -23,15 +25,16 @@ public class PathFind : MonoBehaviour
         GameObject goalObject = GameObject.FindGameObjectWithTag(TagToFind);
         if (goalObject is null)
             Debug.LogError("No object with tag " + TagToFind + " found!");
+
         _goal = goalObject.transform;
     }
 
     /// <summary>
     /// Update the NavMeshAgent's destination to the goal's position.
     /// </summary>
-    public void UpdateAgent()
+    public void UpdateAgent(float remainingDistanceThreshold)
     {
-        if (_goal is null) return;
+        if (_goal == null || !_agent.isOnNavMesh || !GoalWithinRange(remainingDistanceThreshold)) return;
 
         _agent.SetDestination(_goal.position);
         _agent.transform.LookAt(_goal);
@@ -56,4 +59,3 @@ public class PathFind : MonoBehaviour
     /// <returns>True if the goal is within the range, false otherwise.</returns>
     public bool GoalWithinRange(float range) => Vector3.Distance(transform.position, _goal.position) <= range;
 }
-

@@ -9,6 +9,7 @@ TagManager:
   - Key
   - Door
   - Win
+  - Environment
   layers:
   - Default
   - TransparentFX
