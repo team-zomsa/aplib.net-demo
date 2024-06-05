@@ -5,15 +5,26 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(PathFind))]
 [RequireComponent(typeof(HealthComponent))]
+[RequireComponent(typeof(Rigidbody))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
     /// <summary>
     /// The amount of damage the enemy deals to the player.
     /// </summary>
-    [SerializeField] protected int _damagePoints = 25;
-    [SerializeField] protected bool _canMove = true;
-    [SerializeField] protected string _targetTag = "Player";
+    [SerializeField]
+    protected int _damagePoints = 25;
+
+    [SerializeField]
+    protected bool _canMove = true;
+
+    [SerializeField]
+    protected string _targetTag = "Player";
+
+    [SerializeField]
+    protected int _visionRange = 20;
+
     protected HealthComponent _healthComponent;
+
     protected PathFind _pathFind;
 
     /// <summary>
@@ -27,6 +38,11 @@ public abstract class AbstractEnemy : MonoBehaviour
         _healthComponent.Death += OnDeath;
         _healthComponent.Healed += OnHealed;
         _healthComponent.Hurt += OnHurt;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.drag = 2;
+        rb.freezeRotation = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotationY;
     }
 
     /// <summary>
@@ -34,6 +50,25 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// </summary>
     protected virtual void Start()
     {
+    }
+
+    /// <summary>
+    /// Update the pathfinding agent.
+    /// </summary>
+    protected virtual void Update()
+    {
+        if (_canMove)
+            _pathFind.UpdateAgent(_visionRange);
+    }
+
+    /// <summary>
+    /// Unsubscribes from the health component's events.
+    /// </summary>
+    protected virtual void OnDestroy()
+    {
+        _healthComponent.Hurt -= OnHurt;
+        _healthComponent.Death -= OnDeath;
+        _healthComponent.Healed -= OnHealed;
     }
 
     /// <summary>
@@ -50,10 +85,7 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// Invoked when the health component's death event is fired.
     /// </summary>
     /// <param name="healthComponent">The health component firing the event.</param>
-    protected virtual void OnDeath(HealthComponent healthComponent)
-    {
-        Destroy(gameObject);
-    }
+    protected virtual void OnDeath(HealthComponent healthComponent) => Destroy(gameObject);
 
     /// <summary>
     /// Invoked when the health component is healed.
@@ -67,27 +99,5 @@ public abstract class AbstractEnemy : MonoBehaviour
     /// <summary>
     /// Deals damage to a target.
     /// </summary>
-    protected virtual void DealDamage(HealthComponent target)
-    {
-        target.ReduceHealth(_damagePoints);
-    }
-
-    /// <summary>
-    /// Update the pathfinding agent.
-    /// </summary>
-    protected virtual void Update()
-    {
-        if (_canMove)
-            _pathFind.UpdateAgent();
-    }
-
-    /// <summary>
-    /// Unsubscribes from the health component's events.
-    /// </summary>
-    protected virtual void OnDestroy()
-    {
-        _healthComponent.Hurt -= OnHurt;
-        _healthComponent.Death -= OnDeath;
-        _healthComponent.Healed -= OnHealed;
-    }
+    protected virtual void DealDamage(HealthComponent target) => target.ReduceHealth(_damagePoints);
 }
