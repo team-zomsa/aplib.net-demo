@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
@@ -12,8 +13,8 @@ namespace Assets.Scripts.Items
         /// <summary>
         /// Event that is triggered when the item is picked up.
         /// </summary>
-        public event System.Action<Item> ItemPickedUp;
-        
+        public event Action<Item> ItemPickedUp;
+
         private Item _item;
         private Inventory _inventory;
 

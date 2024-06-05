@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
@@ -9,11 +10,11 @@ namespace Assets.Scripts.Items
     [RequireComponent(typeof(KeyPointsAdder))]
     public class PickupableKey : MonoBehaviour
     {
-        public event System.Action<Key> KeyPickedUp;
+        public event Action<Key> KeyPickedUp;
 
         private KeyRing _keyRing;
         private Key _item;
-        private PointsAdderComponent _pointsAdderComponent;
+        private KeyPointsAdder _keyPointsAdder;
 
         public void Start()
         {
@@ -23,7 +24,7 @@ namespace Assets.Scripts.Items
             if (!_keyRing) throw new UnityException("Key ring not found!");
 
             _item = gameObject.GetComponent<Key>();
-            _pointsAdderComponent = GetComponent<PointsAdderComponent>();
+            _keyPointsAdder = GetComponent<KeyPointsAdder>();
         }
 
         private void OnTriggerEnter(Collider other)

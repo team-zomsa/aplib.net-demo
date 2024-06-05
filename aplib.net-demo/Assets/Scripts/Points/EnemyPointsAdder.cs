@@ -11,12 +11,21 @@ public class EnemyPointsAdder : PointsAdderComponent
     private void Awake()
     {
         _enemyHealth = GetComponent<HealthComponent>();
-        _enemyHealth.Death += SendPoints;
     }
 
     private void SendPoints(HealthComponent healthComponent)
     {
         Debug.Log("Points added: " + _pointAmount);
         PointsManager.Instance.AddPoints(_pointAmount);
+    }
+
+    private void OnEnable()
+    {
+        _enemyHealth.Death += SendPoints;
+    }
+
+    private void OnDisable()
+    {
+        _enemyHealth.Death -= SendPoints;
     }
 }
