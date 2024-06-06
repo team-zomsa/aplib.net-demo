@@ -40,13 +40,13 @@ public class CanvasManager : MonoBehaviour
     /// Name of the start screen.
     /// </summary>
     [SerializeField]
-    private string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
+    private readonly string _sceneNameStartingMenu = "Settings";
 
     /// <summary>
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private string _sceneNameGame = "WinCondition"; // TODO:: Load main game screen
+    private readonly string _sceneNameGame = "GridSystem";
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -102,7 +102,7 @@ public class CanvasManager : MonoBehaviour
             SetAllCanvasesToInactive();
         }
         else
-            Debug.Log("Scene names are wrong. Check MenuButtons script");   // TODO:: Remove when game is done. This is for future ease.
+            Debug.Log("Scene names are wrong. Check CanvasManager  script");   // TODO:: Remove when game is done. This is for future ease.
     }
 
     /// <summary>
