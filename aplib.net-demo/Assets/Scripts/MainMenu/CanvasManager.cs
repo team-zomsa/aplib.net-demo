@@ -159,7 +159,7 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleSettings()
     {
-        if (_preventSettingsToggle) return;
+        if (_preventSettingsToggle || IsOnHelp) return;
 
         IsOnSettings = !IsOnSettings;
 
@@ -186,6 +186,8 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleHelp()
     {
+        if (_preventSettingsToggle) return;
+
         IsOnHelp = !IsOnHelp;
 
         switch (_currentSceneName)
