@@ -21,34 +21,10 @@ namespace Assets.Scripts.Wfc
     public class GridPlacer : MonoBehaviour
     {
         /// <summary>
-        /// A boolean that indicates whether a seed is used.
+        /// Represents the grid config.
         /// </summary>
         [SerializeField]
-        private bool _useSeed;
-
-        /// <summary>
-        /// The seed used for the random number generator.
-        /// </summary>
-        [SerializeField]
-        private int _seed;
-
-        /// <summary>
-        /// The width of the grid in the x-direction.
-        /// </summary>
-        [SerializeField]
-        private int _gridWidthX = 10;
-
-        /// <summary>
-        /// The width of the grid in the z-direction.
-        /// </summary>
-        [SerializeField]
-        private int _gridWidthZ = 10;
-
-        /// <summary>
-        /// The amount of rooms that need to be placed.
-        /// </summary>
-        [SerializeField]
-        private int _amountOfRooms = 5;
+        private GridConfig _gridConfig;
 
         /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
@@ -125,19 +101,14 @@ namespace Assets.Scripts.Wfc
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
         private void MakeScene()
         {
-            if (_amountOfRooms > _gridWidthX * _gridWidthZ)
+            if (_gridConfig.AmountOfRooms > _gridConfig.GridWidthX * _gridConfig.GridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
 
-            if (!_useSeed)
-            {
-                Random tempRandom = new();
-                _seed = tempRandom.Next();
-            }
+            if (!_gridConfig.UseSeed) _gridConfig.Seed = new Random().Next();
 
-            _random = new Random(_seed);
+            _random = new Random(_gridConfig.Seed);
 
-
-            Debug.Log("Seed: " + _seed);
+            Debug.Log("Seed: " + _gridConfig.Seed);
 
             MakeGrid();
 
@@ -170,13 +141,13 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void MakeGrid()
         {
-            Grid = new Grid(_gridWidthX, _gridWidthZ, _random);
+            Grid = new Grid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _random);
 
             Grid.Init();
 
             int numberOfRooms = 0;
 
-            while (numberOfRooms < _amountOfRooms)
+            while (numberOfRooms < _gridConfig.AmountOfRooms)
             {
                 Grid.PlaceRandomRoom();
                 numberOfRooms++;

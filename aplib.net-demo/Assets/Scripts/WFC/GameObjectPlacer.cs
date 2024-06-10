@@ -8,7 +8,6 @@ using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
 {
-    [RequireComponent(typeof(GridPlacer))]
     [RequireComponent(typeof(SpawningExtensions))]
     public class GameObjectPlacer : MonoBehaviour
     {

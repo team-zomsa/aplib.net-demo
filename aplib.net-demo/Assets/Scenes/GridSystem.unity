@@ -1228,11 +1228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _useSeed: 0
-  _seed: 0
-  _gridWidthX: 6
-  _gridWidthZ: 6
-  _amountOfRooms: 3
+  _gridConfig: {fileID: 11400000, guid: 9d5c421d94ca61b4e82ad6acb921058e, type: 2}
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
