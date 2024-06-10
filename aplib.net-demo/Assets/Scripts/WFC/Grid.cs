@@ -48,25 +48,11 @@ namespace Assets.Scripts.Wfc
         }
 
         /// <summary>
-        /// Gets or sets the cell at the specified coordinates.
+        /// Gets the cell at the specified coordinates.
         /// </summary>
         /// <param name="x">The x-coordinate of the cell.</param>
         /// <param name="z">The z-coordinate of the cell.</param>
-        public Cell this[int x, int z]
-        {
-            get => _cells[CoordinatesToIndex(x, z)];
-            set => _cells[CoordinatesToIndex(x, z)] = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the cell at the specified index.
-        /// </summary>
-        /// <param name="index">The index of the cell.</param>
-        public Cell this[int index]
-        {
-            get => _cells[index];
-            set => _cells[index] = value;
-        }
+        public Cell this[int x, int z] => _cells[CoordinatesToIndex(x, z)];
 
         /// <summary>
         /// Initializes the grid.
