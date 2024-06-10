@@ -9,7 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(Timer))]
 public class MeleeEnemy : RespawningEnemy
 {
-    private const float _sizeIncrease = 1.2f;
+    private const float _sizeIncrease = 1.1f;
 
     [SerializeField]
     private float _attackCooldown = 2f;
@@ -22,6 +22,8 @@ public class MeleeEnemy : RespawningEnemy
 
     [SerializeField]
     private float _swingLength = 4f;
+
+    private Animator _animator;
 
     private Timer _cooldownTimer;
 
@@ -40,6 +42,8 @@ public class MeleeEnemy : RespawningEnemy
 
         _meleeWeapon = GetComponentInChildren<MeleeWeapon>();
         _meleeWeapon.Initialize(_damagePoints, _targetTag, _swingLength, _swingWidth);
+
+        _animator = GetComponent<Animator>();
 
         base.Awake();
     }
@@ -70,6 +74,7 @@ public class MeleeEnemy : RespawningEnemy
     {
         _isSwinging = true;
         transform.localScale *= _sizeIncrease;
+        _animator.Play("Charge-up");
         StartCoroutine(SwingCoroutine());
     }
 
@@ -82,6 +87,7 @@ public class MeleeEnemy : RespawningEnemy
         yield return new WaitForSeconds(_hitDelay);
         _meleeWeapon.UseWeapon();
         transform.localScale /= _sizeIncrease;
+        _animator.SetBool("IsSwinging", false);
         _isSwinging = false;
     }
 }
