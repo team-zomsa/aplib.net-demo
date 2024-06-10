@@ -472,6 +472,6 @@ namespace Assets.Scripts.Wfc
             _gameObjectPlacer.SpawnItems(cells, _random);
         }
 
-        private void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
+        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
     }
 }
