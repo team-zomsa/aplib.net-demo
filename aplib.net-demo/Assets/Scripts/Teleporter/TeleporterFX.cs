@@ -74,8 +74,8 @@ namespace Teleporter
         private void Update()
         {
             // Rotate over time
-            _currentSpeed += _currentAcceleration * Time.deltaTime;
-            transform.Rotate(0, _currentSpeed * 360, 0);
+            _currentSpeed += _currentAcceleration;
+            transform.Rotate(0, _currentSpeed * 360 * Time.deltaTime, 0);
 
             // Scale over time
             _currentWidth += widthGain * Time.deltaTime;
