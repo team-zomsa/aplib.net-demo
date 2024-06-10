@@ -19,17 +19,17 @@ public class CanvasManager : MonoBehaviour
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject SettingMenuCanvas;
-
-    /// <summary>
-    /// Reference to the settings canvas of the game.
-    /// </summary>
-    public GameObject SettingGameCanvas;
+    public GameObject SettingCanvas;
 
     /// <summary>
     /// Reference to the game over canvas.
     /// </summary>
     public GameObject GameOverCanvas;
+
+    /// <summary>
+    /// Reference to the help/keybinds canvas.
+    /// </summary>
+    public GameObject HelpCanvas;
 
     /// <summary>
     /// Reference to the win screen.
@@ -40,13 +40,13 @@ public class CanvasManager : MonoBehaviour
     /// Name of the start screen.
     /// </summary>
     [SerializeField]
-    private string _sceneNameStartingMenu = "Settings"; // TODO:: Load main start screen
+    private string _sceneNameStartingMenu = "Settings";
 
     /// <summary>
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private string _sceneNameGame = "InGameSettings"; // TODO:: Load main game screen
+    private string _sceneNameGame = "GridSystem";
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -59,14 +59,14 @@ public class CanvasManager : MonoBehaviour
     private bool _preventSettingsToggle;
 
     /// <summary>
-    /// To ensure the game settings and menu UI aren't on at the same time.
+    /// Is Settings on or off.
     /// </summary>
-    public bool IsOnGameSettings { get; private set; }
+    public bool IsOnSettings { get; private set; }
 
     /// <summary>
-    /// Gets an indication whether the menu settings are active right now
+    /// Is Help screen on or off.
     /// </summary>
-    public bool IsOnMenuSettings { get; private set; }
+    public bool IsOnHelp { get; private set; }
 
     public static CanvasManager Instance { get; private set; }
 
@@ -82,28 +82,27 @@ public class CanvasManager : MonoBehaviour
     private void Start()
     {
         _currentSceneName = SceneManager.GetActiveScene().name;
+
         WinArea winArea = FindObjectOfType<WinArea>();
         if (winArea != null)
             winArea.OnWin += ShowWinScreen;
         else
             Debug.LogWarning("No WinArea found in scene!");
 
-        if (_currentSceneName == _sceneNameStartingMenu) // Are we at the starting screen?
+        if (_currentSceneName == _sceneNameStartingMenu)    // Are we at the starting screen?
         {
             SetAllCanvasesToInactive();
             MenuCanvas.SetActive(true);
         }
-        else if (_currentSceneName == _sceneNameGame) // Are we at the main gaming scene?
+        else if (_currentSceneName == _sceneNameGame)   // Are we at the main gaming scene?
         {
             HealthComponent playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthComponent>();
             playerHealth.Death += OnPlayerDeath;
 
             SetAllCanvasesToInactive();
         }
-        else // TODO:: Remove when game is done. This is for future ease.
-        {
-            Debug.Log("Scene names are wrong. Check MenuButtons script");
-        }
+        else
+            Debug.Log("Scene names are wrong. Check CanvasManager  script");   // TODO:: Remove when game is done. This is for future ease.
     }
 
     /// <summary>
@@ -117,12 +116,12 @@ public class CanvasManager : MonoBehaviour
     private void SetAllCanvasesToInactive()
     {
         MenuCanvas.SetActive(false);
-        SettingMenuCanvas.SetActive(false);
-        SettingGameCanvas.SetActive(false);
+        SettingCanvas.SetActive(false);
         GameOverCanvas.SetActive(false);
         WinScreenCanvas.SetActive(false);
-        IsOnMenuSettings = false;
-        IsOnGameSettings = false;
+        HelpCanvas.SetActive(false);
+        IsOnSettings = false;
+        IsOnHelp = false;
     }
 
     /// <summary>
@@ -159,24 +158,53 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void OnToggleSettings()
     {
-        if (_preventSettingsToggle) return;
+        if (_preventSettingsToggle || IsOnHelp) return;
 
-        if (_currentSceneName == _sceneNameStartingMenu) // Toggle from menu to menu settings and back.
+        IsOnSettings = !IsOnSettings;
+
+        if (_currentSceneName == _sceneNameStartingMenu)    // Toggle from menu to menu settings and back.
         {
-            IsOnMenuSettings = !IsOnMenuSettings;
-            SettingMenuCanvas.SetActive(IsOnMenuSettings);
-            MenuCanvas.SetActive(!IsOnMenuSettings);
+            MenuCanvas.SetActive(!IsOnSettings);
         }
-        else if (_currentSceneName == _sceneNameGame) // Toggle from game to game settings and back.
+        else if (_currentSceneName == _sceneNameGame)   // Toggle from game to game settings and back.
         {
-            IsOnGameSettings = !IsOnGameSettings;
-            SettingGameCanvas.SetActive(IsOnGameSettings);
-
-            if (IsOnGameSettings) GameManager.Instance.Pause();
+            if (IsOnSettings) GameManager.Instance.Pause();
             else GameManager.Instance.Resume();
 
-            MenuOpenedEvent?.Invoke(IsOnGameSettings);
+            MenuOpenedEvent?.Invoke(IsOnSettings);
         }
+
+        SettingCanvas.SetActive(IsOnSettings);
+    }
+
+    /// <summary>
+    /// This button toggles the menu canvas off and the help canvas on or help canvas in game on and off.
+    /// </summary>
+    public void OnToggleHelp()
+    {
+        if (_preventSettingsToggle) return;
+
+        IsOnHelp = !IsOnHelp;
+
+        if (_currentSceneName == _sceneNameStartingMenu)    // Toggle from menu to helpscreen and back.
+        {
+            SettingCanvas.SetActive(!IsOnHelp);
+        }
+        else if (_currentSceneName == _sceneNameGame)   // Toggle from game to helpscreen and back.
+        {
+            if (IsOnHelp)
+            {
+                GameManager.Instance.Pause();
+                MenuOpenedEvent?.Invoke(IsOnHelp);
+            }
+            else if (!IsOnSettings)
+            {
+                GameManager.Instance.Resume();
+                MenuOpenedEvent?.Invoke(IsOnHelp);
+            }
+        }
+
+        HelpCanvas.SetActive(IsOnHelp);
     }
 
     /// <summary>
@@ -213,5 +241,15 @@ public class CanvasManager : MonoBehaviour
     /// When player presses the quit button the application closes.
     /// This works with the build not in the editor. Keep this in mind.
     /// </summary>
-    public void QuitApplication() => Application.Quit();
+    public void Quit()
+    {
+        if (_currentSceneName == _sceneNameStartingMenu)    // From menu quit game.
+        {
+            Application.Quit();
+        }
+        else if (_currentSceneName == _sceneNameGame)   // From game quit to menu. 
+        {
+            ToMenu();
+        }
+    }
 }
