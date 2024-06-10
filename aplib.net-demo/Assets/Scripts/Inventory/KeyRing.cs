@@ -20,7 +20,7 @@ public class KeyRing : MonoBehaviour
     /// <returns>True if the correct key is present otherwise False.</returns>
     public bool KeyQuery(Door door)
     {
-        Key key = _keyRing.Find(door.TryOpenDoor);
+        Key key = _keyRing.Find(door.KeyMatchesDoor);
 
         return _keyRing.Remove(key);
     }
