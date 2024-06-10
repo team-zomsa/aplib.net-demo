@@ -2,9 +2,9 @@ using Assets.Scripts.Doors;
 using Assets.Scripts.Tiles;
 using System.Collections.Generic;
 using System.Linq;
+using ThreadSafeRandom;
 using UnityEngine;
 using static Assets.Scripts.Tiles.Direction;
-using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
 {
@@ -124,9 +124,8 @@ namespace Assets.Scripts.Wfc
         /// Spawns all items in the world.
         /// </summary>
         /// <param name="cells">The cells to spawn the items in.</param>
-        /// <param name="random">The random number generator to use.</param>
         /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
-        public void SpawnItems(List<Cell> cells, Random random)
+        public void SpawnItems(List<Cell> cells)
         {
             if (_spawnableItems.Items.Count == 0) return;
 
@@ -141,7 +140,7 @@ namespace Assets.Scripts.Wfc
 
                 for (int j = 0; j < spawnableItem.Count; j++)
                 {
-                    Cell cell = cells[random.Next(cells.Count)];
+                    Cell cell = cells[SharedRandom.Next(cells.Count)];
                     _spawningExtensions.PlacePrefab(spawnableItem.Item, cell, itemParent.transform);
                     cell.CannotAddItem = true;
                     cells.Remove(cell);

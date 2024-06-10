@@ -32,7 +32,7 @@ namespace ThreadSafeRandom
         {
             lock (_global)
             {
-                if (_local == null) _local = new Random();
+                if (_local == null) _local = new Random(seed);
                 else
                     lock (_local)
                     {

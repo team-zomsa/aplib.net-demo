@@ -1,8 +1,8 @@
 using Assets.Scripts.Wfc;
 using System.Collections.Generic;
 using System.Linq;
+using ThreadSafeRandom;
 using UnityEngine;
-using Random = System.Random;
 
 [RequireComponent(typeof(SpawningExtensions))]
 public class EnemySpawner : MonoBehaviour
@@ -24,9 +24,8 @@ public class EnemySpawner : MonoBehaviour
     /// Spawns all items in the world.
     /// </summary>
     /// <param name="cells">The cells to spawn the items in.</param>
-    /// <param name="random">The random number generator to use.</param>
     /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
-    public void SpawnEnemies(List<Cell> cells, Random random)
+    public void SpawnEnemies(List<Cell> cells)
     {
         if (_spawnableEnemies.Enemies.Select(x => x.Count).Sum() > cells.Count)
             throw new UnityException("Not enough empty cells to place all enemies.");
@@ -43,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
 
             for (int j = 0; j < spawnableEnemy.Count; j++)
             {
-                Cell cell = cells[random.Next(cells.Count)];
+                Cell cell = cells[SharedRandom.Next(cells.Count)];
                 _spawningExtensions.PlacePrefab(spawnableEnemy.Enemy, cell, enemyParent.transform);
                 cells.Remove(cell);
             }

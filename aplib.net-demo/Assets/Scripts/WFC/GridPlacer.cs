@@ -3,11 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ThreadSafeRandom;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
-using Random = System.Random;
 
 namespace Assets.Scripts.Wfc
 {
@@ -40,11 +40,6 @@ namespace Assets.Scripts.Wfc
         /// Represents the game object placer.
         /// </summary>
         private GameObjectPlacer _gameObjectPlacer;
-
-        /// <summary>
-        /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
-        /// </summary>
-        private Random _random = new();
 
         /// <summary>
         /// Represents the spawning extensions.
@@ -81,7 +76,7 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// Spawns the enemies in the grid.
         /// </summary>
-        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
+        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles());
 
         /// <summary>
         /// Waits for a certain amount of time.
@@ -104,9 +99,8 @@ namespace Assets.Scripts.Wfc
             if (_gridConfig.AmountOfRooms > _gridConfig.GridWidthX * _gridConfig.GridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
 
-            if (!_gridConfig.UseSeed) _gridConfig.Seed = new Random().Next();
-
-            _random = new Random(_gridConfig.Seed);
+            if (!_gridConfig.UseSeed) SharedRandom.SetSeed(_gridConfig.Seed);
+            ;
 
             Debug.Log("Seed: " + _gridConfig.Seed);
 
@@ -141,7 +135,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private void MakeGrid()
         {
-            Grid = new Grid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _random);
+            Grid = new Grid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ);
 
             Grid.Init();
 
@@ -157,10 +151,10 @@ namespace Assets.Scripts.Wfc
             {
                 List<Cell> lowestEntropyCells = Grid.GetLowestEntropyCells();
 
-                int index = _random.Next(lowestEntropyCells.Count);
+                int index = SharedRandom.Next(lowestEntropyCells.Count);
 
                 Cell cell = lowestEntropyCells[index];
-                cell.Tile = cell.Candidates[_random.Next(cell.Candidates.Count)];
+                cell.Tile = cell.Candidates[SharedRandom.Next(cell.Candidates.Count)];
                 cell.Candidates.Clear();
 
                 Grid.RemoveUnconnectedNeighbourCandidates(cell);
@@ -312,7 +306,7 @@ namespace Assets.Scripts.Wfc
             Transform parent)
         {
             List<Cell> emptyCells = GetEmptyCells(startComponent);
-            Cell itemCell = emptyCells[_random.Next(emptyCells.Count)];
+            Cell itemCell = emptyCells[SharedRandom.Next(emptyCells.Count)];
 
             if (cell1.Tile is Room room)
                 _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, itemCell, parent);
@@ -372,7 +366,7 @@ namespace Assets.Scripts.Wfc
 
             if (lastComponentCells.Count == 0) lastComponentCells = lastComponent.ToList();
 
-            Cell randomCell = lastComponentCells[_random.Next(lastComponentCells.Count)];
+            Cell randomCell = lastComponentCells[SharedRandom.Next(lastComponentCells.Count)];
             _gameObjectPlacer.PlaceEndItem(randomCell, transform);
         }
 
@@ -445,7 +439,7 @@ namespace Assets.Scripts.Wfc
         {
             List<Cell> cells = Grid.GetAllCellsNotContainingItems();
 
-            _gameObjectPlacer.SpawnItems(cells, _random);
+            _gameObjectPlacer.SpawnItems(cells);
         }
     }
 }
