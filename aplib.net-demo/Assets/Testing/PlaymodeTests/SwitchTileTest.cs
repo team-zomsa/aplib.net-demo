@@ -18,36 +18,32 @@ public class SwitchTileTests
         // Setup test object to access method switchTile in GridPlacer
         GameObject gameObject = new GameObject();
         gameObject.SetActive(false);
-        GridPlacer gridPlacer = gameObject.AddComponent<GridPlacer>();
-
+        
         // Define testing cells
-        Cell corner = new Cell(10, 10);
-        corner.Tile = new Corner(Direction.North);
+        Cell corner = new(10, 10) { Tile = new Corner() };
 
-        Cell crossing = new Cell(10, 10);
-        crossing.Tile = new Crossing();
+        Cell crossing = new(10, 10) { Tile = new Crossing() };
 
-        Cell deadEnd = new Cell(10, 10);
-        deadEnd.Tile = new DeadEnd(Direction.North);
+        Cell deadEnd = new(10, 10) { Tile = new DeadEnd() };
 
-        Cell room = new Cell(10, 10);
-        room.Tile = new Room(
-                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West },
-                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West });
+        Cell room = new(10, 10)
+        {
+            Tile = new Room(
+                new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West },
+                new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West })
+        };
 
-        Cell straight = new Cell(10, 10);
-        straight.Tile = new Straight(Direction.North);
+        Cell straight = new(10, 10) { Tile = new Straight() };
 
-        Cell tSection = new Cell(10, 10);
-        tSection.Tile = new TSection(Direction.North);
+        Cell tSection = new(10, 10) { Tile = new TSection() };
 
         // Act
-        gridPlacer.SwitchTile(corner);
-        gridPlacer.SwitchTile(crossing);
-        gridPlacer.SwitchTile(deadEnd);
-        gridPlacer.SwitchTile(room);
-        gridPlacer.SwitchTile(straight);
-        gridPlacer.SwitchTile(tSection);
+        GridPlacer.SwitchTile(corner);
+        GridPlacer.SwitchTile(crossing);
+        GridPlacer.SwitchTile(deadEnd);
+        GridPlacer.SwitchTile(room);
+        GridPlacer.SwitchTile(straight);
+        GridPlacer.SwitchTile(tSection);
 
         // Assert
         Assert.IsTrue(corner.Tile is StartCorner);
