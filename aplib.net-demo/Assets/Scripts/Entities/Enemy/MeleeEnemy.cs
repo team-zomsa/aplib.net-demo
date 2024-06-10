@@ -7,8 +7,10 @@ using UnityEngine;
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
 [RequireComponent(typeof(Timer))]
-public class MeleeEnemy : DummyEnemy
+public class MeleeEnemy : RespawningEnemy
 {
+    private const float _sizeIncrease = 1.2f;
+
     [SerializeField]
     private float _attackCooldown = 2f;
 
@@ -21,10 +23,11 @@ public class MeleeEnemy : DummyEnemy
     [SerializeField]
     private float _swingLength = 4f;
 
-    private readonly float _sizeIncrease = 1.2f;
-    private MeleeWeapon _meleeWeapon;
     private Timer _cooldownTimer;
-    private bool _isSwinging = false;
+
+    private bool _isSwinging;
+
+    private MeleeWeapon _meleeWeapon;
 
     /// <summary>
     /// Sets the target tag for the melee weapon.
@@ -46,16 +49,17 @@ public class MeleeEnemy : DummyEnemy
     /// </summary>
     protected override void Update()
     {
+        Debug.DrawRay(transform.position, Vector3.up * 20, Color.blue);
+
         if (_isSwinging)
             return;
 
         base.Update();
 
-        if (_cooldownTimer.IsFinished() && _meleeWeapon.EnemiesWithinRange())
-        {
-            _cooldownTimer.Reset();
-            StartSwing();
-        }
+        if (!_cooldownTimer.IsFinished() || !_meleeWeapon.EnemiesWithinRange()) return;
+
+        _cooldownTimer.Reset();
+        StartSwing();
     }
 
     /// <summary>

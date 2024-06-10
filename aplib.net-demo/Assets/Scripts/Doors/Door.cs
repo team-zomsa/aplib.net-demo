@@ -1,5 +1,7 @@
+using System;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Doors
 {
@@ -9,10 +11,7 @@ namespace Assets.Scripts.Doors
     /// </summary>
     public class Door : MonoBehaviour
     {
-        /// <summary>
-        /// The number of doors that have been spawned in the level so far. This is used to give each door a unique ID.
-        /// </summary>
-        private static int _numberOfDoors;
+        public event Action DoorOpened;
 
         /// <summary>The unique ID of the door, to check whether the player has the right key/ID to open the door.</summary>
         public int DoorId;
@@ -21,6 +20,11 @@ namespace Assets.Scripts.Doors
         /// The color of the door, which is used to determine which key is needed to open it.
         /// </summary>
         public Color Color { get; private set; }
+
+        /// <summary>
+        /// The number of doors that have been spawned in the level so far. This is used to give each door a unique ID.
+        /// </summary>
+        private static int _numberOfDoors;
 
         [SerializeField] private float _minSaturation = 0.5f;
 
@@ -52,7 +56,10 @@ namespace Assets.Scripts.Doors
         {
             // Delete door if it is triggered by the player and the player has the correct key.
             if (collidingObject.gameObject.CompareTag("Player") && GameObject.Find("KeyRingObject").GetComponent<KeyRing>().KeyQuery(this))
+            {
                 Open();
+                DoorOpened?.Invoke();
+            }
         }
 
         /// <summary>

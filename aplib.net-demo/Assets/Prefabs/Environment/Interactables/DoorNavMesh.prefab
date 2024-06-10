@@ -150,6 +150,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7838348855062248007}
+    - targetCorrespondingSourceObject: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6284689179134640130}
   m_SourcePrefab: {fileID: 100100000, guid: 22b08b26ebf57994bb9b9f1004aa58ca, type: 3}
 --- !u!1 &5163913735208331690 stripped
 GameObject:
@@ -190,6 +194,19 @@ OffMeshLink:
   m_BiDirectional: 1
   m_Activated: 0
   m_AutoUpdatePositions: 1
+--- !u!114 &6284689179134640130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5163913735208331690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e9675e54737dae41bb36e9c2be26cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointAmount: 10
 --- !u!4 &9020146878140602953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 753418903027165643, guid: 22b08b26ebf57994bb9b9f1004aa58ca,

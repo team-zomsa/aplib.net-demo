@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
@@ -8,7 +9,10 @@ namespace Assets.Scripts.Items
     [RequireComponent(typeof(Key))]
     public class PickupableKey : MonoBehaviour
     {
+        public event Action<Key> KeyPickedUp;
+
         private KeyRing _keyRing;
+        private Key _item;
 
         public void Start()
         {
@@ -16,16 +20,18 @@ namespace Assets.Scripts.Items
             _keyRing = inventoryObject.GetComponent<KeyRing>();
 
             if (!_keyRing) throw new UnityException("Key ring not found!");
+
+            _item = gameObject.GetComponent<Key>();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player"))
+            if (!other.CompareTag("Player") || !other.material.name.Contains("PlayerPhysic"))
                 return;
 
-            Key item = gameObject.GetComponent<Key>();
+            KeyPickedUp?.Invoke(_item);
 
-            _keyRing.StoreKey(item);
+            _keyRing.StoreKey(_item);
 
             Destroy(gameObject);
         }

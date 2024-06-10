@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4154971609374344811}
   - component: {fileID: 6644890811013382080}
   - component: {fileID: 4103969277828004525}
+  - component: {fileID: 5869530656772040234}
   m_Layer: 0
   m_Name: HealthPotion
   m_TagString: Untagged
@@ -90,6 +91,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff43e13fa02a6b745b17e95d6facaa50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5869530656772040234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783921441781814114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5540a742eb99c49883e088f2642fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointAmount: 5
 --- !u!1 &5706788672541914114
 GameObject:
   m_ObjectHideFlags: 0
