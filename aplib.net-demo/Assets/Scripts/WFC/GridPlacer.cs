@@ -120,9 +120,9 @@ namespace Assets.Scripts.Wfc
 
             SwitchTile(randomPlayerSpawn);
 
-            _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
+            PlaceGrid();
 
-            PlaceGrid(randomPlayerSpawn.X, randomPlayerSpawn.Z);
+            _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
 
             JoinConnectedComponentsWithTeleporters();
 
@@ -193,16 +193,13 @@ namespace Assets.Scripts.Wfc
                     break;
             }
 
-            int x = startTile.X;
-            int z = startTile.Z;
 
-            _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, new GameObject().transform);
         }
 
         /// <summary>
         /// Places the grid in the world.
         /// </summary>
-        private void PlaceGrid(int xStart, int zStart)
+        private void PlaceGrid()
         {
             GameObject tiles = CreateGameObject("Tiles", transform);
 
@@ -210,9 +207,6 @@ namespace Assets.Scripts.Wfc
             {
                 for (int x = 0; x < Grid.Width; x++)
                 {
-                    if (x == xStart && z == zStart)
-                        continue;
-
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
                 }
             }

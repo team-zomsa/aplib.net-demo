@@ -18,8 +18,7 @@ public class SwitchTileTests
         //      Setup test object to access method switchTile in GridPlacer
         GameObject gameObject = new GameObject();
         gameObject.SetActive(false);
-        GridPlacer grid = gameObject.AddComponent<GridPlacer>();
-        GameObjectPlacer gameObjectPlacer = gameObject.AddComponent<GameObjectPlacer>();
+        GridPlacer gridPlacer = gameObject.AddComponent<GridPlacer>();
 
         //      Define testing cells
         Cell corner = new Cell(10, 10);
@@ -43,12 +42,12 @@ public class SwitchTileTests
         tSection.Tile = new TSection(Direction.North);
 
         // Act
-        grid.SwitchTile(corner);
-        grid.SwitchTile(crossing);
-        grid.SwitchTile(deadEnd);
-        grid.SwitchTile(room);
-        grid.SwitchTile(straight);
-        grid.SwitchTile(tSection);
+        gridPlacer.SwitchTile(corner);
+        gridPlacer.SwitchTile(crossing);
+        gridPlacer.SwitchTile(deadEnd);
+        gridPlacer.SwitchTile(room);
+        gridPlacer.SwitchTile(straight);
+        gridPlacer.SwitchTile(tSection);
 
         // Assert
         Assert.IsTrue(corner.Tile is StartCorner);
