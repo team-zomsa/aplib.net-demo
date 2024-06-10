@@ -15,7 +15,7 @@ public class SwitchTileTests
     public IEnumerator SwitchTileTest()
     {
         // Arrange
-        //      Setup test object to access method switchTile in GridPlacer
+        // Setup test object to access method switchTile in GridPlacer
         GameObject gameObject = new GameObject();
         gameObject.SetActive(false);
         GridPlacer gridPlacer = gameObject.AddComponent<GridPlacer>();
