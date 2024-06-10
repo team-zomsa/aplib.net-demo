@@ -192,7 +192,7 @@ namespace Assets.Scripts.Wfc
             }
         }
 
-        public void SwitchTile(Cell startTile)
+        public static void SwitchTile(Cell startTile)
         {
             Direction facing = startTile.Tile.Facing;
 
