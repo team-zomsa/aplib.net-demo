@@ -128,6 +128,8 @@ namespace Assets.Scripts.Wfc
         /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
         public void SpawnItems(List<Cell> cells, Random random)
         {
+            if (_spawnableItems.Items.Count == 0) return;
+
             if (_spawnableItems.Items.Select(x => x.Count).Aggregate((x, y) => x + y) > cells.Count)
                 throw new UnityException("Not enough empty cells to place all items.");
 

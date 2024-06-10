@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 64
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -682,6 +682,7 @@ MonoBehaviour:
   _mouseLock: {fileID: 961083232}
   _playerTransform: {fileID: 425327221}
   _inventory: {fileID: 0}
+  equipmentInventory: {fileID: 0}
 --- !u!4 &941546954
 Transform:
   m_ObjectHideFlags: 0
@@ -1168,11 +1169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _useSeed: 1
-  _seed: 0
-  _gridWidthX: 5
-  _gridWidthZ: 5
-  _amountOfRooms: 2
+  _gridConfig: {fileID: 11400000, guid: 989cccaf2057b1d488acff23d157f674, type: 2}
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
@@ -1201,7 +1198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
-  _spawnableItems: {fileID: 11400000, guid: 6b18b4a3f56fec9449b715947352debf, type: 2}
+  _spawnableItems: {fileID: 11400000, guid: 251f41f789777bd4fb4157a916140c97, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
     type: 3}
   _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
