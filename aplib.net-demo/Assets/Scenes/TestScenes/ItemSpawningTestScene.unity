@@ -1072,6 +1072,7 @@ MonoBehaviour:
   _mouseLock: {fileID: 2067055331}
   _playerTransform: {fileID: 1892784793}
   _inventory: {fileID: 134152955}
+  equipmentInventory: {fileID: 0}
 --- !u!4 &1444036427
 Transform:
   m_ObjectHideFlags: 0
@@ -1119,11 +1120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _useSeed: 0
-  _seed: 0
-  _gridWidthX: 5
-  _gridWidthZ: 5
-  _amountOfRooms: 3
+  _gridConfig: {fileID: 11400000, guid: e898dbae1cb3779468ae6c2c48f3fb82, type: 2}
 --- !u!4 &1455078763
 Transform:
   m_ObjectHideFlags: 0
