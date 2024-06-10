@@ -40,13 +40,13 @@ public class CanvasManager : MonoBehaviour
     /// Name of the start screen.
     /// </summary>
     [SerializeField]
-    private readonly string _sceneNameStartingMenu = "Settings";
+    private string _sceneNameStartingMenu = "Settings";
 
     /// <summary>
     /// Name of the game scene
     /// </summary>
     [SerializeField]
-    private readonly string _sceneNameGame = "GridSystem";
+    private string _sceneNameGame = "GridSystem";
 
     /// <summary>
     /// This string keeps track of what scene we are in.
@@ -121,6 +121,7 @@ public class CanvasManager : MonoBehaviour
         WinScreenCanvas.SetActive(false);
         HelpCanvas.SetActive(false);
         IsOnSettings = false;
+        IsOnHelp = false;
     }
 
     /// <summary>
