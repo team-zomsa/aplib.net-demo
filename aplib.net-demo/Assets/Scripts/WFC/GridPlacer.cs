@@ -99,12 +99,17 @@ namespace Assets.Scripts.Wfc
             if (_gridConfig.AmountOfRooms > _gridConfig.GridWidthX * _gridConfig.GridWidthZ)
                 throw new Exception("The amount of rooms is larger than the available places in the grid.");
 
-            if (!_gridConfig.UseSeed) SharedRandom.SetSeed(_gridConfig.Seed);
-            ;
+            if (_gridConfig.UseSeed) SharedRandom.SetSeed(_gridConfig.Seed);
 
-            Debug.Log("Seed: " + _gridConfig.Seed);
+            Debug.Log("Seed: " + SharedRandom.Seed());
 
-            MakeGrid();
+            WaveFunctionCollapse wfc = new(_gridConfig.GridWidthX, _gridConfig.GridWidthZ);
+
+            wfc.Init();
+            wfc.PlaceRandomRooms(_gridConfig.AmountOfRooms);
+            wfc.Run();
+
+            Grid = wfc.Grid;
 
             PlaceGrid();
 
@@ -128,37 +133,6 @@ namespace Assets.Scripts.Wfc
             }
 
             SpawnEnemies();
-        }
-
-        /// <summary>
-        /// Makes the grid.
-        /// </summary>
-        private void MakeGrid()
-        {
-            Grid = new Grid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ);
-
-            Grid.Init();
-
-            int numberOfRooms = 0;
-
-            while (numberOfRooms < _gridConfig.AmountOfRooms)
-            {
-                Grid.PlaceRandomRoom();
-                numberOfRooms++;
-            }
-
-            while (!Grid.IsFullyCollapsed())
-            {
-                List<Cell> lowestEntropyCells = Grid.GetLowestEntropyCells();
-
-                int index = SharedRandom.Next(lowestEntropyCells.Count);
-
-                Cell cell = lowestEntropyCells[index];
-                cell.Tile = cell.Candidates[SharedRandom.Next(cell.Candidates.Count)];
-                cell.Candidates.Clear();
-
-                Grid.RemoveUnconnectedNeighbourCandidates(cell);
-            }
         }
 
         /// <summary>
