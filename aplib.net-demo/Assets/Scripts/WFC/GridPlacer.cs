@@ -103,6 +103,11 @@ namespace Assets.Scripts.Wfc
         public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
 
         /// <summary>
+        /// Spawns the enemies in the grid.
+        /// </summary>
+        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
+
+        /// <summary>
         /// Waits for a certain amount of time.
         /// </summary>
         /// <param name="waitTime">The time to wait before making the scene.</param>
@@ -493,7 +498,5 @@ namespace Assets.Scripts.Wfc
 
             _gameObjectPlacer.SpawnItems(cells, _random);
         }
-
-        private void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
     }
 }
