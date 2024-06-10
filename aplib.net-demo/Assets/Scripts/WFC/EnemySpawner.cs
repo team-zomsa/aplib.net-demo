@@ -31,11 +31,15 @@ public class EnemySpawner : MonoBehaviour
         if (_spawnableEnemies.Enemies.Select(x => x.Count).Sum() > cells.Count)
             throw new UnityException("Not enough empty cells to place all enemies.");
 
-        GameObject enemies = SpawningExtensions.CreateGameObject("Enemies", transform);
+        GameObject enemies = GameObject.Find("Enemies");
+
+        if (enemies == null) enemies = SpawningExtensions.CreateGameObject("Enemies", transform);
 
         foreach (SpawnableEnemy spawnableEnemy in _spawnableEnemies.Enemies)
         {
-            GameObject enemyParent = SpawningExtensions.CreateGameObject(spawnableEnemy.Enemy.name, enemies.transform);
+            GameObject enemyParent = GameObject.Find(spawnableEnemy.Enemy.name);
+
+            if (enemyParent == null) enemyParent = SpawningExtensions.CreateGameObject(spawnableEnemy.Enemy.name, enemies.transform);
 
             for (int j = 0; j < spawnableEnemy.Count; j++)
             {

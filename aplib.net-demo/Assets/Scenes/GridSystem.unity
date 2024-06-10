@@ -1180,6 +1180,7 @@ MonoBehaviour:
   _mouseLock: {fileID: 2067055331}
   _playerTransform: {fileID: 593800402}
   _inventory: {fileID: 134152955}
+  equipmentInventory: {fileID: 0}
 --- !u!4 &1444036427
 Transform:
   m_ObjectHideFlags: 0
