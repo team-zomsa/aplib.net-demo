@@ -74,6 +74,7 @@ public class InputManager : MonoBehaviour
         if (CanvasManager.Instance)
         {
             _uiActions.OpenSettings.performed += _ => CanvasManager.Instance.OnToggleSettings();
+            _uiActions.OpenHelp.performed += _ => CanvasManager.Instance.OnToggleHelp();
         }
     }
 

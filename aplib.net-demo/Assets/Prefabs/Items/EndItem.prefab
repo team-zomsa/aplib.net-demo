@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2921050188545365259}
   - component: {fileID: 6476791847648061540}
   - component: {fileID: 8353329355836069700}
+  - component: {fileID: 1579793037850114028}
   m_Layer: 0
   m_Name: EndItem
   m_TagString: Untagged
@@ -101,6 +102,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pointAmount: 25
+--- !u!114 &1579793037850114028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440915271667399624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89fd08d482b34dac875c0c3eee0d8d30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6568616855294691180
 PrefabInstance:
   m_ObjectHideFlags: 0
