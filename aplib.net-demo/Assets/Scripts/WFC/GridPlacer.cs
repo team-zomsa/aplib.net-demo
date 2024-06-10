@@ -196,34 +196,19 @@ namespace Assets.Scripts.Wfc
         {
             Direction facing = startTile.Tile.Facing;
 
-            switch (startTile.Tile)
+            startTile.Tile = startTile.Tile switch
             {
-                case Corner:
-                    startTile.Tile = new StartCorner(facing);
-                    break;
-                case Crossing:
-                    startTile.Tile = new StartCrossing();
-                    break;
-                case DeadEnd:
-                    startTile.Tile = new StartDeadEnd(facing);
-                    break;
-                case Room:
-                    startTile.Tile = new StartRoom(
-                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West },
-                        new List<Direction>() { Direction.North, Direction.East, Direction.South, Direction.West }
-                        );
-                    break;
-                case Straight:
-                    startTile.Tile = new StartStraight(facing);
-                    break;
-                case TSection:
-                    startTile.Tile = new StartTSection(facing);
-                    break;
-                default:
-                    break;
-            }
-
-
+                Corner => new StartCorner(facing),
+                Crossing => new StartCrossing(),
+                DeadEnd => new StartDeadEnd(facing),
+                Room => new StartRoom(
+                    new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West },
+                    new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West }
+                ),
+                Straight => new StartStraight(facing),
+                TSection => new StartTSection(facing),
+                _ => throw new UnityException("Tile cannot be a starter tile.")
+            };
         }
 
         /// <summary>
