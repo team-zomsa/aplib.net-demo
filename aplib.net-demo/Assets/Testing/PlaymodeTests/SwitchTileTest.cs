@@ -20,7 +20,7 @@ public class SwitchTileTests
         gameObject.SetActive(false);
         GridPlacer gridPlacer = gameObject.AddComponent<GridPlacer>();
 
-        //      Define testing cells
+        // Define testing cells
         Cell corner = new Cell(10, 10);
         corner.Tile = new Corner(Direction.North);
 
