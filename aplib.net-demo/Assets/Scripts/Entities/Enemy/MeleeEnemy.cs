@@ -6,6 +6,7 @@ using UnityEngine;
 /// Melee enemy that attacks the player when in range.
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Timer))]
 public class MeleeEnemy : RespawningEnemy
 {
