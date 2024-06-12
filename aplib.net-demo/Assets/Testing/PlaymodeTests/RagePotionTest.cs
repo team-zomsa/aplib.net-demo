@@ -9,15 +9,19 @@ using UnityEngine.TestTools;
 
 public class RagePotionTest
 {
+    [SetUp]
+    public void SetUp()
+    {
+        Debug.Log("Starting test RagePotionTest");
+        SceneManager.LoadScene("RagePotionTestScene");
+    }
+
     /// <summary>
     /// Test if the rage potion doubles the damage of the player.
     /// </summary>
     [UnityTest]
     public IEnumerator RagePotionDoublesDamage()
     {
-        SceneManager.LoadScene("RagePotionTestScene");
-        yield return null;
-
         // Get the player object
         var player = GameObject.Find("Player");
         EquipmentInventory equipmentInventory = player.GetComponentInChildren<EquipmentInventory>();
@@ -34,6 +38,8 @@ public class RagePotionTest
         // Use the rage potion
         ragePotion.UseItem();
 
+        yield return null;
+
         // Check if the player's damage has increased
         Assert.AreEqual(activeWeapon.Damage, expectedDamage);
     }
@@ -44,9 +50,6 @@ public class RagePotionTest
     [UnityTest]
     public IEnumerator ReturnsToNormalAfterTimer()
     {
-        SceneManager.LoadScene("RagePotionTestScene");
-        yield return null;
-
         // Get the player object
         var player = GameObject.Find("Player");
         EquipmentInventory equipmentInventory = player.GetComponentInChildren<EquipmentInventory>();
@@ -59,6 +62,7 @@ public class RagePotionTest
 
         // Use the rage potion
         ragePotion.GetComponent<RagePotion>().UseItem();
+        Debug.Log("rage potion duration: " + ragePotion.Duration);
 
         // Wait for the timer to finish
         yield return new WaitForSeconds(ragePotion.Duration);
