@@ -23,10 +23,10 @@ public class KeyTests
 
         // Assert
         Assert.IsFalse(gameObject.GetComponent<Key>().stackable);
-        Assert.AreEqual(gameObject.GetComponent<Key>().uses, 1);
-        Assert.AreEqual(gameObject.GetComponent<Key>().usesAddedPerPickup, 1);
-        Assert.AreEqual(gameObject.GetComponent<Key>().Id, 10);
-        Assert.AreEqual(gameObject.GetComponent<MeshRenderer>().material.color, Color.blue);
+        Assert.AreEqual(0, gameObject.GetComponent<Key>().uses);
+        Assert.AreEqual(1, gameObject.GetComponent<Key>().usesAddedPerPickup);
+        Assert.AreEqual(10, gameObject.GetComponent<Key>().Id);
+        Assert.AreEqual(Color.blue, gameObject.GetComponent<MeshRenderer>().material.color);
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
