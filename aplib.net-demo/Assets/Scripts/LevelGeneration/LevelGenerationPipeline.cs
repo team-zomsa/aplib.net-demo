@@ -45,10 +45,6 @@ namespace LevelGeneration
 
         public void Awake()
         {
-            if (_gridConfig.UseSeed) SharedRandom.SetSeed(_gridConfig.Seed);
-
-            Debug.Log($"Seed: {SharedRandom.Seed()}");
-
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
             _levelSpawner = GetComponent<LevelSpawner>();
             _enemySpawner = GetComponent<EnemySpawner>();
