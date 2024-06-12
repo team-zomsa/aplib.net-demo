@@ -56,4 +56,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/RangedWeapon/RangedWeaponBroken.unity
     guid: 78655e1cc01fc4a4d9ac0c7d3cbbd425
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/RagePotionTestScene.unity
+    guid: fe6a4c501dcc2d74891b9cfbd950276b
   m_configObjects: {}

@@ -16,13 +16,16 @@ namespace Assets.Scripts.Items
         [field: SerializeField]
         public int DamageIncreasePercentage { get; private set; } = 100;
 
+        /// <summary>
+        /// The duration of the rage potion effect in seconds.
+        /// </summary>
+        [field: SerializeField]
+        public float Duration { get; private set; } = 3f;
+
         [SerializeField]
         private GameObject _rageEffect;
 
         private int _damageIncrease;
-
-        [SerializeField]
-        private float _duration = 3; // In seconds
 
         private GameObject _player;
         private EquipmentInventory _playerInventory;
@@ -31,9 +34,7 @@ namespace Assets.Scripts.Items
         {
             base.Awake();
             _player = GameObject.FindGameObjectWithTag("Player");
-            EquipmentInventory _playerInventory = _player.GetComponentInChildren<EquipmentInventory>();
-            Weapon activeWeapon = _playerInventory.CurrentEquipment as Weapon;
-            _damageIncrease = activeWeapon.Damage * DamageIncreasePercentage / 100;
+            _playerInventory = _player.GetComponentInChildren<EquipmentInventory>();
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Assets.Scripts.Items
             // Add player visual effect as child of player
             GameObject rageEffect = Instantiate(_rageEffect, _player.transform);
 
-            yield return new WaitForSeconds(_duration);
+            yield return new WaitForSeconds(Duration);
 
             activeWeapon.Damage -= _damageIncrease;
 
