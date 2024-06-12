@@ -6,7 +6,10 @@ using UnityEngine.TestTools;
 
 public class KeyTests
 {
-    // A Test behaves as an ordinary method
+    /// <summary>
+    /// Tests start function and variables of the key.
+    /// Also tests id the initialize method works correctly.
+    /// </summary>
     [Test]
     public void KeyBaseFunctionTest()
     {
@@ -19,6 +22,9 @@ public class KeyTests
         gameObject.GetComponent<Key>().Initialize(10, Color.blue);
 
         // Assert
+        Assert.IsFalse(gameObject.GetComponent<Key>().stackable);
+        Assert.AreEqual(gameObject.GetComponent<Key>().uses, 1);
+        Assert.AreEqual(gameObject.GetComponent<Key>().usesAddedPerPickup, 1);
         Assert.AreEqual(gameObject.GetComponent<Key>().Id, 10);
         Assert.AreEqual(gameObject.GetComponent<MeshRenderer>().material.color, Color.blue);
     }
