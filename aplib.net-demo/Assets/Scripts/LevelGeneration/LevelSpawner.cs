@@ -50,8 +50,6 @@ namespace Assets.Scripts.Wfc
         public void Awake()
         {
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
-            _gameObjectPlacer.Initialize();
-
             _spawningExtensions = GetComponent<SpawningExtensions>();
         }
 
@@ -59,12 +57,9 @@ namespace Assets.Scripts.Wfc
         /// Makes the scene.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
-        public void MakeScene(Cell playerSpawnCell, Material startRoomMaterial)
+        public void MakeScene(Cell playerSpawnCell)
         {
             PlaceGrid();
-
-            // Set the colors of the start and end rooms.
-            playerSpawnCell.Tile.GameObject.GetComponent<Renderer>().material.color = startRoomMaterial.color;
 
             JoinConnectedComponentsWithTeleporters();
 
@@ -149,7 +144,7 @@ namespace Assets.Scripts.Wfc
                 Grid.DetermineConnectedComponentsBetweenDoors();
 
             GameObject teleporters = GameObject.Find("Teleporters");
-            if (teleporters is null) throw new UnityException("No teleporters were found.");
+            if (teleporters == null) throw new UnityException("No teleporters were found.");
 
             List<Teleporter.Teleporter> teleporterList = GetAllEntryTeleporters(teleporters);
 

@@ -9,7 +9,6 @@ namespace LevelGeneration
 {
     [RequireComponent(typeof(LevelSpawner))]
     [RequireComponent(typeof(GameObjectPlacer))]
-    [RequireComponent(typeof(SpawningExtensions))]
     [RequireComponent(typeof(EnemySpawner))]
     public class LevelGenerationPipeline : MonoBehaviour
     {
@@ -36,14 +35,14 @@ namespace LevelGeneration
         private GameObjectPlacer _gameObjectPlacer;
 
         /// <summary>
+        /// Represents the grid.
+        /// </summary>
+        private Grid _grid;
+
+        /// <summary>
         /// Represents the level spawner.
         /// </summary>
         private LevelSpawner _levelSpawner;
-
-        /// <summary>
-        /// Represents the grid.
-        /// </summary>
-        private Grid _grid { get; set; }
 
         public void Awake()
         {
@@ -98,7 +97,10 @@ namespace LevelGeneration
 
             Cell randomPlayerSpawn = _grid.GetRandomFilledCell();
 
-            _levelSpawner.MakeScene(randomPlayerSpawn, _startRoomMat);
+            _levelSpawner.MakeScene(randomPlayerSpawn);
+
+            // Set the colors of the start and end rooms.
+            randomPlayerSpawn.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;
 
             _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
 
@@ -107,6 +109,9 @@ namespace LevelGeneration
             SpawnEnemies();
         }
 
+        /// <summary>
+        /// Spawns the enemies.
+        /// </summary>
         public void SpawnEnemies() => _enemySpawner.SpawnEnemies(_grid.GetAllNotEmptyTiles());
     }
 }
