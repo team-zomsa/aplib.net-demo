@@ -453,7 +453,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1455078763}
   - {fileID: 773537169}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -686,6 +685,10 @@ GameObject:
   m_Component:
   - component: {fileID: 773537169}
   - component: {fileID: 773537170}
+  - component: {fileID: 773537174}
+  - component: {fileID: 773537173}
+  - component: {fileID: 773537172}
+  - component: {fileID: 773537171}
   m_Layer: 0
   m_Name: LevelGeneration
   m_TagString: Untagged
@@ -721,6 +724,69 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridConfig: {fileID: 11400000, guid: 348577010c40b244eb546878a2efe7e6, type: 2}
+  _startRoomMat: {fileID: 2100000, guid: f778c1623601f9a49bae03f91296af4f, type: 2}
+--- !u!114 &773537171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773537168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535fefb0b92d5a344b634ca0a3472e01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnableEnemies: {fileID: 11400000, guid: f7bd793b2437aa241a77beb552b78f49, type: 2}
+--- !u!114 &773537172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773537168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cac02a263e74762b9ef9d6d43fd7b85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gridConfig: {fileID: 11400000, guid: 348577010c40b244eb546878a2efe7e6, type: 2}
+--- !u!114 &773537173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773537168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8366bd27287d4220a09e6d3e8d715bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
+  _spawnableItems: {fileID: 11400000, guid: eb2bddcb54a779a4384c095e49697037, type: 2}
+  _doorPrefab: {fileID: 5163913735208331690, guid: 68173a35499684249a46fbd42c360c6c,
+    type: 3}
+  _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
+  _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
+    type: 3}
+  _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
+    type: 3}
+  _endRoomMat: {fileID: 2100000, guid: d8e9a1c487e0d7d4c881fce470e9d9a8, type: 2}
+--- !u!114 &773537174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773537168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b442616a9cd449993876de7096f51bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TileSizeX>k__BackingField: 16
+  <TileSizeZ>k__BackingField: 16
 --- !u!1 &953365985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,104 +1308,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1455078761
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1455078763}
-  - component: {fileID: 1455078762}
-  - component: {fileID: 1455078764}
-  - component: {fileID: 1455078765}
-  - component: {fileID: 1455078766}
-  m_Layer: 0
-  m_Name: Grid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1455078762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455078761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf81f8d2562f471f8fe5ad818d5670e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gridConfig: {fileID: 11400000, guid: 9d5c421d94ca61b4e82ad6acb921058e, type: 2}
---- !u!4 &1455078763
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455078761}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.48278, y: 13.592977, z: -34.27834}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 410545198}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1455078764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455078761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8366bd27287d4220a09e6d3e8d715bbe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
-  _spawnableItems: {fileID: 11400000, guid: 337f0455961848e4daae35638c40a3ae, type: 2}
-  _doorPrefab: {fileID: 5163913735208331690, guid: 68173a35499684249a46fbd42c360c6c,
-    type: 3}
-  _keyPrefab: {fileID: 155280, guid: 41d1cac196452694fb10f2476db79e6e, type: 3}
-  _teleporterPrefab: {fileID: 4524489543751428694, guid: 1c88f3319232dace09ca6eab36996fbc,
-    type: 3}
-  _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
-    type: 3}
-  _startRoomMat: {fileID: 2100000, guid: f778c1623601f9a49bae03f91296af4f, type: 2}
-  _endRoomMat: {fileID: 2100000, guid: d8e9a1c487e0d7d4c881fce470e9d9a8, type: 2}
---- !u!114 &1455078765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455078761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 535fefb0b92d5a344b634ca0a3472e01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spawnableEnemies: {fileID: 11400000, guid: 842bbce29d49004459d43759b8e65d66, type: 2}
---- !u!114 &1455078766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455078761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b442616a9cd449993876de7096f51bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <TileSizeX>k__BackingField: 16
-  <TileSizeZ>k__BackingField: 16
 --- !u!1 &1515546304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1590,6 +1558,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CanvasManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2927779827687187048, guid: 6afe0fbb1debb1449835d0968e789934,
+        type: 3}
+      propertyPath: _sceneNameGame
+      value: LevelGeneration
       objectReference: {fileID: 0}
     - target: {fileID: 3741452075886939737, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
