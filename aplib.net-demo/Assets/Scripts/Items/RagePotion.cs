@@ -10,11 +10,14 @@ namespace Assets.Scripts.Items
     [RequireComponent(typeof(PickupableItem))]
     public class RagePotion : Item
     {
-        [SerializeField]
-        private GameObject _rageEffect;
+        /// <summary>
+        /// The percentage increase of the player's damage.
+        /// </summary>
+        [field: SerializeField]
+        public int DamageIncreasePercentage { get; private set; } = 100;
 
         [SerializeField]
-        private int _damageIncreasePercentage = 50;
+        private GameObject _rageEffect;
 
         private int _damageIncrease;
 
@@ -22,14 +25,15 @@ namespace Assets.Scripts.Items
         private float _duration = 3; // In seconds
 
         private GameObject _player;
-        private Weapon _playerWeapon;
+        private EquipmentInventory _playerInventory;
 
         protected override void Awake()
         {
             base.Awake();
             _player = GameObject.FindGameObjectWithTag("Player");
-            _playerWeapon = _player.GetComponentInChildren<Weapon>();
-            _damageIncrease = _playerWeapon.Damage * _damageIncreasePercentage / 100;
+            EquipmentInventory _playerInventory = _player.GetComponentInChildren<EquipmentInventory>();
+            Weapon activeWeapon = _playerInventory.CurrentEquipment as Weapon;
+            _damageIncrease = activeWeapon.Damage * DamageIncreasePercentage / 100;
         }
 
         /// <summary>
@@ -44,14 +48,17 @@ namespace Assets.Scripts.Items
 
         private IEnumerator ActivateRage()
         {
-            _playerWeapon.Damage += _damageIncrease;
+            Weapon activeWeapon = _playerInventory.CurrentEquipment as Weapon;
+            _damageIncrease = activeWeapon.Damage * DamageIncreasePercentage / 100;
+
+            activeWeapon.Damage += _damageIncrease;
 
             // Add player visual effect as child of player
             GameObject rageEffect = Instantiate(_rageEffect, _player.transform);
 
             yield return new WaitForSeconds(_duration);
 
-            _playerWeapon.Damage -= _damageIncrease;
+            activeWeapon.Damage -= _damageIncrease;
 
             // Remove player visual effect
             Destroy(rageEffect);
