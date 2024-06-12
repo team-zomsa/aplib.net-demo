@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EntitySound))]
 [RequireComponent(typeof(Timer))]
+[RequireComponent(typeof(Animator))]
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float _maxSpeedGround = 7;
@@ -90,8 +91,6 @@ public class Movement : MonoBehaviour
     private void MovePlayer()
     {
         _horizontalVelocity = _playerVisTransform.right * _horizontalInput.x + _playerVisTransform.forward * _horizontalInput.y;
-        _animator.SetFloat("PlayerVelocity", _horizontalVelocity.magnitude);
-
         bool isOnSlope = OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit);
         bool isWallColliding = WalkingAgainstWall(out Vector3 wallNormal);
         _rigidbody.useGravity = !isOnSlope;
@@ -132,6 +131,8 @@ public class Movement : MonoBehaviour
             _timer.Reset();
             _footStep.Step();
         }
+
+        _animator.SetFloat("PlayerVelocity", _rigidbody.velocity.magnitude);
     }
 
     /// <summary>
