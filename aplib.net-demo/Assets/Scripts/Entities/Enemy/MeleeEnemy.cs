@@ -6,12 +6,9 @@ using UnityEngine;
 /// Melee enemy that attacks the player when in range.
 /// It inherits from DummyEnemy to add respawn functionality.
 /// </summary>
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Timer))]
 public class MeleeEnemy : RespawningEnemy
 {
-    private const float _sizeIncrease = 1.1f;
-
     [SerializeField]
     private float _attackCooldown = 2f;
 
@@ -74,8 +71,7 @@ public class MeleeEnemy : RespawningEnemy
     private void StartSwing()
     {
         _isSwinging = true;
-        transform.localScale *= _sizeIncrease;
-        _animator.Play("Charge-up");
+        _animator.SetTrigger("AttackStarted");
         StartCoroutine(SwingCoroutine());
     }
 
@@ -87,7 +83,6 @@ public class MeleeEnemy : RespawningEnemy
     {
         yield return new WaitForSeconds(_hitDelay);
         _meleeWeapon.UseWeapon();
-        transform.localScale /= _sizeIncrease;
         _animator.SetBool("IsSwinging", false);
         _isSwinging = false;
     }
