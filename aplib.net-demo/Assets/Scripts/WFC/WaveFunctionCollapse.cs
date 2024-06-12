@@ -9,36 +9,47 @@ namespace Assets.Scripts.Wfc
 
         private readonly int _widthY;
 
-        public WaveFunctionCollapse(int widthX, int widthY)
+        private Grid _grid;
+
+        private WaveFunctionCollapse(int widthX, int widthY)
         {
             _widthX = widthX;
             _widthY = widthY;
         }
 
-        public Grid Grid { get; private set; }
-
-        public void Init()
+        public static Grid GenerateGrid(int widthX, int widthY, int amountOfRooms)
         {
-            Grid = new Grid(_widthX, _widthY);
-            Grid.Init();
+            WaveFunctionCollapse wfc = new(widthX, widthY);
+
+            wfc.Init();
+            wfc.PlaceRandomRooms(amountOfRooms);
+            wfc.Run();
+
+            return wfc._grid;
         }
 
-        public void PlaceRandomRooms(int amountOfRooms)
+        private void Init()
+        {
+            _grid = new Grid(_widthX, _widthY);
+            _grid.Init();
+        }
+
+        private void PlaceRandomRooms(int amountOfRooms)
         {
             int numberOfRooms = 0;
 
             while (numberOfRooms < amountOfRooms)
             {
-                Grid.PlaceRandomRoom();
+                _grid.PlaceRandomRoom();
                 numberOfRooms++;
             }
         }
 
-        public void Run()
+        private void Run()
         {
-            while (!Grid.IsFullyCollapsed())
+            while (!_grid.IsFullyCollapsed())
             {
-                List<Cell> lowestEntropyCells = Grid.GetLowestEntropyCells();
+                List<Cell> lowestEntropyCells = _grid.GetLowestEntropyCells();
 
                 int index = SharedRandom.Next(lowestEntropyCells.Count);
 
@@ -46,7 +57,7 @@ namespace Assets.Scripts.Wfc
                 cell.Tile = cell.Candidates[SharedRandom.Next(cell.Candidates.Count)];
                 cell.Candidates.Clear();
 
-                Grid.RemoveUnconnectedNeighbourCandidates(cell);
+                _grid.RemoveUnconnectedNeighbourCandidates(cell);
             }
         }
     }
