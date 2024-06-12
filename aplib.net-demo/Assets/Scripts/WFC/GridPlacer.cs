@@ -103,13 +103,7 @@ namespace Assets.Scripts.Wfc
 
             Debug.Log("Seed: " + SharedRandom.Seed());
 
-            WaveFunctionCollapse wfc = new(_gridConfig.GridWidthX, _gridConfig.GridWidthZ);
-
-            wfc.Init();
-            wfc.PlaceRandomRooms(_gridConfig.AmountOfRooms);
-            wfc.Run();
-
-            Grid = wfc.Grid;
+            Grid = WaveFunctionCollapse.GenerateGrid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _gridConfig.AmountOfRooms);
 
             PlaceGrid();
 
