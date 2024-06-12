@@ -33,7 +33,6 @@ namespace WFC
         /// </summary>
         /// <param name="width">The width of the grid.</param>
         /// <param name="height">The height of the grid.</param>
-        /// <param name="random">The random number generator.</param>
         public Grid(int width, int height)
         {
             Width = width;

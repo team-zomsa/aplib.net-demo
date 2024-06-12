@@ -70,7 +70,7 @@ namespace LevelGeneration
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            _levelSpawner.MakeScene(randomPlayerSpawn);
+            _levelSpawner.MakeLevel(randomPlayerSpawn);
 
             // Set the colors of the start and end rooms.
             randomPlayerSpawn.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;

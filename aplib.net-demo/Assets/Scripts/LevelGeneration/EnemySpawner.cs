@@ -10,7 +10,7 @@ namespace LevelGeneration
     public class EnemySpawner : MonoBehaviour
     {
         /// <summary>
-        /// Represents the spawnable items.
+        /// Represents the spawnable enemies.
         /// </summary>
         [SerializeField]
         private SpawnableEnemies _spawnableEnemies;
@@ -23,9 +23,9 @@ namespace LevelGeneration
         public void Awake() => _spawningExtensions = GetComponent<SpawningExtensions>();
 
         /// <summary>
-        /// Spawns all items in the world.
+        /// Spawns all enemies in the world.
         /// </summary>
-        /// <param name="cells">The cells to spawn the items in.</param>
+        /// <param name="cells">The cells to spawn the enemies in.</param>
         /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
         public void SpawnEnemies(List<Cell> cells)
         {

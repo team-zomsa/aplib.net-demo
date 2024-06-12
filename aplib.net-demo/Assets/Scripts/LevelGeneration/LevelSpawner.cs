@@ -40,9 +40,6 @@ namespace LevelGeneration
         /// </summary>
         public Grid Grid { get; set; }
 
-        /// <summary>
-        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
-        /// </summary>
         public void Awake()
         {
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
@@ -50,10 +47,10 @@ namespace LevelGeneration
         }
 
         /// <summary>
-        /// Makes the scene.
+        /// Makes the level.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
-        public void MakeScene(Cell playerSpawnCell)
+        public void MakeLevel(Cell playerSpawnCell)
         {
             PlaceGrid();
 
