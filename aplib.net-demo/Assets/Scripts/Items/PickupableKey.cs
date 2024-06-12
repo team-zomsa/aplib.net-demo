@@ -9,6 +9,8 @@ namespace Assets.Scripts.Items
     [RequireComponent(typeof(Key))]
     public class PickupableKey : MonoBehaviour
     {
+        public event Action<Key> KeyPickedUp;
+
         private Key _item;
 
         private KeyRing _keyRing;
@@ -34,7 +36,5 @@ namespace Assets.Scripts.Items
 
             Destroy(gameObject);
         }
-
-        public event Action<Key> KeyPickedUp;
     }
 }
