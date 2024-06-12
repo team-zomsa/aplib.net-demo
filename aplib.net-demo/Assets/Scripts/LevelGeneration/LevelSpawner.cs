@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Tiles;
+using Assets.Scripts.Wfc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,9 @@ using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
+using Grid = Assets.Scripts.Wfc.Grid;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
     /// <summary>
     /// Represents the grid placer. This class is responsible for placing the grid in the world. It also places the keys
