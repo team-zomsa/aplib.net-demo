@@ -12,6 +12,7 @@ using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
 using Entities.Weapons;
 using NUnit.Framework;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -88,7 +89,7 @@ namespace Testing.AplibTests
             // Calculate the expected damage increase
             int _damageIncreasePercentage = beliefSet.RagePotion.Observation.DamageIncreasePercentage;
             _startDamage = beliefSet.PlayerWeapon.Observation.Damage;
-            _increasedDamage = _startDamage * _damageIncreasePercentage / 100;
+            _increasedDamage = _startDamage + _startDamage * _damageIncreasePercentage / 100;
 
             // Grab the enemy's health at the start
             _enemyStartHealth = beliefSet.TargetDummyHealth.Observation;
@@ -108,9 +109,9 @@ namespace Testing.AplibTests
             );
 
             // Action: Use current inventory item (health potion).
-            Action<RagePotionBeliefSet> activateInventoryItem = new(b => b.InventoryObject.Observation.ActivateItem());
+            Aplib.Core.Intent.Actions.Action<RagePotionBeliefSet> activateInventoryItem = new(b => b.InventoryObject.Observation.ActivateItem());
             // Action: Attack the enemy, when at its position
-            Action<RagePotionBeliefSet> useWeaponAction = new(b => b.PlayerWeapon.Observation.UseWeapon());
+            Aplib.Core.Intent.Actions.Action<RagePotionBeliefSet> useWeaponAction = new(b => b.PlayerWeapon.Observation.UseWeapon());
             PrimitiveTactic<RagePotionBeliefSet> useWeaponTactic = new(useWeaponAction, AtEnemyPositionPredicate);
             FirstOfTactic<RagePotionBeliefSet> attackEnemyTactic = new(useWeaponTactic, moveToEnemyAction.Lift());
 
@@ -145,10 +146,10 @@ namespace Testing.AplibTests
             }
 
             bool DamageIncreasedPredicate(RagePotionBeliefSet beliefSet)
-                => beliefSet.PlayerWeapon.Observation.Damage == _startDamage + _increasedDamage;
+                => beliefSet.PlayerWeapon.Observation.Damage == _increasedDamage;
 
             bool AtEnemyPositionPredicate(RagePotionBeliefSet beliefSet)
-                => Vector3.Distance(beliefSet.Player.Observation.transform.position, beliefSet.EnemyPosition) < 0.5f;
+                => Vector3.Distance(beliefSet.Player.Observation.transform.position, beliefSet.EnemyPosition) < 1f;
 
             bool EnemyTookIncreasedDamagePredicate(RagePotionBeliefSet beliefSet)
             {
