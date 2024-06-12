@@ -18,7 +18,7 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private SpawningExtensions _spawningExtensions;
 
-    public void Initialize() => _spawningExtensions = GetComponent<SpawningExtensions>();
+    public void Awake() => _spawningExtensions = GetComponent<SpawningExtensions>();
 
     /// <summary>
     /// Spawns all items in the world.

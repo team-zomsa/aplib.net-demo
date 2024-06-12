@@ -21,12 +21,6 @@ namespace LevelGeneration
     public class LevelSpawner : MonoBehaviour
     {
         /// <summary>
-        /// Represents the grid config.
-        /// </summary>
-        [SerializeField]
-        private GridConfig _gridConfig;
-
-        /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * .7f;

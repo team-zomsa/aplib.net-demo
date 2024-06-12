@@ -35,14 +35,14 @@ namespace LevelGeneration
         private GameObjectPlacer _gameObjectPlacer;
 
         /// <summary>
-        /// Represents the grid.
-        /// </summary>
-        private Grid _grid;
-
-        /// <summary>
         /// Represents the level spawner.
         /// </summary>
         private LevelSpawner _levelSpawner;
+
+        /// <summary>
+        /// Represents the grid.
+        /// </summary>
+        public Grid Grid { get; private set; }
 
         public void Awake()
         {
@@ -56,7 +56,6 @@ namespace LevelGeneration
             _gameObjectPlacer.Initialize();
 
             _enemySpawner = GetComponent<EnemySpawner>();
-            _enemySpawner.Initialize();
 
             MakeScene();
         }
@@ -92,10 +91,10 @@ namespace LevelGeneration
 
             Debug.Log("Seed: " + SharedRandom.Seed());
 
-            _grid = WaveFunctionCollapse.GenerateGrid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _gridConfig.AmountOfRooms);
-            _levelSpawner.Grid = _grid;
+            Grid = WaveFunctionCollapse.GenerateGrid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _gridConfig.AmountOfRooms);
+            _levelSpawner.Grid = Grid;
 
-            Cell randomPlayerSpawn = _grid.GetRandomFilledCell();
+            Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
             _levelSpawner.MakeScene(randomPlayerSpawn);
 
@@ -104,7 +103,7 @@ namespace LevelGeneration
 
             _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
 
-            _gameObjectPlacer.SpawnItems(_grid.GetAllCellsNotContainingItems());
+            _gameObjectPlacer.SpawnItems(Grid.GetAllCellsNotContainingItems());
 
             SpawnEnemies();
         }
@@ -112,6 +111,6 @@ namespace LevelGeneration
         /// <summary>
         /// Spawns the enemies.
         /// </summary>
-        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(_grid.GetAllNotEmptyTiles());
+        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles());
     }
 }

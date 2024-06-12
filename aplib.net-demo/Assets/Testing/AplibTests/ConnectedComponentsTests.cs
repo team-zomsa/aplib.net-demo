@@ -10,6 +10,7 @@ using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Wfc;
+using LevelGeneration;
 using NUnit.Framework;
 using System.Collections;
 using System.Linq;
@@ -49,11 +50,12 @@ namespace Testing.AplibTests
         {
             // Arrange
             ConnectedComponentsBeliefSet rootBeliefSet = new();
-            GridPlacer gridPlacer = GameObject.Find("Grid").GetComponent<GridPlacer>();
-            SpawningExtensions spawningExtensions = GameObject.Find("Grid").GetComponent<SpawningExtensions>();
+            GameObject gridGameObject = GameObject.Find("LevelGeneration");
+            LevelGenerationPipeline levelGenerationPipeline = gridGameObject.GetComponent<LevelGenerationPipeline>();
+            SpawningExtensions spawningExtensions = gridGameObject.GetComponent<SpawningExtensions>();
 
             // Arrange ==> Level information
-            Vector3[] cellsToVisit = gridPlacer.Grid.DetermineConnectedComponents()
+            Vector3[] cellsToVisit = levelGenerationPipeline.Grid.DetermineConnectedComponents()
                 .Select(cells => spawningExtensions.CenterOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
 
             Vector3[] teleporterPositions = GameObject.Find("Teleporters")
