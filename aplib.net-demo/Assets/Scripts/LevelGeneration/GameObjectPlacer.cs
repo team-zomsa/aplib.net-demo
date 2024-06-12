@@ -70,10 +70,7 @@ namespace LevelGeneration
         /// </summary>
         private SpawningExtensions _spawningExtensions;
 
-        /// <summary>
-        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
-        /// </summary>
-        public void Initialize()
+        public void Awake()
         {
             if (!_doorPrefab.TryGetComponent(out Renderer doorRenderer))
                 throw new UnityException("Door prefab does not have a renderer component.");
