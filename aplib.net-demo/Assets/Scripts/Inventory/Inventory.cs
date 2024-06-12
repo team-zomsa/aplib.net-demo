@@ -1,4 +1,5 @@
 using Assets.Scripts.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,11 +12,6 @@ public class Inventory : MonoBehaviour
     /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
-
-    /// <summary>
-    /// The canvas object that holds the inventory.
-    /// </summary>
-    public GameObject inventoryObject;
 
     [SerializeField] private float _inventorySize = 4;
 

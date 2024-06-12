@@ -2,74 +2,57 @@ using Aplib.Core;
 using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
 using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
 
 namespace Testing.AplibTests
 {
     public class ItemSpawningBeliefSet : BeliefSet
     {
-        /// <summary>
-        /// The inventory in the scene.
-        /// </summary>
-        public readonly Belief<GameObject, Inventory> InventoryObject =
-            new(GameObject.Find("InventoryObject"), x => x.GetComponent<Inventory>());
+        public const string EndItemName = "The Eternal Elixir";
 
-        public readonly Belief<GameObject, Rigidbody> PlayerRigidBody = new(
-            GameObject.Find("Player"),
-            x => x.GetComponent<Rigidbody>());
+        /// <summary> The inventory in the scene. </summary>
+        public readonly Belief<Inventory, Inventory> InventoryObject =
+            new(GameObject.Find("InventoryObject").GetComponent<Inventory>(), x => x);
 
-        /// <summary>
-        /// The target position that the player needs to move towards.
-        /// Find the end item in the scene.
-        /// </summary>
-        public readonly Belief<GameObject[], Vector3> TargetKeyPosition = new(GameObject.FindGameObjectsWithTag("Key"),
-            x =>
+        /// <summary> The rigidbody of the player </summary>
+        public readonly Belief<Rigidbody, Rigidbody> PlayerRigidBody = new(
+            GameObject.Find("Player").GetComponent<Rigidbody>(), x => x);
+
+        /// <summary> The position of the next key to obtain to reach the end room. </summary>
+        public readonly Belief<IEnumerable<GameObject>, Vector3> TargetKeyPosition = new(
+            GameObject.FindGameObjectsWithTag("Key").Where(x => x != null), keys =>
             {
-                // If there are no keys, return Vector3.zero.
-                if (x.Length == 0) return Vector3.zero;
-
-                GameObject player = GameObject.Find("Player");
-                Rigidbody playerRigidBody = player.GetComponent<Rigidbody>();
-                Vector3 playerPosition = playerRigidBody.position;
-
+                Vector3 playerPosition = GameObject.Find("Player").GetComponent<Rigidbody>().position;
                 NavMeshPath path = new();
 
                 // Find the first key that is reachable.
-                foreach (GameObject key in x)
+                foreach (GameObject key in keys)
                 {
-                    if (key == null) continue;
-
-                    NavMesh.CalculatePath(playerPosition,
-                        key.transform.position,
-                        NavMesh.AllAreas,
-                        path
-                    );
-
-                    if (path.status == NavMeshPathStatus.PathComplete) return key.transform.position;
+                    NavMesh.CalculatePath(playerPosition, key.transform.position, NavMesh.AllAreas, path);
+                    if (path.status is NavMeshPathStatus.PathComplete)
+                        return key.transform.position;
                 }
 
                 // If no key is reachable, return Vector3.zero.
                 return Vector3.zero;
             });
 
-        /// <summary>
-        /// The target position that the player needs to move towards.
-        /// Find the end item in the scene.
-        /// </summary>
-        public readonly Belief<GameObject, Vector3> TargetPosition =
-            new(GameObject.Find("The Eternal Elixir"), x => x == null ? Vector3.zero : x.transform.position);
+        /// <summary> The position to which the player must navigate in order to fetch the end item. </summary>
+        public readonly Belief<GameObject, Vector3> EndItemPosition = new(
+            GameObject.Find(EndItemName), x => x.transform.position,
+            () => !GameObject.Find("InventoryObject").GetComponent<Inventory>().ContainsItem(EndItemName));
     }
 
     public class ItemSpawningTests
@@ -99,65 +82,45 @@ namespace Testing.AplibTests
             foreach (GameObject key in keys) key.AddComponent<BeforeDestroyKey>();
 
             // Create an intent for the agent that moves the agent towards the target position.
-            TransformPathfinderAction<ItemSpawningBeliefSet> transformPathfinderAction = new(
+            TransformPathfinderAction<ItemSpawningBeliefSet> moveToEndItemAction = new(
                 beliefSet => beliefSet.PlayerRigidBody,
-                beliefSet => beliefSet.TargetPosition,
+                beliefSet => beliefSet.EndItemPosition,
                 0.3f
             );
 
-            TransformPathfinderAction<ItemSpawningBeliefSet> transformPathfinderActionKey = new(
+            TransformPathfinderAction<ItemSpawningBeliefSet> moveToNextKeyAction = new(
                 beliefSet => beliefSet.PlayerRigidBody,
                 beliefSet => beliefSet.TargetKeyPosition,
                 0.3f
             );
 
-            PrimitiveTactic<ItemSpawningBeliefSet> moveTactic = new(transformPathfinderAction);
-            PrimitiveTactic<ItemSpawningBeliefSet> moveTacticKey = new(transformPathfinderActionKey);
-
-            PrimitiveGoalStructure<ItemSpawningBeliefSet> moveGoal =
-                new(new Goal<ItemSpawningBeliefSet>(moveTactic, EndItemPickedUpPredicate));
-
-            PrimitiveGoalStructure<ItemSpawningBeliefSet> moveToKeyGoal =
-                new(new Goal<ItemSpawningBeliefSet>(moveTacticKey, EndItemReachablePredicate));
-
-            RepeatGoalStructure<ItemSpawningBeliefSet> moveToKeyGoalStructure = new(moveToKeyGoal);
-
-            SequentialGoalStructure<ItemSpawningBeliefSet>
-                moveAndPickupSequence = new(moveToKeyGoalStructure, moveGoal);
-
-            // Arrange ==> DesireSet
-            DesireSet<ItemSpawningBeliefSet> desire = new(moveAndPickupSequence);
+            Goal<ItemSpawningBeliefSet> moveToEndItemGoal = new(moveToEndItemAction.Lift(), endItemPickedUpPredicate);
+            Goal<ItemSpawningBeliefSet> moveToNextKeyGoal = new(moveToNextKeyAction.Lift(), endItemReachablePredicate);
 
             // Act
-            BdiAgent<ItemSpawningBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent<ItemSpawningBeliefSet> agent = new(beliefSet, Seq(moveToNextKeyGoal.Lift(), moveToEndItemGoal.Lift()).Lift());
             AplibRunner testRunner = new(agent);
 
             yield return testRunner.Test();
 
             // Assert
-            Assert.IsTrue(agent.Status == CompletionStatus.Success);
+            Assert.AreEqual(CompletionStatus.Success, agent.Status);
             yield break;
 
-            bool EndItemPickedUpPredicate(ItemSpawningBeliefSet beliefSet)
-            {
-                Inventory inventory = beliefSet.InventoryObject;
-
-                return inventory.ContainsItem("The Eternal Elixir");
-            }
-
-            bool EndItemReachablePredicate(ItemSpawningBeliefSet beliefSet)
+            bool endItemReachablePredicate(ItemSpawningBeliefSet beliefSet)
             {
                 Rigidbody playerRigidbody = beliefSet.PlayerRigidBody;
+                Vector3 target = beliefSet.EndItemPosition;
+
                 NavMeshPath path = new();
-                Vector3 target = beliefSet.TargetPosition;
-
-                NavMesh.CalculatePath(playerRigidbody.position,
-                    target,
-                    NavMesh.AllAreas,
-                    path
-                );
-
+                NavMesh.CalculatePath(playerRigidbody.position, target, NavMesh.AllAreas, path);
                 return path.status == NavMeshPathStatus.PathComplete;
+            }
+
+            bool endItemPickedUpPredicate(ItemSpawningBeliefSet beliefSet)
+            {
+                Inventory inventory = beliefSet.InventoryObject;
+                return inventory.ContainsItem(ItemSpawningBeliefSet.EndItemName);
             }
         }
     }
