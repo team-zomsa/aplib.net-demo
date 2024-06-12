@@ -48,12 +48,6 @@ namespace Assets.Scripts.Wfc
         private GameObject _endItemPrefab;
 
         /// <summary>
-        /// The material of the start room.
-        /// </summary>
-        [SerializeField]
-        private Material _startRoomMat;
-
-        /// <summary>
         /// The material of the end room.
         /// </summary>
         [SerializeField]
@@ -255,9 +249,6 @@ namespace Assets.Scripts.Wfc
             winPoint.transform.position = spawningPoint;
             Area winArea = winPoint.GetComponent<Area>();
             winArea.Bounds = new Bounds(spawningPoint, winArea.Bounds.extents);
-
-            // Set the colors of the start and end rooms.
-            playerSpawnCell.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;
         }
     }
 }

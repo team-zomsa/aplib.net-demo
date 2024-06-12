@@ -16,9 +16,13 @@ namespace Editors
             SerializedObject levelGenerationPipelineSettings = serializedObject;
 
             SerializedProperty gridConfig = levelGenerationPipelineSettings.FindProperty("_gridConfig");
+            SerializedProperty startRoomMaterial = levelGenerationPipelineSettings.FindProperty("_startRoomMat");
 
             gridConfig.objectReferenceValue =
                 EditorGUILayout.ObjectField("Grid Config", gridConfig.objectReferenceValue, typeof(GridConfig), false);
+
+            startRoomMaterial.objectReferenceValue = EditorGUILayout.ObjectField("Start Room Material",
+                startRoomMaterial.objectReferenceValue, typeof(Material), false);
 
             levelGenerationPipelineSettings.ApplyModifiedProperties();
 

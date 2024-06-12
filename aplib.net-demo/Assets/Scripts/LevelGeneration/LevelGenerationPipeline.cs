@@ -7,6 +7,10 @@ using Grid = Assets.Scripts.Wfc.Grid;
 
 namespace LevelGeneration
 {
+    [RequireComponent(typeof(LevelSpawner))]
+    [RequireComponent(typeof(GameObjectPlacer))]
+    [RequireComponent(typeof(SpawningExtensions))]
+    [RequireComponent(typeof(EnemySpawner))]
     public class LevelGenerationPipeline : MonoBehaviour
     {
         /// <summary>
@@ -16,15 +20,44 @@ namespace LevelGeneration
         private GridConfig _gridConfig;
 
         /// <summary>
+        /// The material of the start room.
+        /// </summary>
+        [SerializeField]
+        private Material _startRoomMat;
+
+        /// <summary>
+        /// Represents the enemy spawner.
+        /// </summary>
+        private EnemySpawner _enemySpawner;
+
+        /// <summary>
+        /// Represents the game object placer.
+        /// </summary>
+        private GameObjectPlacer _gameObjectPlacer;
+
+        /// <summary>
+        /// Represents the level spawner.
+        /// </summary>
+        private LevelSpawner _levelSpawner;
+
+        /// <summary>
         /// Represents the grid.
         /// </summary>
-        public Grid Grid { get; private set; }
+        private Grid _grid { get; set; }
 
         public void Awake()
         {
             if (_gridConfig.UseSeed) SharedRandom.SetSeed(_gridConfig.Seed);
 
             Debug.Log($"Seed: {SharedRandom.Seed()}");
+
+            _levelSpawner = GetComponent<LevelSpawner>();
+
+            _gameObjectPlacer = GetComponent<GameObjectPlacer>();
+            _gameObjectPlacer.Initialize();
+
+            _enemySpawner = GetComponent<EnemySpawner>();
+            _enemySpawner.Initialize();
 
             MakeScene();
         }
@@ -47,6 +80,10 @@ namespace LevelGeneration
             MakeScene();
         }
 
+        /// <summary>
+        /// Makes the scene.
+        /// </summary>
+        /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
         private void MakeScene()
         {
             if (_gridConfig.AmountOfRooms > _gridConfig.GridWidthX * _gridConfig.GridWidthZ)
@@ -56,7 +93,20 @@ namespace LevelGeneration
 
             Debug.Log("Seed: " + SharedRandom.Seed());
 
-            Grid = WaveFunctionCollapse.GenerateGrid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _gridConfig.AmountOfRooms);
+            _grid = WaveFunctionCollapse.GenerateGrid(_gridConfig.GridWidthX, _gridConfig.GridWidthZ, _gridConfig.AmountOfRooms);
+            _levelSpawner.Grid = _grid;
+
+            Cell randomPlayerSpawn = _grid.GetRandomFilledCell();
+
+            _levelSpawner.MakeScene(randomPlayerSpawn, _startRoomMat);
+
+            _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
+
+            _gameObjectPlacer.SpawnItems(_grid.GetAllCellsNotContainingItems());
+
+            SpawnEnemies();
         }
+
+        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(_grid.GetAllNotEmptyTiles());
     }
 }
