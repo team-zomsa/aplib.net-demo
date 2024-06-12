@@ -142,7 +142,7 @@ namespace Assets.Scripts.Wfc
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            SwitchTile(randomPlayerSpawn);
+            SetStartTilePropertyTrue(randomPlayerSpawn);
 
             PlaceGrid();
 
@@ -197,23 +197,9 @@ namespace Assets.Scripts.Wfc
             }
         }
 
-        public static void SwitchTile(Cell startTile)
+        public static void SetStartTilePropertyTrue(Cell startTile)
         {
-            Direction facing = startTile.Tile.Facing;
-
-            startTile.Tile = startTile.Tile switch
-            {
-                Corner => new StartCorner(facing),
-                Crossing => new StartCrossing(),
-                DeadEnd => new StartDeadEnd(facing),
-                Room => new StartRoom(
-                    new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West },
-                    new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West }
-                ),
-                Straight => new StartStraight(facing),
-                TSection => new StartTSection(facing),
-                _ => throw new UnityException("Tile cannot be a starter tile.")
-            };
+            startTile.Tile.IsStart = true;
         }
 
         /// <summary>

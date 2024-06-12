@@ -4,21 +4,20 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-public class SwitchTileTests
+public class SetStartTilePropertyTrueTests
 {
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
-    public IEnumerator SwitchTileTest()
+    public IEnumerator SetStartTilePropertyTrueTest()
     {
         // Arrange
         // Setup test object to access method switchTile in GridPlacer
         GameObject gameObject = new GameObject();
         gameObject.SetActive(false);
-        
+
         // Define testing cells
         Cell corner = new(10, 10) { Tile = new Corner() };
 
@@ -38,20 +37,20 @@ public class SwitchTileTests
         Cell tSection = new(10, 10) { Tile = new TSection() };
 
         // Act
-        GridPlacer.SwitchTile(corner);
-        GridPlacer.SwitchTile(crossing);
-        GridPlacer.SwitchTile(deadEnd);
-        GridPlacer.SwitchTile(room);
-        GridPlacer.SwitchTile(straight);
-        GridPlacer.SwitchTile(tSection);
+        GridPlacer.SetStartTilePropertyTrue(corner);
+        GridPlacer.SetStartTilePropertyTrue(crossing);
+        GridPlacer.SetStartTilePropertyTrue(deadEnd);
+        GridPlacer.SetStartTilePropertyTrue(room);
+        GridPlacer.SetStartTilePropertyTrue(straight);
+        GridPlacer.SetStartTilePropertyTrue(tSection);
 
         // Assert
-        Assert.IsTrue(corner.Tile is StartCorner);
-        Assert.IsTrue(crossing.Tile is StartCrossing);
-        Assert.IsTrue(deadEnd.Tile is StartDeadEnd);
-        Assert.IsTrue(room.Tile is StartRoom);
-        Assert.IsTrue(straight.Tile is StartStraight);
-        Assert.IsTrue(tSection.Tile is StartTSection);
+        Assert.IsTrue(corner.Tile.IsStart);
+        Assert.IsTrue(crossing.Tile.IsStart);
+        Assert.IsTrue(deadEnd.Tile.IsStart);
+        Assert.IsTrue(room.Tile.IsStart);
+        Assert.IsTrue(straight.Tile.IsStart);
+        Assert.IsTrue(tSection.Tile.IsStart);
 
         yield return null;
     }
