@@ -26,6 +26,7 @@ public class InputManager : MonoBehaviour
     private PlayerInput.PlayerActions _playerActions;
     private Movement _playerMovement;
     private PlayerInput.UIActions _uiActions;
+    private Animator _playerAnimator;
 
     public static InputManager Instance { get; private set; }
 
@@ -50,6 +51,7 @@ public class InputManager : MonoBehaviour
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
         _playerRespawn = _playerTransform.GetComponent<RespawnableComponent>();
+        _playerAnimator = _playerTransform.gameObject.GetComponent<Animator>();
     }
 
     private void Start()
@@ -59,7 +61,12 @@ public class InputManager : MonoBehaviour
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.Respawn();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
-        _playerActions.NextItem.performed += _ => equipmentInventory.MoveNext();
+        _playerActions.NextItem.performed += _ =>
+        {
+            equipmentInventory.MoveNext();
+
+            _playerAnimator.SetTrigger("SwitchWeapon");
+        };
         _playerActions.PreviousItem.performed += _ => equipmentInventory.MovePrevious();
         _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         _playerActions.Fire.performed += _ =>
@@ -67,6 +74,8 @@ public class InputManager : MonoBehaviour
             if (equipmentInventory.HasItems)
             {
                 equipmentInventory.CurrentEquipment.UseEquipment();
+
+                _playerAnimator.SetTrigger("PlayerAttack");
             }
         };
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
