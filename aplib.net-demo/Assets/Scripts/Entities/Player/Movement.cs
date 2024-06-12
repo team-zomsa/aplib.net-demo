@@ -34,6 +34,7 @@ public class Movement : MonoBehaviour
 
     private Rigidbody _rigidbody;
     private CapsuleCollider _controller;
+    private Animator _animator;
 
     [SerializeField]
     private Transform _playerVisTransform;
@@ -49,6 +50,7 @@ public class Movement : MonoBehaviour
         // Link the components of this object to the variables
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<CapsuleCollider>();
+        _animator = GetComponent<Animator>();
         _footStep = GetComponent<EntitySound>();
         _timer = GetComponent<Timer>();
 
@@ -75,6 +77,7 @@ public class Movement : MonoBehaviour
         // Ground check by checking a sphere at the bottom of the player, more consistent than ray
         _bottomPoint = transform.TransformPoint(_controller.center - Vector3.up * (_playerHeight * 0.55f - _playerRadius));
         _isGrounded = Physics.CheckSphere(_bottomPoint, _playerRadius, _groundMask);
+        _animator.SetBool("PlayerGrounded", _isGrounded);
 
         MovePlayer();
         HandleJump();
@@ -87,6 +90,8 @@ public class Movement : MonoBehaviour
     private void MovePlayer()
     {
         _horizontalVelocity = _playerVisTransform.right * _horizontalInput.x + _playerVisTransform.forward * _horizontalInput.y;
+        _animator.SetFloat("PlayerVelocity", _horizontalVelocity.magnitude);
+
         bool isOnSlope = OnWalkableSlope(out Vector3 directionOnSlope, out RaycastHit downHit);
         bool isWallColliding = WalkingAgainstWall(out Vector3 wallNormal);
         _rigidbody.useGravity = !isOnSlope;
