@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ThreadSafeRandom;
 using UnityEngine;
+using WFC;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
     [RequireComponent(typeof(SpawningExtensions))]
     public class GameObjectPlacer : MonoBehaviour

@@ -6,7 +6,7 @@ using System.Linq;
 using ThreadSafeRandom;
 using static Assets.Scripts.Tiles.Direction;
 
-namespace Assets.Scripts.Wfc
+namespace WFC
 {
     /// <summary>
     /// Represents a grid.

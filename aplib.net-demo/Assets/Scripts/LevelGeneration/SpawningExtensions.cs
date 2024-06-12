@@ -1,6 +1,7 @@
 using UnityEngine;
+using WFC;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
     /// <summary>
     /// Represents the spawnable extensions.

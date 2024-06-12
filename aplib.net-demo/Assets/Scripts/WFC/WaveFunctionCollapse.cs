@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ThreadSafeRandom;
 
-namespace Assets.Scripts.Wfc
+namespace WFC
 {
     public class WaveFunctionCollapse
     {

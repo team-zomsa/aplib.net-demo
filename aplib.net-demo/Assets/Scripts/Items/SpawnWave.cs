@@ -1,4 +1,3 @@
-using Assets.Scripts.Wfc;
 using LevelGeneration;
 using UnityEngine;
 

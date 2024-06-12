@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Tiles;
-using Assets.Scripts.Wfc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +6,9 @@ using ThreadSafeRandom;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
-using Grid = Assets.Scripts.Wfc.Grid;
+using WFC;
+using ConnectedComponent = System.Collections.Generic.ISet<WFC.Cell>;
+using Grid = WFC.Grid;
 
 namespace LevelGeneration
 {

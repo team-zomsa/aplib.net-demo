@@ -1,9 +1,9 @@
-using Assets.Scripts.Wfc;
 using System;
 using System.Collections;
 using ThreadSafeRandom;
 using UnityEngine;
-using Grid = Assets.Scripts.Wfc.Grid;
+using WFC;
+using Grid = WFC.Grid;
 
 namespace LevelGeneration
 {

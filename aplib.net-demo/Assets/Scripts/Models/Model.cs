@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using Grid = Assets.Scripts.Wfc.Grid;
+using Grid = WFC.Grid;
 
 namespace Assets.Scripts.Models
 {

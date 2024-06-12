@@ -9,7 +9,6 @@ using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
-using Assets.Scripts.Wfc;
 using LevelGeneration;
 using NUnit.Framework;
 using System.Collections;
