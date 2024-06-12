@@ -37,12 +37,12 @@ public class SetStartTilePropertyTrueTests
         Cell tSection = new(10, 10) { Tile = new TSection() };
 
         // Act
-        GridPlacer.SetStartTilePropertyTrue(corner);
-        GridPlacer.SetStartTilePropertyTrue(crossing);
-        GridPlacer.SetStartTilePropertyTrue(deadEnd);
-        GridPlacer.SetStartTilePropertyTrue(room);
-        GridPlacer.SetStartTilePropertyTrue(straight);
-        GridPlacer.SetStartTilePropertyTrue(tSection);
+        GridPlacer.UpdateTileModel(corner);
+        GridPlacer.UpdateTileModel(crossing);
+        GridPlacer.UpdateTileModel(deadEnd);
+        GridPlacer.UpdateTileModel(room);
+        GridPlacer.UpdateTileModel(straight);
+        GridPlacer.UpdateTileModel(tSection);
 
         // Assert
         Assert.IsTrue(corner.Tile.IsStart);

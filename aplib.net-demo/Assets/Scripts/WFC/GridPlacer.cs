@@ -142,7 +142,7 @@ namespace Assets.Scripts.Wfc
 
             Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
 
-            SetStartTilePropertyTrue(randomPlayerSpawn);
+            UpdateTileModel(randomPlayerSpawn);
 
             PlaceGrid();
 
@@ -197,7 +197,7 @@ namespace Assets.Scripts.Wfc
             }
         }
 
-        public static void SetStartTilePropertyTrue(Cell startTile)
+        public static void UpdateTileModel(Cell startTile)
         {
             startTile.Tile.IsStart = true;
         }
