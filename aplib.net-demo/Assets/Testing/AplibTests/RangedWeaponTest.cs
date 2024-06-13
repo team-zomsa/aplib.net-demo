@@ -73,7 +73,6 @@ namespace Testing.AplibTests
         public IEnumerator PerformCrossbowTest()
         {
             InputManager.Instance.enabled = false;
-            CameraManager.Instance.CinemachineCamera.enabled = false;
 
             // Make beliefset instance
             RangeedWeaponTestBeliefSet beliefSet = new();

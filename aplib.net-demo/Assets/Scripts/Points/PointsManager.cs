@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Manages the player's points.
 /// </summary>
-public class PointsManager
+public class PointsManager : Singleton<PointsManager>
 {
     /// <summary>
     /// Event that is invoked when points are added.
@@ -15,30 +15,9 @@ public class PointsManager
     /// <summary>
     /// The amount of points the player has.
     /// </summary>
-    [field: SerializeField]
     public int Points { get; private set; }
 
-    /// <summary>
-    /// The singleton instance of this class.
-    /// </summary>
-    public static PointsManager Instance
-    {
-        get
-        {
-            _instance ??= new PointsManager();
-            return _instance;
-        }
-    }
-
-    private static PointsManager _instance;
-
-    [SerializeField]
     private readonly int _unusedItemPoints = 5;
-
-    /// <summary>
-    /// Private constructor to prevent instantiation by other classes.
-    /// </summary>
-    private PointsManager() { }
 
     /// <summary>
     /// Grab the health from the player and add points based on the health.

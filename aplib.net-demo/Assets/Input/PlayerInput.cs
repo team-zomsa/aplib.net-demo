@@ -676,7 +676,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Open Help"",
+                    ""name"": ""OpenHelp"",
                     ""type"": ""Button"",
                     ""id"": ""2e228e74-ccf6-45ba-89e4-614e785b163d"",
                     ""expectedControlType"": ""Button"",
@@ -1144,7 +1144,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Open Help"",
+                    ""action"": ""OpenHelp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1239,7 +1239,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_ShowMouse = m_UI.FindAction("ShowMouse", throwIfNotFound: true);
         m_UI_OpenSettings = m_UI.FindAction("OpenSettings", throwIfNotFound: true);
-        m_UI_OpenHelp = m_UI.FindAction("Open Help", throwIfNotFound: true);
+        m_UI_OpenHelp = m_UI.FindAction("OpenHelp", throwIfNotFound: true);
     }
 
     public void Dispose()

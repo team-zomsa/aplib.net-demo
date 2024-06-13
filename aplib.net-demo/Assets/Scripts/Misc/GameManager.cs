@@ -2,21 +2,10 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     public event Action Paused;
     public event Action Resumed;
-
-    private static GameManager _instance;
-
-    public static GameManager Instance
-    {
-        get
-        {
-            _instance ??= new GameObject("GameManager").AddComponent<GameManager>();
-            return _instance;
-        }
-    }
 
     private void Start() => Resume();
 
@@ -38,10 +27,5 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         Resumed?.Invoke();
         if (InputManager.Instance) InputManager.Instance.EnablePlayerInput();
-    }
-
-    private void OnGUI()
-    {
-        EditorGUILayout.HelpBox("Some warning text", MessageType.Warning);
     }
 }

@@ -736,7 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f9716eb62840d28d877cd9e7c1a460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventorySize: 2
+  _equipmentInventorySize: 2
   SwitchToNewItem: 0
   <DefaultEquipment>k__BackingField:
   - {fileID: 2897604875626640375}
@@ -750,6 +750,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2939172307889739016}
+  - component: {fileID: 1964897997178561885}
   m_Layer: 7
   m_Name: PlayerRotation
   m_TagString: Untagged
@@ -775,6 +776,26 @@ Transform:
   - {fileID: 7491568851057557127}
   m_Father: {fileID: 7917368108203339192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1964897997178561885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7098545768077989620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1214bf3f98361bd4fbf4b6f85d55f6ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 0}
+  _targetName: Main Camera
+  _copyPositionX: 0
+  _copyPositionY: 0
+  _copyPositionZ: 0
+  _copyRotationX: 0
+  _copyRotationY: 1
+  _copyRotationZ: 0
 --- !u!1 &7621415753094476266
 GameObject:
   m_ObjectHideFlags: 0
