@@ -2,13 +2,13 @@ using Assets.Scripts.Doors;
 using Assets.Scripts.Tiles;
 using System.Collections.Generic;
 using System.Linq;
+using ThreadSafeRandom;
 using UnityEngine;
+using WFC;
 using static Assets.Scripts.Tiles.Direction;
-using Random = System.Random;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
-    [RequireComponent(typeof(GridPlacer))]
     [RequireComponent(typeof(SpawningExtensions))]
     public class GameObjectPlacer : MonoBehaviour
     {
@@ -49,12 +49,6 @@ namespace Assets.Scripts.Wfc
         private GameObject _endItemPrefab;
 
         /// <summary>
-        /// The material of the start room.
-        /// </summary>
-        [SerializeField]
-        private Material _startRoomMat;
-
-        /// <summary>
         /// The material of the end room.
         /// </summary>
         [SerializeField]
@@ -76,10 +70,7 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         private SpawningExtensions _spawningExtensions;
 
-        /// <summary>
-        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
-        /// </summary>
-        public void Initialize()
+        public void Awake()
         {
             if (!_doorPrefab.TryGetComponent(out Renderer doorRenderer))
                 throw new UnityException("Door prefab does not have a renderer component.");
@@ -125,10 +116,11 @@ namespace Assets.Scripts.Wfc
         /// Spawns all items in the world.
         /// </summary>
         /// <param name="cells">The cells to spawn the items in.</param>
-        /// <param name="random">The random number generator to use.</param>
         /// <exception cref="UnityException">Thrown when there are not enough empty cells to place all items.</exception>
-        public void SpawnItems(List<Cell> cells, Random random)
+        public void SpawnItems(List<Cell> cells)
         {
+            if (_spawnableItems.Items.Count == 0) return;
+
             if (_spawnableItems.Items.Select(x => x.Count).Aggregate((x, y) => x + y) > cells.Count)
                 throw new UnityException("Not enough empty cells to place all items.");
 
@@ -140,7 +132,7 @@ namespace Assets.Scripts.Wfc
 
                 for (int j = 0; j < spawnableItem.Count; j++)
                 {
-                    Cell cell = cells[random.Next(cells.Count)];
+                    Cell cell = cells[SharedRandom.Next(cells.Count)];
                     _spawningExtensions.PlacePrefab(spawnableItem.Item, cell, itemParent.transform);
                     cell.CannotAddItem = true;
                     cells.Remove(cell);
@@ -255,9 +247,6 @@ namespace Assets.Scripts.Wfc
             winPoint.transform.position = spawningPoint;
             Area winArea = winPoint.GetComponent<Area>();
             winArea.Bounds = new Bounds(spawningPoint, winArea.Bounds.extents);
-
-            // Set the colors of the start and end rooms.
-            playerSpawnCell.Tile.GameObject.GetComponent<Renderer>().material.color = _startRoomMat.color;
         }
     }
 }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b6127cdc9197ae42b9b7c028ac59472, type: 3}
-  m_Name: GridSystemItemSpawning
+  m_Name: LevelGenerationItemSpawning
   m_EditorClassIdentifier: 
   <Items>k__BackingField:
   - Item: {fileID: 1402688592469580382, guid: 18fad5aa543620b449decf03a229c586, type: 3}

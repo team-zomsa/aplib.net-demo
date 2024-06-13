@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
     /// <summary>
     /// Represents the spawnable enemies.
