@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
     /// <summary>
     /// Represents the room objects.

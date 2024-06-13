@@ -1,15 +1,16 @@
 ﻿using Assets.Scripts.Tiles;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ThreadSafeRandom;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using ConnectedComponent = System.Collections.Generic.ISet<Assets.Scripts.Wfc.Cell>;
-using Random = System.Random;
+using WFC;
+using ConnectedComponent = System.Collections.Generic.ISet<WFC.Cell>;
+using Grid = WFC.Grid;
 
-namespace Assets.Scripts.Wfc
+namespace LevelGeneration
 {
     /// <summary>
     /// Represents the grid placer. This class is responsible for placing the grid in the world. It also places the keys
@@ -17,58 +18,17 @@ namespace Assets.Scripts.Wfc
     /// </summary>
     [RequireComponent(typeof(GameObjectPlacer))]
     [RequireComponent(typeof(SpawningExtensions))]
-    [RequireComponent(typeof(EnemySpawner))]
-    public class GridPlacer : MonoBehaviour
+    public class LevelSpawner : MonoBehaviour
     {
-        /// <summary>
-        /// A boolean that indicates whether a seed is used.
-        /// </summary>
-        [SerializeField]
-        private bool _useSeed;
-
-        /// <summary>
-        /// The seed used for the random number generator.
-        /// </summary>
-        [SerializeField]
-        private int _seed;
-
-        /// <summary>
-        /// The width of the grid in the x-direction.
-        /// </summary>
-        [SerializeField]
-        private int _gridWidthX = 10;
-
-        /// <summary>
-        /// The width of the grid in the z-direction.
-        /// </summary>
-        [SerializeField]
-        private int _gridWidthZ = 10;
-
-        /// <summary>
-        /// The amount of rooms that need to be placed.
-        /// </summary>
-        [SerializeField]
-        private int _amountOfRooms = 5;
-
         /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
         private readonly Vector3 _teleporterHeightOffset = Vector3.up * .7f;
 
         /// <summary>
-        /// Represents the enemy spawner.
-        /// </summary>
-        private EnemySpawner _enemySpawner;
-
-        /// <summary>
         /// Represents the game object placer.
         /// </summary>
         private GameObjectPlacer _gameObjectPlacer;
-
-        /// <summary>
-        /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
-        /// </summary>
-        private Random _random = new();
 
         /// <summary>
         /// Represents the spawning extensions.
@@ -78,122 +38,33 @@ namespace Assets.Scripts.Wfc
         /// <summary>
         /// Represents the grid.
         /// </summary>
-        public Grid Grid { get; private set; }
+        public Grid Grid { get; set; }
 
-        /// <summary>
-        /// This contains the whole 'pipeline' of level generation, including initialising the grid and placing teleporters.
-        /// </summary>
         public void Awake()
         {
             _gameObjectPlacer = GetComponent<GameObjectPlacer>();
-            _gameObjectPlacer.Initialize();
-
             _spawningExtensions = GetComponent<SpawningExtensions>();
-            _enemySpawner = GetComponent<EnemySpawner>();
-
-            _enemySpawner.Initialize();
-
-            MakeScene();
         }
 
         /// <summary>
-        /// Waits for the specified time and then makes the scene.
-        /// </summary>
-        /// <param name="waitTime">The time to wait before making the scene.</param>
-        public void WaitBeforeMakeScene(float waitTime = 0.01f) => StartCoroutine(WaitThenMakeScene(waitTime));
-
-        /// <summary>
-        /// Spawns the enemies in the grid.
-        /// </summary>
-        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles(), _random);
-
-        /// <summary>
-        /// Waits for a certain amount of time.
-        /// </summary>
-        /// <param name="waitTime">The time to wait before making the scene.</param>
-        /// <returns>An <see cref="IEnumerator" /> that can be used to wait for a certain amount of time.</returns>
-        private IEnumerator WaitThenMakeScene(float waitTime)
-        {
-            yield return new WaitForSeconds(waitTime);
-
-            MakeScene();
-        }
-
-        /// <summary>
-        /// Makes the scene.
+        /// Makes the level.
         /// </summary>
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
-        private void MakeScene()
+        public void MakeLevel(Cell playerSpawnCell)
         {
-            if (_amountOfRooms > _gridWidthX * _gridWidthZ)
-                throw new Exception("The amount of rooms is larger than the available places in the grid.");
-
-            if (!_useSeed)
-            {
-                Random tempRandom = new();
-                _seed = tempRandom.Next();
-            }
-
-            _random = new Random(_seed);
-
-
-            Debug.Log("Seed: " + _seed);
-
-            MakeGrid();
-
             PlaceGrid();
-
-            Cell randomPlayerSpawn = Grid.GetRandomFilledCell();
-
-            _gameObjectPlacer.SetPlayerSpawn(randomPlayerSpawn);
 
             JoinConnectedComponentsWithTeleporters();
 
-            PlaceDoorsBetweenConnectedComponents(randomPlayerSpawn);
-
-            SpawnItems();
+            PlaceDoorsBetweenConnectedComponents(playerSpawnCell);
 
             GameObject environmentGameObject = GameObject.FindWithTag("Environment");
 
-            if (environmentGameObject != null)
-            {
-                NavMeshSurface navMeshSurface = environmentGameObject.GetComponent<NavMeshSurface>();
-                Debug.Log("Building navmesh...");
-                navMeshSurface.BuildNavMesh();
-            }
+            if (environmentGameObject == null) return;
 
-            SpawnEnemies();
-        }
-
-        /// <summary>
-        /// Makes the grid.
-        /// </summary>
-        private void MakeGrid()
-        {
-            Grid = new Grid(_gridWidthX, _gridWidthZ, _random);
-
-            Grid.Init();
-
-            int numberOfRooms = 0;
-
-            while (numberOfRooms < _amountOfRooms)
-            {
-                Grid.PlaceRandomRoom();
-                numberOfRooms++;
-            }
-
-            while (!Grid.IsFullyCollapsed())
-            {
-                List<Cell> lowestEntropyCells = Grid.GetLowestEntropyCells();
-
-                int index = _random.Next(lowestEntropyCells.Count);
-
-                Cell cell = lowestEntropyCells[index];
-                cell.Tile = cell.Candidates[_random.Next(cell.Candidates.Count)];
-                cell.Candidates.Clear();
-
-                Grid.RemoveUnconnectedNeighbourCandidates(cell);
-            }
+            NavMeshSurface navMeshSurface = environmentGameObject.GetComponent<NavMeshSurface>();
+            Debug.Log("Building navmesh...");
+            navMeshSurface.BuildNavMesh();
         }
 
         /// <summary>
@@ -266,7 +137,7 @@ namespace Assets.Scripts.Wfc
                 Grid.DetermineConnectedComponentsBetweenDoors();
 
             GameObject teleporters = GameObject.Find("Teleporters");
-            if (teleporters is null) throw new UnityException("No teleporters were found.");
+            if (teleporters == null) throw new UnityException("No teleporters were found.");
 
             List<Teleporter.Teleporter> teleporterList = GetAllEntryTeleporters(teleporters);
 
@@ -341,7 +212,7 @@ namespace Assets.Scripts.Wfc
             Transform parent)
         {
             List<Cell> emptyCells = GetEmptyCells(startComponent);
-            Cell itemCell = emptyCells[_random.Next(emptyCells.Count)];
+            Cell itemCell = emptyCells[SharedRandom.Next(emptyCells.Count)];
 
             if (cell1.Tile is Room room)
                 _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, itemCell, parent);
@@ -401,7 +272,7 @@ namespace Assets.Scripts.Wfc
 
             if (lastComponentCells.Count == 0) lastComponentCells = lastComponent.ToList();
 
-            Cell randomCell = lastComponentCells[_random.Next(lastComponentCells.Count)];
+            Cell randomCell = lastComponentCells[SharedRandom.Next(lastComponentCells.Count)];
             _gameObjectPlacer.PlaceEndItem(randomCell, transform);
         }
 
@@ -465,16 +336,6 @@ namespace Assets.Scripts.Wfc
             // If at least one exit portal has been placed, the final exit teleporter will not be linked to
             // another connected component, for this final exit teleporter belongs to the final connected component.
             if (connectedComponentsProcessed > 0) Destroy(previousExitTeleporter!.gameObject);
-        }
-
-        /// <summary>
-        /// Spawns the items in the grid.
-        /// </summary>
-        private void SpawnItems()
-        {
-            List<Cell> cells = Grid.GetAllCellsNotContainingItems();
-
-            _gameObjectPlacer.SpawnItems(cells, _random);
         }
     }
 }
