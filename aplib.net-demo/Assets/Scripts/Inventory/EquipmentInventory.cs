@@ -32,7 +32,7 @@ public class EquipmentInventory : MonoBehaviour
     [field: SerializeField]
     public List<Equipment> DefaultEquipment { get; set; } = new();
 
-    private int _currentEquipmentIndex = 0;
+    private int _currentEquipmentIndex;
 
     private List<Equipment> _equipmentList;
 

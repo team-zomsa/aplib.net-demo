@@ -22,12 +22,25 @@ namespace Assets.Scripts.Items
         [field: SerializeField]
         public float Duration { get; private set; } = 3f;
 
+        /// <summary>
+        /// The visual effect that plays when the player uses the rage potion.
+        /// </summary>
         [SerializeField]
         private GameObject _rageEffect;
 
+        /// <summary>
+        /// The concrete damage increase that the player receives from the rage potion.
+        /// </summary>
         private int _damageIncrease;
 
+        /// <summary>
+        /// The player object in the scene.
+        /// </summary>
         private GameObject _player;
+
+        /// <summary>
+        /// The player's equipment inventory.
+        /// </summary>
         private EquipmentInventory _playerInventory;
 
         protected override void Awake()
@@ -50,8 +63,13 @@ namespace Assets.Scripts.Items
         private IEnumerator ActivateRage()
         {
             Weapon activeWeapon = _playerInventory.CurrentEquipment as Weapon;
-            _damageIncrease = activeWeapon.Damage * DamageIncreasePercentage / 100;
+            if (activeWeapon == null)
+            {
+                Debug.LogWarning("Player does not have a weapon equipped!.");
+                yield break;
+            }
 
+            _damageIncrease = activeWeapon.Damage * DamageIncreasePercentage / 100;
             activeWeapon.Damage += _damageIncrease;
 
             // Add player visual effect as child of player

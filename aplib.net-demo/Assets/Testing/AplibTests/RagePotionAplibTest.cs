@@ -4,7 +4,6 @@ using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
 using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
 using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
@@ -12,11 +11,11 @@ using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
 using Entities.Weapons;
 using NUnit.Framework;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
 
 namespace Testing.AplibTests
 {
@@ -63,16 +62,15 @@ namespace Testing.AplibTests
         public Belief<GameObject, bool> PotionExists = new(GameObject.Find("RagePotion"), x => x != null && x.activeSelf && x.activeInHierarchy);
     }
 
-    public class RagePotionAblibTest
+    public class RagePotionAplibTest
     {
         private int _increasedDamage;
         private int _startDamage;
-        private int _enemyStartHealth;
 
         [SetUp]
         public void SetUp()
-        {
-            Debug.Log("Starting test RagePotionAplibTest");
+        {            
+            Debug.Log($"Starting test {nameof(RagePotionAplibTest)}");
             SceneManager.LoadScene("RagePotionTestScene");
         }
 
@@ -84,15 +82,12 @@ namespace Testing.AplibTests
         public IEnumerator PerformRagePotionAplibTest()
         {
             InputManager.Instance.enabled = false;
-            var beliefSet = new RagePotionBeliefSet();
+            RagePotionBeliefSet ragePotionBeliefSet = new RagePotionBeliefSet();
 
             // Calculate the expected damage increase
-            int _damageIncreasePercentage = beliefSet.RagePotion.Observation.DamageIncreasePercentage;
-            _startDamage = beliefSet.PlayerWeapon.Observation.Damage;
-            _increasedDamage = _startDamage + _startDamage * _damageIncreasePercentage / 100;
-
-            // Grab the enemy's health at the start
-            _enemyStartHealth = beliefSet.TargetDummyHealth.Observation;
+            int damageIncreasePercentage = ragePotionBeliefSet.RagePotion.Observation.DamageIncreasePercentage;
+            _startDamage = ragePotionBeliefSet.PlayerWeapon.Observation.Damage;
+            _increasedDamage = _startDamage + _startDamage * damageIncreasePercentage / 100;
 
             // Action: Create an action that moves towards the potion
             TransformPathfinderAction<RagePotionBeliefSet> moveToPotionAction = new(
@@ -109,23 +104,23 @@ namespace Testing.AplibTests
             );
 
             // Action: Use current inventory item (health potion).
-            Aplib.Core.Intent.Actions.Action<RagePotionBeliefSet> activateInventoryItem = new(b => b.InventoryObject.Observation.ActivateItem());
+            Action<RagePotionBeliefSet> activateInventoryItem = new(b => b.InventoryObject.Observation.ActivateItem());
             // Action: Attack the enemy, when at its position
-            Aplib.Core.Intent.Actions.Action<RagePotionBeliefSet> useWeaponAction = new(b => b.PlayerWeapon.Observation.UseWeapon());
+            Action<RagePotionBeliefSet> useWeaponAction = new(b => b.PlayerWeapon.Observation.UseWeapon());
             PrimitiveTactic<RagePotionBeliefSet> useWeaponTactic = new(useWeaponAction, AtEnemyPositionPredicate);
             FirstOfTactic<RagePotionBeliefSet> attackEnemyTactic = new(useWeaponTactic, moveToEnemyAction.Lift());
 
             // Goals: Reach the target position and use the rage potion.
-            Goal<RagePotionBeliefSet> PotionPickedUpGoal = new(moveToPotionAction.Lift(), PotionPickedupPredicate);
-            Goal<RagePotionBeliefSet> DamageIncreasedGoal = new(activateInventoryItem.Lift(), DamageIncreasedPredicate);
+            Goal<RagePotionBeliefSet> potionPickedUpGoal = new(moveToPotionAction.Lift(), PotionPickedUpPredicate);
+            Goal<RagePotionBeliefSet> damageIncreasedGoal = new(activateInventoryItem.Lift(), DamageIncreasedPredicate);
             // Goal: The enemy should take increased damage from the player
-            Goal<RagePotionBeliefSet> EnemyTookIncreasedDamageGoal = new(attackEnemyTactic, EnemyTookIncreasedDamagePredicate);
+            Goal<RagePotionBeliefSet> enemyTookIncreasedDamageGoal = new(attackEnemyTactic, EnemyTookIncreasedDamagePredicate);
 
             // Desire: Reach the target position and use the rage potion.
-            DesireSet<RagePotionBeliefSet> desire = Combinators.Seq(PotionPickedUpGoal.Lift(), DamageIncreasedGoal.Lift(), EnemyTookIncreasedDamageGoal.Lift());
+            DesireSet<RagePotionBeliefSet> desire = Seq(potionPickedUpGoal.Lift(), damageIncreasedGoal.Lift(), enemyTookIncreasedDamageGoal.Lift());
 
             // Create a new agent with the goal.
-            BdiAgent<RagePotionBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent<RagePotionBeliefSet> agent = new(ragePotionBeliefSet, desire);
 
             AplibRunner runner = new(agent);
 
@@ -134,10 +129,10 @@ namespace Testing.AplibTests
             yield return runner.Test();
 
             // Assert that the agent has completed the goal.
-            Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);
+            Assert.AreEqual(CompletionStatus.Success, agent.Status);
             yield break;
 
-            bool PotionPickedupPredicate(RagePotionBeliefSet beliefSet)
+            bool PotionPickedUpPredicate(RagePotionBeliefSet beliefSet)
             {
                 // The potion is in the player's inventory
                 bool potionExists = beliefSet.PotionExists;

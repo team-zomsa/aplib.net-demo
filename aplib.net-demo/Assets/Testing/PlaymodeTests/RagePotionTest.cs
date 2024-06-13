@@ -1,7 +1,6 @@
 using Assets.Scripts.Items;
 using Entities.Weapons;
 using NUnit.Framework;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +11,7 @@ public class RagePotionTest
     [SetUp]
     public void SetUp()
     {
-        Debug.Log("Starting test RagePotionTest");
+        Debug.Log($"Starting test {nameof(RagePotionTest)}");
         SceneManager.LoadScene("RagePotionTestScene");
     }
 
@@ -23,9 +22,9 @@ public class RagePotionTest
     public IEnumerator RagePotionDoublesDamage()
     {
         // Get the player object
-        var player = GameObject.Find("Player");
+        GameObject player = GameObject.Find("Player");
         EquipmentInventory equipmentInventory = player.GetComponentInChildren<EquipmentInventory>();
-        Weapon activeWeapon = equipmentInventory.CurrentEquipment as Weapon;
+        Weapon activeWeapon = (equipmentInventory.CurrentEquipment as Weapon)!;
 
         // Get the rage potion
         GameObject ragePotionObj = GameObject.Find("RagePotion");
@@ -41,7 +40,7 @@ public class RagePotionTest
         yield return null;
 
         // Check if the player's damage has increased
-        Assert.AreEqual(activeWeapon.Damage, expectedDamage);
+        Assert.AreEqual(expectedDamage, activeWeapon.Damage);
     }
 
     /// <summary>
@@ -51,9 +50,9 @@ public class RagePotionTest
     public IEnumerator ReturnsToNormalAfterTimer()
     {
         // Get the player object
-        var player = GameObject.Find("Player");
+        GameObject player = GameObject.Find("Player");
         EquipmentInventory equipmentInventory = player.GetComponentInChildren<EquipmentInventory>();
-        Weapon activeWeapon = equipmentInventory.CurrentEquipment as Weapon;
+        Weapon activeWeapon = (equipmentInventory.CurrentEquipment as Weapon)!;
         int playerDamageBefore = activeWeapon.Damage;
 
         // Get the rage potion
@@ -62,12 +61,12 @@ public class RagePotionTest
 
         // Use the rage potion
         ragePotion.GetComponent<RagePotion>().UseItem();
-        Debug.Log("rage potion duration: " + ragePotion.Duration);
+        Debug.Log("Rage potion duration: " + ragePotion.Duration);
 
         // Wait for the timer to finish
         yield return new WaitForSeconds(ragePotion.Duration);
 
         // Check if the player's damage has returned to normal
-        Assert.AreEqual(activeWeapon.Damage, playerDamageBefore);
+        Assert.AreEqual(playerDamageBefore, activeWeapon.Damage);
     }
 }
