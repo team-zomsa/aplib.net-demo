@@ -28,7 +28,6 @@ public class PointsManager
             _instance ??= new PointsManager();
             return _instance;
         }
-        private set => _instance = value;
     }
 
     private static PointsManager _instance;

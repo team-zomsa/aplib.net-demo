@@ -1,25 +1,21 @@
+using System;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public event Action Paused;
+    public event Action Resumed;
+
     private static GameManager _instance;
 
     public static GameManager Instance
     {
         get
         {
-            if (_instance == null) Debug.LogError("Game Manager is null, awake it first!");
-
+            _instance ??= new GameObject("GameManager").AddComponent<GameManager>();
             return _instance;
         }
-    }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-            Destroy(gameObject);
-        else
-            _instance = this;
     }
 
     private void Start() => Resume();
@@ -30,6 +26,7 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0;
+        Paused?.Invoke();
         if (InputManager.Instance) InputManager.Instance.DisablePlayerInput();
     }
 
@@ -39,6 +36,12 @@ public class GameManager : MonoBehaviour
     public void Resume()
     {
         Time.timeScale = 1;
+        Resumed?.Invoke();
         if (InputManager.Instance) InputManager.Instance.EnablePlayerInput();
+    }
+
+    private void OnGUI()
+    {
+        EditorGUILayout.HelpBox("Some warning text", MessageType.Warning);
     }
 }
