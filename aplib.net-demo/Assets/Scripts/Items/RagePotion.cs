@@ -10,26 +10,44 @@ namespace Assets.Scripts.Items
     [RequireComponent(typeof(PickupableItem))]
     public class RagePotion : Item
     {
+        /// <summary>
+        /// The percentage increase of the player's damage.
+        /// </summary>
+        [field: SerializeField]
+        public int DamageIncreasePercentage { get; private set; } = 100;
+
+        /// <summary>
+        /// The duration of the rage potion effect in seconds.
+        /// </summary>
+        [field: SerializeField]
+        public float Duration { get; private set; } = 3f;
+
+        /// <summary>
+        /// The visual effect that plays when the player uses the rage potion.
+        /// </summary>
         [SerializeField]
         private GameObject _rageEffect;
 
-        [SerializeField]
-        private int _damageIncreasePercentage = 50;
-
+        /// <summary>
+        /// The concrete damage increase that the player receives from the rage potion.
+        /// </summary>
         private int _damageIncrease;
 
-        [SerializeField]
-        private float _duration = 3; // In seconds
-
+        /// <summary>
+        /// The player object in the scene.
+        /// </summary>
         private GameObject _player;
-        private Weapon _playerWeapon;
+
+        /// <summary>
+        /// The player's equipment inventory.
+        /// </summary>
+        private EquipmentInventory _playerInventory;
 
         protected override void Awake()
         {
             base.Awake();
             _player = GameObject.FindGameObjectWithTag("Player");
-            _playerWeapon = _player.GetComponentInChildren<Weapon>();
-            _damageIncrease = _playerWeapon.Damage * _damageIncreasePercentage / 100;
+            _playerInventory = _player.GetComponentInChildren<EquipmentInventory>();
         }
 
         /// <summary>
@@ -44,14 +62,22 @@ namespace Assets.Scripts.Items
 
         private IEnumerator ActivateRage()
         {
-            _playerWeapon.Damage += _damageIncrease;
+            Weapon activeWeapon = _playerInventory.CurrentEquipment as Weapon;
+            if (activeWeapon == null)
+            {
+                Debug.LogWarning("Player does not have a weapon equipped!.");
+                yield break;
+            }
+
+            _damageIncrease = activeWeapon.Damage * DamageIncreasePercentage / 100;
+            activeWeapon.Damage += _damageIncrease;
 
             // Add player visual effect as child of player
             GameObject rageEffect = Instantiate(_rageEffect, _player.transform);
 
-            yield return new WaitForSeconds(_duration);
+            yield return new WaitForSeconds(Duration);
 
-            _playerWeapon.Damage -= _damageIncrease;
+            activeWeapon.Damage -= _damageIncrease;
 
             // Remove player visual effect
             Destroy(rageEffect);
