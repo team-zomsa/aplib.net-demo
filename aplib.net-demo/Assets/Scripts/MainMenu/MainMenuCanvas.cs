@@ -27,6 +27,32 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     [SerializeField]
     private string _gameSceneName = "GridSystem";
 
+    /// <summary>
+    /// Show/hide the help screen.
+    /// </summary>
+    public void ToggleHelp() => ToggleCanvas(HelpCanvas);
+
+    /// <summary>
+    /// Show/hide the help screen.
+    /// </summary>
+    public void ToggleSettings()
+    {
+        if (IsActive(HelpCanvas)) return;
+
+        ToggleCanvas(SettingCanvas);
+        ToggleCanvas(MenuCanvas);
+    }
+
+    /// <summary>
+    /// Load the game scene.
+    /// </summary>
+    public void PlayGame() => SceneManager.LoadScene(_gameSceneName);
+
+    /// <summary>
+    /// Quit the application.
+    /// </summary>
+    public void QuitApplication() => Application.Quit();
+
     private void Start()
     {
         HideAllCanvases();
@@ -57,12 +83,21 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     private void HideCanvas(GameObject canvas) => canvas.SetActive(false);
 
     /// <summary>
-    /// Load the game scene.
+    /// Show/hide the canvas.
     /// </summary>
-    public void PlayGame() => SceneManager.LoadScene(_gameSceneName);
+    /// <param name="canvas">The canvas to toggle.</param>
+    private void ToggleCanvas(GameObject canvas)
+    {
+        if (IsActive(canvas))
+            HideCanvas(canvas);
+        else
+            ShowCanvas(canvas);
+    }
 
     /// <summary>
-    /// Quit the application.
+    /// Check if the canvas is active.
     /// </summary>
-    public void QuitApplication() => Application.Quit();
+    /// <param name="canvas">The canvas to check.</param>
+    /// <returns>True if the canvas is active, false otherwise.</returns>
+    private bool IsActive(GameObject canvas) => canvas && canvas.activeSelf;
 }

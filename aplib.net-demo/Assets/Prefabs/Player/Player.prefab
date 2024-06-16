@@ -223,7 +223,6 @@ GameObject:
   - component: {fileID: 9165691413317462978}
   - component: {fileID: 2849797845681186798}
   - component: {fileID: 6254012458074700434}
-  - component: {fileID: 5406434194941833880}
   - component: {fileID: 8680734376277569563}
   - component: {fileID: 4639094785897223686}
   - component: {fileID: 4120109883158613966}
@@ -311,37 +310,6 @@ CapsuleCollider:
   m_Height: 1.9
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5406434194941833880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3350569462782925553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 181079df28ea48f47b289ef2760436f4,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &8680734376277569563
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -568,7 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72fc9e12715db454a865b9ad24e83cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnOnDeath: 1
+  _respawnOnDeath: 1
 --- !u!114 &7549273605602703630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,6 +773,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8761273527994894327}
+  - component: {fileID: 8839586451289678945}
   m_Layer: 7
   m_Name: CamFollow
   m_TagString: Untagged
@@ -827,6 +796,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6027258894572874222}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8839586451289678945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621415753094476266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c9494de1c8610c4d95c9cb39b0a62c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3908776566567757388
 PrefabInstance:
   m_ObjectHideFlags: 0
