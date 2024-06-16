@@ -9,7 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(RespawnableComponent))]
 public class PlayerLogic : MonoBehaviour
 {
-    [SerializeField] public bool respawnOnDeath = true;
+    [SerializeField]
+    private bool _respawnOnDeath = true;
     private HealthComponent _healthComponent;
     private RespawnableComponent _respawnableComponent;
 
@@ -42,7 +43,7 @@ public class PlayerLogic : MonoBehaviour
     /// <param name="healthComponent">The health component of the player.</param>.
     private void OnDeath(HealthComponent healthComponent)
     {
-        if (respawnOnDeath) _respawnableComponent.Respawn();
+        if (_respawnOnDeath) _respawnableComponent.Respawn();
     }
 
     private void OnDestroy()

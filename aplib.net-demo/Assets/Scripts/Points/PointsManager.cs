@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -15,9 +18,11 @@ public class PointsManager : Singleton<PointsManager>
     /// <summary>
     /// The amount of points the player has.
     /// </summary>
-    public int Points { get; private set; }
+    public int Points { get; private set; } = 0;
 
     private readonly int _unusedItemPoints = 5;
+
+    private void Start() => GameManager.Instance.GameWon += AddPointsOnGameEnd;
 
     /// <summary>
     /// Grab the health from the player and add points based on the health.
@@ -32,7 +37,7 @@ public class PointsManager : Singleton<PointsManager>
         Inventory inventory = GameObject.Find("InventoryObject").GetComponent<Inventory>();
         AddPoints(inventory.UnusedItems() * _unusedItemPoints);
 
-        CanvasManager.Instance.SetPointsText(Points);
+        DisplayPoints();
     }
 
     /// <summary>
@@ -43,5 +48,12 @@ public class PointsManager : Singleton<PointsManager>
     {
         Points += points;
         PointsAdded?.Invoke(Points);
+    }
+
+    private void DisplayPoints()
+    {
+        List<TextMeshProUGUI> textMeshes = GameCanvas.Instance.WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
+        pointsText.text = "Points: " + Points;
     }
 }

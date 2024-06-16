@@ -6,8 +6,6 @@ using UnityEngine.Rendering;
 public abstract class Singleton<T> : MonoBehaviour
     where T : MonoBehaviour
 {
-    private static T _instance;
-
     /// <summary>
     /// The instance of the singleton.
     /// </summary>
@@ -19,6 +17,8 @@ public abstract class Singleton<T> : MonoBehaviour
             return _instance;
         }
     }
+
+    private static T _instance;
 
     protected virtual void Awake()
     {
@@ -32,6 +32,4 @@ public abstract class Singleton<T> : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    protected virtual void OnDestroy() { if (this == _instance) { _instance = null; } }
 }

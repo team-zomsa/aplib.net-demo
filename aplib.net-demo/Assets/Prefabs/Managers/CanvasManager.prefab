@@ -340,9 +340,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: OnToggleHelp
+      - m_Target: {fileID: 1599440691516525195}
+        m_TargetAssemblyTypeName: GameCanvas, Scripts
+        m_MethodName: ToggleHelp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1390,7 +1390,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5566602604141901278}
-  - component: {fileID: 2927779827687187048}
+  - component: {fileID: 1599440691516525195}
   m_Layer: 0
   m_Name: CanvasManager
   m_TagString: Untagged
@@ -1419,7 +1419,7 @@ Transform:
   - {fileID: 2257016394817159726}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2927779827687187048
+--- !u!114 &1599440691516525195
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1428,16 +1428,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2692948665137110715}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50b98af11f29651428432a585b7006d8, type: 3}
+  m_Script: {fileID: 11500000, guid: a3c8068f25db8654787bf00bd2637f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MenuCanvas: {fileID: 3908540160533036337}
-  SettingCanvas: {fileID: 5618183491702999539}
   GameOverCanvas: {fileID: 110503855823897790}
-  HelpCanvas: {fileID: 3661982244554271762}
   WinScreenCanvas: {fileID: 2834902491686029789}
-  _sceneNameStartingMenu: Settings
-  _sceneNameGame: LevelGeneration
+  SettingCanvas: {fileID: 5618183491702999539}
+  HelpCanvas: {fileID: 3661982244554271762}
+  _mainMenuSceneName: Settings
 --- !u!1 &2733420268660679136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1941,9 +1939,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: OnToggleSettings
+      - m_Target: {fileID: 1599440691516525195}
+        m_TargetAssemblyTypeName: GameCanvas, Scripts
+        m_MethodName: ToggleSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2342,7 +2340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5250834787524431622
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2549,9 +2547,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: Quit
+      - m_Target: {fileID: 1599440691516525195}
+        m_TargetAssemblyTypeName: GameCanvas, Scripts
+        m_MethodName: ToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3274,9 +3272,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: ToMenu
+      - m_Target: {fileID: 1599440691516525195}
+        m_TargetAssemblyTypeName: GameCanvas, Scripts
+        m_MethodName: ToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3722,7 +3720,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CanvasManager, Scripts
         m_MethodName: PlayGame
         m_Mode: 1
@@ -4340,7 +4338,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CanvasManager, Scripts
         m_MethodName: OnToggleSettings
         m_Mode: 1
@@ -4362,7 +4360,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6438643683501964207}
   - component: {fileID: 1426895855208048944}
-  - component: {fileID: 6269719487748913879}
+  - component: {fileID: 3690724743703595757}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -4400,7 +4398,7 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!114 &6269719487748913879
+--- !u!114 &3690724743703595757
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4409,17 +4407,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 6254847958362901760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_PointAction: {fileID: 3982260799059545167, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_MoveAction: {fileID: -8808721619698399779, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_SubmitAction: {fileID: 2184853204280379289, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_CancelAction: {fileID: 7813318573876567638, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_LeftClickAction: {fileID: 8500960901172447570, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_MiddleClickAction: {fileID: 6202084661030051689, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_RightClickAction: {fileID: 3691478471880395736, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_ScrollWheelAction: {fileID: 4798528241938243449, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: -1320383619751843757, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: -1243774612257378091, guid: e81041271c23b1d4d95745d7fc9491b8,
+    type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &6402721380012369070
 GameObject:
   m_ObjectHideFlags: 0
@@ -4876,9 +4895,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: Quit
+      - m_Target: {fileID: 1599440691516525195}
+        m_TargetAssemblyTypeName: GameCanvas, Scripts
+        m_MethodName: ToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5689,7 +5708,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CanvasManager, Scripts
         m_MethodName: Quit
         m_Mode: 1
@@ -5822,9 +5841,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2927779827687187048}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: OnToggleHelp
+      - m_Target: {fileID: 1599440691516525195}
+        m_TargetAssemblyTypeName: GameCanvas, Scripts
+        m_MethodName: ToggleHelp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

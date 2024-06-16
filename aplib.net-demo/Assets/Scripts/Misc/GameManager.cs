@@ -7,6 +7,9 @@ public class GameManager : Singleton<GameManager>
     public event Action Paused;
     public event Action Resumed;
 
+    public event Action GameOver;
+    public event Action GameWon;
+
     private void Start() => Resume();
 
     /// <summary>
@@ -14,9 +17,10 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Pause()
     {
+        if (Time.timeScale == 0) return;
+
         Time.timeScale = 0;
         Paused?.Invoke();
-        if (InputManager.Instance) InputManager.Instance.DisablePlayerInput();
     }
 
     /// <summary>
@@ -24,8 +28,21 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Resume()
     {
+        if (Time.timeScale == 1) return;
+
         Time.timeScale = 1;
         Resumed?.Invoke();
-        if (InputManager.Instance) InputManager.Instance.EnablePlayerInput();
+    }
+
+    public void TriggerGameOver()
+    {
+        Pause();
+        GameOver?.Invoke();
+    }
+
+    public void TriggerGameWon()
+    {
+        Pause();
+        GameWon?.Invoke();
     }
 }

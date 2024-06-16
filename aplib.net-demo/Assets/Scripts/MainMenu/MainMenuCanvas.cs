@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEngine.InputSystem.InputSettings;
 
 public class MainMenuCanvas : Singleton<MainMenuCanvas>
@@ -20,7 +21,6 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     /// </summary>
     public GameObject HelpCanvas;
 
-
     /// <summary>
     /// Name of the game scene.
     /// </summary>
@@ -29,17 +29,40 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
 
     private void Start()
     {
-        SetAllCanvasesToInactive();
-        MenuCanvas.SetActive(true);
+        HideAllCanvases();
+
+        ShowCanvas(MenuCanvas);
     }
 
     /// <summary>
-    /// Sets all UI canvases to false.
+    /// Disable all canvases.
     /// </summary>
-    private void SetAllCanvasesToInactive()
+    private void HideAllCanvases()
     {
-        MenuCanvas.SetActive(false);
-        SettingCanvas.SetActive(false);
-        HelpCanvas.SetActive(false);
+        HideCanvas(MenuCanvas);
+        HideCanvas(SettingCanvas);
+        HideCanvas(HelpCanvas);
     }
+
+    /// <summary>
+    /// Show the canvas.
+    /// </summary>
+    /// <param name="canvas">The canvas to show.</param>
+    private void ShowCanvas(GameObject canvas) => canvas.SetActive(true);
+
+    /// <summary>
+    /// Hide the canvas.
+    /// </summary>
+    /// <param name="canvas">The canvas to hide.</param>
+    private void HideCanvas(GameObject canvas) => canvas.SetActive(false);
+
+    /// <summary>
+    /// Load the game scene.
+    /// </summary>
+    public void PlayGame() => SceneManager.LoadScene(_gameSceneName);
+
+    /// <summary>
+    /// Quit the application.
+    /// </summary>
+    public void QuitApplication() => Application.Quit();
 }

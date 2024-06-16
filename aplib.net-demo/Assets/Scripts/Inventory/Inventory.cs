@@ -40,6 +40,18 @@ public class Inventory : MonoBehaviour
         DisplayItem();
     }
 
+    private void OnEnable()
+    {
+        InputManager.Instance.UsedItem += ActivateItem;
+        InputManager.Instance.SwitchedItem += SwitchItem;
+    }
+
+    private void OnDisable()
+    {
+        InputManager.Instance.UsedItem -= ActivateItem;
+        InputManager.Instance.SwitchedItem -= SwitchItem;
+    }
+
     /// <summary>
     /// Converts queue to list to check if there are any items with matching names.
     /// If there are it checks if they are stackable and adds uses. If they are not it does nothing.

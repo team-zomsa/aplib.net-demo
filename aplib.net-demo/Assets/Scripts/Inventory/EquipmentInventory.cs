@@ -55,36 +55,6 @@ public class EquipmentInventory : MonoBehaviour
     /// </value>
     public Equipment CurrentEquipment => _equipmentList[_currentEquipmentIndex];
 
-    private void Start()
-    {
-        // Link to the input manager
-        InputManager.Instance.equipmentInventory = this;
-
-        // If the default equipment is empty, add the default equipment to the equipment list.
-        // This is to ensure backward compatibility with the previous implementation.
-        if (DefaultEquipment?.Count <= 0)
-        {
-            Debug.LogWarning(
-                "Default equipment is empty! Rolling back to obsolete implementation.\n "
-                + "Make sure to set the default equipment in the inspector."
-            );
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-
-            if (playerObject)
-            {
-                DefaultEquipment = new List<Equipment>(playerObject.transform.GetComponentsInChildren<Equipment>());
-            }
-        }
-
-        _equipmentList = DefaultEquipment.ToList();
-
-        // Set every equipment item to be inactive, except the first one.
-        for (int i = 1; i < _equipmentList.Count; i++)
-        {
-            _equipmentList[i].gameObject.SetActive(false);
-        }
-    }
-
     /// <summary>
     /// Equip the specified equipment item to the EquipmentInventory.
     /// </summary>
@@ -148,5 +118,54 @@ public class EquipmentInventory : MonoBehaviour
     {
         int newIndex = (_currentEquipmentIndex - 1 + _equipmentList.Count) % _equipmentList.Count;
         SwitchEquipment(newIndex);
+    }
+
+    /// <summary>
+    /// Tries to use the currently equipped equipment item.
+    /// </summary>
+    public void TryUseEquipment()
+    {
+        if (HasItems) CurrentEquipment.UseEquipment();
+    }
+
+    private void Start()
+    {
+        // If the default equipment is empty, add the default equipment to the equipment list.
+        // This is to ensure backward compatibility with the previous implementation.
+        if (DefaultEquipment?.Count <= 0)
+        {
+            Debug.LogWarning(
+                "Default equipment is empty! Rolling back to obsolete implementation.\n "
+                + "Make sure to set the default equipment in the inspector."
+            );
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+            if (playerObject)
+            {
+                DefaultEquipment = new List<Equipment>(playerObject.transform.GetComponentsInChildren<Equipment>());
+            }
+        }
+
+        _equipmentList = DefaultEquipment.ToList();
+
+        // Set every equipment item to be inactive, except the first one.
+        for (int i = 1; i < _equipmentList.Count; i++)
+        {
+            _equipmentList[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void OnEnable()
+    {
+        InputManager.Instance.NextItem += MoveNext;
+        InputManager.Instance.PreviousItem += MovePrevious;
+        InputManager.Instance.Fired += TryUseEquipment;
+    }
+
+    private void OnDisable()
+    {
+        InputManager.Instance.NextItem -= MoveNext;
+        InputManager.Instance.PreviousItem -= MovePrevious;
+        InputManager.Instance.Fired -= TryUseEquipment;
     }
 }
