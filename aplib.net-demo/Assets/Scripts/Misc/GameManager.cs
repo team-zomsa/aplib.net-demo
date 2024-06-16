@@ -1,16 +1,27 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    /// <summary>
+    /// Event triggered when the game is paused.
+    /// </summary>
     public event Action Paused;
+
+    /// <summary>
+    /// Event triggered when the game is resumed.
+    /// </summary>
     public event Action Resumed;
 
+    /// <summary>
+    /// Event triggered when the game is lost.
+    /// </summary>
     public event Action GameOver;
-    public event Action GameWon;
 
-    private void Start() => Resume();
+    /// <summary>
+    /// Event triggered when the game is won.
+    /// </summary>
+    public event Action GameWon;
 
     /// <summary>
     /// Pause the game and disable player input.
@@ -34,15 +45,23 @@ public class GameManager : Singleton<GameManager>
         Resumed?.Invoke();
     }
 
+    /// <summary>
+    /// Trigger the game over event and pause the game.
+    /// </summary>
     public void TriggerGameOver()
     {
         Pause();
         GameOver?.Invoke();
     }
 
+    /// <summary>
+    /// Trigger the game won event and pause the game.
+    /// </summary>
     public void TriggerGameWon()
     {
         Pause();
         GameWon?.Invoke();
     }
+
+    private void Start() => Resume();
 }

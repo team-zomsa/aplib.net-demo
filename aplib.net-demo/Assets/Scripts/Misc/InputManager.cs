@@ -1,10 +1,6 @@
-using Entities;
-using Entities.Weapons;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class InputManager : Singleton<InputManager>, PlayerInput.IPlayerActions, UiInput.IUIActions
 {
