@@ -8,6 +8,8 @@ public class SetAsCamFollow : MonoBehaviour
     private void Awake()
     {
         CinemachineVirtualCamera cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        cinemachineVirtualCamera.Follow = transform;
+
+        if (cinemachineVirtualCamera) cinemachineVirtualCamera.Follow = transform;
+        else Debug.LogWarning("No CinemachineVirtualCamera found in scene.");
     }
 }

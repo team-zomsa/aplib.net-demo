@@ -41,7 +41,7 @@ namespace Testing.AplibTests
         /// <summary>
         /// The player object in the scene.
         /// </summary>
-        public Belief<GameObject, GameObject> Player = new(GameObject.Find("PlayerPhysics"), x => x);
+        public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player"), x => x);
     }
 
     public class MeleeAplibTest
@@ -56,7 +56,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformMeleeTest()
         {
-            InputManager.Instance.enabled = false;
             MeleeBeliefSet beliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.
