@@ -36,7 +36,7 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     public void ToggleHelp() => ToggleCanvas(HelpCanvas);
 
     /// <summary>
-    /// Show/hide the help screen.
+    /// Show/hide the settings screen.
     /// </summary>
     public void ToggleSettings()
     {

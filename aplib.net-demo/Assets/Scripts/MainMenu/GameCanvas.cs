@@ -28,7 +28,7 @@ public class GameCanvas : Singleton<GameCanvas>
     public GameObject HelpCanvas { get; set; }
 
     /// <summary>
-    /// Name of the game scene.
+    /// Name of the main menu scene.
     /// </summary>
     [SerializeField]
     private string _mainMenuSceneName = "Settings";
@@ -62,7 +62,7 @@ public class GameCanvas : Singleton<GameCanvas>
     }
 
     /// <summary>
-    /// Show/hide the help screen.
+    /// Show/hide the settings screen.
     /// </summary>
     public void ToggleSettings()
     {
