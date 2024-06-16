@@ -2931,9 +2931,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844d45a607736464ea533cbf1fa4e5c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MenuCanvas: {fileID: 7256154818529251779}
-  SettingCanvas: {fileID: 8850857855294376426}
-  HelpCanvas: {fileID: 3069214172859994610}
+  <MenuCanvas>k__BackingField: {fileID: 7256154818529251779}
+  <SettingCanvas>k__BackingField: {fileID: 8850857855294376426}
+  <HelpCanvas>k__BackingField: {fileID: 3069214172859994610}
   _gameSceneName: LevelGeneration
 --- !u!1 &6839856199291216359
 GameObject:

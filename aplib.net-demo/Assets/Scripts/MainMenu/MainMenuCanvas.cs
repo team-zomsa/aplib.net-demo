@@ -9,17 +9,20 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     /// <summary>
     /// Reference to the menu canvas.
     /// </summary>
-    public GameObject MenuCanvas;
+    [field: SerializeField]
+    public GameObject MenuCanvas { get; set; }
 
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject SettingCanvas;
+    [field: SerializeField]
+    public GameObject SettingCanvas { get; set; }
 
     /// <summary>
     /// Reference to the help/keybinds canvas.
     /// </summary>
-    public GameObject HelpCanvas;
+    [field: SerializeField]
+    public GameObject HelpCanvas { get; set; }
 
     /// <summary>
     /// Name of the game scene.

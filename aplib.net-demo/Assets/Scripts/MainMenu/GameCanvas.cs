@@ -6,22 +6,26 @@ public class GameCanvas : Singleton<GameCanvas>
     /// <summary>
     /// Reference to the game over canvas.
     /// </summary>
-    public GameObject GameOverCanvas;
+    [field: SerializeField]
+    public GameObject GameOverCanvas { get; set; }
 
     /// <summary>
     /// Reference to the win screen.
     /// </summary>
-    public GameObject WinScreenCanvas;
+    [field: SerializeField]
+    public GameObject WinScreenCanvas { get; set; }
 
     /// <summary>
     /// Reference to the settings canvas of the menu.
     /// </summary>
-    public GameObject SettingCanvas;
+    [field: SerializeField]
+    public GameObject SettingCanvas { get; set; }
 
     /// <summary>
     /// Reference to the help/keybinds canvas.
     /// </summary>
-    public GameObject HelpCanvas;
+    [field: SerializeField]
+    public GameObject HelpCanvas { get; set; }
 
     /// <summary>
     /// Name of the game scene.

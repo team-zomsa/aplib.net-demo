@@ -3929,10 +3929,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3c8068f25db8654787bf00bd2637f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameOverCanvas: {fileID: 3733340852750280802}
-  WinScreenCanvas: {fileID: 7448306570150628019}
-  SettingCanvas: {fileID: 8454609203628569324}
-  HelpCanvas: {fileID: 1351312531985874476}
+  <GameOverCanvas>k__BackingField: {fileID: 3733340852750280802}
+  <WinScreenCanvas>k__BackingField: {fileID: 7448306570150628019}
+  <SettingCanvas>k__BackingField: {fileID: 8454609203628569324}
+  <HelpCanvas>k__BackingField: {fileID: 1351312531985874476}
   _mainMenuSceneName: Settings
 --- !u!1 &8290929961102895836
 GameObject:
