@@ -64,7 +64,7 @@ public class RagePotionTest
         Debug.Log("Rage potion duration: " + ragePotion.Duration);
 
         // Wait for the timer to finish
-        yield return new WaitForSeconds(ragePotion.Duration);
+        yield return new WaitForSeconds(ragePotion.Duration + 0.01f);
 
         // Check if the player's damage has returned to normal
         Assert.AreEqual(playerDamageBefore, activeWeapon.Damage);
