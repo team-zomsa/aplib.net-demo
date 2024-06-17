@@ -17,7 +17,7 @@ public class WeaponAnimateTest
         var player = GameObject.Find("PlayerAnimated");
         RangedWeapon crossbow = player.GetComponentInChildren<RangedWeapon>();
 
-        bool canBeAnimated = crossbow.CanAnimate();
+        bool canBeAnimated = crossbow.CanFire();
 
         // Check if the crossbow can be animated
         Assert.IsTrue(canBeAnimated);

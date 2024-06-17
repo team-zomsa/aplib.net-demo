@@ -115,6 +115,6 @@ namespace Entities.Weapons
         /// <summary>
         /// Check if the weapon has enough ammunition to be used and thus animated.
         /// </summary>
-        public override bool CanAnimate() => !_ammoPouch.IsEmpty();
+        public override bool CanFire() => !_ammoPouch.IsEmpty();
     }
 }

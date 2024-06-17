@@ -71,7 +71,7 @@ public class InputManager : MonoBehaviour
                 equipmentInventory.CurrentEquipment.UseEquipment();
 
                 if (equipmentInventory.CurrentEquipment is Weapon weapon)
-                    if (weapon.CanAnimate())
+                    if (weapon.CanFire())
                         _playerAnimator.SetTrigger("PlayerAttack");
             }
         };

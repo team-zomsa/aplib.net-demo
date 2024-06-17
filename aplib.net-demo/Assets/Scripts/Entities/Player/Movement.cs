@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EntitySound))]
 [RequireComponent(typeof(Timer))]
-[RequireComponent(typeof(Animator))]
+// [RequireComponent(typeof(Animator))]
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float _maxSpeedGround = 7;
