@@ -26,6 +26,7 @@ public class InputManager : MonoBehaviour
     private PlayerInput.PlayerActions _playerActions;
     private Movement _playerMovement;
     private PlayerInput.UIActions _uiActions;
+    private Animator _playerAnimator;
 
     public static InputManager Instance { get; private set; }
 
@@ -50,6 +51,7 @@ public class InputManager : MonoBehaviour
         _uiActions = _input.UI;
         _playerMovement = _playerTransform.GetComponent<Movement>();
         _playerRespawn = _playerTransform.GetComponent<RespawnableComponent>();
+        _playerAnimator = _playerTransform.gameObject.GetComponent<Animator>();
     }
 
     private void Start()
@@ -67,6 +69,10 @@ public class InputManager : MonoBehaviour
             if (equipmentInventory.HasItems)
             {
                 equipmentInventory.CurrentEquipment.UseEquipment();
+
+                if (equipmentInventory.CurrentEquipment is Weapon weapon)
+                    if (weapon.CanFire())
+                        _playerAnimator.SetTrigger("PlayerAttack");
             }
         };
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();
