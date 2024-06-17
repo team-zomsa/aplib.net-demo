@@ -58,6 +58,10 @@ public class KeyTests
             key => key ? key.transform.position : Vector3.zero
         );
 
+        public Belief<GameObject, Key> Key = new(GameObject.FindGameObjectWithTag("Key"),
+            k => k.GetComponent<Key>()
+        );
+
         /// <summary>
         /// Player object in the scene.
         /// </summary>
@@ -79,6 +83,12 @@ public class KeyTests
                 {
                     return x == null;
                 }
+            );
+
+        public Belief<GameObject, KeyRing> Keyring = new
+            (
+                GameObject.Find("KeyRingObject"),
+                k => k.GetComponent<KeyRing>()
             );
     }
 
@@ -127,7 +137,9 @@ public class KeyTests
         // Check if there is a key in inventory -> false
         bool IsKeyInInventory(KeyDoorBeliefSet beliefSet)
         {
-            return true;
+            if (beliefSet.Key == null) return false;
+
+            return beliefSet.Keyring.Observation.HasKey(beliefSet.Key);
         }
 
         bool IsDoorOpen(KeyDoorBeliefSet beliefSet)

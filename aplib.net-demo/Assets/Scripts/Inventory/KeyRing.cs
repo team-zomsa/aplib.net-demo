@@ -24,4 +24,14 @@ public class KeyRing : MonoBehaviour
 
         return _keyRing.Remove(key);
     }
+
+    /// <summary>
+    /// Checks if given key is in the inventory.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public bool HasKey(Key key)
+    {
+        return _keyRing.Contains(key);
+    }
 }
