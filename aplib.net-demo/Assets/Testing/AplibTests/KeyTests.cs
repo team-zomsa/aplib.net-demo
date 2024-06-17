@@ -1,3 +1,5 @@
+using Aplib.Core.Agents;
+using Assets.Scripts.Wfc;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,10 +34,13 @@ public class KeyTests
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
-    public IEnumerator KeyTestsWithEnumeratorPasses()
+    public IEnumerator FindKeyAndCorrectDoorOpensTest()
     {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
+        //GameObject instantiatedKeyPrefab = _spawningExtensions.PlacePrefab(_keyPrefab, cell, doorRotation, parent);
+
+        //Key keyComponent = instantiatedKeyPrefab.GetComponentInChildren<Key>();
+        //keyComponent.Initialize(doorComponent.DoorId, doorComponent.Color);
+
         yield return null;
     }
 }
