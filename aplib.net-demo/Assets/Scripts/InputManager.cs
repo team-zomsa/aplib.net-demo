@@ -61,12 +61,7 @@ public class InputManager : MonoBehaviour
         _playerActions.Jump.canceled += _ => _playerMovement.OnJumpUp();
         _playerActions.Respawn.performed += _ => _playerRespawn.Respawn();
         _playerActions.UseItem.performed += _ => _inventory.ActivateItem();
-        _playerActions.NextItem.performed += _ =>
-        {
-            equipmentInventory.MoveNext();
-
-            _playerAnimator.SetTrigger("SwitchWeapon");
-        };
+        _playerActions.NextItem.performed += _ => equipmentInventory.MoveNext();
         _playerActions.PreviousItem.performed += _ => equipmentInventory.MovePrevious();
         _playerActions.SwitchItem.performed += _ => _inventory.SwitchItem();
         _playerActions.Fire.performed += _ =>
@@ -75,7 +70,9 @@ public class InputManager : MonoBehaviour
             {
                 equipmentInventory.CurrentEquipment.UseEquipment();
 
-                _playerAnimator.SetTrigger("PlayerAttack");
+                if (equipmentInventory.CurrentEquipment is Weapon weapon)
+                    if (weapon.CanAnimate())
+                        _playerAnimator.SetTrigger("PlayerAttack");
             }
         };
         _uiActions.ShowMouse.performed += _ => _mouseLock.OnShowMousePressed();

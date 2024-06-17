@@ -497,17 +497,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c29fd54c-fca1-4454-9825-469c0309d461"",
-                    ""path"": ""Mouse/Scroll/Y"",
-                    ""interactions"": ""Press"",
-                    ""processors"": ""Invert"",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Next Item"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""833602b0-ca48-4353-a576-f7746d856998"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
@@ -525,17 +514,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Next Item"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0560d4bb-17f7-4c53-8c7f-a20594dd11fe"",
-                    ""path"": ""Mouse/Scroll/Y"",
-                    ""interactions"": ""Press"",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Previous Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -676,7 +654,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Open Help"",
+                    ""name"": ""OpenHelp"",
                     ""type"": ""Button"",
                     ""id"": ""2e228e74-ccf6-45ba-89e4-614e785b163d"",
                     ""expectedControlType"": ""Button"",
@@ -1144,7 +1122,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Open Help"",
+                    ""action"": ""OpenHelp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1239,7 +1217,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_ShowMouse = m_UI.FindAction("ShowMouse", throwIfNotFound: true);
         m_UI_OpenSettings = m_UI.FindAction("OpenSettings", throwIfNotFound: true);
-        m_UI_OpenHelp = m_UI.FindAction("Open Help", throwIfNotFound: true);
+        m_UI_OpenHelp = m_UI.FindAction("OpenHelp", throwIfNotFound: true);
     }
 
     public void Dispose()
