@@ -88,9 +88,7 @@ namespace Entities.Weapons
             foreach (RaycastHit hit in _orderedHits)
             {
                 if (!hit.collider.CompareTag(_targetTag))
-                {
                     break;
-                }
 
                 // Check if the enemy has a Health component.
                 HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
