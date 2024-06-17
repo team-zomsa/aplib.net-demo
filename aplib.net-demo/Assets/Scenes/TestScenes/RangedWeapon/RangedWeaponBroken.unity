@@ -4484,6 +4484,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6200821051112023543, guid: 6b106093d51a6134e89463af01c7af10,
         type: 3}
+      propertyPath: _ammoPouch
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200821051112023543, guid: 6b106093d51a6134e89463af01c7af10,
+        type: 3}
       propertyPath: _firePoint
       value: 
       objectReference: {fileID: 1842886785}
