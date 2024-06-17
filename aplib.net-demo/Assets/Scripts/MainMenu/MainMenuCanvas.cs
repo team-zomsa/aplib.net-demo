@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.InputSystem.InputSettings;
 
 public class MainMenuCanvas : Singleton<MainMenuCanvas>
 {
@@ -28,7 +25,7 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     /// Name of the game scene.
     /// </summary>
     [SerializeField]
-    private string _gameSceneName = "GridSystem";
+    private string _gameSceneName = "LevelGeneration";
 
     /// <summary>
     /// Show/hide the help screen.
