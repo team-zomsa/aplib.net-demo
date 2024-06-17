@@ -7,6 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(RespawnableComponent))]
+[RequireComponent(typeof(Animator))]
 public class PlayerLogic : MonoBehaviour
 {
     [SerializeField] public bool respawnOnDeath = true;
