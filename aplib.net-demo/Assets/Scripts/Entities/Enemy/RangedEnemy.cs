@@ -52,14 +52,16 @@ public class RangedEnemy : RespawningEnemy
     {
         Debug.DrawRay(transform.position, Vector3.up * 20, Color.green);
 
-        // Set animator velocity
-        _animator.SetFloat("Velocity", _rigidbody.velocity.magnitude);
-
         // If the target is not directly visible but within vision range, move closer to the target.
-        if (!_rangedWeapon.EnemiesInLineOfSight() && _pathFind.GoalWithinRange(_visionRange)) _pathFind.SetStoppingDistance(1f);
+        if (!_rangedWeapon.EnemiesInLineOfSight() && _pathFind.GoalWithinRange(_visionRange))
+        {
+            _pathFind.SetStoppingDistance(1f);
+            _animator.SetBool("Walking", true);
+        }
 
         if (_attackTimer.IsFinished() && _rangedWeapon.EnemiesInLineOfSight())
         {
+            _animator.SetBool("Walking", false);
             _pathFind.SetStoppingDistance(_attackRange - 1f);
             StartCoroutine(Attack());
         }
