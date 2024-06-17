@@ -130,9 +130,11 @@ public class KeyTests
         PrimitiveTactic<KeyDoorBeliefSet> moveToDoorTactic = new(transformPathfinderPlayerToDoor);
 
         // Goal : Grab the key and open the door.
-        PrimitiveGoalStructure<KeyDoorBeliefSet> findKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToKeyTactic, IsKeyInInventory));
-        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsDoorOpen));
-        SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new SequentialGoalStructure<KeyDoorBeliefSet>(findKeyGoal, moveToDoorGoal);
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, beliefSet => !(IsDoorOpen(beliefSet) && IsKeyInInventory(beliefSet))));
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToKeyTactic, IsKeyInInventory));
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsDoorOpen));
+        SequentialGoalStructure<KeyDoorBeliefSet> setupGoal = new SequentialGoalStructure<KeyDoorBeliefSet>(moveToDoorFirstGoal, moveToKeyGoal);
+        SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new SequentialGoalStructure<KeyDoorBeliefSet>(setupGoal, moveToDoorWithKeyGoal);
 
         // Check if there is a key in inventory -> false
         bool IsKeyInInventory(KeyDoorBeliefSet beliefSet)
