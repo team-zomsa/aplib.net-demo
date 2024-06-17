@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(AmmoPouch))]
+[RequireComponent(typeof(RawImage))]
 public class Inventory : MonoBehaviour
 {
     /// <summary>
