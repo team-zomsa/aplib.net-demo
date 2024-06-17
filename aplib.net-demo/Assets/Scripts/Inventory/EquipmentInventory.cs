@@ -164,6 +164,8 @@ public class EquipmentInventory : MonoBehaviour
 
     private void OnDisable()
     {
+        if (InputManager.Instance == null) return;
+
         InputManager.Instance.NextItem -= MoveNext;
         InputManager.Instance.PreviousItem -= MovePrevious;
         InputManager.Instance.Fired -= TryUseEquipment;

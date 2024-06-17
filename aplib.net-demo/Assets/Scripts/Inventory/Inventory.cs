@@ -48,6 +48,8 @@ public class Inventory : MonoBehaviour
 
     private void OnDisable()
     {
+        if (InputManager.Instance == null) return;
+
         InputManager.Instance.UsedItem -= ActivateItem;
         InputManager.Instance.SwitchedItem -= SwitchItem;
     }

@@ -81,11 +81,6 @@ public class InputManager : Singleton<InputManager>, PlayerInput.IPlayerActions,
     public event Action Clicked;
 
     /// <summary>
-    /// Event triggered when the key for player scrolling is pressed.
-    /// </summary>
-    public event Action Scrolled;
-
-    /// <summary>
     /// Event triggered when the key for player middle clicking is pressed.
     /// </summary>
     public event Action MiddleClicked;
@@ -260,15 +255,6 @@ public class InputManager : Singleton<InputManager>, PlayerInput.IPlayerActions,
     public void OnClick(InputAction.CallbackContext context)
     {
         if (context.performed) Clicked?.Invoke();
-    }
-
-    /// <summary>
-    /// Callback for the scroll wheel input action.
-    /// </summary>
-    /// <param name="context">The input action context.</param>
-    public void OnScrollWheel(InputAction.CallbackContext context)
-    {
-        if (context.performed) Scrolled?.Invoke();
     }
 
     /// <summary>

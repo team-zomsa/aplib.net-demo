@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class Singleton<T> : MonoBehaviour
-    where T : MonoBehaviour
+    where T : Singleton<T>
 {
     /// <summary>
     /// The instance of the singleton.
@@ -10,23 +12,33 @@ public abstract class Singleton<T> : MonoBehaviour
     {
         get
         {
-            _instance ??= new GameObject(typeof(T).Name).AddComponent<T>();
+            if (!_isInitialized)
+            {
+                _instance = FindObjectOfType<T>() ?? new GameObject(typeof(T).Name).AddComponent<T>();
+                SceneManager.sceneUnloaded += _instance.OnSceneUnload;
+                _isInitialized = true;
+            }
+
             return _instance;
         }
     }
 
     private static T _instance;
 
+    private static bool _isInitialized = false;
+
+    public void Reset() => _isInitialized = false;
+
     protected virtual void Awake()
     {
-        if (_instance == null)
-        {
-            _instance = this as T;
-        }
-        else if (this != _instance)
-        {
-            Debug.LogWarning($"Another instance of {typeof(T)} already exists. Destroying this instance.");
-            Destroy(gameObject);
-        }
+        T[] instances = FindObjectsOfType<T>();
+        if (instances.Length > 1)
+            Debug.LogWarning($"There are {instances.Length} instances of {typeof(T).Name} in the scene, but only one is expected.");
+    }
+
+    private void OnSceneUnload(Scene scene)
+    {
+        SceneManager.sceneUnloaded -= OnSceneUnload;
+        Reset();
     }
 }

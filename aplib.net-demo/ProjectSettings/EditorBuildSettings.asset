@@ -59,4 +59,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/RagePotionTestScene.unity
     guid: fe6a4c501dcc2d74891b9cfbd950276b
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/WeaponAnimateTestScene.unity
+    guid: fa7e7b89851d59f40a3aff7ec0dcb180
   m_configObjects: {}

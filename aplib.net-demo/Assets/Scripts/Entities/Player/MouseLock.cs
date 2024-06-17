@@ -18,7 +18,6 @@ public class MouseLock : Singleton<MouseLock>
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        Debug.Log("Mouse cursor enabled.");
     }
 
     /// <summary>
@@ -28,7 +27,6 @@ public class MouseLock : Singleton<MouseLock>
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Debug.Log("Mouse cursor disabled.");
     }
 
     /// <summary>
@@ -38,5 +36,8 @@ public class MouseLock : Singleton<MouseLock>
 
     private void OnEnable() => InputManager.Instance.MouseShown += ToggleMouseCursor;
 
-    private void OnDisable() => InputManager.Instance.MouseShown -= ToggleMouseCursor;
+    private void OnDisable()
+    {
+        if (InputManager.Instance) InputManager.Instance.MouseShown -= ToggleMouseCursor;
+    }
 }

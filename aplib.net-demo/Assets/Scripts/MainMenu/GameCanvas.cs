@@ -94,10 +94,16 @@ public class GameCanvas : Singleton<GameCanvas>
 
     private void OnDisable()
     {
-        GameManager.Instance.GameOver -= OnGameOver;
-        GameManager.Instance.GameWon -= OnGameWon;
-        InputManager.Instance.ToggledSettings -= ToggleSettings;
-        InputManager.Instance.ToggledHelp -= ToggleHelp;
+        if (GameManager.Instance)
+        {
+            GameManager.Instance.GameOver -= OnGameOver;
+            GameManager.Instance.GameWon -= OnGameWon;
+        }
+        if (InputManager.Instance)
+        {
+            InputManager.Instance.ToggledSettings -= ToggleSettings;
+            InputManager.Instance.ToggledHelp -= ToggleHelp;
+        }
     }
 
     /// <summary>
