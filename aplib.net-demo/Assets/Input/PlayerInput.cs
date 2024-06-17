@@ -107,6 +107,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShowMouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""d7995a16-26e3-47a8-bb1e-8ab07ee5e639"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -560,6 +569,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Previous Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c6a6482-468b-446a-b9f8-cc7d05eca2bb"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ShowMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -638,6 +658,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_SwitchItem = m_Player.FindAction("Switch Item", throwIfNotFound: true);
         m_Player_NextItem = m_Player.FindAction("Next Item", throwIfNotFound: true);
         m_Player_PreviousItem = m_Player.FindAction("Previous Item", throwIfNotFound: true);
+        m_Player_ShowMouse = m_Player.FindAction("ShowMouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -708,6 +729,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SwitchItem;
     private readonly InputAction m_Player_NextItem;
     private readonly InputAction m_Player_PreviousItem;
+    private readonly InputAction m_Player_ShowMouse;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -721,6 +743,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @SwitchItem => m_Wrapper.m_Player_SwitchItem;
         public InputAction @NextItem => m_Wrapper.m_Player_NextItem;
         public InputAction @PreviousItem => m_Wrapper.m_Player_PreviousItem;
+        public InputAction @ShowMouse => m_Wrapper.m_Player_ShowMouse;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -757,6 +780,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PreviousItem.started += instance.OnPreviousItem;
             @PreviousItem.performed += instance.OnPreviousItem;
             @PreviousItem.canceled += instance.OnPreviousItem;
+            @ShowMouse.started += instance.OnShowMouse;
+            @ShowMouse.performed += instance.OnShowMouse;
+            @ShowMouse.canceled += instance.OnShowMouse;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -788,6 +814,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PreviousItem.started -= instance.OnPreviousItem;
             @PreviousItem.performed -= instance.OnPreviousItem;
             @PreviousItem.canceled -= instance.OnPreviousItem;
+            @ShowMouse.started -= instance.OnShowMouse;
+            @ShowMouse.performed -= instance.OnShowMouse;
+            @ShowMouse.canceled -= instance.OnShowMouse;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -861,5 +890,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnSwitchItem(InputAction.CallbackContext context);
         void OnNextItem(InputAction.CallbackContext context);
         void OnPreviousItem(InputAction.CallbackContext context);
+        void OnShowMouse(InputAction.CallbackContext context);
     }
 }

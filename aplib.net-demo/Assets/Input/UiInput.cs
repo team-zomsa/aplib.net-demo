@@ -118,15 +118,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ShowMouse"",
-                    ""type"": ""Button"",
-                    ""id"": ""15641bc5-fd41-438c-97e5-478e79a86328"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""OpenSettings"",
                     ""type"": ""Button"",
                     ""id"": ""1c1d0796-c797-4ec6-a05b-4f64aaf5a82b"",
@@ -566,17 +557,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b93e82c5-663a-4f37-832c-b7a2fd1bbf9e"",
-                    ""path"": ""<Keyboard>/leftAlt"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""ShowMouse"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1a7affbe-0c5b-4ed4-950e-50812fa4a86a"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -686,7 +666,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        m_UI_ShowMouse = m_UI.FindAction("ShowMouse", throwIfNotFound: true);
         m_UI_OpenSettings = m_UI.FindAction("OpenSettings", throwIfNotFound: true);
         m_UI_OpenHelp = m_UI.FindAction("OpenHelp", throwIfNotFound: true);
     }
@@ -760,7 +739,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_RightClick;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
-    private readonly InputAction m_UI_ShowMouse;
     private readonly InputAction m_UI_OpenSettings;
     private readonly InputAction m_UI_OpenHelp;
     public struct UIActions
@@ -777,7 +755,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
-        public InputAction @ShowMouse => m_Wrapper.m_UI_ShowMouse;
         public InputAction @OpenSettings => m_Wrapper.m_UI_OpenSettings;
         public InputAction @OpenHelp => m_Wrapper.m_UI_OpenHelp;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -819,9 +796,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
-            @ShowMouse.started += instance.OnShowMouse;
-            @ShowMouse.performed += instance.OnShowMouse;
-            @ShowMouse.canceled += instance.OnShowMouse;
             @OpenSettings.started += instance.OnOpenSettings;
             @OpenSettings.performed += instance.OnOpenSettings;
             @OpenSettings.canceled += instance.OnOpenSettings;
@@ -862,9 +836,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
-            @ShowMouse.started -= instance.OnShowMouse;
-            @ShowMouse.performed -= instance.OnShowMouse;
-            @ShowMouse.canceled -= instance.OnShowMouse;
             @OpenSettings.started -= instance.OnOpenSettings;
             @OpenSettings.performed -= instance.OnOpenSettings;
             @OpenSettings.canceled -= instance.OnOpenSettings;
@@ -945,7 +916,6 @@ public partial class @UiInput: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-        void OnShowMouse(InputAction.CallbackContext context);
         void OnOpenSettings(InputAction.CallbackContext context);
         void OnOpenHelp(InputAction.CallbackContext context);
     }

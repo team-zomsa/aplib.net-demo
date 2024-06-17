@@ -3,9 +3,13 @@ using UnityEngine;
 public class MouseLock : Singleton<MouseLock>
 {
     /// <summary>
-    /// Locks the cursor and hides it when the game starts.
+    /// Toggles the mouse cursor.
     /// </summary>
-    private void Start() => DisableMouseCursor();
+    public void ToggleMouseCursor()
+    {
+        if (Cursor.visible) DisableMouseCursor();
+        else EnableMouseCursor();
+    }
 
     /// <summary>
     /// Enables cursor.
@@ -14,6 +18,7 @@ public class MouseLock : Singleton<MouseLock>
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        Debug.Log("Mouse cursor enabled.");
     }
 
     /// <summary>
@@ -23,5 +28,15 @@ public class MouseLock : Singleton<MouseLock>
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        Debug.Log("Mouse cursor disabled.");
     }
+
+    /// <summary>
+    /// Locks the cursor and hides it when the game starts.
+    /// </summary>
+    private void Start() => DisableMouseCursor();
+
+    private void OnEnable() => InputManager.Instance.MouseShown += ToggleMouseCursor;
+
+    private void OnDisable() => InputManager.Instance.MouseShown -= ToggleMouseCursor;
 }

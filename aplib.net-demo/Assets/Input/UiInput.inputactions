@@ -1,5 +1,5 @@
 {
-    "name": "PlayerInput 1",
+    "name": "UiInput",
     "maps": [
         {
             "name": "UI",
@@ -91,15 +91,6 @@
                     "type": "PassThrough",
                     "id": "44fb90a0-a36f-4854-bd5d-3422c6602fbb",
                     "expectedControlType": "Quaternion",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ShowMouse",
-                    "type": "Button",
-                    "id": "15641bc5-fd41-438c-97e5-478e79a86328",
-                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -539,17 +530,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b93e82c5-663a-4f37-832c-b7a2fd1bbf9e",
-                    "path": "<Keyboard>/leftAlt",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "ShowMouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

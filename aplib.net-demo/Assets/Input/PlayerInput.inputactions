@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ShowMouse",
+                    "type": "Button",
+                    "id": "d7995a16-26e3-47a8-bb1e-8ab07ee5e639",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -536,6 +545,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Previous Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c6a6482-468b-446a-b9f8-cc7d05eca2bb",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ShowMouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
