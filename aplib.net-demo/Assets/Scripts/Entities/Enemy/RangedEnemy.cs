@@ -25,8 +25,6 @@ public class RangedEnemy : RespawningEnemy
 
     private Animator _animator;
 
-    private Rigidbody _rigidbody;
-
     /// <summary>
     /// Initialize the ranged weapon and pathfinding.
     /// Do in start to ensure the weapon/pathfinding is initialized beforehand.
@@ -39,7 +37,6 @@ public class RangedEnemy : RespawningEnemy
         _attackTimer.SetExactTime(_attackCooldown + _attackChargeUp);
         _pathFind.SetStoppingDistance(_attackRange - 1f);
         _animator = GetComponent<Animator>();
-        _rigidbody = GetComponent<Rigidbody>();
 
         base.Start();
     }

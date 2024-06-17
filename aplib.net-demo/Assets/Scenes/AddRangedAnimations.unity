@@ -5764,7 +5764,7 @@ PrefabInstance:
     - target: {fileID: 2927779827687187048, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
       propertyPath: _sceneNameGame
-      value: AddPoints
+      value: AddRangedAnimations
       objectReference: {fileID: 0}
     - target: {fileID: 3741452075886939737, guid: 6afe0fbb1debb1449835d0968e789934,
         type: 3}
