@@ -529,11 +529,6 @@ PrefabInstance:
       propertyPath: _spawnArea
       value: 
       objectReference: {fileID: 343009576}
-    - target: {fileID: 3723084130038152046, guid: 6de475068fb9685f5b9e0d862a17164d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7716492017067657420, guid: 6de475068fb9685f5b9e0d862a17164d,
         type: 3}
       propertyPath: m_Name

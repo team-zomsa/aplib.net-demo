@@ -14,6 +14,18 @@ namespace Entities.Weapons
         protected EntitySound _entitySound;
 
         /// <summary>
+        /// The entity animator component used to play weapon animations.
+        /// </summary>
+        [SerializeField]
+        protected Animator _entityAnimator;
+
+        /// <summary>
+        /// The attack animation name on the animator.
+        /// </summary>
+        [SerializeField]
+        protected string _attackAnimationName = "PlayerAttack";
+
+        /// <summary>
         /// The tag of the target that the weapon can hit.
         /// </summary>
         [SerializeField]
@@ -33,9 +45,19 @@ namespace Entities.Weapons
             Damage = damage;
             _targetTag = targetTag;
             _entitySound = GetComponentInParent<EntitySound>();
+            _entityAnimator = GetComponentInParent<Animator>();
         }
 
-        public override void UseEquipment() => UseWeapon();
+        public override void UseEquipment()
+        {
+            UseWeapon();
+
+            if (!CanFire()) return;
+            if (_entityAnimator == null) return;
+            if (_attackAnimationName == string.Empty) return;
+
+            _entityAnimator.SetTrigger(_attackAnimationName);
+        }
 
         /// <summary>
         /// Use the weapon.

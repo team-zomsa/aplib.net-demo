@@ -970,6 +970,11 @@ PrefabInstance:
       propertyPath: _entitySound
       value: 
       objectReference: {fileID: 3363266588949181139}
+    - target: {fileID: 4693412011037971015, guid: c935b7bf63614054ea51bfd5123b9904,
+        type: 3}
+      propertyPath: _entityAnimator
+      value: 
+      objectReference: {fileID: 5468166825587109836}
     - target: {fileID: 7069036620070996254, guid: c935b7bf63614054ea51bfd5123b9904,
         type: 3}
       propertyPath: m_LocalPosition.x

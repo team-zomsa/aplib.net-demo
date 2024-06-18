@@ -142,9 +142,7 @@ public class EquipmentInventory : MonoBehaviour
             GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
 
             if (playerObject)
-            {
                 DefaultEquipment = new List<Equipment>(playerObject.transform.GetComponentsInChildren<Equipment>());
-            }
         }
 
         _equipmentList = DefaultEquipment.ToList();

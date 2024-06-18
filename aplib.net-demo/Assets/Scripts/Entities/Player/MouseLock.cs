@@ -40,10 +40,18 @@ public class MouseLock : Singleton<MouseLock>
     /// </summary>
     private void Start() => DisableMouseCursor();
 
-    private void OnEnable() => InputManager.Instance.MouseShown += ToggleMouseCursor;
+    private void OnEnable()
+    {
+        InputManager.Instance.MouseShown += ToggleMouseCursor;
+        InputManager.Instance.Fired += DisableMouseCursor;
+    }
 
     private void OnDisable()
     {
-        if (InputManager.Instance) InputManager.Instance.MouseShown -= ToggleMouseCursor;
+        if (InputManager.Instance)
+        {
+            InputManager.Instance.MouseShown -= ToggleMouseCursor;
+            InputManager.Instance.Fired -= DisableMouseCursor;
+        }
     }
 }
