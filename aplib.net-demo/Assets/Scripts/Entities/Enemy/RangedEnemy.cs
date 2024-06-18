@@ -25,6 +25,8 @@ public class RangedEnemy : RespawningEnemy
 
     private Animator _animator;
 
+    private const float _arbitrarySmallStoppingDistance = 1f;
+
     /// <summary>
     /// Initialize the ranged weapon and pathfinding.
     /// Do in start to ensure the weapon/pathfinding is initialized beforehand.
@@ -35,7 +37,7 @@ public class RangedEnemy : RespawningEnemy
         _rangedWeapon.Initialize(_damagePoints, _targetTag, transform, _attackRange);
         _attackTimer = gameObject.AddComponent<Timer>();
         _attackTimer.SetExactTime(_attackCooldown + _attackChargeUp);
-        _pathFind.SetStoppingDistance(_attackRange - 1f);
+        _pathFind.SetStoppingDistance(_attackRange - _arbitrarySmallStoppingDistance);
         _animator = GetComponent<Animator>();
 
         base.Start();
@@ -52,14 +54,14 @@ public class RangedEnemy : RespawningEnemy
         // If the target is not directly visible but within vision range, move closer to the target.
         if (!_rangedWeapon.EnemiesInLineOfSight() && _pathFind.GoalWithinRange(_visionRange))
         {
-            _pathFind.SetStoppingDistance(1f);
+            _pathFind.SetStoppingDistance(_arbitrarySmallStoppingDistance);
             _animator.SetBool("Walking", true);
         }
 
         if (_attackTimer.IsFinished() && _rangedWeapon.EnemiesInLineOfSight())
         {
             _animator.SetBool("Walking", false);
-            _pathFind.SetStoppingDistance(_attackRange - 1f);
+            _pathFind.SetStoppingDistance(_attackRange - _arbitrarySmallStoppingDistance);
             StartCoroutine(Attack());
         }
 
