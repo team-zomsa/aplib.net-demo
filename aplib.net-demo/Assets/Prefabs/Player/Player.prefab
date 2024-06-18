@@ -929,6 +929,11 @@ PrefabInstance:
       propertyPath: _entitySound
       value: 
       objectReference: {fileID: 3363266588949181139}
+    - target: {fileID: 6098721876212132164, guid: a32b9718dd054174cb328e71472939bb,
+        type: 3}
+      propertyPath: _entityAnimator
+      value: 
+      objectReference: {fileID: 5468166825587109836}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
