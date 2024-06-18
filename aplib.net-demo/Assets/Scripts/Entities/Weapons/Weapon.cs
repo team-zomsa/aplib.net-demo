@@ -41,5 +41,10 @@ namespace Entities.Weapons
         /// Use the weapon.
         /// </summary>
         public abstract void UseWeapon();
+
+        /// <summary>
+        /// Check if the weapon is currently able to be activated, and is thus able to be animated.
+        /// </summary>
+        public virtual bool CanFire() => true;
     }
 }

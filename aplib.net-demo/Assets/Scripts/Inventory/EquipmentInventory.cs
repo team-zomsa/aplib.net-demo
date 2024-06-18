@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Represents an inventory of equipment items.
 /// </summary>
+[RequireComponent(typeof(AmmoPouch))]
 public class EquipmentInventory : MonoBehaviour
 {
     [SerializeField]

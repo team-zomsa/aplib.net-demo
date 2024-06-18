@@ -111,5 +111,10 @@ namespace Entities.Weapons
 
             return firstHit.collider != null && firstHit.collider.CompareTag(_targetTag);
         }
+
+        /// <summary>
+        /// Check if the weapon has enough ammunition to be used and thus animated.
+        /// </summary>
+        public override bool CanFire() => !_ammoPouch.IsEmpty();
     }
 }

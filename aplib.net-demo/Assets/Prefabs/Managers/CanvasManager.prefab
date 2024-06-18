@@ -1436,6 +1436,8 @@ MonoBehaviour:
   GameOverCanvas: {fileID: 110503855823897790}
   HelpCanvas: {fileID: 3661982244554271762}
   WinScreenCanvas: {fileID: 2834902491686029789}
+  _sceneNameStartingMenu: Settings
+  _sceneNameGame: LevelGeneration
 --- !u!1 &2733420268660679136
 GameObject:
   m_ObjectHideFlags: 0

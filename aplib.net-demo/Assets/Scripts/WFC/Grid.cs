@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ThreadSafeRandom;
 using static Assets.Scripts.Tiles.Direction;
-using Random = System.Random;
 
-namespace Assets.Scripts.Wfc
+namespace WFC
 {
     /// <summary>
     /// Represents a grid.
@@ -17,11 +17,6 @@ namespace Assets.Scripts.Wfc
         /// The cells of the grid.
         /// </summary>
         private readonly List<Cell> _cells;
-
-        /// <summary>
-        /// The random number generator.
-        /// </summary>
-        private readonly Random _random;
 
         /// <summary>
         /// The height of the grid.
@@ -38,35 +33,19 @@ namespace Assets.Scripts.Wfc
         /// </summary>
         /// <param name="width">The width of the grid.</param>
         /// <param name="height">The height of the grid.</param>
-        /// <param name="random">The random number generator.</param>
-        public Grid(int width, int height, Random random)
+        public Grid(int width, int height)
         {
             Width = width;
             Height = height;
-            _random = random;
             _cells = new List<Cell>();
         }
 
         /// <summary>
-        /// Gets or sets the cell at the specified coordinates.
+        /// Gets the cell at the specified coordinates.
         /// </summary>
         /// <param name="x">The x-coordinate of the cell.</param>
         /// <param name="z">The z-coordinate of the cell.</param>
-        public Cell this[int x, int z]
-        {
-            get => _cells[CoordinatesToIndex(x, z)];
-            set => _cells[CoordinatesToIndex(x, z)] = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the cell at the specified index.
-        /// </summary>
-        /// <param name="index">The index of the cell.</param>
-        public Cell this[int index]
-        {
-            get => _cells[index];
-            set => _cells[index] = value;
-        }
+        public Cell this[int x, int z] => _cells[CoordinatesToIndex(x, z)];
 
         /// <summary>
         /// Initializes the grid.
@@ -144,7 +123,7 @@ namespace Assets.Scripts.Wfc
         {
             List<Cell> notFinished = _cells.FindAll(cell => cell.Candidates.Count > 0);
 
-            int index = _random.Next(notFinished.Count);
+            int index = SharedRandom.Next(notFinished.Count);
             Cell cell = notFinished[index];
 
             List<Direction> directions = new() { North, East, South, West };
@@ -426,7 +405,7 @@ namespace Assets.Scripts.Wfc
         public Cell GetRandomFilledCell()
         {
             List<Cell> filledCells = _cells.FindAll(cell => cell.Tile is not Empty);
-            return filledCells[_random.Next(filledCells.Count)];
+            return filledCells[SharedRandom.Next(filledCells.Count)];
         }
 
         /// <summary>
