@@ -1,10 +1,11 @@
 using Assets.Scripts.Tiles;
-using Assets.Scripts.Wfc;
+using LevelGeneration;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TestTools;
+using WFC;
 
 public class SetStartTilePropertyTrueTests
 {
@@ -37,12 +38,12 @@ public class SetStartTilePropertyTrueTests
         Cell tSection = new(10, 10) { Tile = new TSection() };
 
         // Act
-        GridPlacer.UpdateTileModel(corner);
-        GridPlacer.UpdateTileModel(crossing);
-        GridPlacer.UpdateTileModel(deadEnd);
-        GridPlacer.UpdateTileModel(room);
-        GridPlacer.UpdateTileModel(straight);
-        GridPlacer.UpdateTileModel(tSection);
+        LevelSpawner.UpdateTileModel(corner);
+        LevelSpawner.UpdateTileModel(crossing);
+        LevelSpawner.UpdateTileModel(deadEnd);
+        LevelSpawner.UpdateTileModel(room);
+        LevelSpawner.UpdateTileModel(straight);
+        LevelSpawner.UpdateTileModel(tSection);
 
         // Assert
         Assert.IsTrue(corner.Tile.IsStart);
