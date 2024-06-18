@@ -52,6 +52,8 @@ namespace LevelGeneration
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
         public void MakeLevel(Cell playerSpawnCell)
         {
+            UpdateTileModel(playerSpawnCell);
+
             PlaceGrid();
 
             JoinConnectedComponentsWithTeleporters();
