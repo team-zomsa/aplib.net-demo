@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This component triggers the game over event when the entity dies.
+/// </summary>
 [RequireComponent(typeof(HealthComponent))]
 public class GameOverOnDeath : MonoBehaviour
 {

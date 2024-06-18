@@ -4,6 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Represents an inventory of items.
+/// </summary>
 [RequireComponent(typeof(RawImage))]
 public class Inventory : MonoBehaviour
 {

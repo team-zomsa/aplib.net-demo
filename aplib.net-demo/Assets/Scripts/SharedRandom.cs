@@ -3,6 +3,9 @@ using System;
 
 namespace ThreadSafeRandom
 {
+    /// <summary>
+    /// A thread-safe random number generator.
+    /// </summary>
     public static class SharedRandom
     {
         [ThreadStatic]

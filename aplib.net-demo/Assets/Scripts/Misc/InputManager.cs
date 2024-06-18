@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// The input manager, which handles all input events.
+/// </summary>
 public class InputManager : Singleton<InputManager>, PlayerInput.IPlayerActions, UiInput.IUIActions
 {
     #region Input events

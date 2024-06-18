@@ -1,6 +1,9 @@
 using Entities;
 using UnityEngine;
 
+/// <summary>
+/// This component respawns the entity when the player presses the respawn button.
+/// </summary>
 [RequireComponent(typeof(RespawnableComponent))]
 public class RespawnWhenButtonPressed : MonoBehaviour
 {

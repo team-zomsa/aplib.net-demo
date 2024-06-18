@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This component adds points to the player's total amount.
+/// </summary>
 public class PointsContributorComponent : MonoBehaviour
 {
     [SerializeField]

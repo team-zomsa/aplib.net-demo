@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// This component provides methods for locking and unlocking the mouse cursor.
+/// It also locks and hides the mouse cursor when the game starts.
+/// </summary>
 public class MouseLock : Singleton<MouseLock>
 {
     /// <summary>

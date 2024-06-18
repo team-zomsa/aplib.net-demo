@@ -1,8 +1,9 @@
-// ShowGoldenPath
-
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Component that shows the path to the target on the NavMesh.
+/// </summary>
 public class ShowGoldenPath : MonoBehaviour
 {
     public Transform target;

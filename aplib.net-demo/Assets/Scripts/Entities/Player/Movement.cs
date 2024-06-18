@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This component handles the player's movement, jumping, and gravity.
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EntitySound))]

@@ -3,6 +3,9 @@ using ThreadSafeRandom;
 
 namespace WFC
 {
+    /// <summary>
+    /// The wave function collapse algorithm.
+    /// </summary>
     public class WaveFunctionCollapse
     {
         private readonly int _widthX;

@@ -1,7 +1,12 @@
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Singleton class that makes a single static instance of the class available.
+/// </summary>
+/// <typeparam name="T">
+/// The type of the singleton.
+/// </typeparam>
 public abstract class Singleton<T> : MonoBehaviour
     where T : Singleton<T>
 {

@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// This class manages the game over and win screens, as well as the settings and help menu in-game.
+/// </summary>
 public class GameCanvas : Singleton<GameCanvas>
 {
     /// <summary>

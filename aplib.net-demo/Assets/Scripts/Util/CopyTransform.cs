@@ -1,6 +1,8 @@
 using UnityEngine;
 
-
+/// <summary>
+/// This component copies the global transform from the target object.
+/// </summary>
 public class CopyTransform : MonoBehaviour
 {
     [SerializeField]

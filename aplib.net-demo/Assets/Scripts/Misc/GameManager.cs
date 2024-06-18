@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// The game manager, which controls the game state.
+/// </summary>
 public class GameManager : Singleton<GameManager>
 {
     /// <summary>

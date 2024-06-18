@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// This class manages the main menu canvas, including the settings and help menu.
+/// </summary>
 public class MainMenuCanvas : Singleton<MainMenuCanvas>
 {
     /// <summary>

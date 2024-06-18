@@ -1,6 +1,8 @@
 using UnityEngine;
 
-
+/// <summary>
+/// This component copies the local transform from the target object.
+/// </summary>
 public class CopyLocalTransform : MonoBehaviour
 {
     [SerializeField]

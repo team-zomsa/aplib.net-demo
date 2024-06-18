@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This component disables another component when the game is paused.
+/// </summary>
 public class DisableOnPause : MonoBehaviour
 {
     [SerializeField]
