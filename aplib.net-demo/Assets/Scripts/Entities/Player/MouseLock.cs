@@ -18,6 +18,7 @@ public class MouseLock : Singleton<MouseLock>
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        GameManager.Instance.Pause();
     }
 
     /// <summary>
@@ -27,6 +28,7 @@ public class MouseLock : Singleton<MouseLock>
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GameManager.Instance.Resume();
     }
 
     /// <summary>

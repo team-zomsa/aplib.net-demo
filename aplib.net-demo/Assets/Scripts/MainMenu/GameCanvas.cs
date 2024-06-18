@@ -127,7 +127,6 @@ public class GameCanvas : Singleton<GameCanvas>
 
         canvas.SetActive(true);
 
-        GameManager.Instance.Pause();
         MouseLock.Instance.EnableMouseCursor();
         InputManager.Instance.DisablePlayerInput();
     }
@@ -145,7 +144,6 @@ public class GameCanvas : Singleton<GameCanvas>
         if (!IsOnMenu())
         {
             MouseLock.Instance.DisableMouseCursor();
-            GameManager.Instance.Resume();
             InputManager.Instance.EnablePlayerInput();
         }
     }
