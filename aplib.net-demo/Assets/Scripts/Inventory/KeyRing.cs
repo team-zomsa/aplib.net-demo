@@ -30,8 +30,8 @@ public class KeyRing : MonoBehaviour
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public bool HasKey(Key key)
+    public bool HasKey(int keyNumber)
     {
-        return _keyRing.Contains(key);
+        return _keyRing.Find(k => k.Id == keyNumber);
     }
 }

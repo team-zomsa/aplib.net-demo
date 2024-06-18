@@ -14,9 +14,11 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using Testing.AplibTests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.UIElements;
 
 public class KeyTests
 {
@@ -55,23 +57,23 @@ public class KeyTests
         /// Key position in the scene.
         /// </summary>
         public Belief<GameObject, Vector3> KeyPosition = new(GameObject.FindGameObjectWithTag("Key"),
-            key => key ? key.transform.position : Vector3.zero
+            getObservationFromReference: key => key == null ? Vector3.zero : key.transform.position
         );
 
-        public Belief<GameObject, Key> Key = new(GameObject.FindGameObjectWithTag("Key"),
-            k => k.GetComponent<Key>()
+        public Belief<GameObject, int> KeyID = new(GameObject.FindGameObjectWithTag("Key"),
+            getObservationFromReference: k => k.GetComponent<Key>() == null ? 100 : k.GetComponent<Key>().Id
         );
 
         /// <summary>
         /// Player object in the scene.
         /// </summary>
-        public Belief<GameObject, GameObject> Player = new(GameObject.FindGameObjectWithTag("Player"), p => p);
+        public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player"), p => p);
 
         /// <summary>
         /// Door position in the scene.
         /// </summary>
         public Belief<GameObject, Vector3> DoorPosition = new(GameObject.FindGameObjectWithTag("Door"),
-            door => door ? door.transform.position : Vector3.zero);
+            getObservationFromReference: door => door == null ? Vector3.zero : door.transform.position);
 
         /// <summary>
         /// If the door is open, return true;
@@ -111,7 +113,6 @@ public class KeyTests
         0.9f
         );
 
-
         // Action : Walk to door
         TransformPathfinderAction<KeyDoorBeliefSet> transformPathfinderPlayerToDoor = new(
             beliefSet =>
@@ -130,18 +131,33 @@ public class KeyTests
         PrimitiveTactic<KeyDoorBeliefSet> moveToDoorTactic = new(transformPathfinderPlayerToDoor);
 
         // Goal : Grab the key and open the door.
-        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, beliefSet => !(IsDoorOpen(beliefSet) && IsKeyInInventory(beliefSet))));
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsNextToDoor));
         PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToKeyTactic, IsKeyInInventory));
         PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsDoorOpen));
-        SequentialGoalStructure<KeyDoorBeliefSet> setupGoal = new SequentialGoalStructure<KeyDoorBeliefSet>(moveToDoorFirstGoal, moveToKeyGoal);
-        SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new SequentialGoalStructure<KeyDoorBeliefSet>(setupGoal, moveToDoorWithKeyGoal);
+        SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new(moveToDoorFirstGoal, moveToKeyGoal, moveToDoorWithKeyGoal);
 
-        // Check if there is a key in inventory -> false
+        // DesireSet
+        DesireSet<KeyDoorBeliefSet> desire = new(finalGoal);
+
+        // Create a new agent with the goal
+        BdiAgent<KeyDoorBeliefSet> agent = new(beliefSet, desire);
+
+        AplibRunner testRunner = new(agent);
+
+        // Use the Assert class to test conditions.
+        // Use yield to skip a frame.
+        yield return testRunner.Test();
+
+        // Assert that the player has reached the target position.
+        Assert.IsTrue(agent.Status == CompletionStatus.Success);
+        yield break;
+
+        // Check if there is a key in inventory -> true
         bool IsKeyInInventory(KeyDoorBeliefSet beliefSet)
         {
-            if (beliefSet.Key == null) return false;
+            if (beliefSet.KeyID == 100 || beliefSet.KeyID == null) return true;
 
-            return beliefSet.Keyring.Observation.HasKey(beliefSet.Key);
+            return beliefSet.Keyring.Observation.HasKey(beliefSet.KeyID);
         }
 
         bool IsDoorOpen(KeyDoorBeliefSet beliefSet)
@@ -149,6 +165,13 @@ public class KeyTests
             return beliefSet.IsDoorOpen;
         }
 
-        yield return null;
+        bool IsNextToDoor(KeyDoorBeliefSet beliefSet)
+        {
+            Transform player = beliefSet.Player.Observation.transform;
+            Vector3 door = beliefSet.DoorPosition;
+
+            if (player.position.z > door.z - 0.84f) return true;
+            return false;
+        }
     }
 }
