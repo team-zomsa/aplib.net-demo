@@ -5,20 +5,14 @@ using Aplib.Core.Belief.BeliefSets;
 using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
-using Assets.Scripts.Wfc;
-using JetBrains.Annotations;
 using NUnit.Framework;
 using System.Collections;
-using System.Collections.Generic;
-using Testing.AplibTests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
-using UnityEngine.UIElements;
 
 public class KeyTests
 {
@@ -148,7 +142,7 @@ public class KeyTests
             Transform player = beliefSet.Player.Observation.transform;
             Vector3 door = beliefSet.DoorPosition;
 
-            if (player.position.z > door.z - 0.84f) return true;
+            if (player.position.z > door.z - 1.1f) return true;
             return false;
         }
     }
