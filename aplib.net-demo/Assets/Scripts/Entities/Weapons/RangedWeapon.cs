@@ -87,6 +87,7 @@ namespace Entities.Weapons
             // Will damage only enemies and the ray will stop when it hits an object that is not an enemy.
             foreach (RaycastHit hit in _orderedHits)
             {
+                // Stop when the ray hits an object that is not an enemy
                 if (!hit.collider.CompareTag(_targetTag))
                     break;
 
@@ -103,6 +104,9 @@ namespace Entities.Weapons
         /// <returns>True if the first object hit is an enemy.</returns>
         public bool EnemiesInLineOfSight()
         {
+            // Fire a debug ray in the line of sight
+            Debug.DrawRay(_firePoint.position, _firePoint.transform.forward * _range, Globals.s_AimingColor);
+
             RaycastHit[] hits = Physics.RaycastAll(_firePoint.position, _firePoint.transform.forward, _range);
             _orderedHits = hits.OrderBy(hit => hit.distance);
             RaycastHit firstHit = _orderedHits.FirstOrDefault();
