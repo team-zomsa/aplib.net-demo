@@ -8,7 +8,8 @@
         "Unity.InputSystem",
         "Unity.InputSystem.TestFramework",
         "Cinemachine",
-        "team-zomsa.aplib-unity"
+        "team-zomsa.aplib-unity",
+        "Input"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
