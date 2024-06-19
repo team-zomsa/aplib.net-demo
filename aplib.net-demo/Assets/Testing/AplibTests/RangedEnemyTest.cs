@@ -62,7 +62,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformRangedEnemyTest()
         {
-            InputManager.Instance.enabled = false;
             RangedEnemyBeliefSet rangedEnemyBeliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.

@@ -20,9 +20,9 @@ namespace Testing.AplibTests
     public class RangeedWeaponTestBeliefSet : BeliefSet
     {
         /// <summary>
-        /// The player rotation object in the scene.
+        /// The player object in the scene.
         /// </summary>
-        public Belief<GameObject, GameObject> PlayerRotation = new(GameObject.Find("PlayerRotation"), x => x);
+        public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player Ranged"), x => x);
 
         /// <summary>
         /// The crossbow weapon the player is holding.
@@ -44,7 +44,7 @@ namespace Testing.AplibTests
         /// Bool that returns true if enemy is in front of player.
         /// </summary>
         public Belief<GameObject, bool> IsEnemyInFront = new(
-            reference: GameObject.Find("PlayerRotation"),
+            reference: GameObject.Find("Player Ranged"),
             getObservationFromReference: x =>
             {
                 if (!Physics.Raycast(x.transform.position, x.transform.forward, out RaycastHit hit, 100))
@@ -72,9 +72,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformCrossbowTest()
         {
-            InputManager.Instance.enabled = false;
-            CameraManager.Instance.CinemachineCamera.enabled = false;
-
             // Make beliefset instance
             RangeedWeaponTestBeliefSet beliefSet = new();
 
@@ -88,7 +85,7 @@ namespace Testing.AplibTests
             // Action: rotate player
             Action<RangeedWeaponTestBeliefSet> RotatePlayerToEnemy = new(beliefSet =>
             {
-                GameObject playerRotation = beliefSet.PlayerRotation;
+                GameObject playerRotation = beliefSet.Player;
                 Vector3 enemyPosition = beliefSet.EnemyPosition;
 
                 // Weapon viewpoint should be set to player rotation in editor

@@ -81,7 +81,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformRagePotionAplibTest()
         {
-            InputManager.Instance.enabled = false;
             RagePotionBeliefSet ragePotionBeliefSet = new RagePotionBeliefSet();
 
             // Calculate the expected damage increase

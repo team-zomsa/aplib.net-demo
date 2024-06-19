@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
 /// Manages the player's points.
 /// </summary>
-public class PointsManager
+public class PointsManager : Singleton<PointsManager>
 {
     /// <summary>
     /// Event that is invoked when points are added.
@@ -15,31 +18,11 @@ public class PointsManager
     /// <summary>
     /// The amount of points the player has.
     /// </summary>
-    [field: SerializeField]
-    public int Points { get; private set; }
+    public int Points { get; private set; } = 0;
 
-    /// <summary>
-    /// The singleton instance of this class.
-    /// </summary>
-    public static PointsManager Instance
-    {
-        get
-        {
-            _instance ??= new PointsManager();
-            return _instance;
-        }
-        private set => _instance = value;
-    }
-
-    private static PointsManager _instance;
-
-    [SerializeField]
     private readonly int _unusedItemPoints = 5;
 
-    /// <summary>
-    /// Private constructor to prevent instantiation by other classes.
-    /// </summary>
-    private PointsManager() { }
+    private void Start() => GameManager.Instance.GameWon += AddPointsOnGameEnd;
 
     /// <summary>
     /// Grab the health from the player and add points based on the health.
@@ -54,7 +37,7 @@ public class PointsManager
         Inventory inventory = GameObject.Find("InventoryObject").GetComponent<Inventory>();
         AddPoints(inventory.UnusedItems() * _unusedItemPoints);
 
-        CanvasManager.Instance.SetPointsText(Points);
+        DisplayPoints();
     }
 
     /// <summary>
@@ -65,5 +48,12 @@ public class PointsManager
     {
         Points += points;
         PointsAdded?.Invoke(Points);
+    }
+
+    private void DisplayPoints()
+    {
+        List<TextMeshProUGUI> textMeshes = GameCanvas.Instance.WinScreenCanvas.GetComponentsInChildren<TextMeshProUGUI>().ToList();
+        TextMeshProUGUI pointsText = textMeshes.Find(textMesh => textMesh.name == "Points");
+        pointsText.text = "Points: " + Points;
     }
 }
