@@ -52,7 +52,7 @@ public class RangedEnemy : RespawningEnemy
         Debug.DrawRay(transform.position, Vector3.up * 20, Color.green);
 
         // If the target is not directly visible but within vision range, move closer to the target.
-        if (!_rangedWeapon.EnemiesInLineOfSight() && _pathFind.GoalWithinRange(_visionRange))
+        if (_canMove && !_rangedWeapon.EnemiesInLineOfSight() && _pathFind.GoalWithinRange(_visionRange))
         {
             _pathFind.SetStoppingDistance(_arbitrarySmallStoppingDistance);
             _animator.SetBool("Walking", true);
