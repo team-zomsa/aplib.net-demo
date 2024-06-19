@@ -8,6 +8,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 179139162714478852, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.579
+      objectReference: {fileID: 0}
+    - target: {fileID: 179139162714478852, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.158
+      objectReference: {fileID: 0}
+    - target: {fileID: 179139162714478852, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.417
+      objectReference: {fileID: 0}
     - target: {fileID: 3350569462782925553, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_Name
@@ -68,6 +83,11 @@ PrefabInstance:
       propertyPath: Countdown
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7106047614900195080, guid: a97359d0503e62444882482848ac8602,
+        type: 3}
+      propertyPath: _ammoPouch
+      value: 
+      objectReference: {fileID: 8543324882253711374}
     - target: {fileID: 7917368108203339192, guid: a97359d0503e62444882482848ac8602,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -136,5 +156,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c4b9d599f768aa48a6b33a42965724d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8543324882253711374 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4764669849158132465, guid: a97359d0503e62444882482848ac8602,
+    type: 3}
+  m_PrefabInstance: {fileID: 3787665054143916799}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c43b04ec1fb42d99a32ba831149d1ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

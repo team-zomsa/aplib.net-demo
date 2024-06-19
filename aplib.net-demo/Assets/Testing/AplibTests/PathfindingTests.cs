@@ -21,7 +21,7 @@ namespace Testing.AplibTests
         /// <summary>
         /// The player object in the scene.
         /// </summary>
-        public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("PlayerPhysics"), x => x);
+        public Belief<GameObject, GameObject> Player = new(reference: GameObject.Find("Player"), x => x);
 
         /// <summary>
         /// The target position that the player needs to move towards.
@@ -34,7 +34,7 @@ namespace Testing.AplibTests
         [SetUp]
         public void Setup()
         {
-            SceneManager.LoadScene("PathfindingTest2");
+            SceneManager.LoadScene("PathfindingTest");
         }
 
         [UnityTest]

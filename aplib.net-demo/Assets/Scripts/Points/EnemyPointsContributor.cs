@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This component adds points to the player when the enemy dies.
+/// </summary>
 [RequireComponent(typeof(HealthComponent))]
 public class EnemyPointsContributor : PointsContributorComponent
 {

@@ -87,10 +87,9 @@ namespace Entities.Weapons
             // Will damage only enemies and the ray will stop when it hits an object that is not an enemy.
             foreach (RaycastHit hit in _orderedHits)
             {
+                // Stop when the ray hits an object that is not an enemy.
                 if (!hit.collider.CompareTag(_targetTag))
-                {
                     break;
-                }
 
                 // Check if the enemy has a Health component.
                 HealthComponent enemy = hit.collider.GetComponent<HealthComponent>();
@@ -105,11 +104,19 @@ namespace Entities.Weapons
         /// <returns>True if the first object hit is an enemy.</returns>
         public bool EnemiesInLineOfSight()
         {
+            // Fire a debug ray in the line of sight.
+            Debug.DrawRay(_firePoint.position, _firePoint.transform.forward * _range, Globals.s_AimingColor);
+
             RaycastHit[] hits = Physics.RaycastAll(_firePoint.position, _firePoint.transform.forward, _range);
             _orderedHits = hits.OrderBy(hit => hit.distance);
             RaycastHit firstHit = _orderedHits.FirstOrDefault();
 
             return firstHit.collider != null && firstHit.collider.CompareTag(_targetTag);
         }
+
+        /// <summary>
+        /// Check if the weapon has enough ammunition to be used and thus animated.
+        /// </summary>
+        public override bool CanFire() => !_ammoPouch.IsEmpty();
     }
 }

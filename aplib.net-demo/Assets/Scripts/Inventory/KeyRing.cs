@@ -2,6 +2,9 @@ using Assets.Scripts.Doors;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents a keyring that stores keys and can be queried to check if a key is present.
+/// </summary>
 public class KeyRing : MonoBehaviour
 {
     private readonly List<Key> _keyRing = new();

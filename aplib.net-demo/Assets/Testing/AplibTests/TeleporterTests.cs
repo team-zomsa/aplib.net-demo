@@ -105,12 +105,5 @@ namespace Testing.AplibTests
             // Assert
             Assert.AreEqual(CompletionStatus.Success, agent.Status);
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Debug.Log($"Finished {nameof(TeleporterAplibTests)}");
-            SceneManager.UnloadSceneAsync(_sceneName);
-        }
     }
 }
