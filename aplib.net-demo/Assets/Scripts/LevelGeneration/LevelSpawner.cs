@@ -52,6 +52,8 @@ namespace LevelGeneration
         /// <exception cref="Exception">The amount of rooms is larger than the available places in the grid.</exception>
         public void MakeLevel(Cell playerSpawnCell)
         {
+            UpdateTileModel(playerSpawnCell);
+
             PlaceGrid();
 
             JoinConnectedComponentsWithTeleporters();
@@ -67,6 +69,11 @@ namespace LevelGeneration
             navMeshSurface.BuildNavMesh();
         }
 
+        public static void UpdateTileModel(Cell startTile)
+        {
+            startTile.Tile.IsStart = true;
+        }
+
         /// <summary>
         /// Places the grid in the world.
         /// </summary>
@@ -77,7 +84,9 @@ namespace LevelGeneration
             for (int z = 0; z < Grid.Height; z++)
             {
                 for (int x = 0; x < Grid.Width; x++)
+                {
                     _gameObjectPlacer.PlaceTile(x, z, Grid[x, z].Tile, tiles.transform);
+                }
             }
         }
 
