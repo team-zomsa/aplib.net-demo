@@ -1,65 +1,57 @@
 using UnityEngine;
 
-public class MouseLock : MonoBehaviour
+/// <summary>
+/// This component provides methods for locking and unlocking the mouse cursor.
+/// It also locks and hides the mouse cursor when the game starts.
+/// </summary>
+public class MouseLock : Singleton<MouseLock>
 {
-    private bool _isOnMenu = false;
-
     /// <summary>
-    /// Locks the cursor and hides it when the game starts.
-    /// Should be start to ensure the canvas manager is loaded.
+    /// Toggles the mouse cursor.
     /// </summary>
-    private void Start()
+    public void ToggleMouseCursor()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        // Compatability for when no CanvasManager is present.
-        if (CanvasManager.Instance != null)
-            CanvasManager.Instance.MenuOpenedEvent += OnGameSettingsToggled;
-    }
-
-    /// <summary>
-    /// Shows the mouse and unlocks it. Useful on websites.
-    /// </summary>
-    public void OnShowMousePressed() => EnableMouseCursor();
-
-    /// <summary>
-    /// Enables or disables the cursor based on the game settings visibility.
-    /// </summary>
-    /// <param name="isOnGameSettings"></param>
-    public void OnGameSettingsToggled(bool isOnGameSettings)
-    {
-        _isOnMenu = isOnGameSettings;
-        if (isOnGameSettings)
-            EnableMouseCursor();
-        else
-            DisableMouseCursor();
-    }
-
-    /// <summary>
-    /// On left mouse click, go back into the game and lock the cursor.
-    /// </summary>
-    public void OnLeftMousePressed()
-    {
-        if (_isOnMenu) return;
-        DisableMouseCursor();
+        if (Cursor.visible) DisableMouseCursor();
+        else EnableMouseCursor();
     }
 
     /// <summary>
     /// Enables cursor.
     /// </summary>
-    private void EnableMouseCursor()
+    public void EnableMouseCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        GameManager.Instance.Pause();
     }
 
     /// <summary>
     /// Disables cursor.
     /// </summary>
-    private void DisableMouseCursor()
+    public void DisableMouseCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GameManager.Instance.Resume();
+    }
+
+    /// <summary>
+    /// Locks the cursor and hides it when the game starts.
+    /// </summary>
+    private void Start() => DisableMouseCursor();
+
+    private void OnEnable()
+    {
+        InputManager.Instance.MouseShown += ToggleMouseCursor;
+        InputManager.Instance.Fired += DisableMouseCursor;
+    }
+
+    private void OnDisable()
+    {
+        if (InputManager.Instance)
+        {
+            InputManager.Instance.MouseShown -= ToggleMouseCursor;
+            InputManager.Instance.Fired -= DisableMouseCursor;
+        }
     }
 }

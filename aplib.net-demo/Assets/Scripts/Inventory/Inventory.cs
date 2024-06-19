@@ -4,6 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Represents an inventory of items.
+/// </summary>
 [RequireComponent(typeof(RawImage))]
 public class Inventory : MonoBehaviour
 {
@@ -38,6 +41,20 @@ public class Inventory : MonoBehaviour
         _inventoryIndicator = GetComponent<RawImage>();
         _itemList = new Queue<Item>();
         DisplayItem();
+    }
+
+    private void OnEnable()
+    {
+        InputManager.Instance.UsedItem += ActivateItem;
+        InputManager.Instance.SwitchedItem += SwitchItem;
+    }
+
+    private void OnDisable()
+    {
+        if (InputManager.Instance == null) return;
+
+        InputManager.Instance.UsedItem -= ActivateItem;
+        InputManager.Instance.SwitchedItem -= SwitchItem;
     }
 
     /// <summary>

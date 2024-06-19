@@ -63,7 +63,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformPotionTest()
         {
-            InputManager.Instance.enabled = false;
             HealthPotionBeliefSet beliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.
