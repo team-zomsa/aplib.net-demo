@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Timer class, which can be used to create a timer for any purpose.
+/// </summary>
 public class Timer : MonoBehaviour
 {
     [SerializeField]

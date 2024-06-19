@@ -69,7 +69,7 @@ namespace Testing.AplibTests
 
         [SetUp]
         public void SetUp()
-        {            
+        {
             Debug.Log($"Starting test {nameof(RagePotionAplibTest)}");
             SceneManager.LoadScene("RagePotionTestScene");
         }
@@ -81,7 +81,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformRagePotionAplibTest()
         {
-            InputManager.Instance.enabled = false;
             RagePotionBeliefSet ragePotionBeliefSet = new RagePotionBeliefSet();
 
             // Calculate the expected damage increase

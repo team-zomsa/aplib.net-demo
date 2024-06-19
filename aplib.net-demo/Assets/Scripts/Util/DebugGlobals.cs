@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Global variables.
+/// </summary>
 public class Globals : MonoBehaviour
 {
     public static Color s_VelocityColor = Color.red;

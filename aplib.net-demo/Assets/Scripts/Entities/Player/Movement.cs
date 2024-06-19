@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// This component handles the player's movement, jumping, and gravity.
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EntitySound))]
@@ -58,6 +61,20 @@ public class Movement : MonoBehaviour
         _playerHeight = _controller.height;
         _playerRadius = _controller.radius;
         _gravity = Physics.gravity.y;
+    }
+
+    private void OnEnable()
+    {
+        InputManager.Instance.Moved += ReceiveHorizontalInput;
+        InputManager.Instance.Jumped += OnJumped;
+        InputManager.Instance.StoppedJump += OnStoppedJump;
+    }
+
+    private void OnDisable()
+    {
+        InputManager.Instance.Moved -= ReceiveHorizontalInput;
+        InputManager.Instance.Jumped -= OnJumped;
+        InputManager.Instance.StoppedJump -= OnStoppedJump;
     }
 
     /// <summary>
@@ -228,17 +245,16 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Receive the player's input from the InputManager, result of an InputAction.
     /// </summary>
-    /// <param name="input">The horizontal input in a Vector2</param>
+    /// <param name="input">The horizontal input in a Vector2.</param>
     public void ReceiveHorizontalInput(Vector2 input) => _horizontalInput = input;
 
     /// <summary>
     /// Set the jumpPressed flag to true when the player presses the jump button.
-    /// Result of an InputAction.
     /// </summary>
-    public void OnJumpDown() => _jumpPressed = true;
+    public void OnJumped() => _jumpPressed = true;
 
     /// <summary>
     /// Set the jumpPressed flag to false when the player lets go of the jump button.
     /// </summary>
-    public void OnJumpUp() => _jumpPressed = false;
+    public void OnStoppedJump() => _jumpPressed = false;
 }

@@ -92,7 +92,6 @@ namespace Testing.AplibTests
         public IEnumerator CanFindEndItem()
         {
             // Arrange
-            InputManager.Instance.enabled = false;
             ItemSpawningBeliefSet beliefSet = new();
 
             GameObject[] keys = GameObject.FindGameObjectsWithTag("Key");
