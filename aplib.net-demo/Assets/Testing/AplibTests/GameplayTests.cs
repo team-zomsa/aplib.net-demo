@@ -15,6 +15,7 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -448,8 +449,19 @@ namespace Testing.AplibTests
                              && beliefSet.Inventory.Observation.ContainsItem<RagePotion>(),
                 useRagePotion);
 
-            Action shootCrossbowAction = new(beliefSet => beliefSet.RangedWeapon.Observation.UseWeapon());
-            PrimitiveTactic shootEnemy = new(shootCrossbowAction,
+            Action switchWeapon = new(beliefSet =>
+            {
+                beliefSet.
+                Debug.Log($"Switch weapon! {Time.time}");
+            });
+            PrimitiveTactic equipCrossbow = new(switchWeapon, beliefSet => beliefSet.EquippedWeapon is RangedWeapon);
+
+            Action shootCrossbowAction = new(beliefSet =>
+            {
+                beliefSet.RangedWeapon.Observation.UseWeapon();
+                Debug.Log($"Shoot! {Time.time}");
+            });
+            PrimitiveTactic shootEnemy = new(shootCrossbowAction, // TODO first equip crossbow, and aim
                 beliefSet =>
                 {
                     AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
@@ -459,7 +471,31 @@ namespace Testing.AplibTests
                            && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
                 });
 
-            Tactic hitEnemy = new Action(beliefSet => beliefSet.MeleeWeapon.Observation.UseWeapon());
+            Action aimAtEnemy = new(beliefSet =>
+            {
+                Transform playerTransform = beliefSet.PlayerRigidBody.Observation.transform;
+                Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
+                playerTransform.LookAt(enemyPosition);
+                Debug.Log($"Aiming at enemy {Time.time}");
+            });
+            Action swingBat = new(beliefSet =>
+            {
+                beliefSet.MeleeWeapon.Observation.UseWeapon();
+                Debug.Log($"Swing! {Time.time}");
+            });
+            PrimitiveTactic aimAtEnemyWhenNotAimedYet = new(aimAtEnemy, beliefSet =>
+            {
+                AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float distance);
+                Transform playerTransform = beliefSet.PlayerRigidBody.Observation.transform;
+                if (Physics.Raycast(playerTransform.position, playerTransform.forward, out RaycastHit hitInfo, distance,
+                    LayerMask.GetMask("PlayerSelf")))
+                {
+                    AbstractEnemy hitEnemy = hitInfo.collider.GetComponent<AbstractEnemy>();
+                    return hitEnemy != null && hitEnemy == enemyToFocus;
+                }
+                return false;
+            });
+            Tactic hitEnemy = FirstOf(aimAtEnemyWhenNotAimedYet, swingBat.Lift()); // TODO first equip bat
 
             Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
             GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible);
