@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Enemies>k__BackingField:
   - Enemy: {fileID: 2514419866930457234, guid: 86a0d3ee5ff10dd4b93454ad023e838c, type: 3}
-    Count: 5
-  - Enemy: {fileID: 7480288689146226739, guid: 2c5efd8328b8ecd4b83cbacb8142ac3e, type: 3}
     Count: 2
+  - Enemy: {fileID: 7480288689146226739, guid: 2c5efd8328b8ecd4b83cbacb8142ac3e, type: 3}
+    Count: 1

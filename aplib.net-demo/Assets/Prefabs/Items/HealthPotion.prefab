@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6644890811013382080}
   - component: {fileID: 4103969277828004525}
   - component: {fileID: 5869530656772040234}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HealthPotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 6670878522597935835}
   - component: {fileID: 8999004444325526567}
   - component: {fileID: 4987933222704678392}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7171588121974554467}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 7773310571775737343}
   - component: {fileID: 2428910288225605675}
   - component: {fileID: 2429067011553723039}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -317,6 +317,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -1.49
       objectReference: {fileID: 0}
+    - target: {fileID: 2535984516990917545, guid: 87c08e6a1147c904688ab4d0293a148f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6140845518465948779, guid: 87c08e6a1147c904688ab4d0293a148f,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -337,6 +342,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sparkle
       objectReference: {fileID: 0}
+    - target: {fileID: 6891417323614499024, guid: 87c08e6a1147c904688ab4d0293a148f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7703119434909318981, guid: 87c08e6a1147c904688ab4d0293a148f,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -351,6 +361,11 @@ PrefabInstance:
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
       value: 0.9811321
+      objectReference: {fileID: 0}
+    - target: {fileID: 7774401939041117516, guid: 87c08e6a1147c904688ab4d0293a148f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8890594247681875335, guid: 87c08e6a1147c904688ab4d0293a148f,
         type: 3}

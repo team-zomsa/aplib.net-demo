@@ -10,6 +10,7 @@ using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
+using Entities.Weapons;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ using static Aplib.Core.Combinators;
 using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.GameplayBeliefSet>;
 using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.GameplayBeliefSet>;
 using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.GameplayBeliefSet>;
+using FirstOfTactic = Aplib.Core.Intent.Tactics.FirstOfTactic<Testing.AplibTests.GameplayBeliefSet>;
+using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.GameplayBeliefSet>;
 using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.GameplayBeliefSet>;
 using SequentialGoalStructure = Aplib.Core.Desire.GoalStructures.SequentialGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
 using DesireSet = Aplib.Core.Desire.DesireSets.DesireSet<Testing.AplibTests.GameplayBeliefSet>;
@@ -35,20 +38,20 @@ namespace Testing.AplibTests
     // The realistic gameplay, ordered on priority:
     // - If health below 60% and have health potion, use it
     //
-    // - Determine with which enemy to engage
-    //  - Given a list of all enemies, determine enemy to focus X:
+    // - Determine which enemy to engage, IF at least one is visible
+    //  - Given a list of all visible enemies and their distances to the player, determine enemy to focus X:
     //      - group by [close melee enemy, crossbow enemy, distanced melee enemy]
     //      - take group I = 0
-    //      - filter group over which enemies are not visible, and sort within groups on distance (but inverted sort for crossbow enemy)
-    //          - If low on health, filter over untriggered enemies (do not attack them)
+    //      - If low on health, filter over untriggered enemies (do not attack them)
+    //      - sort within group on distance (but inverted sort for crossbow enemy)
     //      - take first enemy within group, else increment I
     //
-    //  - If enemy to focus X is not null:
+    //  - React to enemy X:
     //      - IF X is distanced melee enemy AND ((rage potion is visible AND do not possess rage) OR (healing potion is visible AND health is low)) THEN do not attack but get that item // Implies no crossbow enemy is visible
     //      - ELSE IF X is crossbow enemy AND X is has targeted THEN dodge sideways
-    //      - ELSE IF X is crossbow enemy AND Bullets in visible AND bullets closer than 1/3th of enemy distance AND and low on bullets THEN go get bullets
+    //      - ELSE IF X is crossbow enemy AND Bullets are visible AND bullets closer than 1/3th of enemy distance AND and low on bullets THEN go get bullets
     //      - ELSE: // attack
-    //          - IF in range of enemy, AND possess rage potion, THEN use rage potion
+    //          - IF in range of enemy, AND possess rage potion AND rage not applied, THEN use rage potion
     //          - ELSE Attack X with: crossbow IF possess arrows AND X is out of melee range AND (X is crossbow enemy OR (X is melee AND many bullets)), ELSE melee
     //
     // - Gather first one of [healing > rage > bullets] when visible
@@ -64,7 +67,7 @@ namespace Testing.AplibTests
         public readonly Belief<Inventory, Inventory> Inventory =
             new(GameObject.Find("InventoryObject").GetComponent<Inventory>(), x => x);
 
-        /// <summary> The rigidbody of the player </summary>
+        /// <summary> The rigidbody of the player. </summary>
         public readonly Belief<Rigidbody, Rigidbody> PlayerRigidBody = new(
             GameObject.Find("Player").GetComponent<Rigidbody>(), x => x);
 
@@ -77,8 +80,8 @@ namespace Testing.AplibTests
                 ItemsObject = GameObject.Find("Items"),
                 Player = GameObject.Find("Player").GetComponent<PlayerLogic>()
             },
-            reference => reference.ItemsObject.GetComponentsInChildren<HealthPotion>()
-                .Where(item => VisibleTo(reference.Player.EyesPosition, item.transform.position, out _))
+            referenceTo => referenceTo.ItemsObject.GetComponentsInChildren<HealthPotion>()
+                .Where(item => ItemVisibleFrom(item, referenceTo.Player.EyesPosition, out _))
                 .ToArray());
 
         public readonly Belief<ItemsAndPlayerEyesReference, RagePotion[]> VisibleRagePotions = new(
@@ -87,18 +90,20 @@ namespace Testing.AplibTests
                 ItemsObject = GameObject.Find("Items"),
                 Player = GameObject.Find("Player").GetComponent<PlayerLogic>()
             },
-            reference => reference.ItemsObject.GetComponentsInChildren<RagePotion>()
-                .Where(item => VisibleTo(reference.Player.EyesPosition, item.transform.position, out _))
+            referenceTo => referenceTo.ItemsObject.GetComponentsInChildren<RagePotion>()
+                .Where(item => ItemVisibleFrom(item, referenceTo.Player.EyesPosition, out _))
                 .ToArray());
 
-        public readonly Belief<ItemsAndPlayerEyesReference, AmmoItem[]> VisibleAmmo = new(
+        public readonly Belief<ItemsAndPlayerEyesReference, (AmmoItem item, float distance)[]> VisibleAmmo = new(
             new ItemsAndPlayerEyesReference
             {
                 ItemsObject = GameObject.Find("Items"),
                 Player = GameObject.Find("Player").GetComponent<PlayerLogic>()
             },
-            reference => reference.ItemsObject.GetComponentsInChildren<AmmoItem>()
-                .Where(item => VisibleTo(reference.Player.EyesPosition, item.transform.position, out _))
+            referenceTo => referenceTo.ItemsObject.GetComponentsInChildren<AmmoItem>()
+                .Select(item => ItemVisibleFrom(item, referenceTo.Player.EyesPosition, out float distance)
+                    ? (item, distance) : (null, 0f))
+                .Where(x => x.item != null)
                 .ToArray());
 
         public readonly Belief<ItemsAndPlayerEyesReference, bool> AnyItemIsVisible = new(
@@ -107,8 +112,8 @@ namespace Testing.AplibTests
                 ItemsObject = GameObject.Find("Items"),
                 Player = GameObject.Find("Player").GetComponent<PlayerLogic>()
             },
-            beliefSet => beliefSet.ItemsObject.GetComponentsInChildren<Item>()
-                .Any(item => VisibleTo(item.transform.position, beliefSet.Player.EyesPosition, out _)));
+            referenceTo => referenceTo.ItemsObject.GetComponentsInChildren<Item>()
+                .Any(item => ItemVisibleFrom(item, referenceTo.Player.EyesPosition, out _)));
 
         /// <summary> The position of the next key to obtain to reach the end room. </summary>
         public readonly Belief<IEnumerable<GameObject>, Vector3> TargetKeyPosition = new(
@@ -139,29 +144,128 @@ namespace Testing.AplibTests
             GameObject.FindWithTag("Win").transform, x => x.position);
 
 
-        /// <summary>
-        /// Tests if a ray can be cast from A to B without any collisions, and calculates the distance.
-        /// </summary>
-        /// <param name="a">Point A.</param>
-        /// <param name="b">Point B.</param>
-        /// <param name="distance">The distance, if no collisions were found.</param>
-        /// <returns>Whether no collisions were found.</returns>
-        private static bool VisibleTo(Vector3 a, Vector3 b, out float distance)
+        private static bool ItemVisibleFrom(Item item, Vector3 origin, out float collisionDistance)
         {
-            if (Physics.Raycast(a, b, out RaycastHit hitInfo))
+            Vector3 objectPos = item.transform.position;
+            return IsVisibleFrom(objectPos, origin, ~LayerMask.GetMask("PlayerSelf", "Item"), out collisionDistance);
+        }
+        
+        private static bool EnemyVisibleFrom(AbstractEnemy enemy, Vector3 origin, out float collisionDistance)
+        {
+            Vector3 objectPos = enemy.transform.position;
+            return IsVisibleFrom(objectPos, origin, ~LayerMask.GetMask("PlayerSelf", "Enemy"), out collisionDistance); // TODO Create enemy layer
+        }
+
+        private static bool IsVisibleFrom(Vector3 target, Vector3 origin, LayerMask layerMask, out float collisionDistance)
+        {
+            float maxDistance = Vector3.Distance(origin, target);
+
+            if (Physics.Raycast(origin, target - origin, out RaycastHit hitInfo, maxDistance, layerMask))
             {
-                distance = hitInfo.distance;
-                return true;
+                collisionDistance = hitInfo.distance;
+                return false; // Something is in the way
             }
 
-            distance = 0;
-            return false;
+            collisionDistance = 0;
+            return true; // Visible, nothing in the way
         }
 
         /// Merely here to simplify types above
         public class ItemsAndPlayerEyesReference
         {
             public GameObject ItemsObject;
+            public PlayerLogic Player;
+        }
+
+
+        /// <summary> Determines which enemies are visible and recognizable by the player. </summary>
+        public readonly
+            Belief<EnemiesObjectAndPlayerEyesReference, (AbstractEnemy[] enemies, float[] distances)>
+            VisibleEnemies = new(
+                new EnemiesObjectAndPlayerEyesReference
+                {
+                    EnemiesObject = GameObject.Find("Enemies"),
+                    Player = GameObject.Find("Player").GetComponent<PlayerLogic>()
+                },
+                referenceTo => referenceTo.EnemiesObject.GetComponentsInChildren<AbstractEnemy>()
+                    .Select(enemy => EnemyVisibleFrom(enemy, referenceTo.Player.EyesPosition, out float distance)
+                        ? (enemy, distance)
+                        : (null, 0f))
+                    .Where(x => x.enemy != null)
+                    .Aggregate((new AbstractEnemy[] {}, new float[] {}), (acc, x)
+                        => (acc.Item1.Append(x.enemy).ToArray(), acc.Item2.Append(x.distance).ToArray())));
+
+        public readonly Belief<EnemiesObjectAndPlayerEyesReference, bool> AnyEnemyVisible = new(
+            new EnemiesObjectAndPlayerEyesReference
+            {
+                EnemiesObject = GameObject.Find("Enemies"),
+                Player = GameObject.Find("Player").GetComponent<PlayerLogic>()
+            },
+            referenceTo => referenceTo.EnemiesObject.GetComponentsInChildren<AbstractEnemy>()
+                .Any(enemy => EnemyVisibleFrom(enemy, referenceTo.Player.EyesPosition, out _)));
+
+        /// <summary>
+        /// Determines which enemy to focus on, based on the visible enemies and their distances.
+        /// </summary>
+        public AbstractEnemy DetermineEnemyToFocus(out float distance)
+        {
+            (AbstractEnemy[] enemies, float[] distances) = VisibleEnemies.Observation;
+            if (enemies.Length == 0)
+            {
+                distance = 0;
+                return null; // No enemies in sight
+            }
+
+            // Group and prioritize by [close melee enemy > crossbow enemy > distanced melee enemy]
+            List<int>[] groupedEnemies = { new(), new(), new() };
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                int enemyPriority = enemies[i] switch
+                {
+                    MeleeEnemy when distances[i] < 5 => 0,
+                    RangedEnemy                      => 1,
+                    _                                => 2
+                };
+                groupedEnemies[enemyPriority].Add(i);
+            }
+
+            // Determine enemy to focus
+            for (int i = 0; i < groupedEnemies.Length; i++)
+            {
+                IEnumerable<int> group = groupedEnemies[i];
+                if (!group.Any()) continue;
+
+                // If low on health, filter over untriggered enemies (do not attack them)
+                if (PlayerHealthPercentage.Observation < 30)
+                {
+                    group = group.Where(enemyIndex => !enemies[enemyIndex].IsTriggered());
+                }
+
+                // Ranged enemies further away should be targeted first
+                int enemyToFocusIndex = group
+                    .OrderBy(enemyIndex => distances[enemyIndex] * (enemies[enemyIndex] is RangedEnemy ? -1 : 1))
+                    .First();
+                distance = distances[enemyToFocusIndex];
+                return enemies[enemyToFocusIndex];
+            }
+
+            distance = 0;
+            return null;
+        }
+
+        public readonly Belief<AmmoPouch, int> AmmoCount = new(
+            GameObject.Find("AmmoPouch").GetComponent<AmmoPouch>(), x => x.CurrentAmmoCount);
+
+        public readonly Belief<MeleeWeapon, MeleeWeapon> MeleeWeapon = new(
+            GameObject.Find("MeleeWeapon").GetComponent<MeleeWeapon>(), x => x);
+
+        public readonly Belief<RangedWeapon, RangedWeapon> RangedWeapon = new(
+            GameObject.Find("Crossbow").GetComponent<RangedWeapon>(), x => x);
+
+        /// Merely here to simplify types above
+        public class EnemiesObjectAndPlayerEyesReference
+        {
+            public GameObject EnemiesObject;
             public PlayerLogic Player;
         }
     }
@@ -188,11 +292,21 @@ namespace Testing.AplibTests
         public IEnumerator RealisticGameplayCanWinTheGame()
         {
             // Arrange
-            InputManager.Instance.enabled = false;
+            // InputManager.Instance.enabled = false;
             GameplayBeliefSet mainBeliefSet = new();
+            const float lowHealthThreshold = 30f;
 
             Action mark = new(_ => Debug.Log("MARK"));
+            Action mark2 = new(_ => Debug.Log("MARK2"));
             Goal markGoal = new(mark.Lift(), _ => false);
+            Goal markGoal2 = new(mark2.Lift(), _ => false);
+            bool smort = true;
+
+            Action smartMark = new(_ => Debug.Log("SMART MARK"));
+            Goal smartMarkGoal = new(smartMark.Lift(), _ => smort = !smort);
+            bool smort2 = true;
+            Action smartMark2 = new(_ => Debug.Log("SMART MARK 2"));
+            Goal smartMarkGoal2 = new(smartMark2.Lift(), _ => smort2 = !smort2);
 
 
             Action rotateInventory = new(beliefSet => beliefSet.Inventory.Observation.SwitchItem());
@@ -200,8 +314,8 @@ namespace Testing.AplibTests
             Goal equipHealingPotion = new(rotateInventory.Lift(),
                 beliefSet => beliefSet.Inventory.Observation.EquippedItem is HealthPotion);
             // TODO Assumes the item is in the inventory
-            Goal equipRagePotion = new(rotateInventory.Lift(),
-                beliefSet => beliefSet.Inventory.Observation.EquippedItem is RagePotion);
+            PrimitiveTactic equipRagePotion = new(rotateInventory,
+                beliefSet => beliefSet.Inventory.Observation.EquippedItem is not RagePotion);
 
             Action useEquippedItemAction = new(beliefSet =>
             {
@@ -209,10 +323,14 @@ namespace Testing.AplibTests
                 beliefSet.Inventory.Observation.ActivateItem();
             });
             bool hasNotYetUsedEquippedItem = true;
-            Goal useEquippedItem = new(useEquippedItemAction.Lift(), _ => hasNotYetUsedEquippedItem = !hasNotYetUsedEquippedItem);
+            bool hasUsedEquippedItem = false;
+            PrimitiveTactic useEquippedItemTactic = new(useEquippedItemAction,
+                _ => hasNotYetUsedEquippedItem = !hasNotYetUsedEquippedItem);
+            Goal useEquippedItemGoal = new(useEquippedItemAction.Lift(),
+                _ => hasUsedEquippedItem = !hasUsedEquippedItem);
 
-            SequentialGoalStructure restoreHealth = Seq(equipHealingPotion.Lift(), useEquippedItem.Lift());
-            SequentialGoalStructure useRagePotion = Seq(equipRagePotion.Lift(), useEquippedItem.Lift());
+            SequentialGoalStructure restoreHealth = Seq(equipHealingPotion.Lift(), useEquippedItemGoal.Lift());
+            Tactic useRagePotion = FirstOf(equipRagePotion, useEquippedItemTactic); // TODO probleem dat SEQ hier nodig was?
 
 
             GameObject[] keys = GameObject.FindGameObjectsWithTag("Key");
@@ -246,7 +364,7 @@ namespace Testing.AplibTests
                 beliefSet => beliefSet.PlayerRigidBody,
                 beliefSet => beliefSet.VisibleHealthPotions.Observation
                     .Select(x => x.transform.position)
-                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position))
+                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position)) // TODO distance is already calcualted
                     .First(),
                 0.3f);
             TransformPathfinderAction moveToVisibleRagePotionAction = new(
@@ -259,33 +377,113 @@ namespace Testing.AplibTests
             TransformPathfinderAction moveToVisibleAmmoAction = new(
                 beliefSet => beliefSet.PlayerRigidBody,
                 beliefSet => beliefSet.VisibleAmmo.Observation
-                    .Select(x => x.transform.position)
+                    .Select(x => x.item.transform.position)
                     .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position))
                     .First(),
                 0.3f);
 
-            Goal moveToVisibleHealthPotion = new(moveToVisibleHealthPotionAction.Lift(),
-                beliefSet => beliefSet.VisibleHealthPotions.Observation.Length == 0);
-            Goal moveToVisibleRagePotion = new(moveToVisibleRagePotionAction.Lift(),
-                beliefSet => beliefSet.VisibleRagePotions.Observation.Length == 0);
-            Goal moveToVisibleAmmo = new(moveToVisibleAmmoAction.Lift(),
-                beliefSet => beliefSet.VisibleAmmo.Observation.Length == 0);
+            PrimitiveTactic pickUpVisibleHealthPotion = new(moveToVisibleHealthPotionAction,
+                beliefSet => beliefSet.VisibleHealthPotions.Observation.Length != 0);
+            PrimitiveTactic pickUpVisibleRagePotion = new(moveToVisibleRagePotionAction,
+                beliefSet => beliefSet.VisibleRagePotions.Observation.Length != 0);
+            PrimitiveTactic pickUpVisibleAmmo = new(moveToVisibleAmmoAction,
+                beliefSet => beliefSet.VisibleAmmo.Observation.Length != 0);
+
+            Tactic fetchPotionIfDistancedMelee = FirstOf(guard: beliefSet =>
+                    beliefSet.DetermineEnemyToFocus(out float distance) is MeleeEnemy && distance > 5 &&
+                    ((!beliefSet.Inventory.Observation.ContainsItem<RagePotion>() &&
+                      beliefSet.VisibleRagePotions.Observation.Length != 0) ||
+                     (beliefSet.PlayerHealthPercentage.Observation < 30 &&
+                      beliefSet.VisibleHealthPotions.Observation.Length != 0)),
+                pickUpVisibleHealthPotion, pickUpVisibleRagePotion);
+
+            Action stepAsideRightAction = new(beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+                playerRigidBody.AddForce(playerRigidBody.transform.right * 10, ForceMode.VelocityChange);
+            });
+            Action stepAsideLeftAction = new(beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+                playerRigidBody.AddForce(playerRigidBody.transform.right * -10, ForceMode.VelocityChange);
+            });
+            PrimitiveTactic stepAsideLeft = new(stepAsideLeftAction, beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+
+                Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.left);
+                return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    ~LayerMask.GetMask("PlayerSelf", "Item")); // Whether something is on the left, but not the player or items
+            });
+            PrimitiveTactic stepAsideRight = new(stepAsideRightAction, beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+
+                Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.right);
+                return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    ~LayerMask.GetMask("PlayerSelf", "Item")); // Whether something is on the left, but not the player or items
+            });
+
+            Tactic dodgeCrossbow = FirstOf(guard: beliefSet =>
+            {
+                AbstractEnemy enemy = beliefSet.DetermineEnemyToFocus(out _);
+                return enemy is RangedEnemy && enemy.IsTriggered();
+            },
+            stepAsideLeft, stepAsideRight);
+
+            Tactic fetchAmmo = FirstOf(guard: beliefSet =>
+            {
+                AbstractEnemy enemy = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
+
+                return enemy is RangedEnemy
+                       && beliefSet.AmmoCount < 4
+                       && beliefSet.VisibleAmmo.Observation.Length != 0
+                       && beliefSet.VisibleAmmo.Observation.Min(x => x.distance) < enemyDistance / 3;
+            },
+            pickUpVisibleAmmo);
+
+            Tactic useRagePotionIfUseful = FirstOf(guard:
+                beliefSet => beliefSet.DetermineEnemyToFocus(out float enemyDistance) != null
+                             && enemyDistance < 5
+                             && beliefSet.Inventory.Observation.ContainsItem<RagePotion>(),
+                useRagePotion);
+
+            Action shootCrossbowAction = new(beliefSet => beliefSet.RangedWeapon.Observation.UseWeapon());
+            PrimitiveTactic shootEnemy = new(shootCrossbowAction,
+                beliefSet =>
+                {
+                    AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
+                    return enemyToFocus != null
+                           && beliefSet.AmmoCount > 0
+                           && enemyDistance > beliefSet.MeleeWeapon.Observation.Range
+                           && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
+                });
+
+            Tactic hitEnemy = new Action(beliefSet => beliefSet.MeleeWeapon.Observation.UseWeapon());
+
+            Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
+            GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible);
 
 
-            GoalStructure fetchVisibleItem = Seq(moveToVisibleHealthPotion.Lift(), moveToVisibleRagePotion.Lift(), moveToVisibleAmmo.Lift());
+            Tactic fetchVisibleItem = FirstOf(pickUpVisibleHealthPotion, pickUpVisibleRagePotion, pickUpVisibleAmmo);
+            GoalStructure fetchVisibleItemGoal = new Goal(fetchVisibleItem, beliefSet => !beliefSet.AnyItemIsVisible);
 
             DesireSet desireSet = new(
-                mainGoal: fetchElixir, // When not doing anything else, fetch the elixir and bring it to the final room
+                mainGoal: fetchElixir, // Fetch the elixir and bring it to the final room
                 sideGoals: new (IGoalStructure, InterruptGuard)[]
                 {
-                    // When low on health and in possession of a healing potion, drink the potion
+                    // But, when an item can be picked up, do so
+                    (fetchVisibleItemGoal, beliefSet =>
+                        beliefSet.AnyItemIsVisible),
+
+                    // But, when an enemy is visible, react to it
+                    (reactToEnemy, beliefSet =>
+                        beliefSet.AnyEnemyVisible),
+
+                    // But, when low on health and in possession of a healing potion, drink the potion
                     (restoreHealth, beliefSet =>
                         beliefSet.PlayerHealthPercentage.Observation < 60
                         && beliefSet.Inventory.Observation.ContainsItem<HealthPotion>()),
-
-                    // When an item can be picked up, do so
-                    (fetchVisibleItem, beliefSet =>
-                        beliefSet.AnyItemIsVisible)
                 });
 
 
