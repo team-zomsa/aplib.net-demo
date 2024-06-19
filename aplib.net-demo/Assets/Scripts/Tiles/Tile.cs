@@ -14,6 +14,11 @@ namespace Assets.Scripts.Tiles
         public GameObject GameObject { get; set; }
 
         /// <summary>
+        /// Flags the starting tile.
+        /// </summary>
+        public bool IsStart { get; set; }
+
+        /// <summary>
         /// The direction in which the front of the tile should face.
         /// </summary>
         public Direction Facing = Direction.North;

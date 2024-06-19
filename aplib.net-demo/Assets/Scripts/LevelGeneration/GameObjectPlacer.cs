@@ -151,11 +151,17 @@ namespace LevelGeneration
         {
             GameObject prefab = tile switch
             {
+                Corner c when c.IsStart => _roomObjects.StartCorner,
                 Corner => _roomObjects.Corner,
+                Crossing c when c.IsStart => _roomObjects.StartCrossing,
                 Crossing => _roomObjects.Crossing,
+                DeadEnd d when d.IsStart => _roomObjects.StartDeadEnd,
                 DeadEnd => _roomObjects.DeadEnd,
+                Room r when r.IsStart => _roomObjects.StartRoom,
                 Room => _roomObjects.Room,
+                Straight s when s.IsStart => _roomObjects.StartStraight,
                 Straight => _roomObjects.Straight,
+                TSection t when t.IsStart => _roomObjects.StartTSection,
                 TSection => _roomObjects.TSection,
                 _ => _roomObjects.Empty
             };
