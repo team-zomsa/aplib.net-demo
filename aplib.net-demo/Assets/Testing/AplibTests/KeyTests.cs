@@ -60,10 +60,6 @@ public class KeyTests
             getObservationFromReference: key => key == null ? Vector3.zero : key.transform.position
         );
 
-        public Belief<GameObject, int> KeyID = new(GameObject.FindGameObjectWithTag("Key"),
-            getObservationFromReference: k => k.GetComponent<Key>() == null ? 100 : k.GetComponent<Key>().Id
-        );
-
         /// <summary>
         /// Player object in the scene.
         /// </summary>
@@ -81,16 +77,7 @@ public class KeyTests
         public Belief<GameObject, bool> IsDoorOpen = new
             (
                 GameObject.FindGameObjectWithTag("Door"),
-                x =>
-                {
-                    return x == null;
-                }
-            );
-
-        public Belief<GameObject, KeyRing> Keyring = new
-            (
-                GameObject.Find("KeyRingObject"),
-                k => k.GetComponent<KeyRing>()
+                x => x == null
             );
     }
 
@@ -133,7 +120,7 @@ public class KeyTests
         // Goal : Grab the key and open the door.
         PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsNextToDoor));
         PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToKeyTactic, IsKeyInInventory));
-        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsDoorOpen));
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, x => x.IsDoorOpen));
         SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new(moveToDoorFirstGoal, moveToKeyGoal, moveToDoorWithKeyGoal);
 
         // DesireSet
@@ -153,18 +140,9 @@ public class KeyTests
         yield break;
 
         // Check if there is a key in inventory -> true
-        bool IsKeyInInventory(KeyDoorBeliefSet beliefSet)
-        {
-            if (beliefSet.KeyID == 100 || beliefSet.KeyID == null) return true;
+        bool IsKeyInInventory(KeyDoorBeliefSet beliefSet) => GameObject.Find("Key") == null;
 
-            return beliefSet.Keyring.Observation.HasKey(beliefSet.KeyID);
-        }
-
-        bool IsDoorOpen(KeyDoorBeliefSet beliefSet)
-        {
-            return beliefSet.IsDoorOpen;
-        }
-
+        // Check if player has reached the door.
         bool IsNextToDoor(KeyDoorBeliefSet beliefSet)
         {
             Transform player = beliefSet.Player.Observation.transform;
