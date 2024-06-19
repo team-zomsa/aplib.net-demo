@@ -76,6 +76,7 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     {
         HideCanvas(MenuCanvas);
         HideCanvas(SettingCanvas);
+        HideCanvas(ConfigCanvas);
         HideCanvas(HelpCanvas);
     }
 
@@ -121,5 +122,14 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
 
         // Set config or menu active and disable the other.
         ShowCanvas(ConfigCanvas);
+    }
+
+    /// <summary>
+    /// Toggle for when the user wants to go back to the main menu.
+    /// </summary>
+    public void BackToMenu()
+    {
+        HideCanvas(ConfigCanvas);
+        ShowCanvas(MenuCanvas);
     }
 }

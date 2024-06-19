@@ -410,7 +410,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7369498300175453912}
-  - component: {fileID: 9082416379565140872}
+  - component: {fileID: 4223022823395201104}
   m_Layer: 5
   m_Name: ConfigContents
   m_TagString: Untagged
@@ -441,7 +441,7 @@ RectTransform:
   m_AnchoredPosition: {x: 200, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &9082416379565140872
+--- !u!114 &4223022823395201104
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 908909025161954926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a66640ee9a171d247aa8586969b21fe1, type: 3}
+  m_Script: {fileID: 11500000, guid: 1eb5730ff10d6594baebcf7e2fecd209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnableEnemies: {fileID: 11400000, guid: f7bd793b2437aa241a77beb552b78f49, type: 2}
@@ -7026,7 +7026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MenuCanvas>k__BackingField: {fileID: 7256154818529251779}
   <SettingCanvas>k__BackingField: {fileID: 8850857855294376426}
-  <ConfigCanvas>k__BackingField: {fileID: 0}
+  <ConfigCanvas>k__BackingField: {fileID: 977296798410776614}
   <HelpCanvas>k__BackingField: {fileID: 3069214172859994610}
   _gameSceneName: LevelGeneration
 --- !u!1 &6581124233636983147
