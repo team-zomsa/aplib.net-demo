@@ -389,8 +389,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
+      - m_Target: {fileID: 4110221563777805256}
+        m_TargetAssemblyTypeName: MainMenuCanvas, Scripts
         m_MethodName: PlayGame
         m_Mode: 1
         m_Arguments:
@@ -1349,9 +1349,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CanvasManager, Scripts
-        m_MethodName: ProceedToConfig
+      - m_Target: {fileID: 4110221563777805256}
+        m_TargetAssemblyTypeName: MainMenuCanvas, Scripts
+        m_MethodName: BackToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1484,7 +1484,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4110221563777805256}
         m_TargetAssemblyTypeName: MainMenuCanvas, Scripts
-        m_MethodName: PlayGame
+        m_MethodName: ProceedToConfig
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3031,7 +3031,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetGridZ
         m_Mode: 0
@@ -3218,7 +3218,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetValueItemRage
         m_Mode: 0
@@ -4617,7 +4617,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetValueItemHealth
         m_Mode: 0
@@ -5716,7 +5716,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetValueEnemyMelee
         m_Mode: 0
@@ -5903,7 +5903,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetValueEnemyRanged
         m_Mode: 0
@@ -6261,7 +6261,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetGridX
         m_Mode: 0
@@ -7028,7 +7028,7 @@ MonoBehaviour:
   <SettingCanvas>k__BackingField: {fileID: 8850857855294376426}
   <ConfigCanvas>k__BackingField: {fileID: 977296798410776614}
   <HelpCanvas>k__BackingField: {fileID: 3069214172859994610}
-  _gameSceneName: LevelGeneration
+  _gameSceneName: Main
 --- !u!1 &6581124233636983147
 GameObject:
   m_ObjectHideFlags: 0
@@ -7605,7 +7605,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetValueItemAmmo
         m_Mode: 0
@@ -9012,7 +9012,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4223022823395201104}
         m_TargetAssemblyTypeName: Configuration, Scripts
         m_MethodName: SetValueRoom
         m_Mode: 0
