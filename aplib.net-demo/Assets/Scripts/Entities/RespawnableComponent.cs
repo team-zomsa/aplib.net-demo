@@ -48,15 +48,13 @@ namespace Entities
                 Random.Range(_spawnBounds.min.y, _spawnBounds.max.y),
                 Random.Range(_spawnBounds.min.z, _spawnBounds.max.z));
 
+            transform.position = randomPoint;
+
             // If the entity has a Rigidbody, reset its position and velocity.
             if (_rigidbodyToRespawn != null)
             {
                 _rigidbodyToRespawn.position = randomPoint;
                 _rigidbodyToRespawn.velocity = Vector3.zero;
-            }
-            else
-            {
-                transform.position = randomPoint;
             }
 
             RespawnEvent?.Invoke(this);

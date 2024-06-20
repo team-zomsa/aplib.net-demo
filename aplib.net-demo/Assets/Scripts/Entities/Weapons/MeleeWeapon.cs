@@ -72,8 +72,9 @@ namespace Entities.Weapons
             {
                 foreach (Collider collider in _targets)
                 {
-                    // Check if the collider with enemy tag has a Health component. If so, deal damage to it.
-                    HealthComponent enemy = collider.GetComponent<HealthComponent>();
+                    // Check if a child of the root of the collider with enemy tag has a Health component. 
+                    // If so, deal damage to it.
+                    HealthComponent enemy = collider.transform.root.GetComponentInChildren<HealthComponent>();
                     enemy?.ReduceHealth(Damage);
                 }
             }

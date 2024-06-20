@@ -7,9 +7,11 @@ using UnityEngine;
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(RespawnableComponent))]
+[RequireComponent(typeof(Animator))]
 public class PlayerLogic : MonoBehaviour
 {
-    [SerializeField] public bool respawnOnDeath = true;
+    [SerializeField]
+    private bool _respawnOnDeath = true;
     private HealthComponent _healthComponent;
     private RespawnableComponent _respawnableComponent;
     public Vector3 EyesPosition => transform.position + new Vector3(0, 1, 0);
@@ -43,7 +45,7 @@ public class PlayerLogic : MonoBehaviour
     /// <param name="healthComponent">The health component of the player.</param>.
     private void OnDeath(HealthComponent healthComponent)
     {
-        if (respawnOnDeath) _respawnableComponent.Respawn();
+        if (_respawnOnDeath) _respawnableComponent.Respawn();
     }
 
     private void OnDestroy()

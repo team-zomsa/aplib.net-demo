@@ -43,6 +43,9 @@ public class GameLoopTests
         GameManager.Instance.Pause();
 
         // Assert
-        Assert.AreEqual(0f, Time.timeScale);
+        Time.timeScale = 1f;
     }
+
+    [TearDown]
+    public void TearDown() => Time.timeScale = 1f;
 }

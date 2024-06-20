@@ -1,9 +1,13 @@
 using UnityEngine;
 
+/// <summary>
+/// This component handles the player's movement, jumping, and gravity.
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EntitySound))]
 [RequireComponent(typeof(Timer))]
+[RequireComponent(typeof(Animator))]
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float _maxSpeedGround = 7;
@@ -34,6 +38,7 @@ public class Movement : MonoBehaviour
 
     private Rigidbody _rigidbody;
     private CapsuleCollider _controller;
+    private Animator _animator;
 
     [SerializeField]
     private Transform _playerVisTransform;
@@ -49,12 +54,27 @@ public class Movement : MonoBehaviour
         // Link the components of this object to the variables
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<CapsuleCollider>();
+        _animator = GetComponent<Animator>();
         _footStep = GetComponent<EntitySound>();
         _timer = GetComponent<Timer>();
 
         _playerHeight = _controller.height;
         _playerRadius = _controller.radius;
         _gravity = Physics.gravity.y;
+    }
+
+    private void OnEnable()
+    {
+        InputManager.Instance.Moved += ReceiveHorizontalInput;
+        InputManager.Instance.Jumped += OnJumped;
+        InputManager.Instance.StoppedJump += OnStoppedJump;
+    }
+
+    private void OnDisable()
+    {
+        InputManager.Instance.Moved -= ReceiveHorizontalInput;
+        InputManager.Instance.Jumped -= OnJumped;
+        InputManager.Instance.StoppedJump -= OnStoppedJump;
     }
 
     /// <summary>
@@ -75,6 +95,7 @@ public class Movement : MonoBehaviour
         // Ground check by checking a sphere at the bottom of the player, more consistent than ray
         _bottomPoint = transform.TransformPoint(_controller.center - Vector3.up * (_playerHeight * 0.55f - _playerRadius));
         _isGrounded = Physics.CheckSphere(_bottomPoint, _playerRadius, _groundMask);
+        _animator.SetBool("PlayerGrounded", _isGrounded);
 
         MovePlayer();
         HandleJump();
@@ -127,6 +148,8 @@ public class Movement : MonoBehaviour
             _timer.Reset();
             _footStep.Step();
         }
+
+        _animator.SetFloat("PlayerVelocity", _rigidbody.velocity.magnitude);
     }
 
     /// <summary>
@@ -222,17 +245,16 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Receive the player's input from the InputManager, result of an InputAction.
     /// </summary>
-    /// <param name="input">The horizontal input in a Vector2</param>
+    /// <param name="input">The horizontal input in a Vector2.</param>
     public void ReceiveHorizontalInput(Vector2 input) => _horizontalInput = input;
 
     /// <summary>
     /// Set the jumpPressed flag to true when the player presses the jump button.
-    /// Result of an InputAction.
     /// </summary>
-    public void OnJumpDown() => _jumpPressed = true;
+    public void OnJumped() => _jumpPressed = true;
 
     /// <summary>
     /// Set the jumpPressed flag to false when the player lets go of the jump button.
     /// </summary>
-    public void OnJumpUp() => _jumpPressed = false;
+    public void OnStoppedJump() => _jumpPressed = false;
 }

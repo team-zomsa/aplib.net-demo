@@ -9,7 +9,8 @@ public class AmmoPouch : MonoBehaviour
     /// <summary>
     /// The maximum amount of ammunition that can be stored in the ammo pouch.
     /// </summary>
-    [FormerlySerializedAs("MaxAmmoCount")] [SerializeField]
+    [FormerlySerializedAs("MaxAmmoCount")]
+    [SerializeField]
     public int maxAmmoCount;
 
     public int CurrentAmmoCount { get; private set; }
@@ -41,4 +42,11 @@ public class AmmoPouch : MonoBehaviour
         CurrentAmmoCount--;
         return true;
     }
+
+    /// <summary>
+    /// Returns whether the ammo pouch is empty.
+    /// The second check is inserted to align with the rest of the logic.
+    /// </summary>
+    /// <returns>True if the ammo pouch is empty, false otherwise.</returns>
+    public bool IsEmpty() => CurrentAmmoCount <= 0 && maxAmmoCount >= 0;
 }

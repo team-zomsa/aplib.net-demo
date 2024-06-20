@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(PathFind))]
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
     public bool IsTriggered() => _canMove;

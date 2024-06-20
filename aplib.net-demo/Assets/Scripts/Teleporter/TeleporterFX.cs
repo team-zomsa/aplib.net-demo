@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Teleporter
 {
+    /// <summary>
+    /// This component animates the teleporter FX.
+    /// </summary>
     public class TeleporterFX : MonoBehaviour
     {
         /// <summary>

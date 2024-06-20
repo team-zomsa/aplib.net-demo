@@ -69,7 +69,6 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformMeleeEnemyTest()
         {
-            InputManager.Instance.enabled = false;
             MeleeEnemyBeliefSet beliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.

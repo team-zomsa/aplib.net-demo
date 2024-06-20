@@ -1,6 +1,9 @@
 using Assets.Scripts.Items;
 using UnityEngine;
 
+/// <summary>
+/// This component adds points to the player's score when the item is picked up.
+/// </summary>
 [RequireComponent(typeof(PickupableItem))]
 public class ItemPointsContributor : PointsContributorComponent
 {

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Key item, which can be used to open doors.
+/// </summary>
 public class Key : Item
 {
     /// <summary>

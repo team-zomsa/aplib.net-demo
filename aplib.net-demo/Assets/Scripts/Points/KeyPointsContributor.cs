@@ -1,6 +1,9 @@
 using Assets.Scripts.Items;
 using UnityEngine;
 
+/// <summary>
+/// This component adds points to the player's score when a key is picked up.
+/// </summary>
 [RequireComponent(typeof(PickupableKey))]
 public class KeyPointsContributor : PointsContributorComponent
 {

@@ -8,8 +8,6 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class WinArea : Area
 {
-    public event Action OnWin;
-
     private Inventory _inventory;
 
     public void Start()
@@ -19,8 +17,6 @@ public class WinArea : Area
         if (inventoryObject == null) throw new UnityException("InventoryObject not found!");
 
         if (!inventoryObject.TryGetComponent(out _inventory)) throw new UnityException("Inventory not found!");
-
-        OnWin += PointsManager.Instance.AddPointsOnGameEnd;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -29,6 +25,6 @@ public class WinArea : Area
         if (!other.CompareTag("Player") || !_inventory.ContainsItem("The Eternal Elixir")
             || !other.material.name.Contains("PlayerPhysic")) return;
 
-        OnWin?.Invoke();
+        GameManager.Instance.TriggerGameWon();
     }
 }
