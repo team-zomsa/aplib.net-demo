@@ -145,30 +145,22 @@ namespace Testing.AplibTests
             GameObject.FindWithTag("Win").transform, x => x.position);
 
 
-        private static bool ItemVisibleFrom(Item item, Vector3 origin, out float collisionDistance)
-        {
-            Vector3 objectPos = item.transform.position;
-            return IsVisibleFrom(objectPos, origin, ~LayerMask.GetMask("PlayerSelf", "Item"), out collisionDistance);
-        }
-        
-        private static bool EnemyVisibleFrom(AbstractEnemy enemy, Vector3 origin, out float collisionDistance)
-        {
-            Vector3 objectPos = enemy.transform.position;
-            return IsVisibleFrom(objectPos, origin, ~LayerMask.GetMask("PlayerSelf", "Enemy"), out collisionDistance); // TODO Create enemy layer
-        }
+        private static bool ItemVisibleFrom(Item item, Vector3 origin, out float itemDistance)
+            => IsVisibleFrom(item.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Item"), out itemDistance);
 
-        private static bool IsVisibleFrom(Vector3 target, Vector3 origin, LayerMask layerMask, out float collisionDistance)
+        private static bool EnemyVisibleFrom(AbstractEnemy enemy, Vector3 origin, out float enemyDistance)
+            => IsVisibleFrom(enemy.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Enemy"), out enemyDistance);
+
+        private static bool IsVisibleFrom(Vector3 target, Vector3 origin, LayerMask layerMask, out float enemyDistance)
         {
-            float maxDistance = Vector3.Distance(origin, target);
+            enemyDistance = Vector3.Distance(origin, target);
 
-            if (Physics.Raycast(origin, target - origin, out RaycastHit hitInfo, maxDistance, layerMask))
-            {
-                collisionDistance = hitInfo.distance;
-                return false; // Something is in the way
-            }
+            if (!Physics.Raycast(origin, target - origin, out _, enemyDistance, layerMask))
+                return true; // Visible, nothing in the way
 
-            collisionDistance = 0;
-            return true; // Visible, nothing in the way
+            enemyDistance = 0;
+            return false; // Something is in the way
+
         }
 
         /// Merely here to simplify types above
@@ -208,7 +200,7 @@ namespace Testing.AplibTests
         /// <summary>
         /// Determines which enemy to focus on, based on the visible enemies and their distances.
         /// </summary>
-        public AbstractEnemy DetermineEnemyToFocus(out float distance)
+        public AbstractEnemy DetermineEnemyToFocus(out float distance) // TODO move this to a Belief of its own for caching
         {
             (AbstractEnemy[] enemies, float[] distances) = VisibleEnemies.Observation;
             if (enemies.Length == 0)
@@ -262,6 +254,9 @@ namespace Testing.AplibTests
 
         public readonly Belief<RangedWeapon, RangedWeapon> RangedWeapon = new(
             GameObject.Find("Crossbow").GetComponent<RangedWeapon>(), x => x);
+
+        public readonly Belief<EquipmentInventory, EquipmentInventory> EquipmentInventory = new(
+            GameObject.Find("EquipmentInventory").GetComponent<EquipmentInventory>(), x => x);
 
         /// Merely here to simplify types above
         public class EnemiesObjectAndPlayerEyesReference
@@ -449,39 +444,12 @@ namespace Testing.AplibTests
                              && beliefSet.Inventory.Observation.ContainsItem<RagePotion>(),
                 useRagePotion);
 
-            Action switchWeapon = new(beliefSet =>
-            {
-                beliefSet.
-                Debug.Log($"Switch weapon! {Time.time}");
-            });
-            PrimitiveTactic equipCrossbow = new(switchWeapon, beliefSet => beliefSet.EquippedWeapon is RangedWeapon);
-
-            Action shootCrossbowAction = new(beliefSet =>
-            {
-                beliefSet.RangedWeapon.Observation.UseWeapon();
-                Debug.Log($"Shoot! {Time.time}");
-            });
-            PrimitiveTactic shootEnemy = new(shootCrossbowAction, // TODO first equip crossbow, and aim
-                beliefSet =>
-                {
-                    AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
-                    return enemyToFocus != null
-                           && beliefSet.AmmoCount > 0
-                           && enemyDistance > beliefSet.MeleeWeapon.Observation.Range
-                           && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
-                });
-
             Action aimAtEnemy = new(beliefSet =>
             {
                 Transform playerTransform = beliefSet.PlayerRigidBody.Observation.transform;
                 Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
                 playerTransform.LookAt(enemyPosition);
                 Debug.Log($"Aiming at enemy {Time.time}");
-            });
-            Action swingBat = new(beliefSet =>
-            {
-                beliefSet.MeleeWeapon.Observation.UseWeapon();
-                Debug.Log($"Swing! {Time.time}");
             });
             PrimitiveTactic aimAtEnemyWhenNotAimedYet = new(aimAtEnemy, beliefSet =>
             {
@@ -495,7 +463,48 @@ namespace Testing.AplibTests
                 }
                 return false;
             });
-            Tactic hitEnemy = FirstOf(aimAtEnemyWhenNotAimedYet, swingBat.Lift()); // TODO first equip bat
+
+            Action switchWeapon = new(beliefSet =>
+            {
+                beliefSet.EquipmentInventory.Observation.MoveNext();
+                Debug.Log($"Switch weapon! {Time.time}");
+            });
+            PrimitiveTactic equipCrossbow = new(switchWeapon,
+                beliefSet => beliefSet.EquipmentInventory.Observation.CurrentEquipment is MeleeWeapon);
+            PrimitiveTactic equipBat = new(switchWeapon,
+                beliefSet => beliefSet.EquipmentInventory.Observation.CurrentEquipment is RangedWeapon);
+
+            Action shootCrossbowAction = new(beliefSet =>
+            {
+                beliefSet.RangedWeapon.Observation.UseWeapon();
+                Debug.Log($"Shoot! {Time.time}");
+            });
+            Tactic shootEnemy = FirstOf(guard: beliefSet =>
+            {
+                AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
+                return enemyToFocus != null
+                       && beliefSet.AmmoCount > 0
+                       && enemyDistance > beliefSet.MeleeWeapon.Observation.Range
+                       && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
+            }, equipCrossbow, aimAtEnemyWhenNotAimedYet, shootCrossbowAction.Lift());
+
+            Action swingBat = new(beliefSet =>
+            {
+                beliefSet.MeleeWeapon.Observation.UseWeapon();
+                Debug.Log($"Swing! {Time.time}");
+            });
+            TransformPathfinderAction approachEnemyAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.DetermineEnemyToFocus(out _).transform.position,
+                0.3f
+            );
+            PrimitiveTactic approachEnemy = new(approachEnemyAction, beliefSet =>
+            {
+                _ = beliefSet.DetermineEnemyToFocus(out float distance);
+                return distance > beliefSet.MeleeWeapon.Observation.Range;
+            });
+
+            Tactic hitEnemy = FirstOf(equipBat, aimAtEnemyWhenNotAimedYet, approachEnemy, swingBat.Lift()); // TODO first equip bat
 
             Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
             GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible);
