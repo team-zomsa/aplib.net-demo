@@ -247,7 +247,7 @@ namespace Testing.AplibTests
         }
 
         public readonly Belief<AmmoPouch, int> AmmoCount = new(
-            GameObject.Find("AmmoPouch").GetComponent<AmmoPouch>(), x => x.CurrentAmmoCount);
+            GameObject.Find("EquipmentInventory").GetComponent<AmmoPouch>(), x => x.CurrentAmmoCount);
 
         public readonly Belief<MeleeWeapon, MeleeWeapon> MeleeWeapon = new(
             GameObject.Find("MeleeWeapon").GetComponent<MeleeWeapon>(), x => x);
