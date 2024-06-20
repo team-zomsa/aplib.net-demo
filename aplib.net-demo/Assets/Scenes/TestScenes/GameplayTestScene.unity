@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAmmoCount: 0
+  _currentAmmoCount: 0
 --- !u!1 &276800704
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +456,12 @@ Transform:
   - {fileID: 773537169}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &467653995 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7900413343740512053, guid: 6de475068fb9685f5b9e0d862a17164d,
+    type: 3}
+  m_PrefabInstance: {fileID: 677989942}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &533088676
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,6 +671,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2878962481880194357, guid: 6de475068fb9685f5b9e0d862a17164d,
+        type: 3}
+      propertyPath: _firePoint
+      value: 
+      objectReference: {fileID: 467653995}
     - target: {fileID: 2921083464024424325, guid: 6de475068fb9685f5b9e0d862a17164d,
         type: 3}
       propertyPath: m_LocalPosition.x

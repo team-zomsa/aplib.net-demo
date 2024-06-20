@@ -13,9 +13,11 @@ public class AmmoPouch : MonoBehaviour
     [SerializeField]
     public int maxAmmoCount;
 
-    public int CurrentAmmoCount { get; private set; }
+    [SerializeField]
+    private int _currentAmmoCount;
+    public int CurrentAmmoCount => _currentAmmoCount;
 
-    private void Start() => CurrentAmmoCount = maxAmmoCount;
+    private void Start() => _currentAmmoCount = maxAmmoCount;
 
     /// <summary>
     /// Adds ammunition to the ammo pouch.
@@ -23,10 +25,10 @@ public class AmmoPouch : MonoBehaviour
     /// <param name="ammo">The amount of ammunition to add.</param>
     public void AddAmmo(int ammo)
     {
-        CurrentAmmoCount += ammo;
-        if (CurrentAmmoCount > maxAmmoCount)
+        _currentAmmoCount += ammo;
+        if (_currentAmmoCount > maxAmmoCount)
         {
-            CurrentAmmoCount = maxAmmoCount;
+            _currentAmmoCount = maxAmmoCount;
         }
     }
 
@@ -37,9 +39,9 @@ public class AmmoPouch : MonoBehaviour
     /// <returns>True if there is enough ammunition to use, false otherwise.</returns>
     public bool TryUseAmmo()
     {
-        if (CurrentAmmoCount == 0) return false;
+        if (_currentAmmoCount == 0) return false;
 
-        CurrentAmmoCount--;
+        _currentAmmoCount--;
         return true;
     }
 
@@ -48,5 +50,5 @@ public class AmmoPouch : MonoBehaviour
     /// The second check is inserted to align with the rest of the logic.
     /// </summary>
     /// <returns>True if the ammo pouch is empty, false otherwise.</returns>
-    public bool IsEmpty() => CurrentAmmoCount <= 0 && maxAmmoCount >= 0;
+    public bool IsEmpty() => _currentAmmoCount <= 0 && maxAmmoCount >= 0;
 }

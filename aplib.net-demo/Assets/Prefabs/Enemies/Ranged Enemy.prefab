@@ -667,6 +667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAmmoCount: 2000
+  _currentAmmoCount: 0
 --- !u!1 &6630535104659245811
 GameObject:
   m_ObjectHideFlags: 0

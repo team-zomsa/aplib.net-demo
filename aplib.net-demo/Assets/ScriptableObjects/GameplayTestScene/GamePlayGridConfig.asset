@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GamePlayGridConfig
   m_EditorClassIdentifier: 
   UseSeed: 0
-  Seed: 0
+  Seed: 1292257153
   GridWidthX: 6
   GridWidthZ: 6
   AmountOfRooms: 2
