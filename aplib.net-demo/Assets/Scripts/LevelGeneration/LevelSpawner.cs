@@ -230,16 +230,20 @@ namespace LevelGeneration
 
             Cell itemCell = emptyCells[SharedRandom.Next(emptyCells.Count)];
 
-            if (cell1.Tile is Room room)
+            if (cell1.Tile is Room room1)
             {
-                _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, itemCell, parent);
+                _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room1, direction, itemCell, parent);
                 return (cell1.X, cell1.Z, cell2.X, cell2.Z);
             }
 
-            if (cell2.Tile is not Room room2) return null;
+            // ReSharper disable once InvertIf
+            if (cell2.Tile is Room room2)
+            {
+                _gameObjectPlacer.PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), itemCell, parent);
+                return (cell2.X, cell2.Z, cell1.X, cell1.Z);
+            }
 
-            _gameObjectPlacer.PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), itemCell, parent);
-            return (cell2.X, cell2.Z, cell1.X, cell1.Z);
+            return null;
         }
 
         /// <summary>
