@@ -1,8 +1,5 @@
 using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 public class ConfigurationTests
 {
@@ -86,7 +83,7 @@ public class ConfigurationTests
         config.SetValueRoom("");
 
         // Assert
-        Assert.AreEqual(0, config.RoomAmount);
+        Assert.AreEqual(2, config.RoomAmount);
     }
 
     [Test]
@@ -137,7 +134,7 @@ public class ConfigurationTests
     }
 
     [Theory]
-    [TestCase("", 0)]
+    [TestCase("", 2)]
     [TestCase("-2", 2)]
     [TestCase("1000", 3)]
     public void ItemAmmoValueInvalidTest(string number, int expected)
@@ -151,7 +148,7 @@ public class ConfigurationTests
         config.SetValueItemAmmo(number);
 
         // Assert
-        Assert.AreEqual(expected, config.ItemAmmoAmount);
+        Assert.AreEqual(expected, config.AmmoItemAmount);
     }
 
     [Test]
@@ -168,11 +165,11 @@ public class ConfigurationTests
         config.SetValueItemAmmo("5");
 
         // Assert
-        Assert.AreEqual(5, config.ItemAmmoAmount);
+        Assert.AreEqual(5, config.AmmoItemAmount);
     }
 
     [Theory]
-    [TestCase("", 0)]
+    [TestCase("", 2)]
     [TestCase("-2", 2)]
     [TestCase("1000", 3)]
     public void ItemHealthValueInvalidTest(string number, int expected)
@@ -186,7 +183,7 @@ public class ConfigurationTests
         config.SetValueItemHealth(number);
 
         // Assert
-        Assert.AreEqual(expected, config.ItemHealthAmount);
+        Assert.AreEqual(expected, config.HealthItemAmount);
     }
 
     [Test]
@@ -203,11 +200,11 @@ public class ConfigurationTests
         config.SetValueItemHealth("5");
 
         // Assert
-        Assert.AreEqual(5, config.ItemHealthAmount);
+        Assert.AreEqual(5, config.HealthItemAmount);
     }
 
     [Theory]
-    [TestCase("", 0)]
+    [TestCase("", 2)]
     [TestCase("-2", 2)]
     [TestCase("1000", 3)]
     public void ItemRageValueInvalidTest(string number, int expected)
@@ -221,7 +218,7 @@ public class ConfigurationTests
         config.SetValueItemRage(number);
 
         // Assert
-        Assert.AreEqual(expected, config.ItemRageAmount);
+        Assert.AreEqual(expected, config.RageItemAmount);
     }
 
     [Test]
@@ -238,11 +235,11 @@ public class ConfigurationTests
         config.SetValueItemRage("5");
 
         // Assert
-        Assert.AreEqual(5, config.ItemRageAmount);
+        Assert.AreEqual(5, config.RageItemAmount);
     }
 
     [Theory]
-    [TestCase("", 0)]
+    [TestCase("", 2)]
     [TestCase("-2", 2)]
     [TestCase("1000", 3)]
     public void EnemyMeleeValueInvalidTest(string number, int expected)
@@ -256,7 +253,7 @@ public class ConfigurationTests
         config.SetValueEnemyMelee(number);
 
         // Assert
-        Assert.AreEqual(expected, config.EnemyMeleeAmount);
+        Assert.AreEqual(expected, config.MeleeEnemyAmount);
     }
 
     [Test]
@@ -273,11 +270,11 @@ public class ConfigurationTests
         config.SetValueEnemyMelee("5");
 
         // Assert
-        Assert.AreEqual(5, config.EnemyMeleeAmount);
+        Assert.AreEqual(5, config.MeleeEnemyAmount);
     }
 
     [Theory]
-    [TestCase("", 0)]
+    [TestCase("", 2)]
     [TestCase("-2", 2)]
     [TestCase("1000", 3)]
     public void EnemyRangedValueInvalidTest(string number, int expected)
@@ -291,7 +288,7 @@ public class ConfigurationTests
         config.SetValueEnemyRanged(number);
 
         // Assert
-        Assert.AreEqual(expected, config.EnemyRangedAmount);
+        Assert.AreEqual(expected, config.RangedEnemyAmount);
     }
 
     [Test]
@@ -308,7 +305,7 @@ public class ConfigurationTests
         config.SetValueEnemyRanged("5");
 
         // Assert
-        Assert.AreEqual(5, config.EnemyRangedAmount);
+        Assert.AreEqual(5, config.RangedEnemyAmount);
     }
 
     [Test]
@@ -325,9 +322,9 @@ public class ConfigurationTests
         config.SetValueItemAmmo("25");
 
         // Assert
-        Assert.AreEqual(6, config.ItemAmmoAmount);
-        Assert.AreEqual(6, config.ItemHealthAmount);
-        Assert.AreEqual(6, config.ItemRageAmount);
+        Assert.AreEqual(6, config.AmmoItemAmount);
+        Assert.AreEqual(6, config.HealthItemAmount);
+        Assert.AreEqual(6, config.RageItemAmount);
     }
 
     [Test]
@@ -344,7 +341,8 @@ public class ConfigurationTests
         config.SetValueEnemyMelee("25");
 
         // Assert
-        Assert.AreEqual(6, config.EnemyMeleeAmount);
-        Assert.AreEqual(6, config.EnemyRangedAmount);
+        Assert.AreEqual(6, config.MeleeEnemyAmount);
+        Assert.AreEqual(6, config.RangedEnemyAmount);
     }
 }
+
