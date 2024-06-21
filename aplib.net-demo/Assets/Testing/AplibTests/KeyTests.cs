@@ -95,7 +95,7 @@ public class KeyTests
         );
 
         // Action : Walk to door
-        TransformPathfinderAction<KeyDoorBeliefSet> transformPathfinderPlayerToDoor = new(
+        TransformPathfinderAction<KeyDoorBeliefSet> moveToDoor = new(
             beliefSet =>
             {
                 GameObject player = beliefSet.Player;
@@ -105,23 +105,14 @@ public class KeyTests
             0.9f
             );
 
-        // Tactic : Move player to the key.
-        PrimitiveTactic<KeyDoorBeliefSet> moveToKeyTactic = new(transformPathfinderFromPlayerToKey);
-
-        // Tactic : Move player to the door.
-        PrimitiveTactic<KeyDoorBeliefSet> moveToDoorTactic = new(transformPathfinderPlayerToDoor);
-
         // Goal : Grab the key and open the door.
-        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsNextToDoor));
-        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToKeyTactic, IsKeyInInventory));
-        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, x => x.IsDoorOpen));
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new Goal<KeyDoorBeliefSet>(moveToDoor.Lift(), IsNextToDoor).Lift();
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new Goal<KeyDoorBeliefSet>(transformPathfinderFromPlayerToKey.Lift(), IsKeyInInventory).Lift();
+        PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new Goal<KeyDoorBeliefSet>(moveToDoor.Lift(), x => x.IsDoorOpen).Lift();
         SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new(moveToDoorFirstGoal, moveToKeyGoal, moveToDoorWithKeyGoal);
 
-        // DesireSet
-        DesireSet<KeyDoorBeliefSet> desire = new(finalGoal);
-
         // Create a new agent with the goal
-        BdiAgent<KeyDoorBeliefSet> agent = new(beliefSet, desire);
+        BdiAgent<KeyDoorBeliefSet> agent = new(beliefSet, finalGoal.Lift());
 
         AplibRunner testRunner = new(agent);
 
