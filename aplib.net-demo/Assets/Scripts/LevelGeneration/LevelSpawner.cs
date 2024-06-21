@@ -214,9 +214,14 @@ namespace LevelGeneration
         /// <param name="direction">The direction in which the door should be placed.</param>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="parent">The parent of the door.</param>
-        private (int x, int z, int x2, int z2)? PlaceDoor(Cell cell1, Cell cell2, Direction direction,
+        private (int x, int z, int x2, int z2)? PlaceDoor
+        (
+            Cell cell1,
+            Cell cell2,
+            Direction direction,
             ConnectedComponent startComponent,
-            Transform parent)
+            Transform parent
+        )
         {
             List<Cell> emptyCells = GetEmptyCells(startComponent);
 
