@@ -297,6 +297,8 @@ namespace Testing.AplibTests
 
             Action mark = new(_ => Debug.Log("MARK"));
             Action mark2 = new(_ => Debug.Log("MARK2"));
+            Tactic markT = new PrimitiveTactic(mark, _ => true);
+            Tactic markT2 = new PrimitiveTactic(mark2, _ => true);
             Goal markGoal = new(mark.Lift(), _ => false);
             Goal markGoal2 = new(mark2.Lift(), _ => false);
             bool smort = true;
@@ -318,7 +320,7 @@ namespace Testing.AplibTests
 
             Action useEquippedItemAction = new(beliefSet =>
             {
-                Debug.Log("Using item");
+                // Debug.Log("Using item");
                 beliefSet.Inventory.Observation.ActivateItem();
             });
             bool hasNotYetUsedEquippedItem = true;
@@ -443,34 +445,46 @@ namespace Testing.AplibTests
 
             Tactic useRagePotionIfUseful = FirstOf(guard:
                 beliefSet => beliefSet.DetermineEnemyToFocus(out float enemyDistance) != null
-                             && enemyDistance < 5
+                             && enemyDistance < 7
                              && beliefSet.Inventory.Observation.ContainsItem<RagePotion>(),
                 useRagePotion);
 
+            Action aimAndHitEnemy = new(beliefSet =>
+            {
+                Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
+                Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
+                playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
+                beliefSet.MeleeWeapon.Observation.UseWeapon();
+            });
             Action aimAtEnemy = new(beliefSet =>
             {
                 Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
                 Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
                 playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
-                Debug.Log($"Aiming at enemy {Time.time}");
             });
             PrimitiveTactic aimAtEnemyWhenNotAimedYet = new(aimAtEnemy, beliefSet =>
             {
                 AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float distance);
                 Transform playerTransform = beliefSet.PlayerRigidBody.Observation.transform;
-                if (Physics.Raycast(playerTransform.position, playerTransform.forward, out RaycastHit hitInfo, distance,
-                    LayerMask.GetMask("PlayerSelf", "Ignore Raycast")))
+                Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
+                Ray ray = new(playerTransform.position, playerRotation.forward);
+                Debug.DrawRay(playerTransform.position, playerRotation.forward, Color.green); // TODO remove
+
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, distance,
+                    ~LayerMask.GetMask("PlayerSelf", "Ignore Raycast")))
                 {
                     AbstractEnemy hitEnemy = hitInfo.collider.GetComponent<AbstractEnemy>();
-                    return hitEnemy != null && hitEnemy == enemyToFocus;
+                    var res = hitEnemy == null || hitEnemy != enemyToFocus;
+                    // Debug.LogError($"Aiming at enemy? {!res} {Time.time}");
+                    return res;
                 }
-                return false;
+                return true;
             });
 
             Action switchWeapon = new(beliefSet =>
             {
                 beliefSet.EquipmentInventory.Observation.MoveNext();
-                Debug.Log($"Switch weapon! {Time.time}");
+                // Debug.Log($"Switch weapon! {Time.time}");
             });
             PrimitiveTactic equipCrossbow = new(switchWeapon,
                 beliefSet => beliefSet.EquipmentInventory.Observation.CurrentEquipment is MeleeWeapon);
@@ -490,21 +504,21 @@ namespace Testing.AplibTests
             Action shootCrossbowAction = new(beliefSet =>
             {
                 beliefSet.RangedWeapon.Observation.UseWeapon();
-                Debug.Log($"Shoot! {Time.time}");
+                // Debug.Log($"Shoot! {Time.time}");
             });
             Tactic shootEnemy = FirstOf(guard: beliefSet =>
             {
                 AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
                 return enemyToFocus != null
                        && beliefSet.AmmoCount > 0
-                       && enemyDistance > beliefSet.MeleeWeapon.Observation.Range
+                       && enemyDistance > 0 //beliefSet.MeleeWeapon.Observation.Range
                        && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
-            }, equipCrossbow, aimAtEnemyWhenNotAimedYet, approachEnemyToShoot, shootCrossbowAction.Lift());
+            }, equipCrossbow, aimAtEnemyWhenNotAimedYet, markT, approachEnemyToShoot, shootCrossbowAction.Lift());
 
             Action swingBat = new(beliefSet =>
             {
                 beliefSet.MeleeWeapon.Observation.UseWeapon();
-                Debug.Log($"Swing! {Time.time}");
+                // Debug.Log($"Swing! {Time.time}");
             });
             PrimitiveTactic approachEnemyToMelee = new(approachEnemyAction, beliefSet =>
             {
@@ -512,9 +526,9 @@ namespace Testing.AplibTests
                 return distance > beliefSet.MeleeWeapon.Observation.Range;
             });
 
-            Tactic hitEnemy = FirstOf(equipBat, aimAtEnemyWhenNotAimedYet, approachEnemyToMelee, swingBat.Lift()); // TODO first equip bat
+            Tactic hitEnemy = FirstOf(equipBat, /*aimAtEnemyWhenNotAimedYet,*/ approachEnemyToMelee, aimAndHitEnemy.Lift() /*swingBat.Lift()*/);
 
-            Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
+            Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, /*shootEnemy,*/ hitEnemy);
             GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible);
 
 
@@ -526,12 +540,12 @@ namespace Testing.AplibTests
                 sideGoals: new (IGoalStructure, InterruptGuard)[]
                 {
                     // But, when an item can be picked up, do so
-                    (fetchVisibleItemGoal, beliefSet =>
-                        beliefSet.AnyItemIsVisible),
+                    // (fetchVisibleItemGoal, beliefSet =>
+                    //     beliefSet.AnyItemIsVisible),
 
                     // But, when an enemy is visible, react to it
-                    (reactToEnemy, beliefSet =>
-                        beliefSet.AnyEnemyVisible),
+                    // (reactToEnemy, beliefSet =>
+                    //     beliefSet.AnyEnemyVisible),
 
                     // But, when low on health and in possession of a healing potion, drink the potion
                     (restoreHealth, beliefSet =>

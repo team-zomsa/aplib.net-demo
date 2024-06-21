@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf8976215a2fea43905fbca9883432f, type: 3}
   m_Name: GamePlayGridConfig
   m_EditorClassIdentifier: 
-  UseSeed: 0
-  Seed: 1292257153
-  GridWidthX: 6
-  GridWidthZ: 6
+  UseSeed: 1
+  Seed: 135631194
+  GridWidthX: 5
+  GridWidthZ: 5
   AmountOfRooms: 2
