@@ -69,10 +69,7 @@ namespace LevelGeneration
             navMeshSurface.BuildNavMesh();
         }
 
-        public static void UpdateTileModel(Cell startTile)
-        {
-            startTile.Tile.IsStart = true;
-        }
+        public static void UpdateTileModel(Cell startTile) => startTile.Tile.IsStart = true;
 
         /// <summary>
         /// Places the grid in the world.
@@ -217,16 +214,36 @@ namespace LevelGeneration
         /// <param name="direction">The direction in which the door should be placed.</param>
         /// <param name="startComponent">The component to start the search from.</param>
         /// <param name="parent">The parent of the door.</param>
-        private void PlaceDoor(Cell cell1, Cell cell2, Direction direction, ConnectedComponent startComponent,
-            Transform parent)
+        private (int x, int z, int x2, int z2)? PlaceDoor
+        (
+            Cell cell1,
+            Cell cell2,
+            Direction direction,
+            ConnectedComponent startComponent,
+            Transform parent
+        )
         {
             List<Cell> emptyCells = GetEmptyCells(startComponent);
+
+            // If there are no empty cells, we cannot place a door. This can occur when there is exactly one cell per key and placed teleporters.
+            if (emptyCells.Count == 0) return null;
+
             Cell itemCell = emptyCells[SharedRandom.Next(emptyCells.Count)];
 
-            if (cell1.Tile is Room room)
-                _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room, direction, itemCell, parent);
-            else if (cell2.Tile is Room room2)
+            if (cell1.Tile is Room room1)
+            {
+                _gameObjectPlacer.PlaceDoorInDirection(cell1.X, cell1.Z, room1, direction, itemCell, parent);
+                return (cell1.X, cell1.Z, cell2.X, cell2.Z);
+            }
+
+            // ReSharper disable once InvertIf
+            if (cell2.Tile is Room room2)
+            {
                 _gameObjectPlacer.PlaceDoorInDirection(cell2.X, cell2.Z, room2, direction.Opposite(), itemCell, parent);
+                return (cell2.X, cell2.Z, cell1.X, cell1.Z);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -242,6 +259,7 @@ namespace LevelGeneration
             GameObject doors)
         {
             ConnectedComponent lastComponent = startComponent;
+            HashSet<(int x, int z, int x2, int z2)> placedDoors = new();
 
             while (neighbouringRooms.Count > 0)
             {
@@ -250,12 +268,20 @@ namespace LevelGeneration
 
                 foreach (Cell cell in Grid.Get4NeighbouringCells(neighbouringCell))
                 {
-                    if (!startComponent.Contains(cell)) continue;
+                    if (!startComponent.Contains(cell) ||
+                        placedDoors.Contains((cell.X, cell.Z, neighbouringCell.X, neighbouringCell.Z)) ||
+                        placedDoors.Contains((neighbouringCell.X, neighbouringCell.Z, cell.X, cell.Z)))
+                        continue;
 
                     Direction? direction = Grid.GetDirection(neighbouringCell, cell);
                     if (direction == null) continue;
 
-                    PlaceDoor(neighbouringCell, cell, direction.Value, startComponent, doors.transform);
+                    (int x, int z, int x2, int z2)? placed = PlaceDoor(neighbouringCell, cell, direction.Value,
+                        startComponent, doors.transform);
+
+                    if (placed == null) continue;
+
+                    placedDoors.Add(placed.Value);
 
                     (ConnectedComponent usedComponent, ConnectedComponent usedNeighbouringRooms) =
                         FindAndRemoveCellConnectedComponent(cell, connectedComponents);
@@ -299,6 +325,7 @@ namespace LevelGeneration
                 Grid.DetermineConnectedComponents().GetEnumerator();
 
             Teleporter.Teleporter previousExitTeleporter = null;
+            Cell previousExitCell = null;
             int connectedComponentsProcessed = 0;
 
             // Keep connecting the next connected components with the previous one, by placing a pair of teleporters.
@@ -339,12 +366,16 @@ namespace LevelGeneration
 
                 // Update iteration progress
                 previousExitTeleporter = exitTeleporter;
+                previousExitCell = nextExitCell;
                 connectedComponentsProcessed++;
             }
 
             // If at least one exit portal has been placed, the final exit teleporter will not be linked to
             // another connected component, for this final exit teleporter belongs to the final connected component.
-            if (connectedComponentsProcessed > 0) Destroy(previousExitTeleporter!.gameObject);
+            if (connectedComponentsProcessed <= 0) return;
+
+            Destroy(previousExitTeleporter!.gameObject);
+            previousExitCell!.CannotAddItem = false;
         }
     }
 }
