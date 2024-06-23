@@ -62,7 +62,6 @@ namespace Testing.AplibTests
     public class GameplayBeliefSet : BeliefSet
     {
         public const string EndItemName = "The Eternal Elixir";
-        public const string HealingPotionName = "Health Potion";
 
         /// <summary> The inventory in the scene. </summary>
         public readonly Belief<Inventory, Inventory> Inventory =
@@ -365,7 +364,7 @@ namespace Testing.AplibTests
                 beliefSet => beliefSet.PlayerRigidBody,
                 beliefSet => beliefSet.VisibleHealthPotions.Observation
                     .Select(x => x.transform.position)
-                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position)) // TODO distance is already calcualted
+                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position)) // TODO distance is already calculated
                     .First(),
                 0.3f);
             TransformPathfinderAction moveToVisibleRagePotionAction = new(
@@ -548,9 +547,9 @@ namespace Testing.AplibTests
                     //     beliefSet.AnyEnemyVisible),
 
                     // But, when low on health and in possession of a healing potion, drink the potion
-                    (restoreHealth, beliefSet =>
-                        beliefSet.PlayerHealthPercentage.Observation < 60
-                        && beliefSet.Inventory.Observation.ContainsItem<HealthPotion>()),
+                    // (restoreHealth, beliefSet =>
+                    //     beliefSet.PlayerHealthPercentage.Observation < 60
+                    //     && beliefSet.Inventory.Observation.ContainsItem<HealthPotion>()),
                 });
 
 
