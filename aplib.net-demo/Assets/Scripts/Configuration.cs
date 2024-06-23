@@ -81,6 +81,8 @@ public class Configuration : MonoBehaviour
 
         TotalItemCount = AmmoItemAmount + HealthItemAmount + RageItemAmount;
         TotalEnemyCount = RangedEnemyAmount + MeleeEnemyAmount;
+
+        CheckAllValuesToBeValid();
     }
 
     /// <summary>
