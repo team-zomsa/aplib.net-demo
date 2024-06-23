@@ -9,6 +9,7 @@ using UnityEngine.AI;
 using WFC;
 using ConnectedComponent = System.Collections.Generic.ISet<WFC.Cell>;
 using Grid = WFC.Grid;
+using Random = UnityEngine.Random;
 
 namespace LevelGeneration
 {
@@ -20,6 +21,14 @@ namespace LevelGeneration
     [RequireComponent(typeof(SpawningExtensions))]
     public class LevelSpawner : MonoBehaviour
     {
+        private readonly float _maxSaturation = 1f;
+
+        private readonly float _maxValue = 1f;
+
+        private readonly float _minSaturation = 0.5f;
+
+        private readonly float _minValue = 0.3f;
+
         /// <summary>
         /// The height of the offset of where we place the teleporter, with respect to the cell's floor.
         /// </summary>
@@ -149,10 +158,24 @@ namespace LevelGeneration
 
             MergeConnectedComponentsJoinedByTeleporterPair(teleporterList, connectedComponents);
 
+            ColorConnectedComponent(connectedComponents.Select(t => t.connectedComponent));
+
             (ConnectedComponent startComponent, ConnectedComponent neighbouringRooms) =
                 FindAndRemoveCellConnectedComponent(startCell, connectedComponents);
 
             ProcessNeighbouringRooms(startComponent, neighbouringRooms, connectedComponents, doors);
+        }
+
+        private void ColorConnectedComponent(IEnumerable<ConnectedComponent> connectedComponents)
+        {
+            foreach (ConnectedComponent connectedComponent in connectedComponents)
+            {
+                Color componentColor = Random.ColorHSV(0f, 1f, _minSaturation, _maxSaturation, _minValue, _maxValue);
+                foreach (Cell cell in connectedComponent)
+                {
+                    cell.Tile.GameObject.GetComponent<Renderer>().material.color = componentColor;
+                }
+            }
         }
 
         /// <summary>
