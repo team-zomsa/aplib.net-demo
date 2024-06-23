@@ -308,16 +308,15 @@ namespace Testing.AplibTests
         }
 
         /// <summary>
-        /// Given that the smart agent mimics realistic gameplay,
+        /// Given that the smart agent mimics godlike gameplay,
         /// When the agent is tasked to complete the game from start to end,
         /// The game must be winnable.
         /// </summary>
         /// <returns>An IEnumerator usable to iterate the test.</returns>
         [UnityTest]
         [Timeout(300000)]
-        public IEnumerator RealisticGameplayCanWinTheGame()
+        public IEnumerator GodlikeGameplayCanWinTheGame()
         {
-            InputManager.Instance.enabled = false;
             GameplayBeliefSet mainBeliefSet = new();
 
             #region fetchElixir
@@ -453,13 +452,11 @@ namespace Testing.AplibTests
 
             Action stepAsideRightAction = new(beliefSet =>
             {
-                Debug.Log("Dodging right!");
                 Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
                 playerRigidBody.AddForce(playerRigidBody.transform.right * 10, ForceMode.VelocityChange);
             });
             Action stepAsideLeftAction = new(beliefSet =>
             {
-                Debug.Log("Dodging left!");
                 Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
                 playerRigidBody.AddForce(playerRigidBody.transform.right * -10, ForceMode.VelocityChange);
             });
@@ -535,6 +532,297 @@ namespace Testing.AplibTests
                 Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
                 playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
                 beliefSet.RangedWeapon.Observation.UseWeapon();
+                beliefSet.Animator.Observation.SetTrigger("PlayerAttack");
+            });
+            Tactic shootEnemy = FirstOf(guard: beliefSet =>
+            {
+                AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
+                return enemyToFocus != null
+                       && beliefSet.AmmoCount > 0
+                       && enemyDistance > beliefSet.MeleeWeapon.Observation.Range
+                       && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
+            }, equipCrossbow, approachEnemyToShoot, aimAndShootCrossbowAction.Lift());
+
+            PrimitiveTactic approachEnemyToMelee = new(approachEnemyAction, beliefSet =>
+            {
+                _ = beliefSet.DetermineEnemyToFocus(out float distance);
+                return distance > beliefSet.MeleeWeapon.Observation.Range;
+            });
+
+            Tactic hitEnemy = FirstOf(equipBat, approachEnemyToMelee, aimAndHitEnemyAction.Lift());
+
+            Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
+            GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible || beliefSet.DetermineEnemyToFocus(out _) == null);
+
+            #endregion
+
+
+            DesireSet desireSet = new(
+                mainGoal: fetchElixir, // Fetch the elixir and bring it to the final room
+                sideGoals: new (IGoalStructure, InterruptGuard)[]
+                {
+                    // But, when an item can be picked up, do so
+                    (fetchVisibleItemGoal, beliefSet =>
+                        beliefSet.AnyItemIsVisible),
+
+                    // But, when an enemy is visible, react to it
+                    (reactToEnemy, beliefSet =>
+                        beliefSet.AnyEnemyVisible && beliefSet.DetermineEnemyToFocus(out _) != null),
+
+                    // But, when low on health and in possession of a healing potion, drink the potion
+                    (restoreHealth, beliefSet =>
+                        beliefSet.PlayerHealthPercentage.Observation < 60
+                        && beliefSet.Inventory.Observation.ContainsItem<HealthPotion>()),
+                });
+
+            // Act
+            BdiAgent agent = new(mainBeliefSet, desireSet);
+            AplibRunner testRunner = new(agent);
+
+            yield return testRunner.Test();
+
+            // Assert
+            Assert.AreEqual(CompletionStatus.Success, agent.Status);
+        }
+
+        /// <summary>
+        /// Given that the smart agent mimics realistic gameplay,
+        /// When the agent is tasked to complete the game from start to end,
+        /// The game must be winnable.
+        /// </summary>
+        /// <returns>An IEnumerator usable to iterate the test.</returns>
+        [UnityTest]
+        [Timeout(300000)]
+        public IEnumerator RealisticGameplayCanWinTheGame()
+        {
+            GameplayBeliefSet mainBeliefSet = new();
+
+            #region fetchElixir
+
+            GameObject[] keys = GameObject.FindGameObjectsWithTag("Key");
+            foreach (GameObject key in keys) key.AddComponent<BeforeDestroyKey>();
+
+            TransformPathfinderAction moveToElixir = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.EndItemPosition,
+                0.3f
+            );
+
+            TransformPathfinderAction moveToNextKeyAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.TargetKeyPosition,
+                0.3f
+            );
+
+            TransformPathfinderAction moveToWinAreaAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.WinAreaPosition,
+                0.3f
+            );
+
+            Goal moveToElixirGoal = new(moveToElixir.Lift(), endItemPickedUpPredicate);
+            Goal moveToNextKeyGoal = new(moveToNextKeyAction.Lift(), endItemReachablePredicate);
+            Goal moveToWinArea = new(moveToWinAreaAction.Lift(), playerIsInWinAreaPredicate);
+
+            GoalStructure fetchElixir = Seq(moveToNextKeyGoal.Lift(), moveToElixirGoal.Lift(), moveToWinArea.Lift());
+
+            #region Predicates
+
+            bool endItemReachablePredicate(GameplayBeliefSet beliefSet)
+            {
+                Rigidbody playerRigidbody = beliefSet.PlayerRigidBody;
+                Vector3 target = beliefSet.EndItemPosition;
+
+                NavMeshPath path = new();
+                NavMesh.CalculatePath(playerRigidbody.position, target, NavMesh.AllAreas, path);
+                return path.status == NavMeshPathStatus.PathComplete;
+            }
+
+            bool endItemPickedUpPredicate(GameplayBeliefSet beliefSet)
+            {
+                Inventory inventory = beliefSet.Inventory;
+                return inventory.ContainsItem(GameplayBeliefSet.EndItemName);
+            }
+
+            bool playerIsInWinAreaPredicate(GameplayBeliefSet beliefSet)
+            {
+                Vector3 playerPos = beliefSet.PlayerRigidBody.Observation.position;
+                Vector3 centreOfWinArea = beliefSet.WinAreaPosition;
+                return Vector3.Distance(playerPos, centreOfWinArea) < 10f; // 10 is approximately the radius of the room
+            }
+
+            #endregion
+
+            #endregion
+
+            #region fetchVisibleItem
+
+            Action rotateInventory = new(beliefSet => beliefSet.Inventory.Observation.SwitchItem());
+            Goal equipHealingPotion = new(rotateInventory.Lift(),
+                beliefSet => beliefSet.Inventory.Observation.EquippedItem is HealthPotion);
+            PrimitiveTactic equipRagePotion = new(rotateInventory,
+                beliefSet => beliefSet.Inventory.Observation.EquippedItem is not RagePotion);
+
+            Action useEquippedItemAction = new(beliefSet => beliefSet.Inventory.Observation.ActivateItem());
+            bool hasNotYetUsedEquippedItem = true;
+            bool hasUsedEquippedItem = false;
+            PrimitiveTactic useEquippedItemTactic = new(useEquippedItemAction,
+                _ => hasNotYetUsedEquippedItem = !hasNotYetUsedEquippedItem);
+            Goal useEquippedItemGoal = new(useEquippedItemAction.Lift(),
+                _ => hasUsedEquippedItem = !hasUsedEquippedItem);
+
+            SequentialGoalStructure restoreHealth = Seq(equipHealingPotion.Lift(), useEquippedItemGoal.Lift());
+            Tactic useRagePotion = FirstOf(equipRagePotion, useEquippedItemTactic);
+
+
+            TransformPathfinderAction moveToVisibleHealthPotionAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.VisibleHealthPotions.Observation
+                    .Select(x => x.transform.position)
+                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position)) // TODO distance is already calculated
+                    .First(),
+                0.3f);
+            TransformPathfinderAction moveToVisibleRagePotionAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.VisibleRagePotions.Observation
+                    .Select(x => x.transform.position)
+                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position))
+                    .First(),
+                0.3f);
+            TransformPathfinderAction moveToVisibleAmmoAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.VisibleAmmo.Observation
+                    .Select(x => x.item.transform.position)
+                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position))
+                    .First(),
+                0.3f);
+            TransformPathfinderAction moveToVisibleKeyAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.VisibleKeys.Observation
+                    .Select(x => x.item.transform.position)
+                    .OrderBy(x => Vector3.Distance(x, beliefSet.PlayerRigidBody.Observation.position))
+                    .First(),
+                0.3f);
+
+            PrimitiveTactic pickUpVisibleHealthPotion = new(moveToVisibleHealthPotionAction,
+                beliefSet => beliefSet.VisibleHealthPotions.Observation.Length != 0);
+            PrimitiveTactic pickUpVisibleRagePotion = new(moveToVisibleRagePotionAction,
+                beliefSet => beliefSet.VisibleRagePotions.Observation.Length != 0);
+            PrimitiveTactic pickUpVisibleAmmo = new(moveToVisibleAmmoAction,
+                beliefSet => beliefSet.VisibleAmmo.Observation.Length != 0);
+            PrimitiveTactic pickUpVisibleKey = new(moveToVisibleKeyAction,
+                beliefSet => beliefSet.VisibleKeys.Observation.Length != 0);
+
+            Tactic fetchPotionIfDistancedMelee = FirstOf(guard: beliefSet =>
+                    beliefSet.DetermineEnemyToFocus(out float distance) is MeleeEnemy && distance > 5 &&
+                    ((!beliefSet.Inventory.Observation.ContainsItem<RagePotion>() &&
+                      beliefSet.VisibleRagePotions.Observation.Length != 0) ||
+                     (beliefSet.PlayerHealthPercentage.Observation < 30 &&
+                      beliefSet.VisibleHealthPotions.Observation.Length != 0)),
+                pickUpVisibleHealthPotion, pickUpVisibleRagePotion);
+
+            Tactic fetchVisibleItem = FirstOf(pickUpVisibleHealthPotion, pickUpVisibleRagePotion, pickUpVisibleAmmo, pickUpVisibleKey);
+            GoalStructure fetchVisibleItemGoal = new Goal(fetchVisibleItem, beliefSet => !beliefSet.AnyItemIsVisible);
+
+            #endregion
+
+            #region reactToEnemy
+
+            float wakeUpTimeStamp = -1;
+            const float sleepDuration = 0.3f; // seconds
+            Action sleepAction = new(beliefSet =>
+            {
+                Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
+                Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
+                playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
+            } );
+            PrimitiveTactic sleep = new(sleepAction, _ => Time.time < wakeUpTimeStamp);
+
+
+            Action stepAsideRightAction = new(beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+                playerRigidBody.AddForce(playerRigidBody.transform.right * 10, ForceMode.VelocityChange);
+            });
+            Action stepAsideLeftAction = new(beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+                playerRigidBody.AddForce(playerRigidBody.transform.right * -10, ForceMode.VelocityChange);
+            });
+            PrimitiveTactic stepAsideLeft = new(stepAsideLeftAction, beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+
+                Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.left);
+                return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
+            });
+            PrimitiveTactic stepAsideRight = new(stepAsideRightAction, beliefSet =>
+            {
+                Rigidbody playerRigidBody = beliefSet.PlayerRigidBody;
+
+                Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.right);
+                return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
+            });
+
+            Tactic dodgeCrossbow = FirstOf(guard: beliefSet =>
+            {
+                AbstractEnemy enemy = beliefSet.DetermineEnemyToFocus(out _);
+                return enemy is RangedEnemy && enemy.IsTriggered();
+            },
+            stepAsideLeft, stepAsideRight);
+
+            Tactic fetchAmmo = FirstOf(guard: beliefSet =>
+            {
+                AbstractEnemy enemy = beliefSet.DetermineEnemyToFocus(out float enemyDistance);
+
+                return enemy is RangedEnemy
+                       && beliefSet.AmmoCount < 4
+                       && beliefSet.VisibleAmmo.Observation.Length != 0
+                       && beliefSet.VisibleAmmo.Observation.Min(x => x.distance) < enemyDistance / 3;
+            },
+            pickUpVisibleAmmo);
+
+            Tactic useRagePotionIfUseful = FirstOf(guard:
+                beliefSet => beliefSet.DetermineEnemyToFocus(out float enemyDistance) != null
+                             && enemyDistance < 9
+                             && beliefSet.Inventory.Observation.ContainsItem<RagePotion>(),
+                useRagePotion);
+
+            Action aimAndHitEnemyAction = new(beliefSet =>
+            {
+                Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
+                Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
+                playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
+                beliefSet.MeleeWeapon.Observation.UseWeapon();
+                wakeUpTimeStamp = Time.time + sleepDuration;
+                beliefSet.Animator.Observation.SetTrigger("PlayerAttack");
+            });
+
+            Action switchWeapon = new(beliefSet => beliefSet.EquipmentInventory.Observation.MoveNext());
+            PrimitiveTactic equipCrossbow = new(switchWeapon,
+                beliefSet => beliefSet.EquipmentInventory.Observation.CurrentEquipment is not RangedWeapon);
+            PrimitiveTactic equipBat = new(switchWeapon,
+                beliefSet => beliefSet.EquipmentInventory.Observation.CurrentEquipment is not MeleeWeapon);
+
+            TransformPathfinderAction approachEnemyAction = new(
+                beliefSet => beliefSet.PlayerRigidBody,
+                beliefSet => beliefSet.DetermineEnemyToFocus(out _).transform.position,
+                0.3f
+            );
+            PrimitiveTactic approachEnemyToShoot = new(approachEnemyAction, beliefSet =>
+            {
+                _ = beliefSet.DetermineEnemyToFocus(out float distance);
+                return distance > beliefSet.RangedWeapon.Observation.Range;
+            });
+            Action aimAndShootCrossbowAction = new(beliefSet =>
+            {
+                Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
+                Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
+                playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
+                beliefSet.RangedWeapon.Observation.UseWeapon();
+                wakeUpTimeStamp = Time.time + sleepDuration;
                 beliefSet.Animator.Observation.SetTrigger("PlayerAttack");
             });
             Tactic shootEnemy = FirstOf(guard: beliefSet =>
