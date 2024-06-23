@@ -231,31 +231,31 @@ public class Configuration : MonoBehaviour
         }
     }
 
-    public void CheckItemOverflow()
+    private void CheckItemOverflow()
     {
         TotalItemCount = AmmoItemAmount + HealthItemAmount + RageItemAmount;
-        if (TotalItemCount > GridVolume * _maxPercentage)
-        {
-            int maxCount = Mathf.CeilToInt(GridVolume * _maxPercentage / 3);
 
-            TotalItemCount = Mathf.CeilToInt(GridVolume * _maxPercentage);
-            AmmoItemAmount = maxCount;
-            HealthItemAmount = maxCount;
-            RageItemAmount = maxCount;
-        }
+        if (!(TotalItemCount > GridVolume * _maxPercentage)) return;
+
+        int maxCount = Mathf.CeilToInt(GridVolume * _maxPercentage / 3);
+
+        TotalItemCount = Mathf.CeilToInt(GridVolume * _maxPercentage);
+        AmmoItemAmount = maxCount;
+        HealthItemAmount = maxCount;
+        RageItemAmount = maxCount;
     }
 
-    public void CheckEnemyOverflow()
+    private void CheckEnemyOverflow()
     {
         TotalEnemyCount = RangedEnemyAmount + MeleeEnemyAmount;
-        if (TotalEnemyCount > GridVolume * _maxPercentage)
-        {
-            int maxCount = Mathf.CeilToInt(GridVolume * _maxPercentage / 3);
 
-            TotalItemCount = Mathf.CeilToInt(GridVolume * _maxPercentage);
-            MeleeEnemyAmount = maxCount;
-            RangedEnemyAmount = maxCount;
-        }
+        if (!(TotalEnemyCount > GridVolume * _maxPercentage)) return;
+
+        int maxCount = Mathf.CeilToInt(GridVolume * _maxPercentage / 3);
+
+        TotalItemCount = Mathf.CeilToInt(GridVolume * _maxPercentage);
+        MeleeEnemyAmount = maxCount;
+        RangedEnemyAmount = maxCount;
     }
 
     /// <summary>
