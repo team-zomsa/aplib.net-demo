@@ -1,21 +1,13 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
 using Entities.Weapons;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -24,7 +16,6 @@ using static Aplib.Core.Combinators;
 using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.GameplayBeliefSet>;
 using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.GameplayBeliefSet>;
 using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.GameplayBeliefSet>;
-using FirstOfTactic = Aplib.Core.Intent.Tactics.FirstOfTactic<Testing.AplibTests.GameplayBeliefSet>;
 using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.GameplayBeliefSet>;
 using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.GameplayBeliefSet>;
 using SequentialGoalStructure = Aplib.Core.Desire.GoalStructures.SequentialGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
@@ -36,7 +27,7 @@ using InterruptGuard = System.Func<Testing.AplibTests.GameplayBeliefSet, bool>;
 
 namespace Testing.AplibTests
 {
-    // The realistic gameplay, ordered on priority:
+    // The realistic gameplay, ordered on priority (not fully implemented yet):
     // - If health below 60% and have health potion, use it
     //
     // - Determine which enemy to engage, IF at least one is visible
@@ -130,6 +121,28 @@ namespace Testing.AplibTests
             referenceTo => referenceTo.ItemsObject.GetComponentsInChildren<Item>()
                 .Any(item => ItemVisibleFrom(item, referenceTo.Player.EyesPosition, out _)));
 
+        /// <summary> The position to which the player must navigate in order to fetch the end item. </summary>
+        public readonly Belief<GameObject, Vector3> EndItemPosition = new(
+            GameObject.Find(EndItemName), x => x.transform.position,
+            () => !GameObject.Find("InventoryObject").GetComponent<Inventory>().ContainsItem(EndItemName));
+
+        /// <summary> The position of where the player started </summary>
+        public readonly Belief<Transform, Vector3> WinAreaPosition = new(
+            GameObject.FindWithTag("Win").transform, x => x.position);
+
+        public readonly Belief<AmmoPouch, int> AmmoCount = new(
+            GameObject.Find("EquipmentInventory").GetComponent<AmmoPouch>(), x => x.CurrentAmmoCount);
+
+        public readonly Belief<MeleeWeapon, MeleeWeapon> MeleeWeapon = new(
+            GameObject.Find("Player").GetComponentInChildren<MeleeWeapon>(true), x => x);
+
+        public readonly Belief<RangedWeapon, RangedWeapon> RangedWeapon = new(
+            GameObject.Find("Player").GetComponentInChildren<RangedWeapon>(true), x => x);
+
+        public readonly Belief<EquipmentInventory, EquipmentInventory> EquipmentInventory = new(
+            GameObject.Find("EquipmentInventory").GetComponent<EquipmentInventory>(), x => x);
+
+
         /// <summary> The position of the next key to obtain to reach the end room. </summary>
         public readonly Belief<IEnumerable<GameObject>, Vector3> TargetKeyPosition = new(
             GameObject.FindGameObjectsWithTag("Key").Where(x => x != null), keys =>
@@ -148,42 +161,6 @@ namespace Testing.AplibTests
                 // If no key is reachable, return Vector3.zero.
                 return Vector3.zero;
             });
-
-        /// <summary> The position to which the player must navigate in order to fetch the end item. </summary>
-        public readonly Belief<GameObject, Vector3> EndItemPosition = new(
-            GameObject.Find(EndItemName), x => x.transform.position,
-            () => !GameObject.Find("InventoryObject").GetComponent<Inventory>().ContainsItem(EndItemName));
-
-        /// <summary> The position of where the player started </summary>
-        public readonly Belief<Transform, Vector3> WinAreaPosition = new(
-            GameObject.FindWithTag("Win").transform, x => x.position);
-
-
-        private static bool ItemVisibleFrom(Item item, Vector3 origin, out float itemDistance)
-            => IsVisibleFrom(item.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"), out itemDistance);
-
-        private static bool EnemyVisibleFrom(AbstractEnemy enemy, Vector3 origin, out float enemyDistance)
-            => IsVisibleFrom(enemy.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Enemy", "Ignore Raycast"), out enemyDistance);
-
-        private static bool IsVisibleFrom(Vector3 target, Vector3 origin, LayerMask layerMask, out float enemyDistance)
-        {
-            enemyDistance = Vector3.Distance(origin, target);
-
-            if (!Physics.Raycast(origin, target - origin, out _, enemyDistance, layerMask))
-                return true; // Visible, nothing in the way
-
-            enemyDistance = 0;
-            return false; // Something is in the way
-
-        }
-
-        /// Merely here to simplify types above
-        public class ItemsAndPlayerEyesReference
-        {
-            public GameObject ItemsObject;
-            public PlayerLogic Player;
-        }
-
 
         /// <summary> Determines which enemies are visible and recognizable by the player. </summary>
         public readonly
@@ -260,22 +237,38 @@ namespace Testing.AplibTests
             return null;
         }
 
-        public readonly Belief<AmmoPouch, int> AmmoCount = new(
-            GameObject.Find("EquipmentInventory").GetComponent<AmmoPouch>(), x => x.CurrentAmmoCount);
+        #region HelperMethods
 
-        public readonly Belief<MeleeWeapon, MeleeWeapon> MeleeWeapon = new(
-            GameObject.Find("Player").GetComponentInChildren<MeleeWeapon>(true), x => x);
+        private static bool ItemVisibleFrom(Item item, Vector3 origin, out float itemDistance)
+            => IsVisibleFrom(item.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"), out itemDistance);
 
-        public readonly Belief<RangedWeapon, RangedWeapon> RangedWeapon = new(
-            GameObject.Find("Player").GetComponentInChildren<RangedWeapon>(true), x => x);
+        private static bool EnemyVisibleFrom(AbstractEnemy enemy, Vector3 origin, out float enemyDistance)
+            => IsVisibleFrom(enemy.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Enemy", "Ignore Raycast"), out enemyDistance);
 
-        public readonly Belief<EquipmentInventory, EquipmentInventory> EquipmentInventory = new(
-            GameObject.Find("EquipmentInventory").GetComponent<EquipmentInventory>(), x => x);
+        private static bool IsVisibleFrom(Vector3 target, Vector3 origin, LayerMask layerMask, out float enemyDistance)
+        {
+            enemyDistance = Vector3.Distance(origin, target);
+
+            if (!Physics.Raycast(origin, target - origin, out _, enemyDistance, layerMask))
+                return true; // Visible, nothing in the way
+
+            enemyDistance = 0;
+            return false; // Something is in the way
+        }
+
+        #endregion
 
         /// Merely here to simplify types above
         public class EnemiesObjectAndPlayerEyesReference
         {
             public GameObject EnemiesObject;
+            public PlayerLogic Player;
+        }
+
+        /// Merely here to simplify types above
+        public class ItemsAndPlayerEyesReference
+        {
+            public GameObject ItemsObject;
             public PlayerLogic Player;
         }
     }
@@ -301,48 +294,10 @@ namespace Testing.AplibTests
         [Timeout(300000)]
         public IEnumerator RealisticGameplayCanWinTheGame()
         {
-            // Arrange
             InputManager.Instance.enabled = false;
             GameplayBeliefSet mainBeliefSet = new();
 
-            Action mark = new(_ => Debug.Log("MARK"));
-            Action mark2 = new(_ => Debug.Log("MARK2"));
-            Tactic markT = new PrimitiveTactic(mark, _ => true);
-            Tactic markT2 = new PrimitiveTactic(mark2, _ => true);
-            Goal markGoal = new(mark.Lift(), _ => false);
-            Goal markGoal2 = new(mark2.Lift(), _ => false);
-            bool smort = true;
-
-            Action smartMark = new(_ => Debug.Log("SMART MARK"));
-            Goal smartMarkGoal = new(smartMark.Lift(), _ => smort = !smort);
-            bool smort2 = true;
-            Action smartMark2 = new(_ => Debug.Log("SMART MARK 2"));
-            Goal smartMarkGoal2 = new(smartMark2.Lift(), _ => smort2 = !smort2);
-
-
-            Action rotateInventory = new(beliefSet => beliefSet.Inventory.Observation.SwitchItem());
-            // TODO Assumes the item is in the inventory
-            Goal equipHealingPotion = new(rotateInventory.Lift(),
-                beliefSet => beliefSet.Inventory.Observation.EquippedItem is HealthPotion);
-            // TODO Assumes the item is in the inventory
-            PrimitiveTactic equipRagePotion = new(rotateInventory,
-                beliefSet => beliefSet.Inventory.Observation.EquippedItem is not RagePotion);
-
-            Action useEquippedItemAction = new(beliefSet =>
-            {
-                // Debug.Log("Using item");
-                beliefSet.Inventory.Observation.ActivateItem();
-            });
-            bool hasNotYetUsedEquippedItem = true;
-            bool hasUsedEquippedItem = false;
-            PrimitiveTactic useEquippedItemTactic = new(useEquippedItemAction,
-                _ => hasNotYetUsedEquippedItem = !hasNotYetUsedEquippedItem);
-            Goal useEquippedItemGoal = new(useEquippedItemAction.Lift(),
-                _ => hasUsedEquippedItem = !hasUsedEquippedItem);
-
-            SequentialGoalStructure restoreHealth = Seq(equipHealingPotion.Lift(), useEquippedItemGoal.Lift());
-            Tactic useRagePotion = FirstOf(equipRagePotion, useEquippedItemTactic); // TODO probleem dat SEQ hier nodig was?
-
+            #region fetchElixir
 
             GameObject[] keys = GameObject.FindGameObjectsWithTag("Key");
             foreach (GameObject key in keys) key.AddComponent<BeforeDestroyKey>();
@@ -370,6 +325,55 @@ namespace Testing.AplibTests
             Goal moveToWinArea = new(moveToWinAreaAction.Lift(), playerIsInWinAreaPredicate);
 
             GoalStructure fetchElixir = Seq(moveToNextKeyGoal.Lift(), moveToElixirGoal.Lift(), moveToWinArea.Lift());
+
+            #region Predicates
+
+            bool endItemReachablePredicate(GameplayBeliefSet beliefSet)
+            {
+                Rigidbody playerRigidbody = beliefSet.PlayerRigidBody;
+                Vector3 target = beliefSet.EndItemPosition;
+
+                NavMeshPath path = new();
+                NavMesh.CalculatePath(playerRigidbody.position, target, NavMesh.AllAreas, path);
+                return path.status == NavMeshPathStatus.PathComplete;
+            }
+
+            bool endItemPickedUpPredicate(GameplayBeliefSet beliefSet)
+            {
+                Inventory inventory = beliefSet.Inventory;
+                return inventory.ContainsItem(GameplayBeliefSet.EndItemName);
+            }
+
+            bool playerIsInWinAreaPredicate(GameplayBeliefSet beliefSet)
+            {
+                Vector3 playerPos = beliefSet.PlayerRigidBody.Observation.position;
+                Vector3 centreOfWinArea = beliefSet.WinAreaPosition;
+                return Vector3.Distance(playerPos, centreOfWinArea) < 10f; // 10 is approximately the radius of the room
+            }
+
+            #endregion
+
+            #endregion
+
+            #region fetchVisibleItem
+
+            Action rotateInventory = new(beliefSet => beliefSet.Inventory.Observation.SwitchItem());
+            Goal equipHealingPotion = new(rotateInventory.Lift(),
+                beliefSet => beliefSet.Inventory.Observation.EquippedItem is HealthPotion);
+            PrimitiveTactic equipRagePotion = new(rotateInventory,
+                beliefSet => beliefSet.Inventory.Observation.EquippedItem is not RagePotion);
+
+            Action useEquippedItemAction = new(beliefSet => beliefSet.Inventory.Observation.ActivateItem());
+            bool hasNotYetUsedEquippedItem = true;
+            bool hasUsedEquippedItem = false;
+            PrimitiveTactic useEquippedItemTactic = new(useEquippedItemAction,
+                _ => hasNotYetUsedEquippedItem = !hasNotYetUsedEquippedItem);
+            Goal useEquippedItemGoal = new(useEquippedItemAction.Lift(),
+                _ => hasUsedEquippedItem = !hasUsedEquippedItem);
+
+            SequentialGoalStructure restoreHealth = Seq(equipHealingPotion.Lift(), useEquippedItemGoal.Lift());
+            Tactic useRagePotion = FirstOf(equipRagePotion, useEquippedItemTactic);
+
 
             TransformPathfinderAction moveToVisibleHealthPotionAction = new(
                 beliefSet => beliefSet.PlayerRigidBody,
@@ -417,6 +421,13 @@ namespace Testing.AplibTests
                       beliefSet.VisibleHealthPotions.Observation.Length != 0)),
                 pickUpVisibleHealthPotion, pickUpVisibleRagePotion);
 
+            Tactic fetchVisibleItem = FirstOf(pickUpVisibleHealthPotion, pickUpVisibleRagePotion, pickUpVisibleAmmo, pickUpVisibleKey);
+            GoalStructure fetchVisibleItemGoal = new Goal(fetchVisibleItem, beliefSet => !beliefSet.AnyItemIsVisible);
+
+            #endregion
+
+            #region reactToEnemy
+
             Action stepAsideRightAction = new(beliefSet =>
             {
                 Debug.Log("Dodging right!");
@@ -435,7 +446,7 @@ namespace Testing.AplibTests
 
                 Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.left);
                 return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
-                    ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast")); // Whether something is on the left, but not the player or items
+                    ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
             });
             PrimitiveTactic stepAsideRight = new(stepAsideRightAction, beliefSet =>
             {
@@ -443,7 +454,7 @@ namespace Testing.AplibTests
 
                 Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.right);
                 return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
-                    ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast")); // Whether something is on the left, but not the player or items
+                    ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
             });
 
             Tactic dodgeCrossbow = FirstOf(guard: beliefSet =>
@@ -477,30 +488,6 @@ namespace Testing.AplibTests
                 playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
                 beliefSet.MeleeWeapon.Observation.UseWeapon();
             });
-            // Action aimAtEnemy = new(beliefSet =>
-            // {
-            //     Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
-            //     Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
-            //     playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
-            // });
-            // PrimitiveTactic aimAtEnemyWhenNotAimedYet = new(aimAtEnemy, beliefSet =>
-            // {
-            //     AbstractEnemy enemyToFocus = beliefSet.DetermineEnemyToFocus(out float distance);
-            //     Transform playerTransform = beliefSet.PlayerRigidBody.Observation.transform;
-            //     Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
-            //     Ray ray = new(playerTransform.position, playerRotation.forward);
-            //     Debug.DrawRay(playerTransform.position, playerRotation.forward, Color.green); // TODO remove
-            //
-            //     if (Physics.Raycast(ray, out RaycastHit hitInfo, distance,
-            //         ~LayerMask.GetMask("PlayerSelf", "Ignore Raycast")))
-            //     {
-            //         AbstractEnemy hitEnemy = hitInfo.collider.GetComponent<AbstractEnemy>();
-            //         var res = hitEnemy == null || hitEnemy != enemyToFocus;
-            //         // Debug.LogError($"Aiming at enemy? {!res} {Time.time}");
-            //         return res;
-            //     }
-            //     return true;
-            // });
 
             Action switchWeapon = new(beliefSet => beliefSet.EquipmentInventory.Observation.MoveNext());
             PrimitiveTactic equipCrossbow = new(switchWeapon,
@@ -534,11 +521,6 @@ namespace Testing.AplibTests
                        && (enemyToFocus is RangedEnemy || enemyToFocus is MeleeEnemy && beliefSet.AmmoCount > 3);
             }, equipCrossbow, approachEnemyToShoot, aimAndShootCrossbowAction.Lift());
 
-            // Action swingBat = new(beliefSet =>
-            // {
-            //     beliefSet.MeleeWeapon.Observation.UseWeapon();
-            //     // Debug.Log($"Swing! {Time.time}");
-            // });
             PrimitiveTactic approachEnemyToMelee = new(approachEnemyAction, beliefSet =>
             {
                 _ = beliefSet.DetermineEnemyToFocus(out float distance);
@@ -550,9 +532,8 @@ namespace Testing.AplibTests
             Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
             GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible);
 
+            #endregion
 
-            Tactic fetchVisibleItem = FirstOf(pickUpVisibleHealthPotion, pickUpVisibleRagePotion, pickUpVisibleAmmo, pickUpVisibleKey);
-            GoalStructure fetchVisibleItemGoal = new Goal(fetchVisibleItem, beliefSet => !beliefSet.AnyItemIsVisible);
 
             DesireSet desireSet = new(
                 mainGoal: fetchElixir, // Fetch the elixir and bring it to the final room
@@ -581,35 +562,6 @@ namespace Testing.AplibTests
 
             // Assert
             Assert.AreEqual(CompletionStatus.Success, agent.Status);
-            yield break;
-
-
-            #region Predicates
-
-            bool endItemReachablePredicate(GameplayBeliefSet beliefSet)
-            {
-                Rigidbody playerRigidbody = beliefSet.PlayerRigidBody;
-                Vector3 target = beliefSet.EndItemPosition;
-
-                NavMeshPath path = new();
-                NavMesh.CalculatePath(playerRigidbody.position, target, NavMesh.AllAreas, path);
-                return path.status == NavMeshPathStatus.PathComplete;
-            }
-
-            bool endItemPickedUpPredicate(GameplayBeliefSet beliefSet)
-            {
-                Inventory inventory = beliefSet.Inventory;
-                return inventory.ContainsItem(GameplayBeliefSet.EndItemName);
-            }
-
-            bool playerIsInWinAreaPredicate(GameplayBeliefSet beliefSet)
-            {
-                Vector3 playerPos = beliefSet.PlayerRigidBody.Observation.position;
-                Vector3 centreOfWinArea = beliefSet.WinAreaPosition;
-                return Vector3.Distance(playerPos, centreOfWinArea) < 10f; // 10 is approximately the radius of the room
-            }
-
-            #endregion
         }
     }
 }
