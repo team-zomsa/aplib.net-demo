@@ -20,6 +20,8 @@ namespace Entities.Weapons
         [SerializeField]
         private int _range = 50;
 
+        public int Range => _range;
+
         [SerializeField]
         private AmmoPouch _ammoPouch;
 

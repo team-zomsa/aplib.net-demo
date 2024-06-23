@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 941527993150852492}
   - component: {fileID: 7978339044951059778}
   - component: {fileID: 1558264426942698920}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6903289118291040228}
   - component: {fileID: 3563055558079486355}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: SpawnArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,8 @@ GameObject:
   - component: {fileID: 3330466833410674930}
   - component: {fileID: 98459274967107310}
   - component: {fileID: 4500473103708748035}
-  m_Layer: 0
+  - component: {fileID: 142685328840719027}
+  m_Layer: 9
   m_Name: Target Dummy Body
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -517,6 +518,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pointAmount: 15
+--- !u!95 &142685328840719027
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5361096258398959275}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6630535104659245811
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +550,7 @@ GameObject:
   - component: {fileID: 8164520581160558319}
   - component: {fileID: 8552330508886415421}
   - component: {fileID: 2271626697261335243}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visor
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -609,7 +631,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1714929719199334556}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Target Dummy
   m_TagString: Enemy
   m_Icon: {fileID: 0}

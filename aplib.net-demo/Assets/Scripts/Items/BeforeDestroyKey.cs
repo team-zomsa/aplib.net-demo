@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace Assets.Scripts.Items
 {
     /// <summary>
-    /// Attach this class to make object pickupable.
+    /// Performs logic belonging to when this key is picked up, such as communicating to the NavMesh that the door is open.
     /// </summary>
     [RequireComponent(typeof(Key))]
     public class BeforeDestroyKey : MonoBehaviour
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Items
             if (!key) throw new UnityException("Key not found!");
 
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Door");
-            GameObject door = gameObjects.FirstOrDefault(go => go.GetComponent<Door>().TryOpenDoor(key));
+            GameObject door = gameObjects.FirstOrDefault(go => go.GetComponent<Door>().KeyMatchesDoor(key));
 
             if (!door) throw new UnityException("Door not found!");
 

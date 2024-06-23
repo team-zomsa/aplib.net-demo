@@ -30,6 +30,7 @@ namespace Assets.Scripts.Items
             base.UseItem();
             _playerHealth.IncreaseHealth(_healAmount);
             Instantiate(_playerEffect, _playerHealth.transform);
+            Debug.Log($"Healed player with {_healAmount}");
         }
     }
 }

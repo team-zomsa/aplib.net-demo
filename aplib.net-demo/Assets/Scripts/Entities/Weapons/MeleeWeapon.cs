@@ -17,6 +17,8 @@ namespace Entities.Weapons
         [SerializeField]
         private float _height = 4;
 
+        public float Range => _height;
+
         /// <summary>
         /// The radius of the hitzone in world units.
         /// The two spheres that define the hitzone have the same radius.
