@@ -171,6 +171,15 @@ namespace Testing.AplibTests
         public readonly Belief<EquipmentInventory, EquipmentInventory> EquipmentInventory = new(
             GameObject.Find("EquipmentInventory").GetComponent<EquipmentInventory>(), x => x);
 
+        public readonly Belief<Animator, Animator> Animator = new(
+            GameObject.Find("Player").GetComponent<Animator>(), x =>
+            {
+                x.SetFloat("PlayerVelocity", 3f);
+                x.SetBool("PlayerGrounded", true);
+                return x;
+                // \(^.^)/ manually setting the animator to walk
+            });
+
         /// <summary> Determines which enemies are visible and recognizable by the player. </summary>
         public readonly
             Belief<EnemiesObjectAndPlayerEyesReference, (AbstractEnemy[] enemies, float[] distances)>
@@ -226,7 +235,6 @@ namespace Testing.AplibTests
             for (int i = 0; i < groupedEnemies.Length; i++)
             {
                 IEnumerable<int> group = groupedEnemies[i];
-                if (!group.Any()) continue;
 
                 // If low on health, filter over untriggered enemies (do not attack them)
                 if (PlayerHealthPercentage.Observation < 30)
@@ -234,8 +242,12 @@ namespace Testing.AplibTests
                     group = group.Where(enemyIndex => !enemies[enemyIndex].IsTriggered());
                 }
 
+                int[] groupArray = group.ToArray();
+
+                if (!groupArray.Any()) continue;
+
                 // Ranged enemies further away should be targeted first
-                int enemyToFocusIndex = group
+                int enemyToFocusIndex = groupArray
                     .OrderBy(enemyIndex => distances[enemyIndex] * (enemies[enemyIndex] is RangedEnemy ? -1 : 1))
                     .First();
                 distance = distances[enemyToFocusIndex];
@@ -488,7 +500,7 @@ namespace Testing.AplibTests
 
             Tactic useRagePotionIfUseful = FirstOf(guard:
                 beliefSet => beliefSet.DetermineEnemyToFocus(out float enemyDistance) != null
-                             && enemyDistance < 7
+                             && enemyDistance < 9
                              && beliefSet.Inventory.Observation.ContainsItem<RagePotion>(),
                 useRagePotion);
 
@@ -498,6 +510,7 @@ namespace Testing.AplibTests
                 Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
                 playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
                 beliefSet.MeleeWeapon.Observation.UseWeapon();
+                beliefSet.Animator.Observation.SetTrigger("PlayerAttack");
             });
 
             Action switchWeapon = new(beliefSet => beliefSet.EquipmentInventory.Observation.MoveNext());
@@ -522,6 +535,7 @@ namespace Testing.AplibTests
                 Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
                 playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
                 beliefSet.RangedWeapon.Observation.UseWeapon();
+                beliefSet.Animator.Observation.SetTrigger("PlayerAttack");
             });
             Tactic shootEnemy = FirstOf(guard: beliefSet =>
             {
@@ -540,8 +554,8 @@ namespace Testing.AplibTests
 
             Tactic hitEnemy = FirstOf(equipBat, approachEnemyToMelee, aimAndHitEnemyAction.Lift());
 
-            Tactic reactToEnemyTactic = FirstOf(fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
-            GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible);
+            Tactic reactToEnemyTactic = FirstOf(sleep, fetchPotionIfDistancedMelee, dodgeCrossbow, fetchAmmo, useRagePotionIfUseful, shootEnemy, hitEnemy);
+            GoalStructure reactToEnemy = new Goal(reactToEnemyTactic, beliefSet => !beliefSet.AnyEnemyVisible || beliefSet.DetermineEnemyToFocus(out _) == null);
 
             #endregion
 
@@ -556,7 +570,7 @@ namespace Testing.AplibTests
 
                     // But, when an enemy is visible, react to it
                     (reactToEnemy, beliefSet =>
-                        beliefSet.AnyEnemyVisible),
+                        beliefSet.AnyEnemyVisible && beliefSet.DetermineEnemyToFocus(out _) != null),
 
                     // But, when low on health and in possession of a healing potion, drink the potion
                     (restoreHealth, beliefSet =>

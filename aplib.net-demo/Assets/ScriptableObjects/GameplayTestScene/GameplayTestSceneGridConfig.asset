@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameplayTestSceneGridConfig
   m_EditorClassIdentifier: 
   UseSeed: 1
-  Seed: 1988492683
+  Seed: 846546036
   GridWidthX: 5
   GridWidthZ: 5
   AmountOfRooms: 3
