@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using UnityRandom = UnityEngine.Random;
 
 namespace ThreadSafeRandom
 {
@@ -35,6 +36,7 @@ namespace ThreadSafeRandom
             }
 
             _local = new Random(_seed);
+            UnityRandom.InitState(_seed);
         }
 
         public static int Seed()
@@ -57,6 +59,8 @@ namespace ThreadSafeRandom
                     {
                         _local = new Random(seed);
                     }
+
+                UnityRandom.InitState(_seed);
             }
         }
 
