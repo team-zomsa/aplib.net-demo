@@ -1,68 +1,20 @@
 using LevelGeneration;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using Unity.Plastic.Newtonsoft.Json.Linq;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Configuration : MonoBehaviour
 {
-    [SerializeField] private const float _maxPercentage = 0.7f;
-    [SerializeField] private const float _minPercentage = 0.2f;
-
-    [SerializeField] private SpawnableEnemies _spawnableEnemies;
-    [SerializeField] private SpawnableItems _spawnableItems;
-    [SerializeField] private GridConfig _gridConfig;
-
-    // Grid component variables.
-    public int MinGridSize => 3;
-    public int MaxGridSize => 100;
-
-    public int GridVolume { get; private set; }
+    private const float _maxPercentage = 0.6f;
+    private const int _minValue = 0;
 
     [SerializeField]
-    public int GridSizeX { get; private set; } = 3;
+    private SpawnableEnemies _spawnableEnemies;
+
     [SerializeField]
-    public int GridSizeZ { get; private set; } = 3;
+    private SpawnableItems _spawnableItems;
 
-    // Room component.
     [SerializeField]
-    public int RoomAmount { get; private set; } = 0;
-
-    // Item ammo.
-    [SerializeField]
-    public int AmmoItemAmount { get; private set; } = 0;
-
-    // Item health.
-    [SerializeField]
-    public int HealthItemAmount { get; private set; } = 0;
-
-    // Item rage.
-    [SerializeField]
-    public int RageItemAmount { get; private set; } = 0;
-
-    // Enemy melee.
-    [SerializeField]
-    public int MeleeEnemyAmount { get; private set; } = 0;
-
-    // Enemy ranged.
-    [SerializeField]
-    public int RangedEnemyAmount { get; private set; } = 0;
-
-    /// <summary>
-    /// Max total items that can excist in 1 maze.
-    /// </summary>
-    public int TotalItemCount { get; private set; }
-    /// <summary>
-    /// Max total enemies that can excist in 1 maze.
-    /// </summary>
-    public int TotalEnemyCount { get; private set; }
-
-    // Disables TMP fields so unity can run the unit tests.
-    public bool TestingSwitch { get; set; }
+    private GridConfig _gridConfig;
 
     // Input fields.
     public TMP_InputField inputFieldXGrid;
@@ -73,6 +25,47 @@ public class Configuration : MonoBehaviour
     public TMP_InputField inputFieldRageItem;
     public TMP_InputField inputFieldMeleeEnemy;
     public TMP_InputField inputFieldRangedEnemy;
+
+    // Grid component variables.
+    public static int MinGridSize => 3;
+    public static int MaxGridSize => 100;
+
+    private int GridVolume { get; set; }
+
+    public int GridSizeX { get; private set; } = 4;
+
+    public int GridSizeZ { get; private set; } = 4;
+
+    // Room component.
+    public int RoomAmount { get; private set; } = 2;
+
+    // Item ammo.
+    public int AmmoItemAmount { get; private set; } = 2;
+
+    // Item health.
+    public int HealthItemAmount { get; private set; } = 2;
+
+    // Item rage.
+    public int RageItemAmount { get; private set; } = 2;
+
+    // Enemy melee.
+    public int MeleeEnemyAmount { get; private set; } = 1;
+
+    // Enemy ranged.
+    public int RangedEnemyAmount { get; private set; } = 1;
+
+    /// <summary>
+    /// Max total items that can exists in 1 maze.
+    /// </summary>
+    private int TotalItemCount { get; set; }
+
+    /// <summary>
+    /// Max total enemies that can excist in 1 maze.
+    /// </summary>
+    private int TotalEnemyCount { get; set; }
+
+    // Disables TMP fields so unity can run the unit tests.
+    public bool TestingSwitch { get; set; }
 
     private void Start()
     {
@@ -176,73 +169,72 @@ public class Configuration : MonoBehaviour
     /// <summary>
     /// This is called when the grid values are changed.
     /// This is also called when an individual component has changed.
-    /// It updates all other conponents.
+    /// It updates all other components.
     /// </summary>
     private void CheckAllValuesToBeValid()
     {
         // Check gridW and gridH
-        if (GridSizeX > MaxGridSize) GridSizeX = MaxGridSize;
+        if (GridSizeX > MaxGridSize)
+            GridSizeX = MaxGridSize;
         else if (GridSizeX < MinGridSize) GridSizeX = MinGridSize;
 
-        if (GridSizeZ > MaxGridSize) GridSizeZ = MaxGridSize;
+        if (GridSizeZ > MaxGridSize)
+            GridSizeZ = MaxGridSize;
         else if (GridSizeZ < MinGridSize) GridSizeZ = MinGridSize;
 
         // Update value.
         GridVolume = GridSizeX * GridSizeZ;
 
-        int minValue = Mathf.CeilToInt(GridVolume * _minPercentage);
-        int maxValue = Mathf.CeilToInt(GridVolume * _maxPercentage);
+        int maxValue = Mathf.CeilToInt((GridVolume - (RoomAmount * 4)) * _maxPercentage);
 
         // Check room value.
-        RoomAmount = Mathf.Max(minValue, Mathf.Min(maxValue, RoomAmount));
+        RoomAmount = Mathf.Max(_minValue, Mathf.Min(maxValue, RoomAmount));
 
         // Check ItemAmmoAmount value.
-        AmmoItemAmount = Mathf.Max(minValue, Mathf.Min(maxValue, AmmoItemAmount));
+        AmmoItemAmount = Mathf.Max(_minValue, Mathf.Min(maxValue, AmmoItemAmount));
 
         // Check ItemHealthAmount value.
-        HealthItemAmount = Mathf.Max(minValue, Mathf.Min(maxValue, HealthItemAmount));
+        HealthItemAmount = Mathf.Max(_minValue, Mathf.Min(maxValue, HealthItemAmount));
 
         // Check ItemRageAmount value.
-        RageItemAmount = Mathf.Max(minValue, Mathf.Min(maxValue, RageItemAmount));
+        RageItemAmount = Mathf.Max(_minValue, Mathf.Min(maxValue, RageItemAmount));
 
         // Check EnemyMeleeAmount value.
-        MeleeEnemyAmount = Mathf.Max(minValue, Mathf.Min(maxValue, MeleeEnemyAmount));
+        MeleeEnemyAmount = Mathf.Max(_minValue, Mathf.Min(maxValue, MeleeEnemyAmount));
 
         // Check EnemyRangedAmount value.
-        RangedEnemyAmount = Mathf.Max(minValue, Mathf.Min(maxValue, RangedEnemyAmount));
+        RangedEnemyAmount = Mathf.Max(_minValue, Mathf.Min(maxValue, RangedEnemyAmount));
 
         // Check if items and enemies don't go over grid vol * _maxPrecentage(0.7f)
         CheckItemOverflow();
         CheckEnemyOverflow();
 
         // Print correct number in text field. Skip this when testing.
-        if (!TestingSwitch)
-        {
-            inputFieldXGrid.text = GridSizeX.ToString();
-            inputFieldZGrid.text = GridSizeZ.ToString();
-            inputFieldRoom.text = RoomAmount.ToString();
-            inputFieldAmmoItem.text = AmmoItemAmount.ToString();
-            inputFieldHealthItem.text = HealthItemAmount.ToString();
-            inputFieldRageItem.text = RageItemAmount.ToString();
-            inputFieldMeleeEnemy.text = MeleeEnemyAmount.ToString();
-            inputFieldRangedEnemy.text = RangedEnemyAmount.ToString();
+        if (TestingSwitch) return;
 
-            UpdateConfigValuesInScriptableScript();
-        }
+        inputFieldXGrid.text = GridSizeX.ToString();
+        inputFieldZGrid.text = GridSizeZ.ToString();
+        inputFieldRoom.text = RoomAmount.ToString();
+        inputFieldAmmoItem.text = AmmoItemAmount.ToString();
+        inputFieldHealthItem.text = HealthItemAmount.ToString();
+        inputFieldRageItem.text = RageItemAmount.ToString();
+        inputFieldMeleeEnemy.text = MeleeEnemyAmount.ToString();
+        inputFieldRangedEnemy.text = RangedEnemyAmount.ToString();
+
+        UpdateConfigValuesInScriptableScript();
     }
 
     private void CheckItemOverflow()
     {
         TotalItemCount = AmmoItemAmount + HealthItemAmount + RageItemAmount;
 
-        if (!(TotalItemCount > GridVolume * _maxPercentage)) return;
+        if (!(TotalItemCount > (GridVolume - (RoomAmount * 4)) * _maxPercentage)) return;
 
-        int maxCount = Mathf.CeilToInt(GridVolume * _maxPercentage / 3);
+        int maxCount = Mathf.CeilToInt((GridVolume - (RoomAmount * 4)) * _maxPercentage / 3);
 
-        TotalItemCount = Mathf.CeilToInt(GridVolume * _maxPercentage);
-        AmmoItemAmount = maxCount;
-        HealthItemAmount = maxCount;
-        RageItemAmount = maxCount;
+        AmmoItemAmount = Mathf.Min(maxCount, AmmoItemAmount);
+        HealthItemAmount = Mathf.Min(maxCount, HealthItemAmount);
+        RageItemAmount = Mathf.Min(maxCount, RageItemAmount);
     }
 
     private void CheckEnemyOverflow()
@@ -253,9 +245,8 @@ public class Configuration : MonoBehaviour
 
         int maxCount = Mathf.CeilToInt(GridVolume * _maxPercentage / 3);
 
-        TotalItemCount = Mathf.CeilToInt(GridVolume * _maxPercentage);
-        MeleeEnemyAmount = maxCount;
-        RangedEnemyAmount = maxCount;
+        MeleeEnemyAmount = Mathf.Min(maxCount, MeleeEnemyAmount);
+        RangedEnemyAmount = Mathf.Min(maxCount, RangedEnemyAmount);
     }
 
     /// <summary>

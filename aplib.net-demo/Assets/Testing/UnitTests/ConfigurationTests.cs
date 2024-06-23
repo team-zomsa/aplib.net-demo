@@ -7,7 +7,7 @@ public class ConfigurationTests
     public void GridSizeXZInvalidMinTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -16,15 +16,15 @@ public class ConfigurationTests
         config.SetGridZ("-2");
 
         // Assert
-        Assert.AreEqual(config.MinGridSize, config.GridSizeX);
-        Assert.AreEqual(config.MinGridSize, config.GridSizeZ);
+        Assert.AreEqual(Configuration.MinGridSize, config.GridSizeX);
+        Assert.AreEqual(Configuration.MinGridSize, config.GridSizeZ);
     }
 
     [Test]
     public void GridSizeXZInvalidMaxTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -33,15 +33,15 @@ public class ConfigurationTests
         config.SetGridZ("1000");
 
         // Assert
-        Assert.AreEqual(config.MaxGridSize, config.GridSizeX);
-        Assert.AreEqual(config.MaxGridSize, config.GridSizeZ);
+        Assert.AreEqual(Configuration.MaxGridSize, config.GridSizeX);
+        Assert.AreEqual(Configuration.MaxGridSize, config.GridSizeZ);
     }
 
     [Test]
     public void GridSizeXZValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -58,7 +58,7 @@ public class ConfigurationTests
     public void GridSizeXZEmptyStringTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -67,15 +67,15 @@ public class ConfigurationTests
         config.SetGridZ("");
 
         // Assert
-        Assert.AreEqual(config.MinGridSize, config.GridSizeX);
-        Assert.AreEqual(config.MinGridSize, config.GridSizeZ);
+        Assert.AreEqual(Configuration.MinGridSize, config.GridSizeX);
+        Assert.AreEqual(Configuration.MinGridSize, config.GridSizeZ);
     }
 
     [Test]
     public void RoomValueInvalidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -90,7 +90,7 @@ public class ConfigurationTests
     public void RoomValueInvalidMinTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -105,7 +105,7 @@ public class ConfigurationTests
     public void RoomValueInvalidMaxTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -120,7 +120,7 @@ public class ConfigurationTests
     public void RoomValueValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -140,7 +140,7 @@ public class ConfigurationTests
     public void ItemAmmoValueInvalidTest(string number, int expected)
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -155,7 +155,7 @@ public class ConfigurationTests
     public void ItemAmmoValueValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -175,7 +175,7 @@ public class ConfigurationTests
     public void ItemHealthValueInvalidTest(string number, int expected)
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -190,7 +190,7 @@ public class ConfigurationTests
     public void ItemHealthValueValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -210,7 +210,7 @@ public class ConfigurationTests
     public void ItemRageValueInvalidTest(string number, int expected)
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -225,7 +225,7 @@ public class ConfigurationTests
     public void ItemRageValueValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -245,7 +245,7 @@ public class ConfigurationTests
     public void EnemyMeleeValueInvalidTest(string number, int expected)
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -260,7 +260,7 @@ public class ConfigurationTests
     public void EnemyMeleeValueValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -280,7 +280,7 @@ public class ConfigurationTests
     public void EnemyRangedValueInvalidTest(string number, int expected)
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -295,7 +295,7 @@ public class ConfigurationTests
     public void EnemyRangedValueValidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -312,7 +312,7 @@ public class ConfigurationTests
     public void ItemOverflowInvalidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -331,7 +331,7 @@ public class ConfigurationTests
     public void EnemyOverflowInvalidTest()
     {
         // Arrange
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new();
         Configuration config = gameObject.AddComponent<Configuration>();
         config.TestingSwitch = true;
 
@@ -345,4 +345,3 @@ public class ConfigurationTests
         Assert.AreEqual(6, config.RangedEnemyAmount);
     }
 }
-
