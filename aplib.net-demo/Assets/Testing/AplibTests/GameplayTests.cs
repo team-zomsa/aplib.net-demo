@@ -65,8 +65,30 @@ namespace Testing.AplibTests
         public readonly Belief<GameObject, GameObject> PlayerRotation = new(
             GameObject.Find("PlayerRotation"), x => x);
 
-        public readonly Belief<HealthComponent, float> PlayerHealthPercentage = new(
-            GameObject.Find("Player").GetComponent<HealthComponent>(), x => (float)x.Health / x.MaxHealth * 100);
+        #region fetchElixir
+
+        /// <summary> The position of the next key to obtain to reach the end room. </summary>
+        public readonly Belief<IEnumerable<GameObject>, Vector3> TargetKeyPosition = new(
+            GameObject.FindGameObjectsWithTag("Key").Where(x => x != null), keys =>
+            {
+                Vector3 playerPosition = GameObject.Find("Player").GetComponent<Rigidbody>().position;
+                NavMeshPath path = new();
+
+                // Find the first key that is reachable.
+                foreach (GameObject key in keys)
+                {
+                    NavMesh.CalculatePath(playerPosition, key.transform.position, NavMesh.AllAreas, path);
+                    if (path.status is NavMeshPathStatus.PathComplete)
+                        return key.transform.position;
+                }
+
+                // If no key is reachable, return Vector3.zero.
+                return Vector3.zero;
+            });
+
+        #endregion
+
+        #region fetchVisibleItem
 
         public readonly Belief<ItemsAndPlayerEyesReference, HealthPotion[]> VisibleHealthPotions = new(
             new ItemsAndPlayerEyesReference
@@ -130,6 +152,13 @@ namespace Testing.AplibTests
         public readonly Belief<Transform, Vector3> WinAreaPosition = new(
             GameObject.FindWithTag("Win").transform, x => x.position);
 
+        #endregion
+
+        #region reactToEnemy
+
+        public readonly Belief<HealthComponent, float> PlayerHealthPercentage = new(
+            GameObject.Find("Player").GetComponent<HealthComponent>(), x => (float)x.Health / x.MaxHealth * 100);
+
         public readonly Belief<AmmoPouch, int> AmmoCount = new(
             GameObject.Find("EquipmentInventory").GetComponent<AmmoPouch>(), x => x.CurrentAmmoCount);
 
@@ -141,26 +170,6 @@ namespace Testing.AplibTests
 
         public readonly Belief<EquipmentInventory, EquipmentInventory> EquipmentInventory = new(
             GameObject.Find("EquipmentInventory").GetComponent<EquipmentInventory>(), x => x);
-
-
-        /// <summary> The position of the next key to obtain to reach the end room. </summary>
-        public readonly Belief<IEnumerable<GameObject>, Vector3> TargetKeyPosition = new(
-            GameObject.FindGameObjectsWithTag("Key").Where(x => x != null), keys =>
-            {
-                Vector3 playerPosition = GameObject.Find("Player").GetComponent<Rigidbody>().position;
-                NavMeshPath path = new();
-
-                // Find the first key that is reachable.
-                foreach (GameObject key in keys)
-                {
-                    NavMesh.CalculatePath(playerPosition, key.transform.position, NavMesh.AllAreas, path);
-                    if (path.status is NavMeshPathStatus.PathComplete)
-                        return key.transform.position;
-                }
-
-                // If no key is reachable, return Vector3.zero.
-                return Vector3.zero;
-            });
 
         /// <summary> Determines which enemies are visible and recognizable by the player. </summary>
         public readonly
@@ -191,7 +200,7 @@ namespace Testing.AplibTests
         /// <summary>
         /// Determines which enemy to focus on, based on the visible enemies and their distances.
         /// </summary>
-        public AbstractEnemy DetermineEnemyToFocus(out float distance) // TODO move this to a Belief of its own for caching
+        public AbstractEnemy DetermineEnemyToFocus(out float distance)
         {
             (AbstractEnemy[] enemies, float[] distances) = VisibleEnemies.Observation;
             if (enemies.Length == 0)
@@ -237,7 +246,9 @@ namespace Testing.AplibTests
             return null;
         }
 
-        #region HelperMethods
+        #endregion
+
+        #region HelperMethodsAndTypes
 
         private static bool ItemVisibleFrom(Item item, Vector3 origin, out float itemDistance)
             => IsVisibleFrom(item.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"), out itemDistance);
@@ -256,8 +267,6 @@ namespace Testing.AplibTests
             return false; // Something is in the way
         }
 
-        #endregion
-
         /// Merely here to simplify types above
         public class EnemiesObjectAndPlayerEyesReference
         {
@@ -271,6 +280,8 @@ namespace Testing.AplibTests
             public GameObject ItemsObject;
             public PlayerLogic Player;
         }
+
+        #endregion
     }
 
     public class GameplayTests
@@ -552,7 +563,6 @@ namespace Testing.AplibTests
                         beliefSet.PlayerHealthPercentage.Observation < 60
                         && beliefSet.Inventory.Observation.ContainsItem<HealthPotion>()),
                 });
-
 
             // Act
             BdiAgent agent = new(mainBeliefSet, desireSet);
