@@ -176,9 +176,7 @@ namespace LevelGeneration
             {
                 Color componentColor = Random.ColorHSV(0f, 1f, _minSaturation, _maxSaturation, _minValue, _maxValue);
                 foreach (Cell cell in connectedComponent)
-                {
                     cell.Tile.GameObject.GetComponent<Renderer>().material.color = componentColor;
-                }
             }
         }
 
