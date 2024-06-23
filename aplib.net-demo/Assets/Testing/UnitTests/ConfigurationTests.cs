@@ -83,7 +83,7 @@ public class ConfigurationTests
         config.SetValueRoom("");
 
         // Assert
-        Assert.AreEqual(2, config.RoomAmount);
+        Assert.AreEqual(0, config.RoomAmount);
     }
 
     [Test]
@@ -98,7 +98,7 @@ public class ConfigurationTests
         config.SetValueRoom("-2");
 
         // Assert
-        Assert.AreEqual(2, config.RoomAmount);
+        Assert.AreEqual(0, config.RoomAmount);
     }
 
     [Test]
@@ -113,7 +113,7 @@ public class ConfigurationTests
         config.SetValueRoom("1000");
 
         // Assert
-        Assert.AreEqual(7, config.RoomAmount);
+        Assert.AreEqual(0, config.RoomAmount);
     }
 
     [Test]
@@ -130,13 +130,13 @@ public class ConfigurationTests
         config.SetValueRoom("5");
 
         // Assert
-        Assert.AreEqual(5, config.RoomAmount);
+        Assert.AreEqual(3, config.RoomAmount);
     }
 
     [Theory]
-    [TestCase("", 2)]
-    [TestCase("-2", 2)]
-    [TestCase("1000", 3)]
+    [TestCase("", 0)]
+    [TestCase("-2", 0)]
+    [TestCase("1000", 2)]
     public void ItemAmmoValueInvalidTest(string number, int expected)
     {
         // Arrange
@@ -169,9 +169,9 @@ public class ConfigurationTests
     }
 
     [Theory]
-    [TestCase("", 2)]
-    [TestCase("-2", 2)]
-    [TestCase("1000", 3)]
+    [TestCase("", 0)]
+    [TestCase("-2", 0)]
+    [TestCase("1000", 2)]
     public void ItemHealthValueInvalidTest(string number, int expected)
     {
         // Arrange
@@ -204,9 +204,9 @@ public class ConfigurationTests
     }
 
     [Theory]
-    [TestCase("", 2)]
-    [TestCase("-2", 2)]
-    [TestCase("1000", 3)]
+    [TestCase("", 0)]
+    [TestCase("-2", 0)]
+    [TestCase("1000", 2)]
     public void ItemRageValueInvalidTest(string number, int expected)
     {
         // Arrange
@@ -239,9 +239,9 @@ public class ConfigurationTests
     }
 
     [Theory]
-    [TestCase("", 2)]
-    [TestCase("-2", 2)]
-    [TestCase("1000", 3)]
+    [TestCase("", 0)]
+    [TestCase("-2", 0)]
+    [TestCase("1000", 5)]
     public void EnemyMeleeValueInvalidTest(string number, int expected)
     {
         // Arrange
@@ -274,9 +274,9 @@ public class ConfigurationTests
     }
 
     [Theory]
-    [TestCase("", 2)]
-    [TestCase("-2", 2)]
-    [TestCase("1000", 3)]
+    [TestCase("", 0)]
+    [TestCase("-2", 0)]
+    [TestCase("1000", 5)]
     public void EnemyRangedValueInvalidTest(string number, int expected)
     {
         // Arrange
@@ -322,9 +322,9 @@ public class ConfigurationTests
         config.SetValueItemAmmo("25");
 
         // Assert
-        Assert.AreEqual(6, config.AmmoItemAmount);
-        Assert.AreEqual(6, config.HealthItemAmount);
-        Assert.AreEqual(6, config.RageItemAmount);
+        Assert.AreEqual(4, config.AmmoItemAmount);
+        Assert.AreEqual(2, config.HealthItemAmount);
+        Assert.AreEqual(2, config.RageItemAmount);
     }
 
     [Test]
@@ -341,7 +341,7 @@ public class ConfigurationTests
         config.SetValueEnemyMelee("25");
 
         // Assert
-        Assert.AreEqual(6, config.MeleeEnemyAmount);
-        Assert.AreEqual(6, config.RangedEnemyAmount);
+        Assert.AreEqual(11, config.MeleeEnemyAmount);
+        Assert.AreEqual(1, config.RangedEnemyAmount);
     }
 }
