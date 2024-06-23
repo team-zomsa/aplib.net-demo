@@ -19,6 +19,12 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     public GameObject SettingCanvas { get; set; }
 
     /// <summary>
+    /// Reference to the configuration settings.
+    /// </summary>
+    [field: SerializeField]
+    public GameObject ConfigCanvas { get; set; }
+
+    /// <summary>
     /// Reference to the help/keybinds canvas.
     /// </summary>
     [field: SerializeField]
@@ -70,6 +76,7 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     {
         HideCanvas(MenuCanvas);
         HideCanvas(SettingCanvas);
+        HideCanvas(ConfigCanvas);
         HideCanvas(HelpCanvas);
     }
 
@@ -103,4 +110,26 @@ public class MainMenuCanvas : Singleton<MainMenuCanvas>
     /// <param name="canvas">The canvas to check.</param>
     /// <returns>True if the canvas is active, false otherwise.</returns>
     private bool IsActive(GameObject canvas) => canvas && canvas.activeSelf;
+
+    /// <summary>
+    /// When the play button is pressed it will take the player to the configuration scene.
+    /// If the back button in this canvas is pressed it will go back to main menu.
+    /// </summary>
+    public void ProceedToConfig()
+    {
+        // Set all canvases to inactive.
+        HideCanvas(MenuCanvas);
+
+        // Set config or menu active and disable the other.
+        ShowCanvas(ConfigCanvas);
+    }
+
+    /// <summary>
+    /// Toggle for when the user wants to go back to the main menu.
+    /// </summary>
+    public void BackToMenu()
+    {
+        HideCanvas(ConfigCanvas);
+        ShowCanvas(MenuCanvas);
+    }
 }
