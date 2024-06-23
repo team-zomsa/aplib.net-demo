@@ -166,6 +166,10 @@ namespace LevelGeneration
             ProcessNeighbouringRooms(startComponent, neighbouringRooms, connectedComponents, doors);
         }
 
+        /// <summary>
+        /// Colors the connected components.
+        /// </summary>
+        /// <param name="connectedComponents">The connected components to color.</param>
         private void ColorConnectedComponent(IEnumerable<ConnectedComponent> connectedComponents)
         {
             foreach (ConnectedComponent connectedComponent in connectedComponents)
