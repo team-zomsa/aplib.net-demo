@@ -263,9 +263,11 @@ namespace Testing.AplibTests
         #region HelperMethodsAndTypes
 
         private static bool ItemVisibleFrom(Item item, Vector3 origin, out float itemDistance)
+            // Tests if vision has been obstructed towards the item, where the Player, Item and Ignore Raycast layers do not count to being obstructed
             => IsVisibleFrom(item.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"), out itemDistance);
 
         private static bool EnemyVisibleFrom(AbstractEnemy enemy, Vector3 origin, out float enemyDistance)
+            // Tests if vision has been obstructed towards the enemy, where the Player, Enemy and Ignore Raycast layers do not count to being obstructed
             => IsVisibleFrom(enemy.transform.position, origin, ~LayerMask.GetMask("PlayerSelf", "Enemy", "Ignore Raycast"), out enemyDistance);
 
         private static bool IsVisibleFrom(Vector3 target, Vector3 origin, LayerMask layerMask, out float enemyDistance)
@@ -466,6 +468,7 @@ namespace Testing.AplibTests
 
                 Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.left);
                 return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    // Tests if anything towards the left can collide within 0.5m. Do not collide with said layermasks
                     ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
             });
             PrimitiveTactic stepAsideRight = new(stepAsideRightAction, beliefSet =>
@@ -474,6 +477,7 @@ namespace Testing.AplibTests
 
                 Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.right);
                 return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    // Tests if anything towards the right can collide within 0.5m. Do not collide with said layermasks
                     ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
             });
 
@@ -755,6 +759,7 @@ namespace Testing.AplibTests
 
                 Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.left);
                 return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    // Tests if anything towards the left can collide within 0.5m. Do not collide with said layermasks
                     ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
             });
             PrimitiveTactic stepAsideRight = new(stepAsideRightAction, beliefSet =>
@@ -763,6 +768,7 @@ namespace Testing.AplibTests
 
                 Vector3 left = playerRigidBody.transform.TransformDirection(Vector3.right);
                 return Physics.Raycast(playerRigidBody.transform.position, left, 0.5f,
+                    // Tests if anything towards the right can collide within 0.5m. Do not collide with said layermasks
                     ~LayerMask.GetMask("PlayerSelf", "Item", "Ignore Raycast"));
             });
 
