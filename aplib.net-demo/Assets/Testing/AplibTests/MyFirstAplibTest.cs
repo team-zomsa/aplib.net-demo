@@ -1,18 +1,16 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.MyFirstBeliefSet>;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.MyFirstBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.MyFirstBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.MyFirstBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -44,7 +42,7 @@ namespace Testing.AplibTests
             MyFirstBeliefSet beliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.
-            Action<MyFirstBeliefSet> moveTowardsTargetAction = new(
+            Tactic moveTowardsTarget = new Action (
                 beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
@@ -57,11 +55,10 @@ namespace Testing.AplibTests
                     );
                 }
             );
-            PrimitiveTactic<MyFirstBeliefSet> moveTowardsTargetTactic = new(moveTowardsTargetAction);
 
             // Create a desire for the agent to reach the target position.
-            Goal<MyFirstBeliefSet> reachTargetGoal = new(
-                moveTowardsTargetTactic,
+            Goal reachTargetGoal = new(
+                moveTowardsTarget,
                 beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
@@ -70,12 +67,9 @@ namespace Testing.AplibTests
                     return Vector3.Distance(playerPosition, targetPosition) < 0.1f;
                 }
             );
-            PrimitiveGoalStructure<MyFirstBeliefSet> reachTargetGoalStructure = new(reachTargetGoal);
-            RepeatGoalStructure<MyFirstBeliefSet> repeat = new(reachTargetGoalStructure);
-            DesireSet<MyFirstBeliefSet> desireSet = new(repeat);
 
             // Setup the agent with the belief set and desire set and initialize the test runner.
-            BdiAgent<MyFirstBeliefSet> agent = new(beliefSet, desireSet);
+            BdiAgent agent = new(beliefSet, reachTargetGoal.Lift().Lift());
             AplibRunner testRunner = new(agent);
 
             // Act

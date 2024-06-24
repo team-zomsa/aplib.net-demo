@@ -1,13 +1,7 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
 using Entities.Weapons;
 using NUnit.Framework;
@@ -16,6 +10,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using static Aplib.Core.Combinators;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.RagePotionBeliefSet>;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.RagePotionBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.RagePotionBeliefSet>;
+using FirstOfTactic = Aplib.Core.Intent.Tactics.FirstOfTactic<Testing.AplibTests.RagePotionBeliefSet>;
+using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.RagePotionBeliefSet>;
+using DesireSet = Aplib.Core.Desire.DesireSets.DesireSet<Testing.AplibTests.RagePotionBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.RagePotionBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.RagePotionBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -81,7 +83,7 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator PerformRagePotionAplibTest()
         {
-            RagePotionBeliefSet ragePotionBeliefSet = new RagePotionBeliefSet();
+            RagePotionBeliefSet ragePotionBeliefSet = new();
 
             // Calculate the expected damage increase
             int damageIncreasePercentage = ragePotionBeliefSet.RagePotion.Observation.DamageIncreasePercentage;
@@ -89,37 +91,37 @@ namespace Testing.AplibTests
             _increasedDamage = _startDamage + _startDamage * damageIncreasePercentage / 100;
 
             // Action: Create an action that moves towards the potion
-            TransformPathfinderAction<RagePotionBeliefSet> moveToPotionAction = new(
+            Tactic moveToPotion = new TransformPathfinderAction(
                 objectQuery: beliefSet => beliefSet.Player.Observation.GetComponent<Rigidbody>(),
                 location: beliefSet => beliefSet.PotionPosition,
                 heightOffset: 0.3f
             );
 
             // Action: Create an action that moves towards the enemy
-            TransformPathfinderAction<RagePotionBeliefSet> moveToEnemyAction = new(
+            Tactic moveToEnemy = new TransformPathfinderAction (
                 objectQuery: beliefSet => beliefSet.Player.Observation.GetComponent<Rigidbody>(),
                 location: beliefSet => beliefSet.EnemyPosition,
                 heightOffset: 0.3f
             );
 
             // Action: Use current inventory item (health potion).
-            Action<RagePotionBeliefSet> activateInventoryItem = new(b => b.InventoryObject.Observation.ActivateItem());
+            Tactic activateInventoryItem = new Action(b => b.InventoryObject.Observation.ActivateItem());
             // Action: Attack the enemy, when at its position
-            Action<RagePotionBeliefSet> useWeaponAction = new(b => b.PlayerWeapon.Observation.UseWeapon());
-            PrimitiveTactic<RagePotionBeliefSet> useWeaponTactic = new(useWeaponAction, AtEnemyPositionPredicate);
-            FirstOfTactic<RagePotionBeliefSet> attackEnemyTactic = new(useWeaponTactic, moveToEnemyAction.Lift());
+            Action useWeaponAction = new(b => b.PlayerWeapon.Observation.UseWeapon());
+            PrimitiveTactic useWeaponTactic = new(useWeaponAction, AtEnemyPositionPredicate);
+            FirstOfTactic attackEnemyTactic = new(useWeaponTactic, moveToEnemy);
 
             // Goals: Reach the target position and use the rage potion.
-            Goal<RagePotionBeliefSet> potionPickedUpGoal = new(moveToPotionAction.Lift(), PotionPickedUpPredicate);
-            Goal<RagePotionBeliefSet> damageIncreasedGoal = new(activateInventoryItem.Lift(), DamageIncreasedPredicate);
+            Goal potionPickedUpGoal = new(moveToPotion, PotionPickedUpPredicate);
+            Goal damageIncreasedGoal = new(activateInventoryItem, DamageIncreasedPredicate);
             // Goal: The enemy should take increased damage from the player
-            Goal<RagePotionBeliefSet> enemyTookIncreasedDamageGoal = new(attackEnemyTactic, EnemyTookIncreasedDamagePredicate);
+            Goal enemyTookIncreasedDamageGoal = new(attackEnemyTactic, EnemyTookIncreasedDamagePredicate);
 
             // Desire: Reach the target position and use the rage potion.
-            DesireSet<RagePotionBeliefSet> desire = Seq(potionPickedUpGoal.Lift(), damageIncreasedGoal.Lift(), enemyTookIncreasedDamageGoal.Lift());
+            DesireSet desire = Seq(potionPickedUpGoal.Lift(), damageIncreasedGoal.Lift(), enemyTookIncreasedDamageGoal.Lift());
 
             // Create a new agent with the goal.
-            BdiAgent<RagePotionBeliefSet> agent = new(ragePotionBeliefSet, desire);
+            BdiAgent agent = new(ragePotionBeliefSet, desire);
 
             AplibRunner runner = new(agent);
 

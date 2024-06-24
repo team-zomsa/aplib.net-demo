@@ -1,11 +1,6 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
 using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Entities.Weapons;
@@ -14,10 +9,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.RangedWeaponTestBeliefSet>;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.RangedWeaponTestBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.RangedWeaponTestBeliefSet>;
+using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.RangedWeaponTestBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.RangedWeaponTestBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.RangedWeaponTestBeliefSet>;
 
 namespace Testing.AplibTests
 {
-    public class RangeedWeaponTestBeliefSet : BeliefSet
+    public class RangedWeaponTestBeliefSet : BeliefSet
     {
         /// <summary>
         /// The player object in the scene.
@@ -73,17 +74,17 @@ namespace Testing.AplibTests
         public IEnumerator PerformCrossbowTest()
         {
             // Make beliefset instance
-            RangeedWeaponTestBeliefSet beliefSet = new();
+            RangedWeaponTestBeliefSet beliefSet = new();
 
             // Action: shoot in front
-            Action<RangeedWeaponTestBeliefSet> ShootEnemyInFront = new(beliefSet =>
+            Action ShootEnemyInFront = new(beliefSet =>
             {
                 RangedWeapon crossbow = beliefSet.Rangedweapon;
                 crossbow.UseWeapon();
             });
 
             // Action: rotate player
-            Action<RangeedWeaponTestBeliefSet> RotatePlayerToEnemy = new(beliefSet =>
+            Action RotatePlayerToEnemy = new(beliefSet =>
             {
                 GameObject playerRotation = beliefSet.Player;
                 Vector3 enemyPosition = beliefSet.EnemyPosition;
@@ -92,22 +93,15 @@ namespace Testing.AplibTests
                 playerRotation.transform.LookAt(enemyPosition);
             });
 
-            // Tactic to kill enemy when in front
-            Tactic<RangeedWeaponTestBeliefSet> KillEnemy = new PrimitiveTactic<RangeedWeaponTestBeliefSet>(ShootEnemyInFront, IsEnemyInFrontPredicate);
-
-            // Tactic to turn to enemy
-            Tactic<RangeedWeaponTestBeliefSet> TurnToEnemy = new PrimitiveTactic<RangeedWeaponTestBeliefSet>(RotatePlayerToEnemy);
-
-            // Tactic first try to shoot, otherwise turn.
-            Tactic<RangeedWeaponTestBeliefSet> FinalTactic = new FirstOfTactic<RangeedWeaponTestBeliefSet>(KillEnemy, TurnToEnemy);
+            Tactic KillEnemy = new PrimitiveTactic(ShootEnemyInFront, IsEnemyInFrontPredicate);
+            Tactic TurnToEnemy = new PrimitiveTactic(RotatePlayerToEnemy);
+            Tactic FinalTactic = new FirstOfTactic<RangedWeaponTestBeliefSet>(KillEnemy, TurnToEnemy);
 
             // Goal: enemy is dead
-            PrimitiveGoalStructure<RangeedWeaponTestBeliefSet> goal = new(goal: new Goal<RangeedWeaponTestBeliefSet>(FinalTactic, EnemyKilledPredicate));
-
-            DesireSet<RangeedWeaponTestBeliefSet> desire = new(goal);
+            GoalStructure goal = new Goal(FinalTactic, EnemyKilledPredicate);
 
             // Create a new agent with the goal
-            BdiAgent<RangeedWeaponTestBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent agent = new(beliefSet, goal.Lift());
 
             AplibRunner testRunner = new(agent);
 
@@ -119,9 +113,9 @@ namespace Testing.AplibTests
             Assert.IsTrue(condition: agent.Status == CompletionStatus.Success);
             yield break;
 
-            bool EnemyKilledPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyDead;
+            bool EnemyKilledPredicate(RangedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyDead;
 
-            bool IsEnemyInFrontPredicate(RangeedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyInFront;
+            bool IsEnemyInFrontPredicate(RangedWeaponTestBeliefSet beliefSet) => beliefSet.IsEnemyInFront;
         }
     }
 }

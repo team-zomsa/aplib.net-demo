@@ -1,13 +1,7 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using Assets.Scripts.Items;
 using NUnit.Framework;
 using System.Collections;
@@ -15,6 +9,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.ItemSpawningBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.ItemSpawningBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.ItemSpawningBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.ItemSpawningBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.ItemSpawningBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -98,37 +98,25 @@ namespace Testing.AplibTests
             foreach (GameObject key in keys) key.AddComponent<BeforeDestroyKey>();
 
             // Create an intent for the agent that moves the agent towards the target position.
-            TransformPathfinderAction<ItemSpawningBeliefSet> transformPathfinderAction = new(
+            Tactic moveToTarget = new TransformPathfinderAction (
                 beliefSet => beliefSet.PlayerRigidBody,
                 beliefSet => beliefSet.TargetPosition,
                 0.3f
             );
 
-            TransformPathfinderAction<ItemSpawningBeliefSet> transformPathfinderActionKey = new(
+            Tactic moveToKey = new TransformPathfinderAction (
                 beliefSet => beliefSet.PlayerRigidBody,
                 beliefSet => beliefSet.TargetKeyPosition,
                 0.3f
             );
 
-            PrimitiveTactic<ItemSpawningBeliefSet> moveTactic = new(transformPathfinderAction);
-            PrimitiveTactic<ItemSpawningBeliefSet> moveTacticKey = new(transformPathfinderActionKey);
+            GoalStructure moveToTargetGoal = new Goal(moveToTarget, EndItemPickedUpPredicate);
+            GoalStructure moveToKeyGoal = new Goal(moveToKey, EndItemReachablePredicate);
 
-            PrimitiveGoalStructure<ItemSpawningBeliefSet> moveGoal =
-                new(new Goal<ItemSpawningBeliefSet>(moveTactic, EndItemPickedUpPredicate));
-
-            PrimitiveGoalStructure<ItemSpawningBeliefSet> moveToKeyGoal =
-                new(new Goal<ItemSpawningBeliefSet>(moveTacticKey, EndItemReachablePredicate));
-
-            RepeatGoalStructure<ItemSpawningBeliefSet> moveToKeyGoalStructure = new(moveToKeyGoal);
-
-            SequentialGoalStructure<ItemSpawningBeliefSet>
-                moveAndPickupSequence = new(moveToKeyGoalStructure, moveGoal);
-
-            // Arrange ==> DesireSet
-            DesireSet<ItemSpawningBeliefSet> desire = new(moveAndPickupSequence);
+            GoalStructure moveAndPickupSequence = Seq(moveToKeyGoal, moveToTargetGoal);
 
             // Act
-            BdiAgent<ItemSpawningBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent agent = new(beliefSet, moveAndPickupSequence.Lift());
             AplibRunner testRunner = new(agent);
 
             yield return testRunner.Test();
