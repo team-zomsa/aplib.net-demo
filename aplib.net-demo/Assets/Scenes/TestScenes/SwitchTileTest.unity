@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18029143, g: 0.22572419, b: 0.30693057, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -253,12 +253,6 @@ PrefabInstance:
 --- !u!4 &465571246 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7900413343740512053, guid: 6de475068fb9685f5b9e0d862a17164d,
-    type: 3}
-  m_PrefabInstance: {fileID: 465571245}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &465571247 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4395419148430955978, guid: 6de475068fb9685f5b9e0d862a17164d,
     type: 3}
   m_PrefabInstance: {fileID: 465571245}
   m_PrefabAsset: {fileID: 0}
@@ -632,7 +626,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerRotation: {fileID: 465571246}
-  PlayerCamFollow: {fileID: 465571247}
+  PlayerCamFollow: {fileID: 0}
   CinemachineCamera: {fileID: 1120896408}
 --- !u!4 &1161813732
 Transform:
@@ -738,6 +732,7 @@ GameObject:
   - component: {fileID: 1455078763}
   - component: {fileID: 1455078762}
   - component: {fileID: 1455078764}
+  - component: {fileID: 1455078765}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -789,8 +784,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8366bd27287d4220a09e6d3e8d715bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tileSizeX: 16
-  _tileSizeZ: 16
   _roomObjects: {fileID: 11400000, guid: 9962865d7cc12a74abe02efdb8b7d072, type: 2}
   _spawnableItems: {fileID: 11400000, guid: 337f0455961848e4daae35638c40a3ae, type: 2}
   _doorPrefab: {fileID: 3526522355453958696, guid: 22b08b26ebf57994bb9b9f1004aa58ca,
@@ -800,8 +793,21 @@ MonoBehaviour:
     type: 3}
   _endItemPrefab: {fileID: 7440915271667399624, guid: 5dee1bd433f382645b25c03046c94f10,
     type: 3}
-  _startRoomMat: {fileID: 2100000, guid: f778c1623601f9a49bae03f91296af4f, type: 2}
   _endRoomMat: {fileID: 2100000, guid: d8e9a1c487e0d7d4c881fce470e9d9a8, type: 2}
+--- !u!114 &1455078765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455078761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b442616a9cd449993876de7096f51bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TileSizeX>k__BackingField: 0
+  <TileSizeZ>k__BackingField: 0
 --- !u!1 &1639146140
 GameObject:
   m_ObjectHideFlags: 3
@@ -1156,7 +1162,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 887
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
