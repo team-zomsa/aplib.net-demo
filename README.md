@@ -34,4 +34,4 @@ This game is purely for demonstration purposes and thus does not accept any cont
 
 
 ## License
-The project is provided under the BSD 3 License, which can be found [here](https://github.com/team-zomsa/aplib.net-demo/blob/main/LICENSE).
+The project is provided under the GNU Affero General Public License, which can be found [here](https://github.com/team-zomsa/aplib.net-demo/blob/main/LICENSE).
