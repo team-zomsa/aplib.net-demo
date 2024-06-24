@@ -1,4 +1,5 @@
 using Assets.Scripts.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,11 +15,6 @@ public class Inventory : MonoBehaviour
     /// The texture of the _inventoryIndicator object.
     /// </summary>
     public Texture emptyInventoryImage;
-
-    /// <summary>
-    /// The canvas object that holds the inventory.
-    /// </summary>
-    public GameObject inventoryObject;
 
     [SerializeField] private float _inventorySize = 4;
 
@@ -139,9 +135,12 @@ public class Inventory : MonoBehaviour
     /// <param name="queryName">The name of the item to check for.</param>
     /// <returns>True if the item is in the inventory, otherwise false.</returns>
     public bool ContainsItem(string queryName) => _itemList.Any(i => i.name == queryName);
+    public bool ContainsItem<T>() => _itemList.Any(i => i is T);
 
     /// <summary>
     /// Returns the amount of item uses left in every item in the inventory.
     /// </summary>
     public int UnusedItems() => _itemList.Sum(item => item.uses);
+
+    public Item EquippedItem => _itemList.Peek();
 }

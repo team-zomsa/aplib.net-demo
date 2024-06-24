@@ -85,6 +85,6 @@ namespace LevelGeneration
         /// <summary>
         /// Spawns the enemies.
         /// </summary>
-        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTiles());
+        public void SpawnEnemies() => _enemySpawner.SpawnEnemies(Grid.GetAllNotEmptyTilesExceptStartRoom());
     }
 }

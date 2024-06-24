@@ -67,7 +67,7 @@ namespace Assets.Scripts.Doors
         /// </summary>
         /// <param name="key">The key that is being checked for the same ID as the door</param>
         /// <returns>True if key id is the same as door id otherwise false.</returns>
-        public bool TryOpenDoor(Key key) => key.Id == DoorId;
+        public bool KeyMatchesDoor(Key key) => key.Id == DoorId;
 
         /// <summary>
         /// Opens the door by destroying the game object.

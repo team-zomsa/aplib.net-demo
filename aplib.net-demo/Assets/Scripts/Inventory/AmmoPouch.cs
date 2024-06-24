@@ -13,7 +13,9 @@ public class AmmoPouch : MonoBehaviour
     [SerializeField]
     public int maxAmmoCount;
 
+    [SerializeField]
     private int _currentAmmoCount;
+    public int CurrentAmmoCount => _currentAmmoCount;
 
     private void Start() => _currentAmmoCount = maxAmmoCount;
 
