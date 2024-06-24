@@ -65,4 +65,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestScenes/WeaponAnimateTestScene.unity
     guid: fa7e7b89851d59f40a3aff7ec0dcb180
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/GameplayTestScene.unity
+    guid: 2b3f85a86977b9b0b824a76151fe31a1
   m_configObjects: {}

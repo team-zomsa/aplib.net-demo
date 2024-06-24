@@ -9,6 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public abstract class AbstractEnemy : MonoBehaviour
 {
+    public bool IsTriggered() => _canMove;
+
     /// <summary>
     /// The amount of damage the enemy deals to the player.
     /// </summary>
