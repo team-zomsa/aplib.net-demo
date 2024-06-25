@@ -40,10 +40,12 @@ namespace Testing.AplibTests
                 {
                     if (TargetPositionsInConnectedComponents.Count == 0) return false;
 
-                    if (Vector3.Distance(PlayerRigidbody.position, TargetPositionsInConnectedComponents.Peek()) > 0.4f)
+                    Vector3 currentTarget = TargetPositionsInConnectedComponents.Peek();
+
+                    if (Vector3.Distance(PlayerRigidbody.position, currentTarget) > 0.4f)
                         return false;
 
-                    Debug.Log($"Reached target at {TargetPositionsInConnectedComponents.Peek()}");
+                    Debug.Log($"Reached target at {currentTarget}");
                     TargetPositionsInConnectedComponents.Dequeue();
                     Debug.Log($"Remaining targets: {TargetPositionsInConnectedComponents.Count}");
 
