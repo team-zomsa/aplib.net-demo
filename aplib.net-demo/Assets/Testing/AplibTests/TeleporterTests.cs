@@ -1,19 +1,20 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.TeleporterBeliefSet>;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.TeleporterBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.TeleporterBeliefSet>;
+using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.TeleporterBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.TeleporterBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.TeleporterBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.TeleporterBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -53,51 +54,37 @@ namespace Testing.AplibTests
             TeleporterBeliefSet rootBeliefSet = new();
 
             // Arrange ==> Actions
-            TransformPathfinderAction<TeleporterBeliefSet> approachTeleporterAction = new(
+            Tactic approachTeleporter = new TransformPathfinderAction (
                 objectQuery: beliefSet => beliefSet.PlayerRigidbody,
                 location: rootBeliefSet.TeleporterInLocation,
                 heightOffset: .7f);
 
-            Action<TeleporterBeliefSet> waitForTeleportAction = new(_ => { Debug.Log("Waiting for teleport..."); });
+            Action waitForTeleport = new(_ => Debug.Log("Waiting for teleport..."));
 
-            TransformPathfinderAction<TeleporterBeliefSet> walkOutOfTeleporter = new(
+            Tactic walkOutOfTeleporter = new TransformPathfinderAction (
                 objectQuery: beliefSet => beliefSet.PlayerRigidbody,
                 location: beliefSet => beliefSet.TeleporterOutLocation + new Vector3(3, 0, 0),
                 heightOffset: .7f);
 
             // Arrange ==> Tactics
-            PrimitiveTactic<TeleporterBeliefSet> approachTeleporterTactic = new(approachTeleporterAction);
-            PrimitiveTactic<TeleporterBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
-                guard: beliefSet => (rootBeliefSet.TeleporterInLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
-                    .magnitude < 0.4f);
-            PrimitiveTactic<TeleporterBeliefSet> walkOutOfTeleporterTactic = new(walkOutOfTeleporter);
-            FirstOfTactic<TeleporterBeliefSet> teleportOrApproachTactic = new(new Metadata("Teleport or approach teleporter"),
-                waitForTeleportTactic,
-                approachTeleporterTactic);
+            Tactic waitForTeleportTactic = new PrimitiveTactic(waitForTeleport,
+                guard: beliefSet => (rootBeliefSet.TeleporterInLocation -
+                                     ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f);
+            Tactic teleportOrApproachTactic = FirstOf(waitForTeleportTactic, approachTeleporter);
 
-            // Arrange ==> Goals
-            Goal<TeleporterBeliefSet> teleportOnceGoal = new(teleportOrApproachTactic,
+            // Arrange ==> Goals and GoalStructures
+            GoalStructure teleportOnceGoal = new Goal(teleportOrApproachTactic,
                 beliefSet => (rootBeliefSet.TeleporterOutLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
                     .magnitude < 0.2f);
 
-            Goal<TeleporterBeliefSet> walkOutOfTeleporterGoal = new(walkOutOfTeleporterTactic,
+            GoalStructure walkOutOfTeleporterGoal = new Goal(walkOutOfTeleporter,
                 beliefSet => (rootBeliefSet.TeleporterOutLocation - ((Rigidbody)beliefSet.PlayerRigidbody).position)
                     .magnitude > 2f);
 
-            // Arrange ==> GoalStructures
-            PrimitiveGoalStructure<TeleporterBeliefSet> teleportOnceGoalStructurePrimitive = new(teleportOnceGoal);
-            RepeatGoalStructure<TeleporterBeliefSet> teleportOnceGoalStructure = new(teleportOnceGoalStructurePrimitive);
-
-            PrimitiveGoalStructure<TeleporterBeliefSet> walkOutOfTeleporterGoalStructurePrimitive = new(walkOutOfTeleporterGoal);
-            RepeatGoalStructure<TeleporterBeliefSet> walkOutOfTeleporterGoalStructure = new(walkOutOfTeleporterGoalStructurePrimitive);
-
-            SequentialGoalStructure<TeleporterBeliefSet> teleportAndWalkOutSequence = new(teleportOnceGoalStructure, walkOutOfTeleporterGoalStructure);
-
-            // Arrange ==> DesireSet
-            DesireSet<TeleporterBeliefSet> desireSet = new(teleportAndWalkOutSequence);
+            GoalStructure teleportAndWalkOutSequence = Seq(teleportOnceGoal, walkOutOfTeleporterGoal);
 
             // Act
-            BdiAgent<TeleporterBeliefSet> agent = new(rootBeliefSet, desireSet);
+            BdiAgent agent = new(rootBeliefSet, teleportAndWalkOutSequence.Lift());
             AplibRunner testRunner = new(agent);
 
             yield return testRunner.Test();
