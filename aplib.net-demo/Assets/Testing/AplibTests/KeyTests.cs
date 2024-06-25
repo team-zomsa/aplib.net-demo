@@ -2,8 +2,10 @@ using Aplib.Core;
 using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
+using Aplib.Core.Desire.DesireSets;
 using Aplib.Core.Desire.Goals;
 using Aplib.Core.Desire.GoalStructures;
+using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
 using Aplib.Integrations.Unity.Actions;
 using NUnit.Framework;
@@ -82,14 +84,23 @@ namespace Testing.AplibTests
                 0.9f
                 );
 
+            // Tactic : Move player to the key.
+            PrimitiveTactic<KeyDoorBeliefSet> moveToKeyTactic = new(transformPathfinderFromPlayerToKey);
+
+            // Tactic : Move player to the door.
+            PrimitiveTactic<KeyDoorBeliefSet> moveToDoorTactic = new(moveToDoor);
+
             // Goal : Grab the key and open the door.
-            PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new Goal<KeyDoorBeliefSet>(moveToDoor.Lift(), IsNextToDoor).Lift();
-            PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new Goal<KeyDoorBeliefSet>(transformPathfinderFromPlayerToKey.Lift(), IsKeyInInventory).Lift();
-            PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new Goal<KeyDoorBeliefSet>(moveToDoor.Lift(), x => x.IsDoorOpen).Lift();
+            PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorFirstGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, IsNextToDoor));
+            PrimitiveGoalStructure<KeyDoorBeliefSet> moveToKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToKeyTactic, IsKeyInInventory));
+            PrimitiveGoalStructure<KeyDoorBeliefSet> moveToDoorWithKeyGoal = new(new Goal<KeyDoorBeliefSet>(moveToDoorTactic, x => x.IsDoorOpen));
             SequentialGoalStructure<KeyDoorBeliefSet> finalGoal = new(moveToDoorFirstGoal, moveToKeyGoal, moveToDoorWithKeyGoal);
 
+            // DesireSet
+            DesireSet<KeyDoorBeliefSet> desire = new(finalGoal);
+
             // Create a new agent with the goal
-            BdiAgent<KeyDoorBeliefSet> agent = new(beliefSet, finalGoal.Lift());
+            BdiAgent<KeyDoorBeliefSet> agent = new(beliefSet, desire);
 
             AplibRunner testRunner = new(agent);
 
