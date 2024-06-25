@@ -838,6 +838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAmmoCount: 0
+  _currentAmmoCount: 0
 --- !u!114 &1220979210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -851,7 +852,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emptyInventoryImage: {fileID: 2800000, guid: 8d003bcfe1c8c044893bf31bdf72fba7, type: 3}
-  inventoryObject: {fileID: 1220979207}
   _inventorySize: 4
 --- !u!114 &1220979211
 MonoBehaviour:
