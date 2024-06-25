@@ -1,35 +1,84 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using LevelGeneration;
 using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.ConnectedComponentsBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.ConnectedComponentsBeliefSet>;
+using DesireSet = Aplib.Core.Desire.DesireSets.DesireSet<Testing.AplibTests.ConnectedComponentsBeliefSet>;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.ConnectedComponentsBeliefSet>;
+using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.ConnectedComponentsBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.ConnectedComponentsBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.ConnectedComponentsBeliefSet>;
 
 namespace Testing.AplibTests
 {
-    public class ConnectedComponentsBeliefSet : BeliefSet
+    public class ConnectedComponentsBeliefSet : IBeliefSet
     {
-        public Belief<GameObject, Rigidbody> PlayerRigidbody = new(
-            GameObject.Find("Player"),
-            x => x.GetComponent<Rigidbody>());
+        public Rigidbody PlayerRigidbody { get; } = GameObject.Find("Player").GetComponent<Rigidbody>();
+
+        public Belief<Queue<Vector3>, Vector3> GetCurrentTarget;
+
+        public Queue<Vector3> TargetPositionsInConnectedComponents { get; } = new(GetTargetPositionsInConnectedComponents());
+
+        public Queue<Vector3> TeleporterPositions { get; } = new(GetTeleporterLandingPoints());
+
+        public ConnectedComponentsBeliefSet()
+        {
+            GetCurrentTarget = new(
+                reference: TargetPositionsInConnectedComponents,
+                getObservationFromReference: positions => positions.Peek(),
+                shouldUpdate: () =>
+                {
+                    if (TargetPositionsInConnectedComponents.Count == 0) return false;
+
+                    if (Vector3.Distance(PlayerRigidbody.position, TargetPositionsInConnectedComponents.Peek()) > 0.4f)
+                        return false;
+
+                    Debug.Log($"Reached target at {TargetPositionsInConnectedComponents.Peek()}");
+                    TargetPositionsInConnectedComponents.Dequeue();
+                    Debug.Log($"Remaining targets: {TargetPositionsInConnectedComponents.Count}");
+
+                    return TargetPositionsInConnectedComponents.Count > 0;
+                }
+            );
+        }
+
+        public void UpdateBeliefs()
+        {
+            GetCurrentTarget.UpdateBelief();
+        }
+
+        private static IEnumerable<Vector3> GetTargetPositionsInConnectedComponents()
+        {
+            GameObject gridGameObject = GameObject.Find("LevelGeneration");
+            LevelGenerationPipeline levelGenerationPipeline = gridGameObject.GetComponent<LevelGenerationPipeline>();
+            SpawningExtensions spawningExtensions = gridGameObject.GetComponent<SpawningExtensions>();
+
+            Vector3 centreOfCellHeightOffset = Vector3.up * 1.5f;
+
+            return levelGenerationPipeline.Grid
+                .DetermineConnectedComponents()
+                .Select(cells => spawningExtensions.CenterOfCell(cells.First()) + centreOfCellHeightOffset);
+        }
+
+        private static IEnumerable<Vector3> GetTeleporterLandingPoints()
+            => GameObject.Find("Teleporters")
+                .GetComponentsInChildren<Teleporter.Teleporter>()
+                .Select(x => x.LandingPoint);
     }
 
     public class ConnectedComponentsTests
     {
         private const string _sceneName = "ConnectedComponentsTestScene";
-        private readonly Vector3 _centreOfCellHeightOffset = Vector3.up * 1.7f;
 
         [SetUp]
         public void SetUp()
@@ -47,85 +96,33 @@ namespace Testing.AplibTests
         [UnityTest]
         public IEnumerator CanVisitEveryConnectedComponent()
         {
+
             // Arrange
-            ConnectedComponentsBeliefSet rootBeliefSet = new();
-            GameObject gridGameObject = GameObject.Find("LevelGeneration");
-            LevelGenerationPipeline levelGenerationPipeline = gridGameObject.GetComponent<LevelGenerationPipeline>();
-            SpawningExtensions spawningExtensions = gridGameObject.GetComponent<SpawningExtensions>();
+            ConnectedComponentsBeliefSet connectedComponentBeliefSet = new();
 
-            // Arrange ==> Level information
-            Vector3[] cellsToVisit = levelGenerationPipeline.Grid.DetermineConnectedComponents()
-                .Select(cells => spawningExtensions.CenterOfCell(cells.First()) + _centreOfCellHeightOffset).ToArray();
+            // Remove doors and keys from the level.
+            GameObject doorsAndKeys = GameObject.Find("Doors and keys");
+            Object.Destroy(doorsAndKeys);
 
-            Vector3[] teleporterPositions = GameObject.Find("Teleporters")
-                .GetComponentsInChildren<Teleporter.Teleporter>()
-                .Select(x => x.LandingPoint).ToArray();
-
-            int currentCellToVisitIndex = 0;
-
-            Vector3 currentCellPosition()
-            {
-                return cellsToVisit[currentCellToVisitIndex];
-            }
-
-            // Arrange ==> GoalStructure: Visit cell of the current connected component
-            TransformPathfinderAction<ConnectedComponentsBeliefSet> approachCurrentCellAction = new(
+            Tactic moveToNextComponent = new TransformPathfinderAction(
                 beliefSet => beliefSet.PlayerRigidbody,
-                currentCellPosition(),
-                1.4f);
+                beliefSet => beliefSet.GetCurrentTarget,
+                1.5f);
 
-            Action<ConnectedComponentsBeliefSet> waitForTeleportAction = new(_ => { Debug.Log("Waiting for teleport..."); });
-
-            PrimitiveTactic<ConnectedComponentsBeliefSet> approachCurrentCellTactic = new(approachCurrentCellAction);
-            PrimitiveTactic<ConnectedComponentsBeliefSet> waitForTeleportTactic = new(waitForTeleportAction,
-                beliefSet => teleporterPositions.Any(teleporterPosition =>
-                    (teleporterPosition - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude < 0.4f));
-            FirstOfTactic<ConnectedComponentsBeliefSet> waitForTeleportOrApproachCurrentCellTactic = new(
-                waitForTeleportTactic,
-                approachCurrentCellTactic);
-
-            Goal<ConnectedComponentsBeliefSet> approachCurrentCellGoal = new(waitForTeleportOrApproachCurrentCellTactic,
-                beliefSet => (currentCellPosition() - ((Rigidbody)beliefSet.PlayerRigidbody).position).magnitude <
-                             1.5f);
-
-            PrimitiveGoalStructure<ConnectedComponentsBeliefSet> approachCurrentCellGoalStructure =
-                new(approachCurrentCellGoal);
-
-            RepeatGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellGoalStructure =
-                new(approachCurrentCellGoalStructure);
-
-            // Arrange ==> GoalStructure: Target the next cell until every cell has been targeted
-            Action<ConnectedComponentsBeliefSet> targetNextCellAction = new(_ =>
-            {
-                Debug.Log($"Reached cell at {currentCellPosition()}");
-                currentCellToVisitIndex++;
-            });
-
-            PrimitiveTactic<ConnectedComponentsBeliefSet> targetNextCellTactic = new(targetNextCellAction);
-            Goal<ConnectedComponentsBeliefSet> visitedEveryCellGoal = new(targetNextCellTactic,
-                _ => currentCellToVisitIndex >= cellsToVisit.Length);
-
-            PrimitiveGoalStructure<ConnectedComponentsBeliefSet> visitedEveryCellGoalStructure =
-                new(visitedEveryCellGoal);
-
-            // Arrange ==> GoalStructure: Visit every connected component
-            SequentialGoalStructure<ConnectedComponentsBeliefSet> visitCurrentCellAndVisitEveryCellGoalStructure =
-                new(visitCurrentCellGoalStructure, visitedEveryCellGoalStructure);
-
-            RepeatGoalStructure<ConnectedComponentsBeliefSet> visitEveryConnectedComponentGoalStructure =
-                new(visitCurrentCellAndVisitEveryCellGoalStructure);
-
-            // Arrange ==> DesireSet
-            DesireSet<ConnectedComponentsBeliefSet> desireSet = new(visitEveryConnectedComponentGoalStructure);
+            DesireSet visitAllComponents = new Goal(moveToNextComponent, HasVisitedEveryConnectedComponent);
 
             // Act
-            BdiAgent<ConnectedComponentsBeliefSet> agent = new(rootBeliefSet, desireSet);
+            BdiAgent agent = new(connectedComponentBeliefSet, visitAllComponents);
             AplibRunner testRunner = new(agent);
 
             yield return testRunner.Test();
 
             // Assert
             Assert.AreEqual(CompletionStatus.Success, agent.Status);
+
+            // Local functions
+            static bool HasVisitedEveryConnectedComponent(ConnectedComponentsBeliefSet beliefSet)
+                => beliefSet.TargetPositionsInConnectedComponents.Count == 0;
         }
     }
 }
