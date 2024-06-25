@@ -34,7 +34,10 @@ namespace Testing.AplibTests
             /// <summary>
             /// Player object in the scene.
             /// </summary>
-            public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player"), p => p);
+            public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player"), p => {
+                Debug.Log(p.transform.position);
+                return p;
+            });
 
             /// <summary>
             /// Door position in the scene.
