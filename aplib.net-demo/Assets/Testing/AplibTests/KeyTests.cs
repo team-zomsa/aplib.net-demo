@@ -14,14 +14,14 @@ using UnityEngine.TestTools;
 
 namespace Testing.AplibTests
 {
-    public class AAKeyTests
+    public class ASimpleKeyTests
     {
         private const string _sceneName = "KeyDoorTest";
 
         [SetUp]
         public void SetUpScene()
         {
-            Debug.Log($"Starting {nameof(AAKeyTests)}");
+            Debug.Log($"Starting {nameof(ASimpleKeyTests)}");
             SceneManager.LoadScene(_sceneName);
         }
 
@@ -37,11 +37,7 @@ namespace Testing.AplibTests
             /// <summary>
             /// Player object in the scene.
             /// </summary>
-            public Belief<GameObject, GameObject> Player = new(GameObject.Find("Player"), p =>
-            {
-                // Debug.Log(p.transform.position);
-                return p;
-            });
+            public GameObject Player { get; } = GameObject.Find("Player");
 
             /// <summary>
             /// Door position in the scene.
@@ -55,7 +51,7 @@ namespace Testing.AplibTests
             public Belief<GameObject, bool> IsDoorOpen = new
                 (
                     GameObject.FindGameObjectWithTag("Door"),
-                    x => x == null
+                    door => door == null
                 );
         }
 
@@ -114,7 +110,7 @@ namespace Testing.AplibTests
             // Check if player has reached the door.
             bool IsNextToDoor(KeyDoorBeliefSet beliefSet)
             {
-                Transform player = beliefSet.Player.Observation.transform;
+                Transform player = beliefSet.Player.transform;
                 Vector3 door = beliefSet.DoorPosition;
 
                 if (player.position.z > 4.3f) return true;
