@@ -419,5 +419,11 @@ namespace WFC
         /// </summary>
         /// <returns>Returns all cells that are not empty.</returns>
         public List<Cell> GetAllNotEmptyTiles() => _cells.FindAll(cell => cell.Tile is not Empty);
+
+        /// <summary>
+        /// Gets all cells that are not empty. Excludes the starting room.
+        /// </summary>
+        /// <returns>Returns all cells that are not empty.</returns>
+        public List<Cell> GetAllNotEmptyTilesExceptStartRoom() => _cells.FindAll(cell => cell.Tile is not Empty && !cell.Tile.IsStart);
     }
 }

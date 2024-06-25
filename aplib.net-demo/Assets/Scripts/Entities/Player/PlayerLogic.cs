@@ -14,6 +14,7 @@ public class PlayerLogic : MonoBehaviour
     private bool _respawnOnDeath = true;
     private HealthComponent _healthComponent;
     private RespawnableComponent _respawnableComponent;
+    public Vector3 EyesPosition => transform.position + new Vector3(0, 1, 0);
 
 
     /// <summary>
