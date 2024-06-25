@@ -110,7 +110,7 @@ namespace Testing.AplibTests
                 Transform player = beliefSet.Player.Observation.transform;
                 Vector3 door = beliefSet.DoorPosition;
 
-                if (player.position.z > door.z - 1.1f) return true;
+                if (door.z - player.position.z < 1.2f) return true;
                 return false;
             }
         }
