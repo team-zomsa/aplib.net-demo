@@ -14,12 +14,15 @@ using UnityEngine.TestTools;
 
 namespace Testing.AplibTests
 {
-    public class KeyTests
+    public class AAKeyTests
     {
+        private const string _sceneName = "KeyDoorTest";
+
         [SetUp]
         public void SetUpScene()
         {
-            SceneManager.LoadScene("KeyDoorTest");
+            Debug.Log($"Starting {nameof(AAKeyTests)}");
+            SceneManager.LoadScene(_sceneName);
         }
 
         public class KeyDoorBeliefSet : BeliefSet
