@@ -1,20 +1,20 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using Entities.Weapons;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.MeleeBeliefSet>;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.MeleeBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.MeleeBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.MeleeBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.MeleeBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.MeleeBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -59,7 +59,7 @@ namespace Testing.AplibTests
             MeleeBeliefSet beliefSet = new();
 
             // Create an intent for the agent that moves the agent towards the target position.
-            TransformPathfinderAction<MeleeBeliefSet> transformPathfinderAction = new(
+            Tactic move = new TransformPathfinderAction(
                 beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
@@ -70,7 +70,7 @@ namespace Testing.AplibTests
             );
 
             // Create an attack action for the agent, that attacks the enemy.
-            Action<MeleeBeliefSet> attackAction = new(
+            Tactic attack = new Action (
                 beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
@@ -79,21 +79,13 @@ namespace Testing.AplibTests
                 }
             );
 
-            // Tactic: Move the player towards the target position
-            PrimitiveTactic<MeleeBeliefSet> moveTactic = new(transformPathfinderAction);
-
-            // Tactic: Attack the enemy
-            PrimitiveTactic<MeleeBeliefSet> attackTactic = new(attackAction);
-
             // Goal: Reach the target position and attack the enemy
-            PrimitiveGoalStructure<MeleeBeliefSet> moveGoal = new(new Goal<MeleeBeliefSet>(moveTactic, MovePredicate));
-            PrimitiveGoalStructure<MeleeBeliefSet> attackGoal = new(new Goal<MeleeBeliefSet>(attackTactic, EnemyKilledPredicate));
-            SequentialGoalStructure<MeleeBeliefSet> finalGoal = new(moveGoal, attackGoal);
-
-            DesireSet<MeleeBeliefSet> desire = new(finalGoal);
+            GoalStructure moveGoal = new Goal(move, MovePredicate);
+            GoalStructure attackGoal = new Goal(attack, EnemyKilledPredicate);
+            GoalStructure finalGoal = Seq(moveGoal, attackGoal);
 
             // Create a new agent with the goal
-            BdiAgent<MeleeBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent agent = new(beliefSet, finalGoal.Lift());
 
             AplibRunner testRunner = new(agent);
 

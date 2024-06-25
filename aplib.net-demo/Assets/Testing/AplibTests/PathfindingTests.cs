@@ -1,18 +1,17 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.PathfindingBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.PathfindingBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.PathfindingBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.PathfindingBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.PathfindingBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -43,26 +42,17 @@ namespace Testing.AplibTests
             PathfindingBeliefSet rootBeliefSet = new();
 
             // Action: Move the player towards the target position
-            TransformPathfinderAction<PathfindingBeliefSet> transformPathfinderAction = new(
-                b =>
+            Tactic move = new TransformPathfinderAction(beliefSet =>
                 {
-                    GameObject player = b.Player;
+                    GameObject player = beliefSet.Player;
                     return player.GetComponent<Rigidbody>();
                 },
                 rootBeliefSet.TargetPosition,
                 0.9f
             );
 
-            // Tactic: Move the player towards the target position
-            PrimitiveTactic<PathfindingBeliefSet> moveTactic = new(transformPathfinderAction);
-
-            // Goal: Reach the target position
-            PrimitiveGoalStructure<PathfindingBeliefSet> goal = new(goal: new Goal<PathfindingBeliefSet>(moveTactic, Predicate));
-
-            DesireSet<PathfindingBeliefSet> desire = new(goal);
-
-            // Create a new agent with the goal
-            BdiAgent<PathfindingBeliefSet> agent = new(rootBeliefSet, desire);
+            GoalStructure goal = new Goal(move, Predicate);
+            BdiAgent agent = new(rootBeliefSet, goal.Lift());
 
             AplibRunner testRunner = new(agent);
 

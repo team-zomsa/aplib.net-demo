@@ -1,19 +1,19 @@
 using Aplib.Core;
-using Aplib.Core.Agents;
 using Aplib.Core.Belief.Beliefs;
 using Aplib.Core.Belief.BeliefSets;
-using Aplib.Core.Desire.DesireSets;
-using Aplib.Core.Desire.Goals;
-using Aplib.Core.Desire.GoalStructures;
-using Aplib.Core.Intent.Actions;
-using Aplib.Core.Intent.Tactics;
 using Aplib.Integrations.Unity;
-using Aplib.Integrations.Unity.Actions;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using static Aplib.Core.Combinators;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.HealthPotionBeliefSet>;
+using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.HealthPotionBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.HealthPotionBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.HealthPotionBeliefSet>;
+using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.HealthPotionBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.HealthPotionBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -65,8 +65,7 @@ namespace Testing.AplibTests
         {
             HealthPotionBeliefSet beliefSet = new();
 
-            // Create an intent for the agent that moves the agent towards the target position.
-            TransformPathfinderAction<HealthPotionBeliefSet> transformPathfinderAction = new(
+            Tactic moveTactic = new TransformPathfinderAction (
                 objectQuery: beliefSet =>
                 {
                     GameObject player = beliefSet.Player;
@@ -76,43 +75,30 @@ namespace Testing.AplibTests
                 heightOffset: 0.3f
             );
 
-            // Action: Decrease the player's health.
-            Action<HealthPotionBeliefSet> decreaseHealth = new(
-                b =>
+            Tactic decreaseHealth = new Action(
+                beliefSet =>
                 {
-                    HealthComponent playerHealth = b.PlayerHealth;
+                    HealthComponent playerHealth = beliefSet.PlayerHealth;
                     playerHealth.ReduceHealth(_reduceHealthAmount);
                 }
             );
 
-            // Action: Use current inventory item (health potion).
-            Action<HealthPotionBeliefSet> activateInventoryItem = new(
-                b =>
+            Tactic usePotion = new Action(
+                beliefSet =>
                 {
-                    Inventory inventory = b.InventoryObject;
+                    Inventory inventory = beliefSet.InventoryObject;
                     inventory.ActivateItem();
                 }
             );
 
-            // Tactic: Move the player towards the target position.
-            PrimitiveTactic<HealthPotionBeliefSet> moveTactic = new(transformPathfinderAction);
-
-            // Tactic: Decrease the player's health.
-            PrimitiveTactic<HealthPotionBeliefSet> decreaseHealthTactic = new(decreaseHealth);
-
-            // Tactic: Use the health potion.
-            PrimitiveTactic<HealthPotionBeliefSet> usePotionTactic = new(activateInventoryItem);
-
             // Goal: Decrease health, reach the target position and use the health potion.
-            PrimitiveGoalStructure<HealthPotionBeliefSet> decreaseHealthGoal = new(goal: new Goal<HealthPotionBeliefSet>(decreaseHealthTactic, HealthNotFullPredicate));
-            PrimitiveGoalStructure<HealthPotionBeliefSet> moveGoal = new(goal: new Goal<HealthPotionBeliefSet>(moveTactic, PotionPickedupPredicate));
-            PrimitiveGoalStructure<HealthPotionBeliefSet> usePotionGoal = new(goal: new Goal<HealthPotionBeliefSet>(usePotionTactic, HealthFullPredicate));
-            SequentialGoalStructure<HealthPotionBeliefSet> finalGoal = new(decreaseHealthGoal, moveGoal, usePotionGoal);
-
-            DesireSet<HealthPotionBeliefSet> desire = new(finalGoal);
+            GoalStructure decreaseHealthGoal = new Goal(decreaseHealth, HealthNotFullPredicate);
+            GoalStructure moveGoal = new Goal(moveTactic, PotionPickedupPredicate);
+            GoalStructure usePotionGoal = new Goal(usePotion, HealthFullPredicate);
+            GoalStructure finalGoal = Seq(decreaseHealthGoal, moveGoal, usePotionGoal);
 
             // Create a new agent with the goal.
-            BdiAgent<HealthPotionBeliefSet> agent = new(beliefSet, desire);
+            BdiAgent agent = new(beliefSet, finalGoal.Lift());
 
             AplibRunner testRunner = new(agent);
 
