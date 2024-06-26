@@ -40,7 +40,7 @@ namespace Testing.AplibTests
             GetCurrentTarget = new(
                 reference: TargetPositionsInConnectedComponents,
                 getObservationFromReference: positions => positions.Peek(),
-                shouldUpdate: () =>
+                shouldUpdate: _ =>
                 {
                     if (TargetPositionsInConnectedComponents.Count == 0) return false;
 
