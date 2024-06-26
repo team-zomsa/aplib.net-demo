@@ -23,7 +23,6 @@ using DesireSet = Aplib.Core.Desire.DesireSets.DesireSet<Testing.AplibTests.Game
 using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.GameplayBeliefSet>;
 using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.GameplayBeliefSet>;
 using IGoalStructure = Aplib.Core.Desire.GoalStructures.IGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
-using InterruptGuard = System.Func<Testing.AplibTests.GameplayBeliefSet, bool>;
 using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.GameplayBeliefSet>;
 using SequentialGoalStructure = Aplib.Core.Desire.GoalStructures.SequentialGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
 using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.GameplayBeliefSet>;
