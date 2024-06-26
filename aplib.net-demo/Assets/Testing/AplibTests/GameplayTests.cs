@@ -17,17 +17,16 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using static Aplib.Core.Combinators;
-using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.GameplayBeliefSet>;
 using Action = Aplib.Core.Intent.Actions.Action<Testing.AplibTests.GameplayBeliefSet>;
-using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.GameplayBeliefSet>;
-using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.GameplayBeliefSet>;
-using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.GameplayBeliefSet>;
-using SequentialGoalStructure = Aplib.Core.Desire.GoalStructures.SequentialGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
-using DesireSet = Aplib.Core.Desire.DesireSets.DesireSet<Testing.AplibTests.GameplayBeliefSet>;
 using BdiAgent = Aplib.Core.Agents.BdiAgent<Testing.AplibTests.GameplayBeliefSet>;
-using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.GameplayBeliefSet>;
+using DesireSet = Aplib.Core.Desire.DesireSets.DesireSet<Testing.AplibTests.GameplayBeliefSet>;
+using Goal = Aplib.Core.Desire.Goals.Goal<Testing.AplibTests.GameplayBeliefSet>;
+using GoalStructure = Aplib.Core.Desire.GoalStructures.GoalStructure<Testing.AplibTests.GameplayBeliefSet>;
 using IGoalStructure = Aplib.Core.Desire.GoalStructures.IGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
-using InterruptGuard = System.Func<Testing.AplibTests.GameplayBeliefSet, bool>;
+using PrimitiveTactic = Aplib.Core.Intent.Tactics.PrimitiveTactic<Testing.AplibTests.GameplayBeliefSet>;
+using SequentialGoalStructure = Aplib.Core.Desire.GoalStructures.SequentialGoalStructure<Testing.AplibTests.GameplayBeliefSet>;
+using Tactic = Aplib.Core.Intent.Tactics.Tactic<Testing.AplibTests.GameplayBeliefSet>;
+using TransformPathfinderAction = Aplib.Integrations.Unity.Actions.TransformPathfinderAction<Testing.AplibTests.GameplayBeliefSet>;
 
 namespace Testing.AplibTests
 {
@@ -150,7 +149,7 @@ namespace Testing.AplibTests
         /// <summary> The position to which the player must navigate in order to fetch the end item. </summary>
         public readonly Belief<GameObject, Vector3> EndItemPosition = new(
             GameObject.Find(EndItemName), x => x.transform.position,
-            () => !GameObject.Find("InventoryObject").GetComponent<Inventory>().ContainsItem(EndItemName));
+            _ => !GameObject.Find("InventoryObject").GetComponent<Inventory>().ContainsItem(EndItemName));
 
         /// <summary> The position of where the player started </summary>
         public readonly Belief<Transform, Vector3> WinAreaPosition = new(
@@ -198,7 +197,7 @@ namespace Testing.AplibTests
                         ? (enemy, distance)
                         : (null, 0f))
                     .Where(x => x.enemy != null)
-                    .Aggregate((new AbstractEnemy[] {}, new float[] {}), (acc, x)
+                    .Aggregate((new AbstractEnemy[] { }, new float[] { }), (acc, x)
                         => (acc.Item1.Append(x.enemy).ToArray(), acc.Item2.Append(x.distance).ToArray())));
 
         public readonly Belief<EnemiesObjectAndPlayerEyesReference, bool> AnyEnemyVisible = new(
@@ -229,8 +228,8 @@ namespace Testing.AplibTests
                 int enemyPriority = enemies[i] switch
                 {
                     MeleeEnemy when distances[i] < 5 => 0,
-                    RangedEnemy                      => 1,
-                    _                                => 2
+                    RangedEnemy => 1,
+                    _ => 2
                 };
                 groupedEnemies[enemyPriority].Add(i);
             }
@@ -567,7 +566,7 @@ namespace Testing.AplibTests
 
             DesireSet desireSet = new(
                 mainGoal: fetchElixir, // Fetch the elixir and bring it to the final room
-                sideGoals: new (IGoalStructure, InterruptGuard)[]
+                sideGoals: new (IGoalStructure, System.Predicate<GameplayBeliefSet>)[]
                 {
                     // But, when an item can be picked up, do so
                     (fetchVisibleItemGoal, beliefSet =>
@@ -743,7 +742,7 @@ namespace Testing.AplibTests
                 Transform playerRotation = beliefSet.PlayerRotation.Observation.transform;
                 Vector3 enemyPosition = beliefSet.DetermineEnemyToFocus(out _).transform.position;
                 playerRotation.transform.LookAt(enemyPosition); // Weapon viewpoint should be set to player rotation in editor
-            } );
+            });
             PrimitiveTactic sleep = new(sleepAction, _ => Time.time < wakeUpTimeStamp);
 
 
@@ -860,7 +859,7 @@ namespace Testing.AplibTests
 
             DesireSet desireSet = new(
                 mainGoal: fetchElixir, // Fetch the elixir and bring it to the final room
-                sideGoals: new (IGoalStructure, InterruptGuard)[]
+                sideGoals: new (IGoalStructure, System.Predicate<GameplayBeliefSet>)[]
                 {
                     // But, when an item can be picked up, do so
                     (fetchVisibleItemGoal, beliefSet =>
